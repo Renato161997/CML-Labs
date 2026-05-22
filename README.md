@@ -69,21 +69,12 @@ labs/
 4. Read the lab notes inside CML.
 5. Configure, break, verify, fix, repeat.
 
-The labs are intentionally small. Most are built to boot quickly, show one main
-idea clearly, and leave enough room for you to modify the scenario.
+The labs are intentionally compact, but some scenarios use more than five
+nodes. CML Free can import larger labs, but it can only run up to five nodes at
+the same time. For the full experience, this collection is best used with a
+paid CML license.
 
-## Node definitions
-
-Most labs use standard CML node definitions:
-
-- `iosv`
-- `iosvl2`
-- `desktop`
-
-If your CML instance uses different node definition names, import the lab and
-remap the nodes, or edit the `node_definition` fields in the YAML.
-
-## What this repo is not
+## Disclaimer
 
 This repo does not include Cisco images, licenses, entitlement files, exam
 dumps, answer keys, or official courseware. It is just a practical lab library
