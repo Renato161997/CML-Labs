@@ -1,0 +1,86 @@
+lab:
+  title: Site To Site IPsec IOS
+  description: 350-701 SCOR - Implementing and Operating Cisco Security Core Technologies importable CML topology.
+  notes: '350-701 SCOR blueprint lab: Site To Site IPsec IOS
+
+
+    Topics:
+
+    - IPsec
+
+    - IKE
+
+    - Cisco IOS
+
+
+    Tasks:
+
+    1. Define interesting traffic
+
+    2. Build IPsec profile
+
+    3. Verify SA
+
+
+    Useful checks:
+
+    - show ip interface brief
+
+    - show running-config
+
+    - show ip route
+
+    - show ip protocols
+
+    - ping and traceroute between endpoints'
+  version: 0.2.0
+nodes:
+- id: n0
+  label: HUB1
+  node_definition: iosv
+  x: -180
+  y: -120
+  configuration: "hostname HUB1\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR Site To Site IPsec IOS ^C\ninterface GigabitEthernet0/0\n\
+    \ description SECCORE-SCOR Site To Site IPsec IOS\n ip address 10.0.12.1 255.255.255.252\n no shutdown\ninterface GigabitEthernet0/1\n\
+    \ description SECCORE-SCOR Site To Site IPsec IOS\n ip address 10.0.13.1 255.255.255.252\n no shutdown\ninterface Loopback0\n\
+    \ description SECCORE-SCOR Site To Site IPsec IOS\n ip address 172.16.0.1 255.255.255.255\n no shutdown\nend"
+- id: n1
+  label: SPOKE1
+  node_definition: iosv
+  x: -420
+  y: 120
+  configuration: "hostname SPOKE1\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR Site To Site IPsec IOS ^C\ninterface GigabitEthernet0/0\n\
+    \ description SECCORE-SCOR Site To Site IPsec IOS\n ip address 10.0.12.2 255.255.255.252\n no shutdown\ninterface Loopback0\n\
+    \ description SECCORE-SCOR Site To Site IPsec IOS\n ip address 172.16.1.1 255.255.255.255\n no shutdown\nend"
+- id: n2
+  label: SPOKE2
+  node_definition: iosv
+  x: 60
+  y: 120
+  configuration: "hostname SPOKE2\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR Site To Site IPsec IOS ^C\ninterface GigabitEthernet0/0\n\
+    \ description SECCORE-SCOR Site To Site IPsec IOS\n ip address 10.0.13.2 255.255.255.252\n no shutdown\ninterface Loopback0\n\
+    \ description SECCORE-SCOR Site To Site IPsec IOS\n ip address 172.16.2.1 255.255.255.255\n no shutdown\nend"
+- id: n3
+  label: INTERNET
+  node_definition: iosv
+  x: 300
+  y: -120
+  configuration: "hostname INTERNET\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR Site To Site IPsec IOS ^C\ninterface\
+    \ GigabitEthernet0/0\n description SECCORE-SCOR Site To Site IPsec IOS\n ip address 203.0.113.1 255.255.255.252\n no shutdown\n\
+    end"
+links:
+- id: l0
+  n1: n0
+  i1: 0
+  n2: n1
+  i2: 0
+- id: l1
+  n1: n0
+  i1: 1
+  n2: n2
+  i2: 0
+- id: l2
+  n1: n0
+  i1: 2
+  n2: n3
+  i2: 0

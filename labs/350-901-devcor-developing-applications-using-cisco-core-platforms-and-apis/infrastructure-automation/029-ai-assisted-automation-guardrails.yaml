@@ -1,0 +1,70 @@
+lab:
+  title: AI Assisted Automation Guardrails
+  description: 350-901 DEVCOR - Developing Applications Using Cisco Core Platforms and APIs importable CML topology.
+  notes: '350-901 DEVCOR blueprint lab: AI Assisted Automation Guardrails
+
+
+    Topics:
+
+    - AI in automation
+
+    - guardrails
+
+    - approval
+
+
+    Tasks:
+
+    1. Generate intent
+
+    2. Validate commands
+
+    3. Require approval
+
+
+    Useful checks:
+
+    - show ip interface brief
+
+    - show running-config
+
+    - show ip route
+
+    - show ip protocols
+
+    - ping and traceroute between endpoints'
+  version: 0.2.0
+nodes:
+- id: n0
+  label: R1
+  node_definition: iosv
+  x: -180
+  y: 0
+  configuration: "hostname R1\nno ip domain-lookup\nbanner motd ^C DEVCORE-AUTOCOR AI Assisted Automation Guardrails ^C\n\
+    interface GigabitEthernet0/0\n description DEVCORE-AUTOCOR AI Assisted Automation Guardrails\n ip address 10.255.0.1 255.255.255.0\n\
+    \ no shutdown\ninterface Loopback0\n description DEVCORE-AUTOCOR AI Assisted Automation Guardrails\n ip address 10.255.255.1\
+    \ 255.255.255.255\n no shutdown\nend"
+- id: n1
+  label: DEVBOX
+  node_definition: desktop
+  x: 180
+  y: 0
+- id: n2
+  label: API-TARGET
+  node_definition: iosv
+  x: 0
+  y: 160
+  configuration: "hostname API-TARGET\nno ip domain-lookup\nbanner motd ^C DEVCORE-AUTOCOR AI Assisted Automation Guardrails\
+    \ ^C\ninterface GigabitEthernet0/0\n description DEVCORE-AUTOCOR AI Assisted Automation Guardrails\n ip address 10.255.0.2\
+    \ 255.255.255.0\n no shutdown\nend"
+links:
+- id: l0
+  n1: n0
+  i1: 0
+  n2: n1
+  i2: 0
+- id: l1
+  n1: n0
+  i1: 1
+  n2: n2
+  i2: 0

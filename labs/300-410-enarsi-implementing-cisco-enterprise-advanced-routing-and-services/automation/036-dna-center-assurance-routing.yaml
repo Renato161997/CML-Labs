@@ -1,0 +1,69 @@
+lab:
+  title: DNA Center Assurance Routing
+  description: 300-410 ENARSI - Implementing Cisco Enterprise Advanced Routing and Services importable CML topology.
+  notes: '300-410 ENARSI blueprint lab: DNA Center Assurance Routing
+
+
+    Topics:
+
+    - DNA Center
+
+    - assurance
+
+    - routing telemetry
+
+
+    Tasks:
+
+    1. Map assurance inputs
+
+    2. Model path analysis
+
+    3. Define remediation data
+
+
+    Useful checks:
+
+    - show ip interface brief
+
+    - show running-config
+
+    - show ip route
+
+    - show ip protocols
+
+    - ping and traceroute between endpoints'
+  version: 0.2.0
+nodes:
+- id: n0
+  label: R1
+  node_definition: iosv
+  x: -180
+  y: 0
+  configuration: "hostname R1\nno ip domain-lookup\nbanner motd ^C ENARSI DNA Center Assurance Routing ^C\ninterface GigabitEthernet0/0\n\
+    \ description ENARSI DNA Center Assurance Routing\n ip address 10.255.0.1 255.255.255.0\n no shutdown\ninterface Loopback0\n\
+    \ description ENARSI DNA Center Assurance Routing\n ip address 10.255.255.1 255.255.255.255\n no shutdown\nend"
+- id: n1
+  label: DEVBOX
+  node_definition: desktop
+  x: 180
+  y: 0
+- id: n2
+  label: API-TARGET
+  node_definition: iosv
+  x: 0
+  y: 160
+  configuration: "hostname API-TARGET\nno ip domain-lookup\nbanner motd ^C ENARSI DNA Center Assurance Routing ^C\ninterface\
+    \ GigabitEthernet0/0\n description ENARSI DNA Center Assurance Routing\n ip address 10.255.0.2 255.255.255.0\n no shutdown\n\
+    end"
+links:
+- id: l0
+  n1: n0
+  i1: 0
+  n2: n1
+  i2: 0
+- id: l1
+  n1: n0
+  i1: 1
+  n2: n2
+  i2: 0

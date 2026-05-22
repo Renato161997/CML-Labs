@@ -1,0 +1,79 @@
+lab:
+  title: QoS Marking Classification
+  description: 200-301 CCNA - Implementing and Administering Cisco Solutions CML lab.
+  notes: '200-301 CCNA blueprint lab: QoS Marking Classification
+
+
+    Topics:
+
+    - QoS
+
+    - classification
+
+    - marking
+
+
+    Suggested tasks:
+
+    1. Create class-map
+
+    2. Apply policy-map
+
+    3. Verify counters
+
+
+    Suggested verification:
+
+    - show ip interface brief
+
+    - show interfaces status
+
+    - show ip route
+
+    - show running-config | section router
+
+    - ping between the lab endpoints'
+  version: 0.2.0
+nodes:
+- id: n0
+  label: R1
+  node_definition: iosv
+  x: -200
+  y: 0
+  configuration: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNA QoS Marking Classification ^C\ninterface GigabitEthernet0/0\n\
+    \ description CCNA QoS Marking Classification\n ip address 10.0.12.1 255.255.255.252\n no shutdown\ninterface GigabitEthernet0/1\n\
+    \ description CCNA QoS Marking Classification\n ip address 10.1.1.1 255.255.255.0\n no shutdown\nend"
+- id: n1
+  label: R2
+  node_definition: iosv
+  x: 200
+  y: 0
+  configuration: "hostname R2\nno ip domain-lookup\nbanner motd ^C CCNA QoS Marking Classification ^C\ninterface GigabitEthernet0/0\n\
+    \ description CCNA QoS Marking Classification\n ip address 10.0.12.2 255.255.255.252\n no shutdown\ninterface GigabitEthernet0/1\n\
+    \ description CCNA QoS Marking Classification\n ip address 10.2.2.1 255.255.255.0\n no shutdown\nend"
+- id: n2
+  label: PC1
+  node_definition: desktop
+  x: -400
+  y: 120
+- id: n3
+  label: PC2
+  node_definition: desktop
+  x: 400
+  y: 120
+links:
+- id: l0
+  n1: n0
+  i1: 0
+  n2: n1
+  i2: 0
+- id: l1
+  n1: n0
+  i1: 1
+  n2: n2
+  i2: 0
+- id: l2
+  n1: n1
+  i1: 1
+  n2: n3
+  i2: 0
