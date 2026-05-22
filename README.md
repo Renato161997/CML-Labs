@@ -11,13 +11,17 @@ the repo.
 
 | Exam | Official exam name | Labs |
 | --- | --- | ---: |
-| 200-301 CCNA | Implementing and Administering Cisco Solutions | 40 |
-| 350-401 ENCOR | Implementing and Operating Cisco Enterprise Network Core Technologies | 41 |
-| 300-410 ENARSI | Implementing Cisco Enterprise Advanced Routing and Services | 36 |
-| 350-901 DEVCOR | Developing Applications Using Cisco Core Platforms and APIs | 30 |
-| 350-701 SCOR | Implementing and Operating Cisco Security Core Technologies | 36 |
+| 200-301 CCNA | Implementing and Administering Cisco Solutions | 50 |
+| 350-401 ENCOR | Implementing and Operating Cisco Enterprise Network Core Technologies | 51 |
+| 300-410 ENARSI | Implementing Cisco Enterprise Advanced Routing and Services | 46 |
+| 350-901 DEVCOR | Developing Applications Using Cisco Core Platforms and APIs | 40 |
+| 350-701 SCOR | Implementing and Operating Cisco Security Core Technologies | 46 |
 
-Total: **183 CML labs**.
+Total: **233 CML labs**.
+
+The collection includes blueprint-focused labs plus scenario-based labs such as
+capstones, break/fix exercises, mini assessments, migration labs, and design
+challenges.
 
 ## Repository layout
 
@@ -30,6 +34,11 @@ labs/
     ip-services/
     security/
     automation/
+    scenario/
+    troubleshooting/
+    migration/
+    assessment/
+    capstone/
 
   350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/
     architecture/
@@ -38,27 +47,57 @@ labs/
     network-assurance/
     security/
     automation/
+    scenario/
+    troubleshooting/
+    migration/
+    assessment/
+    capstone/
 
   300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/
-    layer-3-technologies/
-    vpn-technologies/
-    infrastructure-security/
-    infrastructure-services/
+    layer-3/
+    bgp/
+    vpn/
+    infra-security/
+    infra-services/
+    services/
+    automation/
+    troubleshooting/
+    migration/
+    assessment/
+    capstone/
 
   350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/
-    software-development-and-design/
+    software-design/
     using-apis/
     cisco-platforms/
-    application-deployment-and-security/
-    infrastructure-and-automation/
+    deployment-security/
+    deployment/
+    infrastructure-automation/
+    gitops/
+    apis/
+    webhooks/
+    security/
+    validation/
+    assessment/
+    capstone/
 
   350-701-scor-implementing-and-operating-cisco-security-core-technologies/
     security-concepts/
     network-security/
-    securing-the-cloud/
-    content-security/
-    endpoint-protection-and-detection/
-    secure-network-access-visibility-and-enforcement/
+    cloud-content/
+    endpoint/
+    secure-access/
+    visibility-enforcement/
+    automation/
+    firewall/
+    management/
+    nac/
+    scenario/
+    vpn/
+    incident-response/
+    visibility/
+    assessment/
+    capstone/
 ```
 
 ## How to use
