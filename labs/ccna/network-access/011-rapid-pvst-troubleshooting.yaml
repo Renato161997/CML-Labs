@@ -1,0 +1,91 @@
+lab:
+  title: Rapid PVST Troubleshooting
+  description: CCNA CML lab generated from blueprint coverage.
+  notes: 'CCNA blueprint lab: Rapid PVST Troubleshooting
+
+
+    Topics:
+
+    - Rapid PVST+
+
+    - convergence
+
+    - troubleshooting
+
+
+    Suggested tasks:
+
+    1. Tune STP mode
+
+    2. Force a topology change
+
+    3. Observe convergence
+
+
+    Suggested verification:
+
+    - show ip interface brief
+
+    - show interfaces status
+
+    - show ip route
+
+    - show running-config | section router
+
+    - ping between the lab endpoints'
+  version: 0.2.0
+nodes:
+- id: n0
+  label: R1
+  node_definition: iosv
+  x: 0
+  y: -180
+  configuration: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNA Rapid PVST Troubleshooting ^C\ninterface GigabitEthernet0/0\n\
+    \ description CCNA Rapid PVST Troubleshooting\n ip address 10.0.0.1 255.255.255.252\n no shutdown\nend"
+- id: n1
+  label: SW1
+  node_definition: iosvl2
+  x: -160
+  y: 0
+  configuration: "hostname SW1\nno ip domain-lookup\nbanner motd ^C CCNA Rapid PVST Troubleshooting ^C\nvlan 10\n name USERS\n\
+    vlan 20\n name SERVICES\nvlan 99\n name MGMT\ninterface range GigabitEthernet0/1-3\n switchport mode access\n spanning-tree\
+    \ portfast\nend"
+- id: n2
+  label: SW2
+  node_definition: iosvl2
+  x: 160
+  y: 0
+  configuration: "hostname SW2\nno ip domain-lookup\nbanner motd ^C CCNA Rapid PVST Troubleshooting ^C\nvlan 10\n name USERS\n\
+    vlan 20\n name SERVICES\nvlan 99\n name MGMT\ninterface range GigabitEthernet0/1-3\n switchport mode access\n spanning-tree\
+    \ portfast\nend"
+- id: n3
+  label: PC1
+  node_definition: desktop
+  x: -320
+  y: 180
+- id: n4
+  label: PC2
+  node_definition: desktop
+  x: 320
+  y: 180
+links:
+- id: l0
+  n1: n0
+  i1: 0
+  n2: n1
+  i2: 0
+- id: l1
+  n1: n1
+  i1: 1
+  n2: n2
+  i2: 1
+- id: l2
+  n1: n1
+  i1: 2
+  n2: n3
+  i2: 0
+- id: l3
+  n1: n2
+  i1: 2
+  n2: n4
+  i2: 0

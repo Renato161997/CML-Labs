@@ -1,0 +1,56 @@
+lab:
+  title: Infrastructure Device Hardening
+  description: CCNP-ENCOR CML lab generated from blueprint coverage.
+  notes: 'CCNP-ENCOR blueprint lab: Infrastructure Device Hardening
+
+
+    Topics:
+
+    - hardening
+
+    - SSH
+
+    - management plane
+
+
+    Suggested tasks:
+
+    1. Harden management access
+
+    2. Disable unused services
+
+    3. Verify login policy
+
+
+    Suggested verification:
+
+    - show ip interface brief
+
+    - show interfaces status
+
+    - show ip route
+
+    - show running-config | section router
+
+    - ping between the lab endpoints'
+  version: 0.2.0
+nodes:
+- id: n0
+  label: R1
+  node_definition: iosv
+  x: 0
+  y: 0
+  configuration: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR Infrastructure Device Hardening ^C\ninterface\
+    \ GigabitEthernet0/0\n description CCNP-ENCOR Infrastructure Device Hardening\n ip address 10.0.1.1 255.255.255.0\n no\
+    \ shutdown\nend"
+- id: n1
+  label: PC1
+  node_definition: desktop
+  x: -200
+  y: 0
+links:
+- id: l0
+  n1: n0
+  i1: 0
+  n2: n1
+  i2: 0
