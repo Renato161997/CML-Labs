@@ -1,0 +1,33 @@
+name: Lab problem
+description: Report a reproducible import, boot or exercise problem
+body:
+  - type: input
+    id: lab
+    attributes:
+      label: Lab YAML path
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: CML version and node image versions
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps, expected result and actual result
+      description: Include the exact error. Remove credentials and real infrastructure details.
+    validations:
+      required: true
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Where does it fail?
+      options:
+        - Import
+        - Boot
+        - Connectivity or protocol behavior
+        - Instructions or expected result
+    validations:
+      required: true
