@@ -1,123 +1,80 @@
-# CML - LABS
+# CML Labs
 
-Ready-to-import Cisco Modeling Labs topologies for people studying Cisco
-certifications hands-on.
+[![Lab quality](https://github.com/Renato161997/CML-Labs/actions/workflows/quality.yml/badge.svg)](https://github.com/Renato161997/CML-Labs/actions/workflows/quality.yml)
 
-Clone the repo, import a `.yaml` file into CML, start the lab, and work through
-the tasks in the lab notes. No workbook, no hidden files, no vendor images in
-the repo.
+**233 Cisco Modeling Labs exercises, with a curated starting path and explicit validation levels.**
 
-## Lab tracks
+Practice enterprise routing, switching, security concepts and network automation.
+Topology files and original teaching examples only: no vendor images, entitlement files or exam dumps.
 
-| Exam | Official exam name | Labs |
-| --- | --- | ---: |
-| 200-301 CCNA | Implementing and Administering Cisco Solutions | 50 |
-| 350-401 ENCOR | Implementing and Operating Cisco Enterprise Network Core Technologies | 51 |
-| 300-410 ENARSI | Implementing Cisco Enterprise Advanced Routing and Services | 46 |
-| 350-901 DEVCOR | Developing Applications Using Cisco Core Platforms and APIs | 40 |
-| 350-701 SCOR | Implementing and Operating Cisco Security Core Technologies | 46 |
+**[Browse all labs](docs/CATALOG.md)** · **[Validation evidence](validation/README.md)** · **[Certification/image scope](docs/CERTIFICATIONS.md)** · **[Report a problem](https://github.com/Renato161997/CML-Labs/issues/new/choose)**
 
-Total: **233 CML labs**.
+## Start here
 
-The collection includes blueprint-focused labs plus scenario-based labs such as
-capstones, break/fix exercises, mini assessments, migration labs, and design
-challenges.
+Choose an exercise with a workbook, import its YAML and read the starting-state instructions before changing configuration. Some are working reference baselines; the OSPF troubleshooting exercise is deliberately broken.
 
-## Repository layout
+| Workbook | What you can observe |
+| --- | --- |
+| [Single-area OSPF](docs/workbooks/017-single-area-ospfv2.md) | FULL adjacency, learned loopbacks and sourced ping |
+| [OSPF troubleshooting](docs/workbooks/018-ospfv2-neighbor-troubleshooting.md) | Area mismatch, diagnosis, repair and recovery |
+| [Router on a stick](docs/workbooks/007-vlan-router-on-a-stick.md) | 802.1Q trunk and two VLAN subinterfaces |
+| [STP root selection](docs/workbooks/009-stp-root-selection.md) | Root bridge, root port and alternate blocking path |
+| [NAT/PAT edge](docs/workbooks/024-nat-pat-edge.md) | Translation hits and return traffic without a private-subnet route |
+| [Extended ACLs](docs/workbooks/032-standard-extended-acls.md) | A specific blocked flow, an allowed flow and deny counters |
+| [eBGP neighbors](docs/workbooks/013-ibgp-ebgp-neighbors.md) | Received prefix, AS path and loopback connectivity |
+| [BGP path selection](docs/workbooks/014-bgp-path-selection-local-pref-med.md) | Two competing paths and local-preference selection |
+| [Webhook receiver](docs/workbooks/011-webhook-receiver.md) | Authenticated HTTP requests, duplicate events and safe rejection |
+| [Intent validation](docs/workbooks/035-webhook-receiver-config-validation.md) | Device/interface allowlists, strict types and an approval boundary |
 
-```text
-labs/
-  200-301-ccna-implementing-and-administering-cisco-solutions/
-    network-fundamentals/
-    network-access/
-    ip-connectivity/
-    ip-services/
-    security/
-    automation/
-    scenario/
-    troubleshooting/
-    migration/
-    assessment/
-    capstone/
+The catalog separates **curated practice/break-fix** entries from **scaffolds**. A scaffold is a starting topology and exercise outline, not a complete workbook or a claim that every technology in its title is implemented. Functional status is attached to a dated file hash and the actual tested CML/images.
 
-  350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/
-    architecture/
-    virtualization/
-    infrastructure/
-    network-assurance/
-    security/
-    automation/
-    scenario/
-    troubleshooting/
-    migration/
-    assessment/
-    capstone/
+## Import and run
 
-  300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/
-    layer-3/
-    bgp/
-    vpn/
-    infra-security/
-    infra-services/
-    services/
-    automation/
-    troubleshooting/
-    migration/
-    assessment/
-    capstone/
+1. Download or clone this repository.
+2. Check node types, memory estimate, image availability and license requirements in the catalog/workbook.
+3. In CML, import the selected `.yaml` from `labs/`.
+4. Start the isolated lab and wait for the startup configuration to finish applying; IOS images can take several minutes before their CLI is ready.
+5. Follow the workbook and acceptance checks. Stop/wipe only your exercise when resetting it.
 
-  350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/
-    software-design/
-    using-apis/
-    cisco-platforms/
-    deployment-security/
-    deployment/
-    infrastructure-automation/
-    gitops/
-    apis/
-    webhooks/
-    security/
-    validation/
-    assessment/
-    capstone/
+The normalized format targets **CML 2.10.1**, using named configuration files and explicit interface IDs. Older releases have not been certified. The files use installed default images; no host-specific image IDs are required.
 
-  350-701-scor-implementing-and-operating-cisco-security-core-technologies/
-    security-concepts/
-    network-security/
-    cloud-content/
-    endpoint/
-    secure-access/
-    visibility-enforcement/
-    automation/
-    firewall/
-    management/
-    nac/
-    scenario/
-    vpn/
-    incident-response/
-    visibility/
-    assessment/
-    capstone/
+**Keep these exercises isolated.** Do not attach an external connector to your home/work network. Demo access and console settings are designed for disposable practice. CML Free's node limit alone does not establish image compatibility or entitlement.
+
+## Tracks
+
+| Track | Exercises | Scope |
+| --- | ---: | --- |
+| 200-301 CCNA | 50 | Fundamentals, switching, routing and services |
+| 350-401 ENCOR | 51 | Enterprise core scenarios |
+| 300-410 ENARSI | 46 | Advanced routing and troubleshooting |
+| 350-701 SCOR | 46 | Security concepts and network scenarios |
+| 350-901 DEVCOR | 40 | **Legacy:** retained paths; see the current AUTOCOR mapping |
+
+Cisco's 2026 Automation changes include revised content. Legacy DEVCOR exercises are not complete AUTOCOR coverage. [Read the mapping and limitations](docs/CERTIFICATIONS.md).
+
+## Searchable local catalog
+
+The HTML catalog filters by track, topic, node count, difficulty and functional status. It runs locally and sends no telemetry:
+
+```sh
+python -m http.server 8000 --bind 127.0.0.1
+# Open http://127.0.0.1:8000/docs/catalog.html
 ```
 
-## How to use
+## Quality and contribution
 
-1. Open Cisco Modeling Labs.
-2. Import any `.yaml` file from `labs/`.
-3. Start the lab.
-4. Read the lab notes inside CML.
-5. Configure, break, verify, fix, repeat.
+```sh
+python -m pip install -r requirements-dev.txt
+ruff check scripts tests examples
+ruff format --check scripts tests examples
+python scripts/labtools.py generate
+python scripts/labtools.py check
+python scripts/embed_webhook.py --check
+python -m unittest discover -s tests -v
+```
 
-The labs are intentionally compact, but some scenarios use more than five
-nodes. CML Free can import larger labs, but it can only run up to five nodes at
-the same time. For the full experience, this collection is best used with a
-paid CML license.
+CI checks YAML, topology references, interface slots, isolation constraints, catalog freshness and real HTTP example tests. It does not connect to CML. [Live validation](validation/README.md) is a separate, opt-in operation. See [CONTRIBUTING.md](CONTRIBUTING.md) for reproducible bug reports and changes.
 
-## Disclaimer
+## Disclaimer and licensing
 
-This repo does not include Cisco images, licenses, entitlement files, exam
-dumps, answer keys, or official courseware. It is just a practical lab library
-for CML.
-
-Cisco, Cisco Modeling Labs, IOS, IOS-XE, CCNA, CCNP, CCIE and related names
-belong to Cisco Systems, Inc. This is an independent lab collection.
+This is an independent practice collection. Cisco, CML, IOS, IOS-XE and related names belong to their respective owners. It is not official courseware or an exam-coverage guarantee. Vendor software must be obtained under the user's own entitlement. An explicit license for this repository's original material still requires a maintainer decision; public visibility is not a substitute for one.

@@ -1,0 +1,62 @@
+{
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/017-single-area-ospfv2.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 35,
+    "kind": "practice",
+    "workbook": "docs/workbooks/017-single-area-ospfv2.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/018-ospfv2-neighbor-troubleshooting.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 35,
+    "kind": "break-fix",
+    "workbook": "docs/workbooks/018-ospfv2-neighbor-troubleshooting.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/007-vlan-router-on-a-stick.yaml": {
+    "difficulty": "Beginner",
+    "duration_minutes": 35,
+    "kind": "practice",
+    "workbook": "docs/workbooks/007-vlan-router-on-a-stick.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/009-stp-root-selection.yaml": {
+    "difficulty": "Beginner",
+    "duration_minutes": 35,
+    "kind": "practice",
+    "workbook": "docs/workbooks/009-stp-root-selection.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/024-nat-pat-edge.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 35,
+    "kind": "practice",
+    "workbook": "docs/workbooks/024-nat-pat-edge.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/032-standard-extended-acls.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 35,
+    "kind": "practice",
+    "workbook": "docs/workbooks/032-standard-extended-acls.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/013-ibgp-ebgp-neighbors.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 35,
+    "kind": "practice",
+    "workbook": "docs/workbooks/013-ibgp-ebgp-neighbors.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/014-bgp-path-selection-local-pref-med.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 45,
+    "kind": "practice",
+    "workbook": "docs/workbooks/014-bgp-path-selection-local-pref-med.md"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "practice",
+    "workbook": "docs/workbooks/011-webhook-receiver.md"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/webhooks/035-webhook-receiver-config-validation.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "practice",
+    "workbook": "docs/workbooks/035-webhook-receiver-config-validation.md"
+  }
+}

@@ -1,0 +1,4 @@
+-r requirements-dev.txt
+virl2-client==2.10.1
+websockets==15.0.1
+paramiko==5.0.0

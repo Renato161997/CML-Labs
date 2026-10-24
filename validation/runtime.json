@@ -1,0 +1,334 @@
+{
+  "schema_version": 1,
+  "method": "Isolated CML boot and verified-host-key SSH serial-console acceptance checks; at most three small test labs at a time; only session-owned test labs are changed",
+  "labs": [
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/017-single-area-ospfv2.yaml",
+      "sha256": "1e17377f70b3fb15ba57fd27012d5a64dc99faf90f92a92a6c4462fd1d1d8825",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-24T18:17:39Z",
+      "checks": [
+        {
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "One FULL neighbor (2.2.2.2).",
+          "passed": true,
+          "output": "show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n2.2.2.2           1   FULL/DR         00:00:38    198.18.0.2      GigabitEthernet0/0\nR1#"
+        },
+        {
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three successful replies using the learned OSPF route.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/5/9 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-24T18:23:04Z",
+      "plan_sha256": "65e8230efb55a264ee590671e33415cdd88e385774e0687ae0d3dd57d974a2e2"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/018-ospfv2-neighbor-troubleshooting.yaml",
+      "sha256": "b1b1ab33020b2913c93d9cdda58f34ad83fe88d90df9ed728d7b149288f91ce2",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-24T18:17:39Z",
+      "checks": [
+        {
+          "name": "initial fault: no FULL adjacency",
+          "passed": true
+        },
+        {
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "No FULL neighbor before repair; FULL after repair.",
+          "passed": true,
+          "output": "show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n2.2.2.2           1   FULL/BDR        00:00:37    198.18.0.2      GigabitEthernet0/0\nR1#"
+        },
+        {
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Loopback ping passes after repair.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/5/9 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-24T18:23:32Z",
+      "plan_sha256": "6349223387746be39fb4e7ebd65a2f78988f40b67379e0a0953ce2645b3148a0"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/024-nat-pat-edge.yaml",
+      "sha256": "ed4eec5b7b82bce02ef8835d5932317ba84a1600a242737c7052ae6fad87c842",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-24T18:24:28Z",
+      "checks": [
+        {
+          "node": "CLIENT",
+          "command": "ping 192.0.2.100 repeat 3",
+          "expectation": "Translated traffic reaches the ISP loopback.",
+          "passed": true,
+          "output": "ping 192.0.2.100 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.100, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/97/205 ms\nCLIENT#"
+        },
+        {
+          "node": "EDGE",
+          "command": "show ip nat statistics",
+          "expectation": "NAT hit counter increases after client traffic.",
+          "passed": true,
+          "output": "show ip nat statistics\nTotal active translations: 1 (0 static, 1 dynamic; 1 extended)\nPeak translations: 1, occurred 00:00:13 ago\nOutside interfaces:\n  GigabitEthernet0/1\nInside interfaces: \n  GigabitEthernet0/0\nHits: 6  Misses: 0\nCEF Translated packets: 6, CEF Punted packets: 0\nExpired translations: 0\nDynamic mappings:\n-- Inside Source\n[Id: 1] access-list NAT-SOURCES interface GigabitEthernet0/1 refcount 1\n\nTotal doors: 0\nAppl doors: 0\nNormal doors: 0\nQueued Packets: 0\nEDGE#"
+        }
+      ],
+      "images": {
+        "CLIENT": "iosv-159-3-m12",
+        "EDGE": "iosv-159-3-m12",
+        "ISP": "iosv-159-3-m12"
+      },
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-24T18:29:48Z",
+      "plan_sha256": "77cfcc1a0a597a3ec35aff71b1d1860360db940d16c083351dc1ee963870ffd4"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/032-standard-extended-acls.yaml",
+      "sha256": "a7b9d5c74fe4301e1fbbee9ba0f749ba62572c179917ad7f71763f9a51e655fc",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-24T18:24:28Z",
+      "checks": [
+        {
+          "node": "CLIENT",
+          "command": "ping 192.0.2.100 repeat 3",
+          "expectation": "The target echo request is denied.",
+          "passed": true,
+          "output": "ping 192.0.2.100 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.100, timeout is 2 seconds:\nU.U\nSuccess rate is 0 percent (0/3)\nCLIENT#"
+        },
+        {
+          "node": "CLIENT",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "Other routed traffic succeeds.",
+          "passed": true,
+          "output": "ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/5/6 ms\nCLIENT#"
+        },
+        {
+          "node": "EDGE",
+          "command": "show access-lists CLIENT-IN",
+          "expectation": "Deny counter records the blocked probes.",
+          "passed": true,
+          "output": "show access-lists CLIENT-IN\nExtended IP access list CLIENT-IN\n    10 deny icmp host 198.18.10.2 host 192.0.2.100 echo (3 matches)\n    20 permit ip any any (63 matches)\nEDGE#"
+        }
+      ],
+      "images": {
+        "CLIENT": "iosv-159-3-m12",
+        "EDGE": "iosv-159-3-m12",
+        "ISP": "iosv-159-3-m12"
+      },
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-24T18:30:00Z",
+      "plan_sha256": "c3660f426c71bb1afb9a9935aa31968f744fa47989b5095625c10b3dfbc59431"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/009-stp-root-selection.yaml",
+      "sha256": "0c3055cca824b0e3027119219510104bad3fe5a770c905bc99c43a18eb3fc727",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-24T18:24:28Z",
+      "checks": [
+        {
+          "node": "SW1",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "SW1 is the root bridge.",
+          "passed": true,
+          "output": "show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     5254.00c8.c9fd\n             This bridge is the root\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    4106   (priority 4096 sys-id-ext 10)\n             Address     5254.00c8.c9fd\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nGi0/0               Desg FWD 4         128.1    P2p \nGi0/1               Desg FWD 4         128.2    P2p \n\n\nSW1#"
+        },
+        {
+          "node": "SW2",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "SW2 has one alternate blocking link.",
+          "passed": true,
+          "output": "show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     5254.00c8.c9fd\n             Cost        4\n             Port        1 (GigabitEthernet0/0)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)\n             Address     5254.00a4.3af2\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nGi0/0               Root FWD 4         128.1    P2p \nGi0/1               Altn BLK 4         128.2    P2p \n\n\nSW2#"
+        }
+      ],
+      "images": {
+        "SW1": "iosvl2-2020",
+        "SW2": "iosvl2-2020"
+      },
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-24T18:30:29Z",
+      "plan_sha256": "8328e8880d7245ad49cc2e964befdf56ede80794093acacf3c07af9cc8f9ca8f"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/013-ibgp-ebgp-neighbors.yaml",
+      "sha256": "f6b517b14228526ecae14101b9b31446c7e597c02f5dcd5c846752f0be079b17",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-24T18:30:29Z",
+      "checks": [
+        {
+          "node": "R1",
+          "command": "show ip bgp summary",
+          "expectation": "Neighbor is established and one prefix is received.",
+          "passed": true,
+          "output": "show ip bgp summary\nBGP router identifier 1.1.1.1, local AS number 65001\nBGP table version is 3, main routing table version 3\n2 network entries using 288 bytes of memory\n2 path entries using 168 bytes of memory\n2/2 BGP path/bestpath attribute entries using 320 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 800 total bytes of memory\nBGP activity 2/0 prefixes, 2/0 paths, scan interval 60 secs\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.2      4        65002       5       5        2    0    0 00:00:59        1\nR1#"
+        },
+        {
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Learned loopback is reachable in both directions.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/4/7 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-24T18:35:49Z",
+      "plan_sha256": "238b37cee9ae7a3838e629ba6a723efe63237825aea0d78e5ed94279ba617ae6"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/014-bgp-path-selection-local-pref-med.yaml",
+      "sha256": "fe8c9668318e034c621666aa767fcf3400282b66f83e3cf83fd8d7f33b2f8b0f",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-24T18:30:29Z",
+      "checks": [
+        {
+          "node": "R1",
+          "command": "show ip bgp 203.0.113.0",
+          "expectation": "The path through 198.18.0.6 has local preference 200 and is best.",
+          "passed": true,
+          "output": "show ip bgp 203.0.113.0\nBGP routing table entry for 203.0.113.0/24, version 2\nPaths: (2 available, best #1, table default)\n  Advertised to update-groups:\n     1         \n  Refresh Epoch 1\n  65003\n    198.18.0.6 from 198.18.0.6 (3.3.3.3)\n      Origin IGP, metric 0, localpref 200, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n  Refresh Epoch 1\n  65002\n    198.18.0.2 from 198.18.0.2 (2.2.2.2)\n      Origin IGP, metric 0, localpref 100, valid, external\n      rx pathid: 0, tx pathid: 0\nR1#"
+        },
+        {
+          "node": "R1",
+          "command": "show ip route 203.0.113.0",
+          "expectation": "The forwarding route uses R3.",
+          "passed": true,
+          "output": "show ip route 203.0.113.0\nRouting entry for 203.0.113.0/24\n  Known via \"bgp 65001\", distance 20, metric 0\n  Tag 65003, type external\n  Last update from 198.18.0.6 00:00:03 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.6, from 198.18.0.6, 00:00:03 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65003\n      MPLS label: none\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12",
+        "R3": "iosv-159-3-m12"
+      },
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-24T18:36:09Z",
+      "plan_sha256": "6018d0c91da9ba253fd8962e731db50093282db9fed84e5ffb0560a1ad7c50a7"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/webhooks/035-webhook-receiver-config-validation.yaml",
+      "sha256": "1d5a9a5406f3954dfb5c1284327564efb4d676d8c3cf01d4dafa07344e479402",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-24T18:36:09Z",
+      "checks": [
+        {
+          "node": "DEVBOX",
+          "command": "systemctl is-active cml-webhook.service",
+          "expectation": "The localhost-only receiver is active.",
+          "passed": true,
+          "output": "systemctl is-active cml-webhook.service\nactive\nroot@DEVBOX:~# "
+        },
+        {
+          "node": "DEVBOX",
+          "command": "python3 /opt/cml-webhook/probe.py",
+          "expectation": "All six real HTTP checks pass, with zero device changes.",
+          "passed": true,
+          "output": "python3 /opt/cml-webhook/probe.py\n{\"passed\": 6, \"checks\": [\"unauthorized request rejected\", \"valid intent accepted\", \"duplicate request is idempotent\", \"conflicting event ID rejected\", \"invalid interface rejected\", \"string boolean rejected\"], \"device_changes\": 0}\nroot@DEVBOX:~# "
+        }
+      ],
+      "images": {
+        "DEVBOX": "ubuntu-24-04-20260307"
+      },
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-24T18:37:45Z",
+      "plan_sha256": "7557a1c82967807231f0eeb7511f48f41065b9c38e1f7158a7c97cf7553672c6"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/007-vlan-router-on-a-stick.yaml",
+      "sha256": "dd2892a37bc7ef47429dcaa3aaa84c496d01da463d9bebed5266721a5d8abf03",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-24T18:37:45Z",
+      "checks": [
+        {
+          "node": "SW1",
+          "command": "show vlan brief",
+          "expectation": "Both configured VLANs exist and are active.",
+          "passed": true,
+          "output": "show vlan brief\n\nVLAN Name                             Status    Ports\n---- -------------------------------- --------- -------------------------------\n1    default                          active    Gi0/1, Gi0/2, Gi0/3\n10   USERS                            active    \n20   SERVICES                         active    \n1002 fddi-default                     act/unsup \n1003 token-ring-default               act/unsup \n1004 fddinet-default                  act/unsup \n1005 trnet-default                    act/unsup \nSW1#"
+        },
+        {
+          "node": "SW1",
+          "command": "show interfaces trunk",
+          "expectation": "Gi0/0 is trunking with VLANs 10 and 20.",
+          "passed": true,
+          "output": "show interfaces trunk\n\nPort        Mode             Encapsulation  Status        Native vlan\nGi0/0       on               802.1q         trunking      1\n\nPort        Vlans allowed on trunk\nGi0/0       10,20\n\nPort        Vlans allowed and active in management domain\nGi0/0       10,20\n\nPort        Vlans in spanning tree forwarding state and not pruned\nGi0/0       10,20\nSW1#"
+        },
+        {
+          "node": "SW1",
+          "command": "ping 192.0.2.65 source Vlan20 repeat 3",
+          "expectation": "VLAN 20 reaches its router subinterface.",
+          "passed": true,
+          "output": "ping 192.0.2.65 source Vlan20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.65, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.66 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/5/8 ms\nSW1#"
+        },
+        {
+          "node": "SW1",
+          "command": "ping 192.0.2.1 source Vlan10 repeat 3",
+          "expectation": "VLAN 10 reaches its router subinterface.",
+          "passed": true,
+          "output": "ping 192.0.2.1 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/5/10 ms\nSW1#"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "SW1": "iosvl2-2020"
+      },
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-24T18:43:31Z",
+      "plan_sha256": "dc93b2e75c83eb3ba0ef017aaa03c4a2700a46f6dc395012a8714a5012bf7aa1"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml",
+      "sha256": "c29646bb75a5ccc05a29006979929ac6b862e6d41e79cd74eae62cdbecaf3825",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-24T18:45:12Z",
+      "checks": [
+        {
+          "node": "DEVBOX",
+          "command": "systemctl is-active cml-webhook.service",
+          "expectation": "The localhost-only receiver is active.",
+          "passed": true,
+          "output": "systemctl is-active cml-webhook.service\nactive\nroot@DEVBOX:~# "
+        },
+        {
+          "node": "DEVBOX",
+          "command": "python3 /opt/cml-webhook/probe.py",
+          "expectation": "All six real HTTP checks pass, with zero device changes.",
+          "passed": true,
+          "output": "python3 /opt/cml-webhook/probe.py\n{\"passed\": 6, \"checks\": [\"unauthorized request rejected\", \"valid intent accepted\", \"duplicate request is idempotent\", \"conflicting event ID rejected\", \"invalid interface rejected\", \"string boolean rejected\"], \"device_changes\": 0}\nroot@DEVBOX:~# "
+        }
+      ],
+      "plan_sha256": "7557a1c82967807231f0eeb7511f48f41065b9c38e1f7158a7c97cf7553672c6",
+      "images": {
+        "DEVBOX": "ubuntu-24-04-20260307"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-24T18:46:46Z"
+    }
+  ]
+}

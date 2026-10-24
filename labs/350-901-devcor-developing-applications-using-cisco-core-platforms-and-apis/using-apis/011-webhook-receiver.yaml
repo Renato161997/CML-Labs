@@ -1,67 +1,47 @@
 lab:
   title: Webhook Receiver
-  description: 350-901 DEVCOR - Developing Applications Using Cisco Core Platforms and APIs importable CML topology.
-  notes: '350-901 DEVCOR blueprint lab: Webhook Receiver
-
-
-    Topics:
-
-    - webhooks
-
-    - event handling
-
-
-    Tasks:
-
-    1. Receive event
-
-    2. Validate source
-
-    3. Trigger workflow
-
-
-    Useful checks:
-
-    - show ip interface brief
-
-    - show running-config
-
-    - show ip route
-
-    - show ip protocols
-
-    - ping and traceroute between endpoints'
-  version: 0.2.0
+  description: HTTP authentication, event delivery and bounded idempotency. Offline teaching service,
+    no changes to real devices.
+  notes: See docs/workbooks/011-webhook-receiver.md. Wait for CML-LABS-READY and a root console. Receiver
+    binds to localhost only. A fresh ephemeral secret is generated inside this disposable VM; do not publish
+    it. This lab uses console autologin in an isolated guest and must not be bridged externally. It is
+    a legacy DEVCOR exercise, not a claim of full AUTOCOR coverage.
+  version: 0.3.1
 nodes:
 - id: n0
-  label: R1
-  node_definition: iosv
-  x: -180
-  y: 0
-  configuration: "hostname R1\nno ip domain-lookup\nbanner motd ^C DEVCORE-AUTOCOR Webhook Receiver ^C\ninterface GigabitEthernet0/0\n\
-    \ description DEVCORE-AUTOCOR Webhook Receiver\n ip address 10.255.0.1 255.255.255.0\n no shutdown\ninterface Loopback0\n\
-    \ description DEVCORE-AUTOCOR Webhook Receiver\n ip address 10.255.255.1 255.255.255.255\n no shutdown\nend"
-- id: n1
   label: DEVBOX
-  node_definition: desktop
-  x: 180
-  y: 0
-- id: n2
-  label: API-TARGET
-  node_definition: iosv
+  node_definition: ubuntu
+  configuration:
+  - name: user-data
+    content: "#cloud-config\nhostname: DEVBOX\nmanage_etc_hosts: true\nwrite_files:\n- path: /opt/cml-webhook/receiver.py\n\
+      \  permissions: '0644'\n  encoding: b64\n  content: IiIiT2ZmbGluZSB3ZWJob29rL2ludGVudCB0ZWFjaGluZyBzZXJ2aWNlLiBWYWxpZGF0ZXMgcmVxdWVzdHM7IG5ldmVyIGNoYW5nZXMgZGV2aWNlcy4iIiIKCmltcG9ydCBhcmdwYXJzZQppbXBvcnQgaG1hYwppbXBvcnQganNvbgppbXBvcnQgb3MKaW1wb3J0IHRocmVhZGluZwpmcm9tIGNvbGxlY3Rpb25zIGltcG9ydCBPcmRlcmVkRGljdApmcm9tIGh0dHAuc2VydmVyIGltcG9ydCBCYXNlSFRUUFJlcXVlc3RIYW5kbGVyLCBUaHJlYWRpbmdIVFRQU2VydmVyCgpNQVhfQk9EWSA9IDgxOTIKSU5URVJGQUNFUyA9IHsiR2lnYWJpdEV0aGVybmV0MC8wIiwgIkdpZ2FiaXRFdGhlcm5ldDAvMSIsICJMb29wYmFjazAifQoKCmRlZiB2YWxpZGF0ZV9pbnRlbnQodmFsdWUpOgogICAgaWYgbm90IGlzaW5zdGFuY2UodmFsdWUsIGRpY3QpIG9yIHNldCh2YWx1ZSkgIT0geyJldmVudF9pZCIsICJkZXZpY2UiLCAiaW50ZXJmYWNlIiwgImVuYWJsZWQifToKICAgICAgICByZXR1cm4gRmFsc2UKICAgIHJldHVybiAoCiAgICAgICAgaXNpbnN0YW5jZSh2YWx1ZVsiZXZlbnRfaWQiXSwgc3RyKQogICAgICAgIGFuZCAxIDw9IGxlbih2YWx1ZVsiZXZlbnRfaWQiXSkgPD0gNjQKICAgICAgICBhbmQgdmFsdWVbImRldmljZSJdIGluICgiUjEiLCAiUjIiKQogICAgICAgIGFuZCBpc2luc3RhbmNlKHZhbHVlWyJkZXZpY2UiXSwgc3RyKQogICAgICAgIGFuZCBpc2luc3RhbmNlKHZhbHVlWyJpbnRlcmZhY2UiXSwgc3RyKQogICAgICAgIGFuZCB2YWx1ZVsiaW50ZXJmYWNlIl0gaW4gSU5URVJGQUNFUwogICAgICAgIGFuZCB0eXBlKHZhbHVlWyJlbmFibGVkIl0pIGlzIGJvb2wKICAgICkKCgpkZWYgbWFrZV9zZXJ2ZXIoYWRkcmVzcywgc2VjcmV0KToKICAgIGlmIG5vdCBzZWNyZXQ6CiAgICAgICAgcmFpc2UgVmFsdWVFcnJvcigiU2V0IExBQl9XRUJIT09LX1NFQ1JFVDsgdGhlcmUgaXMgbm8gZGVmYXVsdCBjcmVkZW50aWFsIikKICAgIHNlZW4gPSBPcmRlcmVkRGljdCgpCiAgICBsb2NrID0gdGhyZWFkaW5nLkxvY2soKQoKICAgIGNsYXNzIEhhbmRsZXIoQmFzZUhUVFBSZXF1ZXN0SGFuZGxlcik6CiAgICAgICAgZGVmIGxvZ19tZXNzYWdlKHNlbGYsICpfYXJncyk6CiAgICAgICAgICAgIHBhc3MgICMgRG8gbm90IHByaW50IGhlYWRlcnMsIHRva2VucyBvciBwYXlsb2Fkcy4KCiAgICAgICAgZGVmIHJlcGx5KHNlbGYsIHN0YXR1cywgZGF0YSk6CiAgICAgICAgICAgIHJhdyA9IGpzb24uZHVtcHMoZGF0YSkuZW5jb2RlKCkKICAgICAgICAgICAgc2VsZi5zZW5kX3Jlc3BvbnNlKHN0YXR1cykKICAgICAgICAgICAgc2VsZi5zZW5kX2hlYWRlcigiQ29udGVudC1UeXBlIiwgImFwcGxpY2F0aW9uL2pzb24iKQogICAgICAgICAgICBzZWxmLnNlbmRfaGVhZGVyKCJDb250ZW50LUxlbmd0aCIsIHN0cihsZW4ocmF3KSkpCiAgICAgICAgICAgIHNlbGYuZW5kX2hlYWRlcnMoKQogICAgICAgICAgICBzZWxmLndmaWxlLndyaXRlKHJhdykKCiAgICAgICAgZGVmIGRvX0dFVChzZWxmKToKICAgICAgICAgICAgc2VsZi5yZXBseSgKICAgICAgICAgICAgICAgIDIwMCBpZiBzZWxmLnBhdGggPT0gIi9oZWFsdGgiIGVsc2UgNDA0LAogICAgICAgICAgICAgICAgeyJzdGF0dXMiOiAib2sifSBpZiBzZWxmLnBhdGggPT0gIi9oZWFsdGgiIGVsc2UgeyJlcnJvciI6ICJub3QtZm91bmQifSwKICAgICAgICAgICAgKQoKICAgICAgICBkZWYgZG9fUE9TVChzZWxmKToKICAgICAgICAgICAgaWYgc2VsZi5wYXRoICE9ICIvZXZlbnRzIjoKICAgICAgICAgICAgICAgIHNlbGYucmVwbHkoNDA0LCB7ImVycm9yIjogIm5vdC1mb3VuZCJ9KQogICAgICAgICAgICAgICAgcmV0dXJuCiAgICAgICAgICAgIGlmIG5vdCBobWFjLmNvbXBhcmVfZGlnZXN0KAogICAgICAgICAgICAgICAgc2VsZi5oZWFkZXJzLmdldCgiQXV0aG9yaXphdGlvbiIsICIiKS5lbmNvZGUoInV0Zi04IiksCiAgICAgICAgICAgICAgICAoIkJlYXJlciAiICsgc2VjcmV0KS5lbmNvZGUoInV0Zi04IiksCiAgICAgICAgICAgICk6CiAgICAgICAgICAgICAgICBzZWxmLnJlcGx5KDQwMSwgeyJlcnJvciI6ICJ1bmF1dGhvcml6ZWQifSkKICAgICAgICAgICAgICAgIHJldHVybgogICAgICAgICAgICBpZiBzZWxmLmhlYWRlcnMuZ2V0X2NvbnRlbnRfdHlwZSgpICE9ICJhcHBsaWNhdGlvbi9qc29uIjoKICAgICAgICAgICAgICAgIHNlbGYucmVwbHkoNDE1LCB7ImVycm9yIjogImFwcGxpY2F0aW9uLWpzb24tcmVxdWlyZWQifSkKICAgICAgICAgICAgICAgIHJldHVybgogICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICBsZW5ndGggPSBpbnQoc2VsZi5oZWFkZXJzLmdldCgiQ29udGVudC1MZW5ndGgiLCAiMCIpKQogICAgICAgICAgICBleGNlcHQgVmFsdWVFcnJvcjoKICAgICAgICAgICAgICAgIHNlbGYucmVwbHkoNDAwLCB7ImVycm9yIjogImludmFsaWQtbGVuZ3RoIn0pCiAgICAgICAgICAgICAgICByZXR1cm4KICAgICAgICAgICAgaWYgbm90IDAgPCBsZW5ndGggPD0gTUFYX0JPRFkgb3Igc2VsZi5oZWFkZXJzLmdldCgiVHJhbnNmZXItRW5jb2RpbmciKToKICAgICAgICAgICAgICAgIHNlbGYucmVwbHkoNDEzLCB7ImVycm9yIjogImludmFsaWQtc2l6ZSJ9KQogICAgICAgICAgICAgICAgcmV0dXJuCiAgICAgICAgICAgIHNlbGYuY29ubmVjdGlvbi5zZXR0aW1lb3V0KDMpCiAgICAgICAgICAgIHRyeToKICAgICAgICAgICAgICAgIHJhdyA9IHNlbGYucmZpbGUucmVhZChsZW5ndGgpCiAgICAgICAgICAgICAgICB2YWx1ZSA9IGpzb24ubG9hZHMocmF3KQogICAgICAgICAgICBleGNlcHQgKFZhbHVlRXJyb3IsIFVuaWNvZGVFcnJvciwgVGltZW91dEVycm9yLCBPU0Vycm9yKToKICAgICAgICAgICAgICAgIHNlbGYucmVwbHkoNDAwLCB7ImVycm9yIjogImludmFsaWQtanNvbiJ9KQogICAgICAgICAgICAgICAgcmV0dXJuCiAgICAgICAgICAgIGlmIG5vdCB2YWxpZGF0ZV9pbnRlbnQodmFsdWUpOgogICAgICAgICAgICAgICAgc2VsZi5yZXBseSg0MjIsIHsiZXJyb3IiOiAiaW52YWxpZC1pbnRlbnQifSkKICAgICAgICAgICAgICAgIHJldHVybgogICAgICAgICAgICB3aXRoIGxvY2s6CiAgICAgICAgICAgICAgICBrZXkgPSB2YWx1ZVsiZXZlbnRfaWQiXQogICAgICAgICAgICAgICAgaWYga2V5IGluIHNlZW46CiAgICAgICAgICAgICAgICAgICAgaWYgc2VlbltrZXldICE9IHZhbHVlOgogICAgICAgICAgICAgICAgICAgICAgICBzZWxmLnJlcGx5KDQwOSwgeyJlcnJvciI6ICJldmVudC1pZC1jb25mbGljdCJ9KQogICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4KICAgICAgICAgICAgICAgICAgICBzZWxmLnJlcGx5KDIwMCwgeyJkZWNpc2lvbiI6ICJhbHJlYWR5LWFjY2VwdGVkIiwgImFwcGxpZWQiOiBGYWxzZX0pCiAgICAgICAgICAgICAgICAgICAgcmV0dXJuCiAgICAgICAgICAgICAgICBzZWVuW2tleV0gPSB2YWx1ZQogICAgICAgICAgICAgICAgaWYgbGVuKHNlZW4pID4gMTAwMDoKICAgICAgICAgICAgICAgICAgICBzZWVuLnBvcGl0ZW0obGFzdD1GYWxzZSkKICAgICAgICAgICAgc2VsZi5yZXBseSgyMDIsIHsiZGVjaXNpb24iOiAiYWNjZXB0ZWQiLCAiYXBwbGllZCI6IEZhbHNlfSkKCiAgICBzZXJ2ZXIgPSBUaHJlYWRpbmdIVFRQU2VydmVyKGFkZHJlc3MsIEhhbmRsZXIpCiAgICBzZXJ2ZXIuZGFlbW9uX3RocmVhZHMgPSBUcnVlCiAgICByZXR1cm4gc2VydmVyCgoKZGVmIG1haW4oKToKICAgIHBhcnNlciA9IGFyZ3BhcnNlLkFyZ3VtZW50UGFyc2VyKGRlc2NyaXB0aW9uPV9fZG9jX18pCiAgICBwYXJzZXIuYWRkX2FyZ3VtZW50KCItLWhvc3QiLCBkZWZhdWx0PSIxMjcuMC4wLjEiKQogICAgcGFyc2VyLmFkZF9hcmd1bWVudCgiLS1wb3J0IiwgZGVmYXVsdD04MDgwLCB0eXBlPWludCkKICAgIGFyZ3MgPSBwYXJzZXIucGFyc2VfYXJncygpCiAgICBzZXJ2ZXIgPSBtYWtlX3NlcnZlcigoYXJncy5ob3N0LCBhcmdzLnBvcnQpLCBvcy5lbnZpcm9uLmdldCgiTEFCX1dFQkhPT0tfU0VDUkVUIikpCiAgICB0cnk6CiAgICAgICAgc2VydmVyLnNlcnZlX2ZvcmV2ZXIoKQogICAgZXhjZXB0IEtleWJvYXJkSW50ZXJydXB0OgogICAgICAgIHBhc3MKICAgIGZpbmFsbHk6CiAgICAgICAgc2VydmVyLnNlcnZlcl9jbG9zZSgpCgoKaWYgX19uYW1lX18gPT0gIl9fbWFpbl9fIjoKICAgIG1haW4oKQo=\n\
+      - path: /opt/cml-webhook/probe.py\n  permissions: '0644'\n  encoding: b64\n  content: IiIiUnVuIHJlYWwgSFRUUCBhY2NlcHRhbmNlIGNoZWNrcyBhZ2FpbnN0IHRoZSBpc29sYXRlZCByZWNlaXZlci4iIiIKCmltcG9ydCBqc29uCmltcG9ydCBvcwppbXBvcnQgc2VjcmV0cwppbXBvcnQgdGltZQpmcm9tIHVybGxpYi5lcnJvciBpbXBvcnQgSFRUUEVycm9yLCBVUkxFcnJvcgpmcm9tIHVybGxpYi5yZXF1ZXN0IGltcG9ydCBSZXF1ZXN0LCB1cmxvcGVuCgoKZGVmIHJ1bih1cmwsIHRva2VuKToKICAgIGRlYWRsaW5lID0gdGltZS5tb25vdG9uaWMoKSArIDUKICAgIHdoaWxlIFRydWU6CiAgICAgICAgdHJ5OgogICAgICAgICAgICB3aXRoIHVybG9wZW4odXJsICsgIi9oZWFsdGgiLCB0aW1lb3V0PTAuNSkgYXMgcmVzcG9uc2U6CiAgICAgICAgICAgICAgICBhc3NlcnQganNvbi5sb2FkKHJlc3BvbnNlKSA9PSB7InN0YXR1cyI6ICJvayJ9LCAiVW5leHBlY3RlZCBoZWFsdGggcmVzcG9uc2UiCiAgICAgICAgICAgIGJyZWFrCiAgICAgICAgZXhjZXB0IChVUkxFcnJvciwgVGltZW91dEVycm9yKToKICAgICAgICAgICAgaWYgdGltZS5tb25vdG9uaWMoKSA+PSBkZWFkbGluZToKICAgICAgICAgICAgICAgIHJhaXNlIFJ1bnRpbWVFcnJvcigiUmVjZWl2ZXIgZGlkIG5vdCBiZWNvbWUgcmVhZHkgd2l0aGluIGZpdmUgc2Vjb25kcyIpIGZyb20gTm9uZQogICAgICAgICAgICB0aW1lLnNsZWVwKDAuMSkKICAgIGV2ZW50ID0gewogICAgICAgICJldmVudF9pZCI6IHNlY3JldHMudG9rZW5faGV4KDEyKSwKICAgICAgICAiZGV2aWNlIjogIlIxIiwKICAgICAgICAiaW50ZXJmYWNlIjogIkxvb3BiYWNrMCIsCiAgICAgICAgImVuYWJsZWQiOiBUcnVlLAogICAgfQogICAgY2hlY2tzID0gW10KCiAgICBkZWYgcG9zdCh2YWx1ZSwgZXhwZWN0ZWQsIGxhYmVsLCBhdXRoPXRva2VuKToKICAgICAgICByZXF1ZXN0ID0gUmVxdWVzdCgKICAgICAgICAgICAgdXJsICsgIi9ldmVudHMiLAogICAgICAgICAgICBqc29uLmR1bXBzKHZhbHVlKS5lbmNvZGUoKSwKICAgICAgICAgICAgaGVhZGVycz17IkNvbnRlbnQtVHlwZSI6ICJhcHBsaWNhdGlvbi9qc29uIiwgIkF1dGhvcml6YXRpb24iOiAiQmVhcmVyICIgKyBhdXRofSwKICAgICAgICApCiAgICAgICAgdHJ5OgogICAgICAgICAgICByZXNwb25zZSA9IHVybG9wZW4ocmVxdWVzdCwgdGltZW91dD01KQogICAgICAgIGV4Y2VwdCBIVFRQRXJyb3IgYXMgZXhjOgogICAgICAgICAgICByZXNwb25zZSA9IGV4YwogICAgICAgIHdpdGggcmVzcG9uc2U6CiAgICAgICAgICAgIHBheWxvYWQgPSBqc29uLmxvYWRzKHJlc3BvbnNlLnJlYWQoKSkKICAgICAgICAgICAgYXNzZXJ0IHJlc3BvbnNlLmNvZGUgPT0gZXhwZWN0ZWQsIChsYWJlbCwgcmVzcG9uc2UuY29kZSkKICAgICAgICAgICAgYXNzZXJ0IG5vdCBwYXlsb2FkLmdldCgiYXBwbGllZCIsIEZhbHNlKSwgIlRoaXMgZXhhbXBsZSBtdXN0IG5ldmVyIGNsYWltIGRldmljZSBjaGFuZ2VzIgogICAgICAgIGNoZWNrcy5hcHBlbmQobGFiZWwpCgogICAgcG9zdChldmVudCwgNDAxLCAidW5hdXRob3JpemVkIHJlcXVlc3QgcmVqZWN0ZWQiLCBhdXRoPSJ3cm9uZy10b2tlbiIpCiAgICBwb3N0KGV2ZW50LCAyMDIsICJ2YWxpZCBpbnRlbnQgYWNjZXB0ZWQiKQogICAgcG9zdChldmVudCwgMjAwLCAiZHVwbGljYXRlIHJlcXVlc3QgaXMgaWRlbXBvdGVudCIpCiAgICBwb3N0KGRpY3QoZXZlbnQsIGVuYWJsZWQ9RmFsc2UpLCA0MDksICJjb25mbGljdGluZyBldmVudCBJRCByZWplY3RlZCIpCiAgICBwb3N0KAogICAgICAgIGRpY3QoZXZlbnQsIGV2ZW50X2lkPXNlY3JldHMudG9rZW5faGV4KDEyKSwgaW50ZXJmYWNlPSJub3QtYS1yZWFsLWludGVyZmFjZSIpLAogICAgICAgIDQyMiwKICAgICAgICAiaW52YWxpZCBpbnRlcmZhY2UgcmVqZWN0ZWQiLAogICAgKQogICAgcG9zdCgKICAgICAgICBkaWN0KGV2ZW50LCBldmVudF9pZD1zZWNyZXRzLnRva2VuX2hleCgxMiksIGVuYWJsZWQ9InRydWUiKSwgNDIyLCAic3RyaW5nIGJvb2xlYW4gcmVqZWN0ZWQiCiAgICApCiAgICBwcmludChqc29uLmR1bXBzKHsicGFzc2VkIjogbGVuKGNoZWNrcyksICJjaGVja3MiOiBjaGVja3MsICJkZXZpY2VfY2hhbmdlcyI6IDB9KSkKICAgIHJldHVybiBjaGVja3MKCgppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOgogICAgcnVuKAogICAgICAgIG9zLmVudmlyb24uZ2V0KCJMQUJfV0VCSE9PS19VUkwiLCAiaHR0cDovLzEyNy4wLjAuMTo4MDgwIiksIG9zLmVudmlyb25bIkxBQl9XRUJIT09LX1NFQ1JFVCJdCiAgICApCg==\n\
+      - path: /etc/systemd/system/cml-webhook.service\n  permissions: '0644'\n  content: '[Unit]\n\n \
+      \   Description=Isolated CML webhook exercise\n\n    After=network.target\n\n    [Service]\n\n \
+      \   EnvironmentFile=/run/cml-webhook.env\n\n    ExecStart=/usr/bin/python3 /opt/cml-webhook/receiver.py\n\
+      \n    User=root\n\n    NoNewPrivileges=true\n\n    ProtectSystem=strict\n\n    ProtectHome=true\n\
+      \n    PrivateTmp=true\n\n    [Install]\n\n    WantedBy=multi-user.target\n\n    '\n- path: /etc/systemd/system/serial-getty@ttyS0.service.d/autologin.conf\n\
+      \  permissions: '0644'\n  content: '[Service]\n\n    ExecStart=\n\n    ExecStart=-/sbin/agetty --autologin\
+      \ root --noclear %I $TERM\n\n    '\n- path: /root/.bash_profile\n  permissions: '0600'\n  content:\
+      \ 'set -a\n\n    . /run/cml-webhook.env\n\n    set +a\n\n    '\nruncmd:\n- - sh\n  - -c\n  - umask\
+      \ 077; printf 'LAB_WEBHOOK_SECRET=%s\\n' \"$(python3 -c 'import secrets; print(secrets.token_hex(24))')\"\
+      \n    > /run/cml-webhook.env\n- - systemctl\n  - daemon-reload\n- - systemctl\n  - enable\n  - --now\n\
+      \  - cml-webhook.service\n- - sh\n  - -c\n  - set -a; . /run/cml-webhook.env; set +a; python3 /opt/cml-webhook/probe.py\
+      \ > /var/log/cml-webhook-acceptance.json\n- - sh\n  - -c\n  - echo CML-LABS-READY > /dev/ttyS0\n\
+      - - systemctl\n  - restart\n  - serial-getty@ttyS0.service\n"
+  - name: network-config
+    content: "#network-config\nnetwork:\n  version: 2\n  ethernets:\n    ens2:\n      dhcp4: false\n \
+      \     optional: true\n      addresses: [198.18.250.1/24]\n"
+  cpu_limit: 100
+  priority: 100
   x: 0
-  y: 160
-  configuration: "hostname API-TARGET\nno ip domain-lookup\nbanner motd ^C DEVCORE-AUTOCOR Webhook Receiver ^C\ninterface\
-    \ GigabitEthernet0/0\n description DEVCORE-AUTOCOR Webhook Receiver\n ip address 10.255.0.2 255.255.255.0\n no shutdown\n\
-    end"
-links:
-- id: l0
-  n1: n0
-  i1: 0
-  n2: n1
-  i2: 0
-- id: l1
-  n1: n0
-  i1: 1
-  n2: n2
-  i2: 0
+  y: 0
+  tags: []
+  interfaces:
+  - id: i0
+    label: ens2
+    type: physical
+    slot: 0
+links: []
+annotations: []
+smart_annotations: []

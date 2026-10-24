@@ -1,0 +1,232 @@
+{
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/017-single-area-ospfv2.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip ospf neighbor",
+        "pattern": "FULL",
+        "expectation": "One FULL neighbor (2.2.2.2).",
+        "negative": false
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three successful replies using the learned OSPF route.",
+        "negative": false
+      }
+    ],
+    "repair": null,
+    "initial": null
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/018-ospfv2-neighbor-troubleshooting.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip ospf neighbor",
+        "pattern": "FULL",
+        "expectation": "No FULL neighbor before repair; FULL after repair.",
+        "negative": false
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Loopback ping passes after repair.",
+        "negative": false
+      }
+    ],
+    "repair": {
+      "node": "R2",
+      "commands": [
+        "configure terminal",
+        "router ospf 10",
+        "no network 198.18.0.0 0.0.0.3 area 1",
+        "no network 192.0.2.2 0.0.0.0 area 1",
+        "network 198.18.0.0 0.0.0.3 area 0",
+        "network 192.0.2.2 0.0.0.0 area 0",
+        "end"
+      ]
+    },
+    "initial": "R1 uses area 0 and R2 uses area 1 on the same link."
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/007-vlan-router-on-a-stick.yaml": {
+    "checks": [
+      {
+        "node": "SW1",
+        "command": "show vlan brief",
+        "pattern": "10\\s+USERS\\s+active[\\s\\S]*20\\s+SERVICES\\s+active",
+        "expectation": "Both configured VLANs exist and are active.",
+        "negative": false
+      },
+      {
+        "node": "SW1",
+        "command": "show interfaces trunk",
+        "pattern": "10,20",
+        "expectation": "Gi0/0 is trunking with VLANs 10 and 20.",
+        "negative": false
+      },
+      {
+        "node": "SW1",
+        "command": "ping 192.0.2.65 source Vlan20 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "VLAN 20 reaches its router subinterface.",
+        "negative": false
+      },
+      {
+        "node": "SW1",
+        "command": "ping 192.0.2.1 source Vlan10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "VLAN 10 reaches its router subinterface.",
+        "negative": false
+      }
+    ],
+    "repair": null,
+    "initial": null
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/009-stp-root-selection.yaml": {
+    "checks": [
+      {
+        "node": "SW1",
+        "command": "show spanning-tree vlan 10",
+        "pattern": "This bridge is the root",
+        "expectation": "SW1 is the root bridge.",
+        "negative": false
+      },
+      {
+        "node": "SW2",
+        "command": "show spanning-tree vlan 10",
+        "pattern": "Altn\\s+BLK",
+        "expectation": "SW2 has one alternate blocking link.",
+        "negative": false
+      }
+    ],
+    "repair": null,
+    "initial": null
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/024-nat-pat-edge.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "ping 192.0.2.100 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Translated traffic reaches the ISP loopback.",
+        "negative": false
+      },
+      {
+        "node": "EDGE",
+        "command": "show ip nat statistics",
+        "pattern": "3 hits|Hits: [1-9]",
+        "expectation": "NAT hit counter increases after client traffic.",
+        "negative": false
+      }
+    ],
+    "repair": null,
+    "initial": null
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/032-standard-extended-acls.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "ping 192.0.2.100 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "The target echo request is denied.",
+        "negative": false
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Other routed traffic succeeds.",
+        "negative": false
+      },
+      {
+        "node": "EDGE",
+        "command": "show access-lists CLIENT-IN",
+        "pattern": "deny icmp.*\\([1-9][0-9]* match",
+        "expectation": "Deny counter records the blocked probes.",
+        "negative": false
+      }
+    ],
+    "repair": null,
+    "initial": null
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/013-ibgp-ebgp-neighbors.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip bgp summary",
+        "pattern": "198\\.18\\.0\\.2\\s+4\\s+65002.*\\s1\\s*$",
+        "expectation": "Neighbor is established and one prefix is received.",
+        "negative": false
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Learned loopback is reachable in both directions.",
+        "negative": false
+      }
+    ],
+    "repair": null,
+    "initial": null
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/014-bgp-path-selection-local-pref-med.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip bgp 203.0.113.0",
+        "pattern": "localpref 200, valid, external, best",
+        "expectation": "The path through 198.18.0.6 has local preference 200 and is best.",
+        "negative": false
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 203.0.113.0",
+        "pattern": "198\\.18\\.0\\.6",
+        "expectation": "The forwarding route uses R3.",
+        "negative": false
+      }
+    ],
+    "repair": null,
+    "initial": null
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml": {
+    "checks": [
+      {
+        "node": "DEVBOX",
+        "command": "systemctl is-active cml-webhook.service",
+        "pattern": "(?m)^active$",
+        "expectation": "The localhost-only receiver is active."
+      },
+      {
+        "node": "DEVBOX",
+        "command": "python3 /opt/cml-webhook/probe.py",
+        "pattern": "\"passed\": 6",
+        "expectation": "All six real HTTP checks pass, with zero device changes."
+      }
+    ],
+    "initial": null,
+    "repair": null,
+    "ready_marker": "CML-LABS-READY"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/webhooks/035-webhook-receiver-config-validation.yaml": {
+    "checks": [
+      {
+        "node": "DEVBOX",
+        "command": "systemctl is-active cml-webhook.service",
+        "pattern": "(?m)^active$",
+        "expectation": "The localhost-only receiver is active."
+      },
+      {
+        "node": "DEVBOX",
+        "command": "python3 /opt/cml-webhook/probe.py",
+        "pattern": "\"passed\": 6",
+        "expectation": "All six real HTTP checks pass, with zero device changes."
+      }
+    ],
+    "initial": null,
+    "repair": null,
+    "ready_marker": "CML-LABS-READY"
+  }
+}

@@ -12,4 +12,9 @@ Thumbs.db
 *.license
 *.lic
 secrets/
+__pycache__/
+*.pyc
+.venv/
+.env
+private-validation/
 

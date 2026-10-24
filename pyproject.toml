@@ -1,0 +1,6 @@
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint.per-file-ignores]
+"tests/test_quality.py" = ["E402"] # Local script path is set before importing the modules under test.
