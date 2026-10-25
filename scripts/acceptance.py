@@ -19,6 +19,9 @@ def validate_plan(plan, labels):
         if not name or name in phases or step.get("node") not in labels:
             errors.append("invalid transition name or node")
         phases.add(name)
+        timeout = step.get("command_timeout", 5)
+        if not isinstance(timeout, (int, float)) or not 1 <= timeout <= 60:
+            errors.append("transition command timeout must be between 1 and 60 seconds")
         commands = step.get("commands", [])
         if not commands or any(
             not isinstance(c, str) or not c.strip() or any(x in c for x in ("\n", "\r", "\x00"))
@@ -94,7 +97,7 @@ def execute_plan(plan, console, record, *, sleep=time.sleep):
     for step in plan.get("transitions", []):
         phase = step["name"]
         for command in step["commands"]:
-            output = console(step["node"]).command(command, 5)
+            output = console(step["node"]).command(command, step.get("command_timeout", 5))
             passed = command in output and not CLI_ERROR.search(output)
             record(
                 {

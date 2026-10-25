@@ -256,5 +256,19 @@
     "duration_minutes": 40,
     "kind": "practice",
     "workbook": "docs/workbooks/200-301-001-osi-tcpip-traffic-path.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/031-ssh-local-users-hardening.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-031-ssh-local-users-hardening.md",
+    "example_profile": "ssh-management"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/036-passwords-banners-secure-management.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-036-passwords-banners-secure-management.md",
+    "example_profile": "ssh-management"
   }
 }

@@ -930,20 +930,20 @@
       "topic": "security",
       "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "iol-xe",
+        "ubuntu"
       ],
-      "nominal_ram_mib": 1024,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 50,
+      "workbook": "docs/workbooks/200-301-031-ssh-local-users-hardening.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "1cd5a3c84ef57537e2fd6c5f9ea2f8b982ba35800efe975b2f58a83e71735635"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-25T17:57:46Z",
+      "sha256": "364dae499eed9ddcdc195d691a0d75500ac77a2c419d9ac88573b5782062418c"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/032-standard-extended-acls.yaml",
@@ -1040,20 +1040,20 @@
       "topic": "security",
       "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "iol-xe",
+        "ubuntu"
       ],
-      "nominal_ram_mib": 1024,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 50,
+      "workbook": "docs/workbooks/200-301-036-passwords-banners-secure-management.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "7791a50d4f54812ac416f8c8732800c19b41ab0f1d868076202b305a8367c776"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-25T17:55:21Z",
+      "sha256": "310b4ac171f4dad6f10658e5c1bd4b422f0ef052984c0248355b8bd149d136a9"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/044-layer-2-security-stack.yaml",

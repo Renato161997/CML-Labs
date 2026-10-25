@@ -68,5 +68,17 @@ a fresh NTP reference may spend several minutes measuring clock drift before it
 advertises synchronized time; transport reachability is not a substitute for that
 state. The workbook and acceptance plan make the longer wait explicit.
 
+Longer CLI operations can set a transition `command_timeout` between 1 and 60
+seconds (default: 5). The SSH workbooks use 30 seconds for ephemeral RSA key
+generation. This is distinct from protocol convergence retries and cannot remove
+an acceptance check.
+
+Offline guest fixtures declare an allowlisted `example_profile`. Run
+`python scripts/embed_webhook.py --check` after changing a helper: it verifies
+that embedded guest code matches the reviewed source, including the SSH
+management probe. Unknown profiles and missing required files fail closed.
+The management fixture uses a clearly public exercise password, never a CML
+application credential or a production secret.
+
 See [platform scope](../docs/PLATFORMS.md) before substituting IOL for IOSv or
 selecting a platform for an API/controller exercise.

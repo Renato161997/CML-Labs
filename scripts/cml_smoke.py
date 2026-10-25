@@ -74,6 +74,7 @@ class WebConsole:
                 if not re.search(re.escape(node.label) + r"#", prompt):
                     raise RuntimeError("Privileged console prompt was not established")
                 self.command("terminal length 0", 3)
+                self.command("terminal width 511", 3)
             elif node.node_definition == "ubuntu":
                 deadline = time.monotonic() + 120
                 while not re.search(r"root@DEVBOX", prompt) and time.monotonic() < deadline:
@@ -157,6 +158,7 @@ class SSHConsole:
                 if not re.search(re.escape(node.label) + r"#", prompt):
                     raise RuntimeError("Privileged SSH console prompt was not established")
                 self.command("terminal length 0", 3)
+                self.command("terminal width 511", 3)
             elif node.node_definition == "ubuntu":
                 deadline = time.monotonic() + 120
                 while not re.search(r"root@DEVBOX", prompt) and time.monotonic() < deadline:
