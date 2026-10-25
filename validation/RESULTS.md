@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **39**.
+Import/export passes: **233/233**. Functional passes: **43**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -19,6 +19,7 @@ Import/export passes: **233/233**. Functional passes: **39**.
 | [NAT PAT Internet Edge](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/024-nat-pat-edge.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 0 | 2026-10-24T18:29:48Z |
 | [NTP Time Sync](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/025-ntp-time-sync.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 7 | 12 | 2026-10-25T17:03:03Z |
 | [DNS Client Resolution](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/026-dns-client-resolution.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 0 | 2026-10-25T11:55:01Z |
+| [QoS Marking Classification](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/028-qos-marking-classification.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 8 | 10 | 2026-10-25T17:11:29Z |
 | [TFTP Config Backup](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/029-tftp-config-backup.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 1 | 2026-10-25T12:32:45Z |
 | [IP SLA Tracking Static Route](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/030-sla-tracking-static-route.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 8 | 8 | 2026-10-25T13:07:05Z |
 | [Static Routes To OSPF Migration](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/migration/046-static-routes-to-ospf-migration.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 10 | 12 | 2026-10-25T12:33:36Z |
@@ -26,10 +27,13 @@ Import/export passes: **233/233**. Functional passes: **39**.
 | [Access Trunk Native VLAN](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/008-access-trunk-native-vlan.yaml) | passed | 2.10.1+build.21 | iosvl2-2020 | 5 | 8 | 2026-10-25T12:59:26Z |
 | [STP Root Selection](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/009-stp-root-selection.yaml) | passed | 2.10.1+build.21 | iosvl2-2020 | 2 | 0 | 2026-10-24T18:30:29Z |
 | [EtherChannel LACP](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/012-etherchannel-lacp.yaml) | passed | 2.10.1+build.21 | iosvl2-2020 | 6 | 8 | 2026-10-25T12:59:31Z |
+| [OSI TCP/IP Traffic Path](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/001-osi-tcpip-traffic-path.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 4 | 0 | 2026-10-25T17:11:52Z |
 | [IPv4 Subnetting And VLSM](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/002-ipv4-subnetting-vlsm.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 3 | 0 | 2026-10-25T12:08:17Z |
+| [IPv6 Addressing Static](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/003-ipv6-addressing-static.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 6 | 8 | 2026-10-25T17:11:33Z |
 | [CDP And LLDP Discovery](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/004-cdp-lldp-discovery.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 3 | 0 | 2026-10-25T12:41:40Z |
 | [Interface Status Duplex Speed](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/005-interface-status-duplex.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 4 | 8 | 2026-10-25T13:06:29Z |
 | [Standard And Extended ACLs](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/032-standard-extended-acls.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 3 | 0 | 2026-10-24T18:30:00Z |
+| [Port Security Sticky MAC](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/034-port-security-sticky.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 5 | 8 | 2026-10-25T17:11:24Z |
 | [iBGP eBGP Neighbors](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/013-ibgp-ebgp-neighbors.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 0 | 2026-10-24T18:35:49Z |
 | [BGP Path Selection Local Pref MED](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/014-bgp-path-selection-local-pref-med.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 0 | 2026-10-24T18:36:09Z |
 | [BGP Route Reflector](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/015-bgp-route-reflector.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 11 | 14 | 2026-10-25T13:16:16Z |

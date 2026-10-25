@@ -492,22 +492,21 @@
       "title": "QoS Marking Classification",
       "track": "200-301",
       "topic": "ip-services",
-      "nodes": 4,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "iol-xe"
       ],
       "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 50,
+      "workbook": "docs/workbooks/200-301-028-qos-marking-classification.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "e9d5f8932c42fd1bc5e8c96d94f47d514068cc1071cd26a9315133c4745c1fc0"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-25T17:11:29Z",
+      "sha256": "7d6fa34576a04a4c85a321fd7d8b07a213057b7ee8d80d8cd188c88df88229e8"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/029-tftp-config-backup.yaml",
@@ -754,22 +753,22 @@
       "title": "OSI TCP/IP Traffic Path",
       "track": "200-301",
       "topic": "network-fundamentals",
-      "nodes": 4,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv"
+        "iol-xe",
+        "ioll2-xe"
       ],
-      "nominal_ram_mib": 2048,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 40,
+      "workbook": "docs/workbooks/200-301-001-osi-tcpip-traffic-path.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "3e85fd5043060bdf6ac07728c18ae200a2e8ccef3e41637f61c8b97d1a1b4a04"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-25T17:11:52Z",
+      "sha256": "2e73866e55579bf50faf00cfe585af53116e33fb785907efc7a3c0756e611aca"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/002-ipv4-subnetting-vlsm.yaml",
@@ -797,22 +796,21 @@
       "title": "IPv6 Addressing Static",
       "track": "200-301",
       "topic": "network-fundamentals",
-      "nodes": 4,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "iol-xe"
       ],
       "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 40,
+      "workbook": "docs/workbooks/200-301-003-ipv6-addressing-static.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "e3a422ec8d8a3da69fc5690bec9fce26716f4c3540da6947a286a88dcd6d6484"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-25T17:11:33Z",
+      "sha256": "db37a4806ab4773840d5545d766597e378e5d04fc6681c82c7e33c62d75ea56c"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/004-cdp-lldp-discovery.yaml",
@@ -996,23 +994,22 @@
       "title": "Port Security Sticky MAC",
       "track": "200-301",
       "topic": "security",
-      "nodes": 5,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe",
+        "ioll2-xe"
       ],
-      "nominal_ram_mib": 3072,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 45,
+      "workbook": "docs/workbooks/200-301-034-port-security-sticky.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "63aa49ab06299d15e69297a55cdb1ffac91afa878082b2b861fc9f6109f5e8bf"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-25T17:11:24Z",
+      "sha256": "f28ec5a288e5801144beb55e6f7b2b42aca094cb2e54640fcc5c53c253730337"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/035-ipsec-site-to-site-concepts.yaml",

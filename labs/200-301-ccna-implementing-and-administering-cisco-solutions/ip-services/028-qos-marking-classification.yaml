@@ -1,131 +1,106 @@
 lab:
   title: QoS Marking Classification
-  description: 200-301 CCNA - Implementing and Administering Cisco Solutions CML lab.
-  notes: '200-301 CCNA blueprint lab: QoS Marking Classification
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# QoS Marking Classification
 
 
-    Topics:
-
-    - QoS
-
-    - classification
-
-    - marking
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Suggested tasks:
-
-    1. Create class-map
-
-    2. Apply policy-map
-
-    3. Verify counters
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/200-301-028-qos-marking-classification.md
 
 
-    Suggested verification:
+    Requires IOL-XE with software MQC marking support. The receiver ACL distinguishes EF-marked traffic
+    from other IP packets. Clearing only its named test counters avoids mistaking earlier matches for
+    fresh evidence. This verifies classification/marking, not hardware queuing, policing accuracy or throughput.
 
-    - show ip interface brief
 
-    - show interfaces status
+    Objectives:
 
-    - show ip route
+    - Classify ICMP and apply an egress DSCP policy.
 
-    - show running-config | section router
+    - Verify the resulting marking at the receiver, not just the configured action.
 
-    - ping between the lab endpoints'
+    - Remove and restore the policy with fresh counters between observations.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
-  node_definition: iosv
-  x: -200
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNA QoS Marking Classification ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNA QoS Marking Classification\n ip address 10.0.12.1 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description CCNA QoS Marking Classification\n ip address\
-      \ 10.1.1.1 255.255.255.0\n no shutdown\nend"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Ethernet0/0\n ip address 198.18.0.1 255.255.255.252\n no shutdown\n exit\nip access-list\
+      \ extended CLASSIFY-ICMP\n permit icmp any any\n exit\nclass-map match-all ICMP\n match access-group\
+      \ name CLASSIFY-ICMP\n exit\npolicy-map MARK-EF\n class ICMP\n  set dscp ef\n exit\n exit\ninterface\
+      \ Ethernet0/0\n service-policy output MARK-EF\n exit\nend\n"
+  cpu_limit: 50
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
   label: R2
-  node_definition: iosv
-  x: 200
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nbanner motd ^C CCNA QoS Marking Classification ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNA QoS Marking Classification\n ip address 10.0.12.2 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description CCNA QoS Marking Classification\n ip address\
-      \ 10.2.2.1 255.255.255.0\n no shutdown\nend"
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Ethernet0/0\n ip address 198.18.0.2 255.255.255.252\n no shutdown\n exit\nip access-list\
+      \ extended OBSERVE-DSCP\n permit icmp any any dscp ef\n permit ip any any\n exit\ninterface Ethernet0/0\n\
+      \ ip access-group OBSERVE-DSCP in\n exit\nend\n"
+  cpu_limit: 50
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 99
-  tags: []
-- id: n2
-  label: PC1
-  node_definition: desktop
-  x: -400
-  y: 120
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  configuration: []
-  priority: 98
-  tags: []
-- id: n3
-  label: PC2
-  node_definition: desktop
-  x: 400
-  y: 120
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  configuration: []
-  priority: 97
   tags: []
 links:
 - id: l0
@@ -133,15 +108,5 @@ links:
   i1: i1
   n2: n1
   i2: i1
-- id: l1
-  n1: n0
-  i1: i2
-  n2: n2
-  i2: i0
-- id: l2
-  n1: n1
-  i1: i2
-  n2: n3
-  i2: i0
 annotations: []
 smart_annotations: []

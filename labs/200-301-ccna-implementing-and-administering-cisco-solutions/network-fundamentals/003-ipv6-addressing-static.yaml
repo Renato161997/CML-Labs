@@ -1,131 +1,103 @@
 lab:
   title: IPv6 Addressing Static
-  description: 200-301 CCNA - Implementing and Administering Cisco Solutions CML lab.
-  notes: '200-301 CCNA blueprint lab: IPv6 Addressing Static
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# IPv6 Addressing Static
 
 
-    Topics:
-
-    - IPv6 addressing
-
-    - static IPv6
-
-    - neighbor discovery
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Suggested tasks:
-
-    1. Configure IPv6 addresses
-
-    2. Enable IPv6 routing
-
-    3. Verify neighbor discovery
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/200-301-003-ipv6-addressing-static.md
 
 
-    Suggested verification:
+    Requires IOL-XE. The shared /64 is directly connected; no IPv6 static route is needed. The link-local
+    address has interface-local scope and is independent of the global address. This models addressing
+    and Neighbor Discovery, not DHCPv6 or SLAAC.
 
-    - show ip interface brief
 
-    - show interfaces status
+    Objectives:
 
-    - show ip route
+    - Identify statically configured global and link-local addresses.
 
-    - show running-config | section router
+    - Verify actual neighbor discovery without an IPv4 dependency.
 
-    - ping between the lab endpoints'
+    - Remove and restore only the global address while preserving the local link.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
-  node_definition: iosv
-  x: -200
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNA IPv6 Addressing Static ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNA IPv6 Addressing Static\n ip address 10.0.12.1 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description CCNA IPv6 Addressing Static\n ip address\
-      \ 10.1.1.1 255.255.255.0\n no shutdown\nend"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\nipv6 unicast-routing\ninterface Ethernet0/0\n no ip address\n ipv6 enable\n ipv6 address\
+      \ fe80::1 link-local\n ipv6 address 2001:db8:12::1/64\n no shutdown\n exit\nend\n"
+  cpu_limit: 50
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
   label: R2
-  node_definition: iosv
-  x: 200
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nbanner motd ^C CCNA IPv6 Addressing Static ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNA IPv6 Addressing Static\n ip address 10.0.12.2 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description CCNA IPv6 Addressing Static\n ip address\
-      \ 10.2.2.1 255.255.255.0\n no shutdown\nend"
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\nipv6 unicast-routing\ninterface Ethernet0/0\n no ip address\n ipv6 enable\n ipv6 address\
+      \ fe80::2 link-local\n ipv6 address 2001:db8:12::2/64\n no shutdown\n exit\nend\n"
+  cpu_limit: 50
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 99
-  tags: []
-- id: n2
-  label: PC1
-  node_definition: desktop
-  x: -400
-  y: 120
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  configuration: []
-  priority: 98
-  tags: []
-- id: n3
-  label: PC2
-  node_definition: desktop
-  x: 400
-  y: 120
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  configuration: []
-  priority: 97
   tags: []
 links:
 - id: l0
@@ -133,15 +105,5 @@ links:
   i1: i1
   n2: n1
   i2: i1
-- id: l1
-  n1: n0
-  i1: i2
-  n2: n2
-  i2: i0
-- id: l2
-  n1: n1
-  i1: i2
-  n2: n3
-  i2: i0
 annotations: []
 smart_annotations: []
