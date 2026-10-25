@@ -2060,5 +2060,97 @@
         "expectation": "The bridge learns real source MACs on both access ports."
       }
     ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/031-ssh-local-users-hardening.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The Ubuntu client network is ready."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "initialize SSH host identity",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "crypto key generate rsa general-keys label CML-LAB-SSH modulus 2048",
+          "ip ssh rsa keypair-name CML-LAB-SSH",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show running-config | section line vty",
+            "pattern": "(?s)line vty 0 4(?=.*login local)(?=.*transport input ssh)(?=.*access-class MGMT in)",
+            "expectation": "All available VTY lines use the intended local SSH access policy."
+          },
+          {
+            "node": "R1",
+            "command": "show ip ssh",
+            "pattern": "SSH Enabled - version 2",
+            "expectation": "The actual server is enabled for SSHv2."
+          },
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "Real OpenSSH verifies login, privilege 1, denied configuration, wrong-password rejection, banner and closed legacy/web ports."
+          }
+        ],
+        "command_timeout": 30
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/036-passwords-banners-secure-management.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The Ubuntu client network is ready."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "initialize SSH host identity",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "crypto key generate rsa general-keys label CML-LAB-SSH modulus 2048",
+          "ip ssh rsa keypair-name CML-LAB-SSH",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show running-config | section line vty",
+            "pattern": "(?s)line vty 0 4(?=.*login local)(?=.*transport input ssh)(?=.*access-class MGMT in)",
+            "expectation": "All available VTY lines use the intended local SSH access policy."
+          },
+          {
+            "node": "R1",
+            "command": "show running-config | include username viewer",
+            "pattern": "username viewer.*secret 9",
+            "expectation": "The lab-only password is stored as a type-9 secret."
+          },
+          {
+            "node": "R1",
+            "command": "show ip ssh",
+            "pattern": "SSH Enabled - version 2",
+            "expectation": "The actual server is enabled for SSHv2."
+          },
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_probe.py --banner CML-AUTHORIZED-USERS",
+            "pattern": "\"passed\": true",
+            "expectation": "Real OpenSSH verifies login, privilege 1, denied configuration, wrong-password rejection, banner and closed legacy/web ports."
+          }
+        ],
+        "command_timeout": 30
+      }
+    ]
   }
 }

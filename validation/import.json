@@ -1608,16 +1608,6 @@
       "completed_utc": "2026-10-25T15:56:02Z"
     },
     {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/031-ssh-local-users-hardening.yaml",
-      "sha256": "1cd5a3c84ef57537e2fd6c5f9ea2f8b982ba35800efe975b2f58a83e71735635",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:02Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:02Z"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/032-standard-extended-acls.yaml",
       "sha256": "a7b9d5c74fe4301e1fbbee9ba0f749ba62572c179917ad7f71763f9a51e655fc",
       "cml_version": "2.10.1+build.21",
@@ -1640,16 +1630,6 @@
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/035-ipsec-site-to-site-concepts.yaml",
       "sha256": "98d4ae820d582f42ffd698eba25eccc30545a70cb95fd4c83b30c08f2b077d76",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:03Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:03Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/036-passwords-banners-secure-management.yaml",
-      "sha256": "7791a50d4f54812ac416f8c8732800c19b41ab0f1d868076202b305a8367c776",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-25T15:56:03Z",
       "checks": [],
@@ -2336,6 +2316,26 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T17:18:50Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/031-ssh-local-users-hardening.yaml",
+      "sha256": "364dae499eed9ddcdc195d691a0d75500ac77a2c419d9ac88573b5782062418c",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T17:55:57Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T17:55:57Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/036-passwords-banners-secure-management.yaml",
+      "sha256": "310b4ac171f4dad6f10658e5c1bd4b422f0ef052984c0248355b8bd149d136a9",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T17:55:59Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T17:55:59Z"
     }
   ]
 }

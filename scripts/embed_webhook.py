@@ -1,4 +1,4 @@
-"""Refresh/check the example sources embedded in the two offline Ubuntu labs."""
+"""Refresh/check registered example sources embedded in offline Ubuntu labs."""
 
 import argparse
 import base64
@@ -8,10 +8,22 @@ import sys
 import yaml
 from labtools import ROOT, load
 
+PROFILES = {
+    "webhook": {
+        "/opt/cml-webhook/receiver.py": "examples/webhook/receiver.py",
+        "/opt/cml-webhook/probe.py": "examples/webhook/probe.py",
+    },
+    "ssh-management": {
+        "/opt/cml-management/ssh_probe.py": "examples/management/ssh_probe.py",
+    },
+}
+
 
 def update(check=False):
     changed = []
-    for relative in json.loads((ROOT / "catalog/curated.json").read_text(encoding="utf-8")):
+    for relative, metadata in json.loads(
+        (ROOT / "catalog/curated.json").read_text(encoding="utf-8")
+    ).items():
         path = ROOT / relative
         data = load(path)
         dirty = False
@@ -20,13 +32,15 @@ def update(check=False):
                 continue
             userdata = next(f for f in node["configuration"] if f["name"] == "user-data")
             cloud = yaml.safe_load(userdata["content"])
-            for filename in ("receiver.py", "probe.py"):
-                entry = next(
-                    f for f in cloud["write_files"] if f["path"] == "/opt/cml-webhook/" + filename
-                )
-                expected = base64.b64encode(
-                    (ROOT / "examples/webhook" / filename).read_bytes()
-                ).decode()
+            profile = metadata.get("example_profile", "webhook")
+            if profile not in PROFILES:
+                raise ValueError("Unknown embedded example profile: " + str(profile))
+            files = {f["path"]: f for f in cloud.get("write_files", [])}
+            for filename, source in PROFILES[profile].items():
+                if filename not in files:
+                    raise ValueError(relative + ": missing embedded source " + filename)
+                entry = files[filename]
+                expected = base64.b64encode((ROOT / source).read_bytes()).decode()
                 if entry.get("encoding") != "b64" or entry["content"] != expected:
                     dirty = True
                     entry["encoding"] = "b64"
@@ -53,7 +67,7 @@ if __name__ == "__main__":
         print("Embedded example differs from source: " + ", ".join(paths), file=sys.stderr)
         sys.exit(1)
     print(
-        "Embedded webhook sources are current"
+        "Embedded example sources are current"
         if not paths
         else "Updated " + str(len(paths)) + " topologies; refresh the catalog and live evidence"
     )

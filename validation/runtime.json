@@ -3827,6 +3827,176 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T17:11:52Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/036-passwords-banners-secure-management.yaml",
+      "sha256": "310b4ac171f4dad6f10658e5c1bd4b422f0ef052984c0248355b8bd149d136a9",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T17:53:34Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The Ubuntu client network is ready.",
+          "passed": true,
+          "output": "ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "crypto key generate rsa general-keys label CML-LAB-SSH modulus 2048",
+          "passed": true,
+          "output": "crypto key generate rsa general-keys label CML-LAB-SSH modulus 2048\n%This command is deprecated.  Use the command in exec mode insteadThe name for the keys will be: CML-LAB-SSH\n\n% The key modulus size is 2048 bits\n% Generating 2048 bit RSA keys, keys will be non-exportable...\n SECURITY WARNING - Module: SSH, Command: crypto key generate rsa ..., Reason: SSH host key uses insufficient key length, Description: SSH with insufficient key length, Remediation: Use SSH RSA host key with a minimum length of 3072 bits for enhanced security\n[OK] (elapsed time was 0 seconds)\n\nR1(config)#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip ssh rsa keypair-name CML-LAB-SSH",
+          "passed": true,
+          "output": "ip ssh rsa keypair-name CML-LAB-SSH\n SECURITY WARNING - Module: SSH, Command: crypto key generate rsa ..., Reason: SSH host key uses insufficient key length, Description: SSH with insufficient key length, Remediation: Use SSH RSA host key with a minimum length of 3072 bits for enhanced security\nR1(config)#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "node": "R1",
+          "command": "show running-config | section line vty",
+          "expectation": "All available VTY lines use the intended local SSH access policy.",
+          "passed": true,
+          "output": "\n*Oct 25 17:55:10.059: %PARSER-5-HIDDEN: Warning!!! ' crypto key generate rsa general-keys label * modulus 2048' is a hidden command. Use of this command is not recommended/supported and will be removed in future.\n*Oct 25 17:55:10.515: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named CML-LAB-SSH has been generated or imported by crypto-engine\n*Oct 25 17:55:10.571: %SSH-5-ENABLED: SSH 2.0 has been enabled\n*Oct 25 17:55:11.077: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named CML-LAB-SSH.server has been generated or imported by crypto-engine\nR1#show running-config | section line vty\nline vty 0 4\n access-class MGMT in\n exec-timeout 5 0\n activation-character 13\n login local\n transport input ssh\nR1#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "node": "R1",
+          "command": "show running-config | include username viewer",
+          "expectation": "The lab-only password is stored as a type-9 secret.",
+          "passed": true,
+          "output": "show running-config | include username viewer\nusername viewer secret 9 $9$n5PWI8gDvH/U6k$xCuAjAkpUClAS6ym6kkNkjkZTwQfn1oAmfMLRhxqg.g\nR1#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "node": "R1",
+          "command": "show ip ssh",
+          "expectation": "The actual server is enabled for SSHv2.",
+          "passed": true,
+          "output": "show ip ssh\nSSH Enabled - version 2.0\nAuthentication methods:publickey,keyboard-interactive,password\nAuthentication Publickey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-ed25519,x509v3-ecdsa-sha2-nistp256,x509v3-ecdsa-sha2-nistp384,x509v3-ecdsa-sha2-nistp521,rsa-sha2-256,rsa-sha2-512,x509v3-rsa2048-sha256\nHostkey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256\nEncryption Algorithms:chacha20-poly1305@openssh.com,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-gcm,aes256-gcm,aes128-ctr,aes192-ctr,aes256-ctr\nMAC Algorithms:hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2-256,hmac-sha2-512\nKEX Algorithms:curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512\nAuthentication timeout: 30 secs; Authentication retries: 1\nMinimum expected Diffie Hellman key size : 2048 bits\nIOS Keys in SECSH format(ssh-rsa, base64 encoded): CML-LAB-SSH\nModulus Size : 2048 bits\nssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCngwR0RncJEfyUJHQpEEfOvC5SiVNIiiFlYqNxE1l4\nA8B8u3Og++zt462frUSo0PiQ9m9wBSZhVihwWYK/uKFy5ArTilbCalqmZfl/SQMVv2lrDVAJwT/9pEti\n3POHRFe2zFsVADwXmOg4bN/m4iGsV0EkEN+bmFnJpPnS5QGHL3yiEaU6X3c8h/fuoqqvBCAJ2HsUpqVb\n9UwnxMBuXu3AdDUOrYJCKNFz5ILF6ox9du3PLmxtXlI/d+dpQTpTybhE7RIkblcm2f+zQ1J/vdCYf/dA\n2ZrjsJRk4TaDRcg0nBThETrW+LYjM44dT8SKBv5S+AURSrIOJNkRzJiMiAhj                    \nIOS Keys in SECSH format(ssh-ec, base64 encoded): NONE\nR1#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "node": "DEVBOX",
+          "command": "python3 /opt/cml-management/ssh_probe.py --banner CML-AUTHORIZED-USERS",
+          "expectation": "Real OpenSSH verifies login, privilege 1, denied configuration, wrong-password rejection, banner and closed legacy/web ports.",
+          "passed": true,
+          "output": "python3 /opt/cml-management/ssh_probe.py --banner CML-AUTHORIZED-USERS\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@DEVBOX:~# "
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "DEVBOX": "ubuntu-24-04-20260307"
+      },
+      "plan_sha256": "048124525d5b0c4e6d6f2d02a7861bb146304fbe86b2d614d6813bd54464fe01",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T17:55:21Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/031-ssh-local-users-hardening.yaml",
+      "sha256": "364dae499eed9ddcdc195d691a0d75500ac77a2c419d9ac88573b5782062418c",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T17:56:00Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The Ubuntu client network is ready.",
+          "passed": true,
+          "output": "ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "crypto key generate rsa general-keys label CML-LAB-SSH modulus 2048",
+          "passed": true,
+          "output": "crypto key generate rsa general-keys label CML-LAB-SSH modulus 2048\n%This command is deprecated.  Use the command in exec mode insteadThe name for the keys will be: CML-LAB-SSH\n\n% The key modulus size is 2048 bits\n% Generating 2048 bit RSA keys, keys will be non-exportable...\n SECURITY WARNING - Module: SSH, Command: crypto key generate rsa ..., Reason: SSH host key uses insufficient key length, Description: SSH with insufficient key length, Remediation: Use SSH RSA host key with a minimum length of 3072 bits for enhanced security\n[OK] (elapsed time was 1 seconds)\n\nR1(config)#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip ssh rsa keypair-name CML-LAB-SSH",
+          "passed": true,
+          "output": "ip ssh rsa keypair-name CML-LAB-SSH\n SECURITY WARNING - Module: SSH, Command: crypto key generate rsa ..., Reason: SSH host key uses insufficient key length, Description: SSH with insufficient key length, Remediation: Use SSH RSA host key with a minimum length of 3072 bits for enhanced security\nR1(config)#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "node": "R1",
+          "command": "show running-config | section line vty",
+          "expectation": "All available VTY lines use the intended local SSH access policy.",
+          "passed": true,
+          "output": "\n*Oct 25 17:57:35.785: %PARSER-5-HIDDEN: Warning!!! ' crypto key generate rsa general-keys label * modulus 2048' is a hidden command. Use of this command is not recommended/supported and will be removed in future.\n*Oct 25 17:57:36.062: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named CML-LAB-SSH has been generated or imported by crypto-engine\n*Oct 25 17:57:36.118: %SSH-5-ENABLED: SSH 2.0 has been enabled\n*Oct 25 17:57:36.361: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named CML-LAB-SSH.server has been generated or imported by crypto-engine\n*Oct 25 17:57:36.589: %CRYPTO_ENGINE-5-KEY_DELETED: A key named CML-LAB-SSH.server has been removed from key storage\nR1#show running-config | section line vty\nline vty 0 4\n access-class MGMT in\n exec-timeout 5 0\n activation-character 13\n login local\n transport input ssh\nR1#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "node": "R1",
+          "command": "show ip ssh",
+          "expectation": "The actual server is enabled for SSHv2.",
+          "passed": true,
+          "output": "show ip ssh\nSSH Enabled - version 2.0\nAuthentication methods:publickey,keyboard-interactive,password\nAuthentication Publickey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-ed25519,x509v3-ecdsa-sha2-nistp256,x509v3-ecdsa-sha2-nistp384,x509v3-ecdsa-sha2-nistp521,rsa-sha2-256,rsa-sha2-512,x509v3-rsa2048-sha256\nHostkey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256\nEncryption Algorithms:chacha20-poly1305@openssh.com,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-gcm,aes256-gcm,aes128-ctr,aes192-ctr,aes256-ctr\nMAC Algorithms:hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2-256,hmac-sha2-512\nKEX Algorithms:curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512\nAuthentication timeout: 30 secs; Authentication retries: 1\nMinimum expected Diffie Hellman key size : 2048 bits\nIOS Keys in SECSH format(ssh-rsa, base64 encoded): CML-LAB-SSH\nModulus Size : 2048 bits\nssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQClhMBluopX6PZWTG01MUUctCVS/OFEVqHdsicr2n6u\nZU8M3SSxxQQdqmfjQwxRhNf8JlZmZ6YGMZdAfJ8Np8fLRu0C7YCOSM0e+/kNpHXEARZn4BZ25ZyrMlGG\nHODxZ5u8wCEhLUO+3VUD3RcNOXiRUIEhQ8CgnJKwnZL+/j5TO2PcjOaqA6kc+stHFs4NiNlUMD41ISN5\nx3JyPhWekl6lDq5//ecg5NSr/yie88034JUyYsncspOqX70yPna1I6wB5JCiYPhRHpOGuZuyDZvxL2Jf\nnF8+WF0IA9sSPDkbeQJPbGRTzmUsLeJhkopG64vPMevvJpblqj6jsNUpG3tJ                    \nIOS Keys in SECSH format(ssh-ec, base64 encoded): NONE\nR1#"
+        },
+        {
+          "phase": "initialize SSH host identity",
+          "node": "DEVBOX",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "expectation": "Real OpenSSH verifies login, privilege 1, denied configuration, wrong-password rejection, banner and closed legacy/web ports.",
+          "passed": true,
+          "output": "python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@DEVBOX:~# "
+        }
+      ],
+      "plan_sha256": "b730e5d77a472a451a3b026c473bbf10436a48fda0dfab6d9ee79b00a7a0e8b2",
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "DEVBOX": "ubuntu-24-04-20260307"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T17:57:46Z"
     }
   ]
 }

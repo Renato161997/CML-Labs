@@ -12,9 +12,11 @@ class Console:
     def __init__(self, outputs):
         self.outputs = iter(outputs)
         self.commands = []
+        self.timeouts = []
 
     def command(self, command, timeout=18):
         self.commands.append(command)
+        self.timeouts.append(timeout)
         return next(self.outputs)
 
 
@@ -28,6 +30,29 @@ CHECK = {
 
 
 class AcceptanceTests(unittest.TestCase):
+    def test_slow_configuration_timeout_is_bounded_and_reaches_the_console(self):
+        step = {
+            "name": "initialize host key",
+            "node": "R1",
+            "commands": ["crypto key generate rsa modulus 2048"],
+            "command_timeout": 30,
+            "checks": [CHECK],
+        }
+        plan = {"checks": [CHECK], "transitions": [step]}
+        self.assertEqual(validate_plan(plan, {"R1"}), [])
+        connection = Console(
+            [
+                "show ip route\nvia 198.18.0.2",
+                "crypto key generate rsa modulus 2048\nR1(config)#",
+                "show ip route\nvia 198.18.0.2",
+            ]
+        )
+        execute_plan(plan, lambda _: connection, lambda _: None)
+        self.assertEqual(connection.timeouts, [18, 30, 18])
+        for bad in (0, 61, "30"):
+            step["command_timeout"] = bad
+            self.assertTrue(validate_plan(plan, {"R1"}))
+
     def test_slow_protocol_can_use_its_bounded_convergence_window(self):
         connection = Console(["show ip route\nNo route"] * 20 + ["show ip route\nvia 198.18.0.2"])
         waits = []
