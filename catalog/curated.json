@@ -270,5 +270,23 @@
     "kind": "practice",
     "workbook": "docs/workbooks/200-301-036-passwords-banners-secure-management.md",
     "example_profile": "ssh-management"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/010-portfast-bpduguard.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 45,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-010-portfast-bpduguard.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/013-layer2-security.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-013-layer2-security.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/011-rapid-pvst-troubleshooting.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-011-rapid-pvst-troubleshooting.md"
   }
 }

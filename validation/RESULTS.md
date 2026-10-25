@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **45**.
+Import/export passes: **233/233**. Functional passes: **48**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -26,7 +26,10 @@ Import/export passes: **233/233**. Functional passes: **45**.
 | [VLANs And Router On A Stick](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/007-vlan-router-on-a-stick.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, iosvl2-2020 | 4 | 0 | 2026-10-24T18:43:31Z |
 | [Access Trunk Native VLAN](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/008-access-trunk-native-vlan.yaml) | passed | 2.10.1+build.21 | iosvl2-2020 | 5 | 8 | 2026-10-25T12:59:26Z |
 | [STP Root Selection](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/009-stp-root-selection.yaml) | passed | 2.10.1+build.21 | iosvl2-2020 | 2 | 0 | 2026-10-24T18:30:29Z |
+| [PortFast And BPDU Guard](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/010-portfast-bpduguard.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 11 | 16 | 2026-10-25T18:10:48Z |
+| [Rapid PVST Troubleshooting](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/011-rapid-pvst-troubleshooting.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 9 | 6 | 2026-10-25T18:06:22Z |
 | [EtherChannel LACP](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/012-etherchannel-lacp.yaml) | passed | 2.10.1+build.21 | iosvl2-2020 | 6 | 8 | 2026-10-25T12:59:31Z |
+| [Layer 2 Security Basics](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/013-layer2-security.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 11 | 6 | 2026-10-25T18:13:11Z |
 | [OSI TCP/IP Traffic Path](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/001-osi-tcpip-traffic-path.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 4 | 0 | 2026-10-25T17:11:52Z |
 | [IPv4 Subnetting And VLSM](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/002-ipv4-subnetting-vlsm.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 3 | 0 | 2026-10-25T12:08:17Z |
 | [IPv6 Addressing Static](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/003-ipv6-addressing-static.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 6 | 8 | 2026-10-25T17:11:33Z |

@@ -3997,6 +3997,531 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T17:57:46Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/011-rapid-pvst-troubleshooting.yaml",
+      "sha256": "27e9d31e9997766516817d1db46515e32a97800bc1d20ba5d41f1fd7e033fd1c",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T18:05:07Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "SW1 is the intended VLAN 10 root.",
+          "passed": true,
+          "output": "show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc00.7900\n             This bridge is the root\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    4106   (priority 4096 sys-id-ext 10)\n             Address     aabb.cc00.7900\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Desg FWD 4         128.1    P2p \nEt0/1               Desg FWD 4         128.2    P2p \n\n\nSW1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW3",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "The redundant path is correctly blocked, not a failed link.",
+          "passed": true,
+          "output": "show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc00.7900\n             Cost        4\n             Port        1 (Ethernet0/0)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)\n             Address     aabb.cc00.7b00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Root FWD 4         128.1    P2p \nEt0/1               Altn BLK 4         128.2    P2p \n\n\nSW3#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW2",
+          "command": "ping 198.18.10.3 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.3 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.3, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nSW2#"
+        },
+        {
+          "phase": "unintended bridge wins election",
+          "kind": "configuration",
+          "node": "SW3",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW3(config)#"
+        },
+        {
+          "phase": "unintended bridge wins election",
+          "kind": "configuration",
+          "node": "SW3",
+          "command": "spanning-tree vlan 10 priority 0",
+          "passed": true,
+          "output": "spanning-tree vlan 10 priority 0\nSW3(config)#"
+        },
+        {
+          "phase": "unintended bridge wins election",
+          "kind": "configuration",
+          "node": "SW3",
+          "command": "end",
+          "passed": true,
+          "output": "end\nSW3#"
+        },
+        {
+          "phase": "unintended bridge wins election",
+          "node": "SW3",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "SW3 has actually become root.",
+          "passed": true,
+          "output": "show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    10\n             Address     aabb.cc00.7b00\n             This bridge is the root\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    10     (priority 0 sys-id-ext 10)\n             Address     aabb.cc00.7b00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Desg FWD 4         128.1    P2p \nEt0/1               Desg FWD 4         128.2    P2p \n\n\nSW3#"
+        },
+        {
+          "phase": "unintended bridge wins election",
+          "node": "SW1",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "SW1 now points toward the unintended root.",
+          "passed": true,
+          "output": "show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    10\n             Address     aabb.cc00.7b00\n             Cost        4\n             Port        2 (Ethernet0/1)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    4106   (priority 4096 sys-id-ext 10)\n             Address     aabb.cc00.7900\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Desg FWD 4         128.1    P2p \nEt0/1               Root FWD 4         128.2    P2p \n\n\nSW1#"
+        },
+        {
+          "phase": "unintended bridge wins election",
+          "node": "SW2",
+          "command": "ping 198.18.10.3 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.3 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.3, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSW2#"
+        },
+        {
+          "phase": "restore intended root policy",
+          "kind": "configuration",
+          "node": "SW3",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\n*Oct 25 18:06:14.757: %SYS-5-CONFIG_I: Configured from console by console\nSW3#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW3(config)#"
+        },
+        {
+          "phase": "restore intended root policy",
+          "kind": "configuration",
+          "node": "SW3",
+          "command": "spanning-tree vlan 10 priority 32768",
+          "passed": true,
+          "output": "spanning-tree vlan 10 priority 32768\nSW3(config)#"
+        },
+        {
+          "phase": "restore intended root policy",
+          "kind": "configuration",
+          "node": "SW3",
+          "command": "end",
+          "passed": true,
+          "output": "end\nSW3#"
+        },
+        {
+          "phase": "restore intended root policy",
+          "node": "SW1",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "SW1 is the intended VLAN 10 root.",
+          "passed": true,
+          "output": "show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc00.7900\n             This bridge is the root\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    4106   (priority 4096 sys-id-ext 10)\n             Address     aabb.cc00.7900\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Desg FWD 4         128.1    P2p \nEt0/1               Desg FWD 4         128.2    P2p \n\n\nSW1#"
+        },
+        {
+          "phase": "restore intended root policy",
+          "node": "SW3",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "The redundant path is correctly blocked, not a failed link.",
+          "passed": true,
+          "output": "show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc00.7900\n             Cost        4\n             Port        1 (Ethernet0/0)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)\n             Address     aabb.cc00.7b00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Root FWD 4         128.1    P2p \nEt0/1               Altn BLK 4         128.2    P2p \n\n\nSW3#"
+        },
+        {
+          "phase": "restore intended root policy",
+          "node": "SW2",
+          "command": "ping 198.18.10.3 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.3 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.3, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nSW2#"
+        }
+      ],
+      "images": {
+        "SW1": "ioll2-xe-17-18-02",
+        "SW2": "ioll2-xe-17-18-02",
+        "SW3": "ioll2-xe-17-18-02"
+      },
+      "plan_sha256": "2c78ef51412067d6ee01ecdebda93a6dd4ed1d64da50962b626e2ffe6e8d15b8",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T18:06:22Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/010-portfast-bpduguard.yaml",
+      "sha256": "d108903d4ce56160d1441a772d9cc8ae7ffc338a6414ef7f245d6c28715a1f1f",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T18:09:34Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.2 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show interfaces status",
+          "expectation": "The test-facing access port is connected.",
+          "passed": true,
+          "output": "show interfaces status\n\nPort         Name               Status       Vlan       Duplex  Speed Type\nEt0/0                           connected    10           full   auto 10/100/1000BaseTX\nEt0/1                           connected    10           full   auto 10/100/1000BaseTX\nEt0/2                           disabled     1            full   auto 10/100/1000BaseTX\nEt0/3                           disabled     1            full   auto 10/100/1000BaseTX\nSW1#"
+        },
+        {
+          "phase": "arm the interface guard",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "arm the interface guard",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "interface Ethernet0/0\nSW1(config-if)#"
+        },
+        {
+          "phase": "arm the interface guard",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "spanning-tree bpduguard enable",
+          "passed": true,
+          "output": "spanning-tree bpduguard enable\nSW1(config-if)#"
+        },
+        {
+          "phase": "arm the interface guard",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nSW1#"
+        },
+        {
+          "phase": "arm the interface guard",
+          "node": "SW1",
+          "command": "show running-config interface Ethernet0/0",
+          "expectation": "The interface guard is explicitly enabled.",
+          "passed": true,
+          "output": "show running-config interface Ethernet0/0\nBuilding configuration...\n\nCurrent configuration : 136 bytes\n!\ninterface Ethernet0/0\n switchport access vlan 10\n switchport mode access\n spanning-tree portfast\n spanning-tree bpduguard enable\nend\n\nSW1#"
+        },
+        {
+          "phase": "peer BPDU disables the edge port",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW2(config)#"
+        },
+        {
+          "phase": "peer BPDU disables the edge port",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "spanning-tree vlan 10 priority 0",
+          "passed": true,
+          "output": "spanning-tree vlan 10 priority 0\nSW2(config)#"
+        },
+        {
+          "phase": "peer BPDU disables the edge port",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nSW2#"
+        },
+        {
+          "phase": "peer BPDU disables the edge port",
+          "node": "SW1",
+          "command": "show interfaces status",
+          "expectation": "The edge port is actually error-disabled.",
+          "passed": true,
+          "output": "show interfaces status\n\nPort         Name               Status       Vlan       Duplex  Speed Type\nEt0/0                           err-disabled 10           full   auto 10/100/1000BaseTX\nEt0/1                           connected    10           full   auto 10/100/1000BaseTX\nEt0/2                           disabled     1            full   auto 10/100/1000BaseTX\nEt0/3                           disabled     1            full   auto 10/100/1000BaseTX\nSW1#"
+        },
+        {
+          "phase": "peer BPDU disables the edge port",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.2 repeat 3",
+          "expectation": "The protected segment drops all three probes.",
+          "passed": true,
+          "output": "ping 198.18.10.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.2, timeout is 2 seconds:\n...\nSuccess rate is 0 percent (0/3)\nCLIENT#"
+        },
+        {
+          "phase": "peer BPDU disables the edge port",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "restore the peer bridge priority",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW2(config)#"
+        },
+        {
+          "phase": "restore the peer bridge priority",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "spanning-tree vlan 10 priority 32768",
+          "passed": true,
+          "output": "spanning-tree vlan 10 priority 32768\nSW2(config)#"
+        },
+        {
+          "phase": "restore the peer bridge priority",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nSW2#"
+        },
+        {
+          "phase": "restore the peer bridge priority",
+          "node": "SW2",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "The test bridge priority is restored before resetting the guarded port.",
+          "passed": true,
+          "output": "show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    32778\n             Address     aabb.cc00.7d00\n             This bridge is the root\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)\n             Address     aabb.cc00.7d00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Desg FWD 100       128.1    P2p \n\n\nSW2#"
+        },
+        {
+          "phase": "restore the deliberately unprotected test baseline",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "restore the deliberately unprotected test baseline",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "interface Ethernet0/0\nSW1(config-if)#"
+        },
+        {
+          "phase": "restore the deliberately unprotected test baseline",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "spanning-tree bpduguard disable",
+          "passed": true,
+          "output": "spanning-tree bpduguard disable\nSW1(config-if)#"
+        },
+        {
+          "phase": "restore the deliberately unprotected test baseline",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "shutdown",
+          "passed": true,
+          "output": "shutdown\nSW1(config-if)#"
+        },
+        {
+          "phase": "restore the deliberately unprotected test baseline",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "no shutdown\nSW1(config-if)#"
+        },
+        {
+          "phase": "restore the deliberately unprotected test baseline",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nSW1#"
+        },
+        {
+          "phase": "restore the deliberately unprotected test baseline",
+          "node": "SW1",
+          "command": "show interfaces status",
+          "expectation": "The test-facing access port is connected.",
+          "passed": true,
+          "output": "show interfaces status\n\nPort         Name               Status       Vlan       Duplex  Speed Type\nEt0/0                           connected    10           full   auto 10/100/1000BaseTX\nEt0/1                           connected    10           full   auto 10/100/1000BaseTX\nEt0/2                           disabled     1            full   auto 10/100/1000BaseTX\nEt0/3                           disabled     1            full   auto 10/100/1000BaseTX\nSW1#"
+        },
+        {
+          "phase": "restore the deliberately unprotected test baseline",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.2 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "restore the deliberately unprotected test baseline",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        }
+      ],
+      "images": {
+        "SW1": "ioll2-xe-17-18-02",
+        "SW2": "ioll2-xe-17-18-02",
+        "CLIENT": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "7552b91c39793545c329592b61e66c21e3fb3251f2aaf0097ce6dbf63bbd9f49",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T18:10:48Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/013-layer2-security.yaml",
+      "sha256": "a1ef88ef8eade1a80cdb8fcb7ce0c2a60fabf0e4238467b7f98059fe8ba58ee0",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T18:11:56Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "ACCESS",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "The authorized upstream remains the root port.",
+          "passed": true,
+          "output": "show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc00.8000\n             Cost        4\n             Port        1 (Ethernet0/0)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)\n             Address     aabb.cc00.7f00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Root FWD 4         128.1    P2p \nEt0/1               Desg FWD 4         128.2    P2p \n\n\nACCESS#"
+        },
+        {
+          "phase": "baseline",
+          "node": "ROGUE",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nROGUE#"
+        },
+        {
+          "phase": "baseline",
+          "node": "ACCESS",
+          "command": "show spanning-tree inconsistentports",
+          "expectation": "No guarded port remains inconsistent.",
+          "passed": true,
+          "output": "show spanning-tree inconsistentports\n\nName                 Interface                      Inconsistency\n-------------------- ------------------------------ ------------------\n\nNumber of inconsistent ports (segments) in the system : 0\n\nACCESS#"
+        },
+        {
+          "phase": "superior downstream BPDUs",
+          "kind": "configuration",
+          "node": "ROGUE",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nROGUE(config)#"
+        },
+        {
+          "phase": "superior downstream BPDUs",
+          "kind": "configuration",
+          "node": "ROGUE",
+          "command": "spanning-tree vlan 10 priority 0",
+          "passed": true,
+          "output": "spanning-tree vlan 10 priority 0\nROGUE(config)#"
+        },
+        {
+          "phase": "superior downstream BPDUs",
+          "kind": "configuration",
+          "node": "ROGUE",
+          "command": "end",
+          "passed": true,
+          "output": "end\nROGUE#"
+        },
+        {
+          "phase": "superior downstream BPDUs",
+          "node": "ACCESS",
+          "command": "show spanning-tree inconsistentports",
+          "expectation": "The guarded downstream interface is root-inconsistent.",
+          "passed": true,
+          "output": "show spanning-tree inconsistentports\n\nName                 Interface                      Inconsistency\n-------------------- ------------------------------ ------------------\nVLAN0010             Ethernet0/1                    Root Inconsistent\n\nNumber of inconsistent ports (segments) in the system : 1\n\nACCESS#"
+        },
+        {
+          "phase": "superior downstream BPDUs",
+          "node": "ACCESS",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "The authorized upstream remains the root port.",
+          "passed": true,
+          "output": "show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc00.8000\n             Cost        4\n             Port        1 (Ethernet0/0)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)\n             Address     aabb.cc00.7f00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Root FWD 4         128.1    P2p \nEt0/1               Desg BKN*4         128.2    P2p *ROOT_Inc \n\n\nACCESS#"
+        },
+        {
+          "phase": "superior downstream BPDUs",
+          "node": "ROOT",
+          "command": "ping 198.18.10.2 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nROOT#"
+        },
+        {
+          "phase": "superior downstream BPDUs",
+          "node": "ROGUE",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The protected segment drops all three probes.",
+          "passed": true,
+          "output": "ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n...\nSuccess rate is 0 percent (0/3)\nROGUE#"
+        },
+        {
+          "phase": "legitimate downstream priority restored",
+          "kind": "configuration",
+          "node": "ROGUE",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nROGUE(config)#"
+        },
+        {
+          "phase": "legitimate downstream priority restored",
+          "kind": "configuration",
+          "node": "ROGUE",
+          "command": "spanning-tree vlan 10 priority 61440",
+          "passed": true,
+          "output": "spanning-tree vlan 10 priority 61440\nROGUE(config)#"
+        },
+        {
+          "phase": "legitimate downstream priority restored",
+          "kind": "configuration",
+          "node": "ROGUE",
+          "command": "end",
+          "passed": true,
+          "output": "end\nROGUE#"
+        },
+        {
+          "phase": "legitimate downstream priority restored",
+          "node": "ACCESS",
+          "command": "show spanning-tree inconsistentports",
+          "expectation": "No guarded port remains inconsistent.",
+          "passed": true,
+          "output": "show spanning-tree inconsistentports\n\nName                 Interface                      Inconsistency\n-------------------- ------------------------------ ------------------\n\nNumber of inconsistent ports (segments) in the system : 0\n\nACCESS#"
+        },
+        {
+          "phase": "legitimate downstream priority restored",
+          "node": "ACCESS",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "The authorized upstream remains the root port.",
+          "passed": true,
+          "output": "show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc00.8000\n             Cost        4\n             Port        1 (Ethernet0/0)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)\n             Address     aabb.cc00.7f00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Root FWD 4         128.1    P2p \nEt0/1               Desg FWD 4         128.2    P2p \n\n\nACCESS#"
+        },
+        {
+          "phase": "legitimate downstream priority restored",
+          "node": "ROGUE",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nROGUE#"
+        },
+        {
+          "phase": "legitimate downstream priority restored",
+          "node": "ACCESS",
+          "command": "show running-config interface Ethernet0/1",
+          "expectation": "The boundary protection remains enabled.",
+          "passed": true,
+          "output": "show running-config interface Ethernet0/1\nBuilding configuration...\n\nCurrent configuration : 180 bytes\n!\ninterface Ethernet0/1\n switchport trunk encapsulation dot1q\n switchport trunk allowed vlan 10\n switchport mode trunk\n spanning-tree guard root\n spanning-tree vlan 10 cost 4\nend\n\nACCESS#"
+        }
+      ],
+      "plan_sha256": "281cbe2e043300f50459c1e64caeea4593d3152d7b16c0af8e2682b5026b497a",
+      "images": {
+        "ROOT": "ioll2-xe-17-18-02",
+        "ACCESS": "ioll2-xe-17-18-02",
+        "ROGUE": "ioll2-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T18:13:11Z"
     }
   ]
 }
