@@ -58,5 +58,179 @@
     "duration_minutes": 40,
     "kind": "practice",
     "workbook": "docs/workbooks/035-webhook-receiver-config-validation.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/015-static-default-routes.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-015-static-default-routes.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/016-floating-static-routes.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-016-floating-static-routes.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/020-ipv6-static-routing.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-020-ipv6-static-routing.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/021-routing-table-selection.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-021-routing-table-selection.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/023-dhcp-server-relay.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-023-dhcp-server-relay.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/025-ntp-time-sync.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 45,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-025-ntp-time-sync.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/026-dns-client-resolution.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-026-dns-client-resolution.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/002-ipv4-subnetting-vlsm.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-002-ipv4-subnetting-vlsm.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/004-cdp-lldp-discovery.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-004-cdp-lldp-discovery.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/008-access-trunk-native-vlan.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-008-access-trunk-native-vlan.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/012-etherchannel-lacp.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-012-etherchannel-lacp.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/019-first-hop-redundancy-hsrp.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-019-first-hop-redundancy-hsrp.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/005-interface-status-duplex.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-005-interface-status-duplex.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/030-sla-tracking-static-route.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-030-sla-tracking-static-route.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/029-tftp-config-backup.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-029-tftp-config-backup.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/migration/046-static-routes-to-ospf-migration.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 55,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-046-static-routes-to-ospf-migration.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/020-gre-tunnel-routing.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 45,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-020-gre-tunnel-routing.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/012-vrf-lite-routing-protocols.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-012-vrf-lite-routing-protocols.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/001-eigrp-classic-named-ipv4-ipv6.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-001-eigrp-classic-named-ipv4-ipv6.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/005-ospfv2-ospfv3-multiarea.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-005-ospfv2-ospfv3-multiarea.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/002-eigrp-stub-summary-default.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 45,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-002-eigrp-stub-summary-default.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/003-eigrp-authentication-load-balancing.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-003-eigrp-authentication-load-balancing.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/004-eigrp-troubleshooting.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "break-fix",
+    "workbook": "docs/workbooks/300-410-004-eigrp-troubleshooting.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/008-ospf-troubleshooting.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "break-fix",
+    "workbook": "docs/workbooks/300-410-008-ospf-troubleshooting.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/015-bgp-route-reflector.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 55,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-015-bgp-route-reflector.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/016-bgp-filtering-prefix-aspath.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-016-bgp-filtering-prefix-aspath.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/017-bgp-communities.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-017-bgp-communities.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/010-route-map-filtering.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 45,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-010-route-map-filtering.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/019-bgp-troubleshooting.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 40,
+    "kind": "break-fix",
+    "workbook": "docs/workbooks/300-410-019-bgp-troubleshooting.md"
   }
 }

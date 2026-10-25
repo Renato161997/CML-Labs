@@ -1,79 +1,49 @@
 lab:
   title: TFTP Config Backup
-  description: 200-301 CCNA - Implementing and Administering Cisco Solutions CML lab.
-  notes: '200-301 CCNA blueprint lab: TFTP Config Backup
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# TFTP Config Backup
 
 
-    Topics:
-
-    - TFTP
-
-    - config backup
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Suggested tasks:
-
-    1. Prepare TFTP path
-
-    2. Copy running config
-
-    3. Restore startup config
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/200-301-029-tftp-config-backup.md
 
 
-    Suggested verification:
+    TFTP is intentionally unencrypted and restricted to the isolated link. Only the educational R2 startup
+    configuration is served; it contains no real credentials. The destination is a separate flash file.
+    File-prompt quiet avoids an interactive destination prompt in this disposable lab.
 
-    - show ip interface brief
 
-    - show interfaces status
+    Objectives:
 
-    - show ip route
+    - Identify the permitted TFTP client and the served startup configuration.
 
-    - show running-config | section router
+    - Transfer the isolated reference configuration into a separate client file.
 
-    - ping between the lab endpoints'
+    - Inspect the copied content without replacing running or startup configuration.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
   node_definition: iosv
-  x: -200
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNA TFTP Config Backup ^C\ninterface GigabitEthernet0/0\n\
-      \ description CCNA TFTP Config Backup\n ip address 10.10.10.1 255.255.255.0\n no shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.1 255.255.255.252\n no\
+      \ shutdown\n exit\nfile prompt quiet\nend\n"
+  cpu_limit: 50
   priority: 100
-  tags: []
-- id: n1
-  label: SW1
-  node_definition: iosvl2
   x: 0
   y: 0
-  configuration:
-  - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nbanner motd ^C CCNA TFTP Config Backup ^C\nvlan 10\n\
-      \ name USERS\nvlan 20\n name SERVICES\nvlan 99\n name MGMT\ninterface range GigabitEthernet0/1-3\n\
-      \ switchport mode access\n spanning-tree portfast\nend"
   interfaces:
   - id: i0
     label: Loopback0
@@ -94,20 +64,41 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 99
   tags: []
-- id: n2
-  label: DEVBOX
-  node_definition: desktop
-  x: 200
-  y: 0
+- id: n1
+  label: R2
+  node_definition: iosv
+  configuration:
+  - name: ios_config.txt
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface Loopback0\n ip address 192.0.2.2 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.2 255.255.255.252\n no\
+      \ shutdown\n exit\naccess-list 90 permit host 198.18.0.1\ntftp-server nvram:startup-config 90\n\
+      end\n"
+  cpu_limit: 50
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
-    label: eth0
+    label: Loopback0
+    type: loopback
+  - id: i1
+    label: GigabitEthernet0/0
     type: physical
     slot: 0
-  configuration: []
-  priority: 98
+  - id: i2
+    label: GigabitEthernet0/1
+    type: physical
+    slot: 1
+  - id: i3
+    label: GigabitEthernet0/2
+    type: physical
+    slot: 2
+  - id: i4
+    label: GigabitEthernet0/3
+    type: physical
+    slot: 3
   tags: []
 links:
 - id: l0
@@ -115,10 +106,5 @@ links:
   i1: i1
   n2: n1
   i2: i1
-- id: l1
-  n1: n1
-  i1: i2
-  n2: n2
-  i2: i0
 annotations: []
 smart_annotations: []

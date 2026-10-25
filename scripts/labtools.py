@@ -5,21 +5,24 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import re
 import sys
 from pathlib import Path
 
 import yaml
+from acceptance import validate_plan
 
 ROOT = Path(__file__).resolve().parents[1]
 PHYSICAL = {
     "iosv": [f"GigabitEthernet0/{i}" for i in range(16)],
     "iosvl2": [f"GigabitEthernet{i // 4}/{i % 4}" for i in range(16)],
+    "iol-xe": [f"Ethernet{i // 4}/{i % 4}" for i in range(32)],
+    "ioll2-xe": [f"Ethernet{i // 4}/{i % 4}" for i in range(32)],
     "desktop": [f"eth{i}" for i in range(4)],
     "alpine": [f"eth{i}" for i in range(4)],
     "ubuntu": [f"ens{i}" for i in range(2, 10)],
 }
 RAM_MIB = {"iosv": 512, "iosvl2": 768, "desktop": 512, "alpine": 512, "ubuntu": 2048}
+RAM_MIB.update({"iol-xe": 1024, "ioll2-xe": 1024})
 
 
 class UniqueLoader(yaml.SafeLoader):
@@ -164,7 +167,7 @@ def plan_digest(plan):
     ).hexdigest()
 
 
-def check_evidence(proof, path, expected_hash, phase, expected_plan_hash=None):
+def check_evidence(proof, path, expected_hash, phase, expected_plan_hash=None, expected_plan=None):
     """Reject stale hashes and a green status without successful acceptance checks."""
     errors = []
     if proof.get("sha256") != expected_hash:
@@ -179,6 +182,32 @@ def check_evidence(proof, path, expected_hash, phase, expected_plan_hash=None):
             errors.append("functional pass requires the tested CML version")
         if expected_plan_hash and proof.get("plan_sha256") != expected_plan_hash:
             errors.append("acceptance plan changed; refresh or remove the functional evidence")
+        if expected_plan is not None:
+            from collections import Counter
+
+            required = Counter(
+                ("check", "baseline", c["node"], c["command"])
+                for c in expected_plan.get("checks", [])
+            )
+            for step in expected_plan.get("transitions", []):
+                required.update(
+                    ("check", step["name"], c["node"], c["command"]) for c in step["checks"]
+                )
+                required.update(
+                    ("action", step["name"], step["node"], command) for command in step["commands"]
+                )
+            observed = Counter(
+                (
+                    "action" if c.get("kind") in ("action", "configuration") else "check",
+                    c.get("phase", "baseline"),
+                    c.get("node"),
+                    c.get("command"),
+                )
+                for c in checks
+                if c.get("command") and c.get("passed") is True
+            )
+            if required - observed:
+                errors.append("functional evidence omits planned checks or transitions")
     return [f"{path}: {e}" for e in errors]
 
 
@@ -215,7 +244,12 @@ def catalog(root=ROOT):
         if proof:
             failures.extend(
                 check_evidence(
-                    proof, relative, digest(path), "runtime", plan_digest(plans.get(relative, {}))
+                    proof,
+                    relative,
+                    digest(path),
+                    "runtime",
+                    plan_digest(plans.get(relative, {})),
+                    plans.get(relative, {}),
                 )
             )
         import_proof = import_proofs.get(relative, {})
@@ -230,17 +264,9 @@ def catalog(root=ROOT):
                 failures.append(f"{relative}: evidence does not cover the acceptance plan")
         if relative in plans:
             labels = {n["label"] for n in data["nodes"]}
-            for check in plans[relative].get("checks", []):
-                if (
-                    check.get("node") not in labels
-                    or not check.get("command")
-                    or not check.get("expectation")
-                ):
-                    failures.append(f"{relative}: invalid acceptance command or node")
-                try:
-                    re.compile(check["pattern"])
-                except (re.error, KeyError, TypeError):
-                    failures.append(f"{relative}: invalid acceptance pattern")
+            failures.extend(
+                f"{relative}: {error}" for error in validate_plan(plans[relative], labels)
+            )
         records.append(
             {
                 "path": relative,
@@ -319,8 +345,8 @@ def generated_files(root=ROOT):
         "",
         "[Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)",
         "",
-        "| Exercise | Functional status | CML | Explicit image selections | Checks passed | Completed UTC |",
-        "| --- | --- | --- | --- | ---: | --- |",
+        "| Exercise | Functional status | CML | Explicit image selections | Checks passed | Transition commands | Completed UTC |",
+        "| --- | --- | --- | --- | ---: | ---: | --- |",
     ]
     for row in sorted(runtime, key=lambda r: r["path"]):
         images = (
@@ -334,9 +360,16 @@ def generated_files(root=ROOT):
             )
             or "—"
         )
-        passed = sum(c.get("passed") is True for c in row.get("checks", []))
+        passed = sum(
+            c.get("passed") is True and c.get("kind") not in ("action", "configuration")
+            for c in row.get("checks", [])
+        )
+        actions = sum(
+            c.get("passed") is True and c.get("kind") in ("action", "configuration")
+            for c in row.get("checks", [])
+        )
         results.append(
-            f"| [{titles[row['path']]}](../{row['path']}) | {row['status']} | {row.get('cml_version', '—')} | {images} | {passed} | {row.get('completed_utc', '—')} |"
+            f"| [{titles[row['path']]}](../{row['path']}) | {row['status']} | {row.get('cml_version', '—')} | {images} | {passed} | {actions} | {row.get('completed_utc', '—')} |"
         )
     results += [
         "",

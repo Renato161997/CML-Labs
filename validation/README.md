@@ -55,3 +55,18 @@ possibly incomplete boot-log tail alone, determine functional success.
 All remaining catalog entries with `runtime_status: not-run` have **no functional
 validation claim**, even if import/export passes. Platform concepts such as
 VXLAN, NAC and controller integrations require a separate image-capability review.
+
+Additional plans can contain ordered `transitions`. Each transition runs console
+commands and then its own observable acceptance checks. Evidence must contain all
+planned baseline checks, transition commands and transition checks; copying a plan
+hash while omitting a failure or recovery phase is rejected. Results distinguish
+protocol/data-plane checks from commands used to change the test state.
+
+Slow protocols can set `attempts` (bounded to 60) and `interval_seconds` (bounded
+to 30 seconds). Defaults remain five attempts eight seconds apart. In particular,
+a fresh NTP reference may spend several minutes measuring clock drift before it
+advertises synchronized time; transport reachability is not a substitute for that
+state. The workbook and acceptance plan make the longer wait explicit.
+
+See [platform scope](../docs/PLATFORMS.md) before substituting IOL for IOSv or
+selecting a platform for an API/controller exercise.

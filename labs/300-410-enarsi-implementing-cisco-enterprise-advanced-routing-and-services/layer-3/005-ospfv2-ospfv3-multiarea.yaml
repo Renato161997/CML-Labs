@@ -1,172 +1,150 @@
 lab:
   title: OSPFv2 OSPFv3 Multiarea
-  description: 300-410 ENARSI - Implementing Cisco Enterprise Advanced Routing and Services importable
-    CML topology.
-  notes: '300-410 ENARSI blueprint lab: OSPFv2 OSPFv3 Multiarea
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# OSPFv2 OSPFv3 Multiarea
 
 
-    Topics:
-
-    - OSPFv2
-
-    - OSPFv3
-
-    - multi-area
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Tasks:
-
-    1. Build area 0 and non-backbone area
-
-    2. Verify LSDB
-
-    3. Check inter-area routes
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/300-410-005-ospfv2-ospfv3-multiarea.md
 
 
-    Useful checks:
+    Requires IOL-XE. R2 is the ABR for two independent OSPF processes: OSPFv2 carries IPv4 and OSPFv3
+    carries IPv6. Documentation prefixes are used throughout; no redistribution between protocols is configured.
 
-    - show ip interface brief
 
-    - show running-config
+    Objectives:
 
-    - show ip route
+    - Identify the ABR between backbone area 0 and area 10.
 
-    - show ip protocols
+    - Compare IPv4 and IPv6 inter-area routes.
 
-    - ping and traceroute between endpoints'
+    - Prove bidirectional endpoint forwarding in both address families.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
-  node_definition: iosv
-  x: -450
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C ENARSI OSPFv2 OSPFv3 Multiarea ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI OSPFv2 OSPFv3 Multiarea\n ip address 10.0.12.1 255.255.255.252\n\
-      \ no shutdown\ninterface Loopback0\n description ENARSI OSPFv2 OSPFv3 Multiarea\n ip address 10.1.1.1\
-      \ 255.255.255.255\n no shutdown\nend"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\nipv6 unicast-routing\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n no shutdown\n\
+      \ exit\ninterface Loopback0\n ipv6 address 2001:db8:1::1/128\n ip ospf 1 area 0\n ipv6 ospf 10 area\
+      \ 0\n exit\nrouter ospf 1\n router-id 192.0.2.1\n passive-interface Loopback0\n exit\nipv6 router\
+      \ ospf 10\n router-id 192.0.2.1\n passive-interface Loopback0\n exit\ninterface Ethernet0/0\n ip\
+      \ address 198.18.0.1 255.255.255.252\n no shutdown\n ipv6 address 2001:db8:12::1/64\n ip ospf 1\
+      \ area 0\n ipv6 ospf 10 area 0\n exit\nend\n"
+  cpu_limit: 50
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
   label: R2
-  node_definition: iosv
-  x: -150
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nbanner motd ^C ENARSI OSPFv2 OSPFv3 Multiarea ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI OSPFv2 OSPFv3 Multiarea\n ip address 10.0.12.2 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description ENARSI OSPFv2 OSPFv3 Multiarea\n ip address\
-      \ 10.0.23.1 255.255.255.252\n no shutdown\nend"
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\nipv6 unicast-routing\ninterface Loopback0\n ip address 192.0.2.2 255.255.255.255\n no shutdown\n\
+      \ exit\ninterface Loopback0\n ipv6 address 2001:db8:2::2/128\n ip ospf 1 area 0\n ipv6 ospf 10 area\
+      \ 0\n exit\nrouter ospf 1\n router-id 192.0.2.2\n passive-interface Loopback0\n exit\nipv6 router\
+      \ ospf 10\n router-id 192.0.2.2\n passive-interface Loopback0\n exit\ninterface Ethernet0/0\n ip\
+      \ address 198.18.0.2 255.255.255.252\n no shutdown\n ipv6 address 2001:db8:12::2/64\n ip ospf 1\
+      \ area 0\n ipv6 ospf 10 area 0\n exit\ninterface Ethernet0/1\n ip address 198.18.1.1 255.255.255.252\n\
+      \ no shutdown\n ipv6 address 2001:db8:23::2/64\n ip ospf 1 area 10\n ipv6 ospf 10 area 10\n exit\n\
+      end\n"
+  cpu_limit: 50
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 99
   tags: []
 - id: n2
   label: R3
-  node_definition: iosv
-  x: 150
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R3\nno ip domain-lookup\nbanner motd ^C ENARSI OSPFv2 OSPFv3 Multiarea ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI OSPFv2 OSPFv3 Multiarea\n ip address 10.0.23.2 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description ENARSI OSPFv2 OSPFv3 Multiarea\n ip address\
-      \ 10.0.34.1 255.255.255.252\n no shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
+    content: "hostname R3\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\nipv6 unicast-routing\ninterface Loopback0\n ip address 192.0.2.3 255.255.255.255\n no shutdown\n\
+      \ exit\ninterface Loopback0\n ipv6 address 2001:db8:3::3/128\n ip ospf 1 area 10\n ipv6 ospf 10\
+      \ area 10\n exit\nrouter ospf 1\n router-id 192.0.2.3\n passive-interface Loopback0\n exit\nipv6\
+      \ router ospf 10\n router-id 192.0.2.3\n passive-interface Loopback0\n exit\ninterface Ethernet0/0\n\
+      \ ip address 198.18.1.2 255.255.255.252\n no shutdown\n ipv6 address 2001:db8:23::3/64\n ip ospf\
+      \ 1 area 10\n ipv6 ospf 10 area 10\n exit\nend\n"
+  cpu_limit: 50
   priority: 98
-  tags: []
-- id: n3
-  label: R4
-  node_definition: iosv
-  x: 450
+  x: 520
   y: 0
-  configuration:
-  - name: ios_config.txt
-    content: "hostname R4\nno ip domain-lookup\nbanner motd ^C ENARSI OSPFv2 OSPFv3 Multiarea ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI OSPFv2 OSPFv3 Multiarea\n ip address 10.0.34.2 255.255.255.252\n\
-      \ no shutdown\ninterface Loopback0\n description ENARSI OSPFv2 OSPFv3 Multiarea\n ip address 10.4.4.4\
-      \ 255.255.255.255\n no shutdown\nend"
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 97
   tags: []
 links:
 - id: l0
@@ -178,11 +156,6 @@ links:
   n1: n1
   i1: i2
   n2: n2
-  i2: i1
-- id: l2
-  n1: n2
-  i1: i2
-  n2: n3
   i2: i1
 annotations: []
 smart_annotations: []
