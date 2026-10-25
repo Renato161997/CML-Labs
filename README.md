@@ -28,6 +28,10 @@ Choose an exercise with a workbook, import its YAML and read the starting-state 
 
 The catalog separates **curated practice/break-fix** entries from **scaffolds**. A scaffold is a starting topology and exercise outline, not a complete workbook or a claim that every technology in its title is implemented. Functional status is attached to a dated file hash and the actual tested CML/images.
 
+Additional guided workbooks cover static/floating and IPv6 routing, VLAN trunks, LACP, HSRP, DHCP relay, DNS, NTP, TFTP, IP SLA, EIGRP, multi-area OSPF, VRF-Lite, GRE and BGP route reflection, prefix/AS-path filters, route-maps and communities. Their acceptance plans include observed forwarding, deliberate faults or controlled configuration changes where applicable. [See each exercise's current results](validation/RESULTS.md); configuration commands are counted separately from acceptance checks.
+
+Some exercises use the native **IOL-XE/IOL-L2 XE** models. Check the [platform requirements and limitations](docs/PLATFORMS.md) before importing them; these models are not interchangeable with IOSv for every feature.
+
 ## Import and run
 
 1. Download or clone this repository.

@@ -1,49 +1,49 @@
 lab:
   title: IPv6 Static Routing
-  description: 200-301 CCNA - Implementing and Administering Cisco Solutions CML lab.
-  notes: '200-301 CCNA blueprint lab: IPv6 Static Routing
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# IPv6 Static Routing
 
 
-    Topics:
-
-    - IPv6 routing
-
-    - static routes
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Suggested tasks:
-
-    1. Enable IPv6 unicast routing
-
-    2. Configure static routes
-
-    3. Test end-to-end IPv6
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/200-301-020-ipv6-static-routing.md
 
 
-    Suggested verification:
+    Documentation prefix 2001:db8::/32 is used exclusively. IPv6 forwarding must be enabled globally;
+    successful interface addressing alone does not prove remote routing.
 
-    - show ip interface brief
 
-    - show interfaces status
+    Objectives:
 
-    - show ip route
+    - Inspect global and link-local addressing.
 
-    - show running-config | section router
+    - Explain the IPv6 forward and return static routes.
 
-    - ping between the lab endpoints'
+    - Verify end-to-end ICMPv6 from the source loopback.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
   node_definition: iosv
-  x: -200
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNA IPv6 Static Routing ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNA IPv6 Static Routing\n ip address 10.0.12.1 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description CCNA IPv6 Static Routing\n ip address\
-      \ 10.1.1.1 255.255.255.0\n no shutdown\nend"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n!\nipv6 unicast-routing\n!\ninterface Loopback0\n no ip address\n ipv6\
+      \ enable\n ipv6 address 2001:db8:1::1/128\n!\ninterface GigabitEthernet0/0\n no ip address\n ipv6\
+      \ enable\n ipv6 address 2001:db8:12::1/64\n no shutdown\n!\nipv6 route 2001:db8:2::2/128 2001:db8:12::2\n\
+      end\n"
+  cpu_limit: 50
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
@@ -64,19 +64,21 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
   label: R2
   node_definition: iosv
-  x: 200
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nbanner motd ^C CCNA IPv6 Static Routing ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNA IPv6 Static Routing\n ip address 10.0.12.2 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description CCNA IPv6 Static Routing\n ip address\
-      \ 10.2.2.1 255.255.255.0\n no shutdown\nend"
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n!\nipv6 unicast-routing\n!\ninterface Loopback0\n no ip address\n ipv6\
+      \ enable\n ipv6 address 2001:db8:2::2/128\n!\ninterface GigabitEthernet0/0\n no ip address\n ipv6\
+      \ enable\n ipv6 address 2001:db8:12::2/64\n no shutdown\n!\nipv6 route 2001:db8:1::1/128 2001:db8:12::1\n\
+      end\n"
+  cpu_limit: 50
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
@@ -97,33 +99,6 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 99
-  tags: []
-- id: n2
-  label: PC1
-  node_definition: desktop
-  x: -400
-  y: 120
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  configuration: []
-  priority: 98
-  tags: []
-- id: n3
-  label: PC2
-  node_definition: desktop
-  x: 400
-  y: 120
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  configuration: []
-  priority: 97
   tags: []
 links:
 - id: l0
@@ -131,15 +106,5 @@ links:
   i1: i1
   n2: n1
   i2: i1
-- id: l1
-  n1: n0
-  i1: i2
-  n2: n2
-  i2: i0
-- id: l2
-  n1: n1
-  i1: i2
-  n2: n3
-  i2: i0
 annotations: []
 smart_annotations: []

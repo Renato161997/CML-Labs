@@ -23,6 +23,8 @@ from urllib.parse import urlencode, urlsplit, urlunsplit
 
 import paramiko
 import yaml
+from acceptance import CLI_ERROR, execute_plan
+from console_protocol import response_complete
 from httpx import HTTPError
 from labtools import (
     RAM_MIB,
@@ -67,7 +69,7 @@ class WebConsole:
             prompt = self.read(8)
             self.socket.send("\x03\r")
             prompt += self.read(3)
-            if node.node_definition in ("iosv", "iosvl2"):
+            if node.node_definition in ("iosv", "iosvl2", "iol-xe", "ioll2-xe"):
                 prompt = self.command("enable", 3)
                 if not re.search(re.escape(node.label) + r"#", prompt):
                     raise RuntimeError("Privileged console prompt was not established")
@@ -85,7 +87,7 @@ class WebConsole:
             self.socket.close()
             raise
 
-    def read(self, seconds, until_prompt=False):
+    def read(self, seconds, until_prompt=False, command=None):
         until = time.monotonic() + seconds
         last = time.monotonic()
         text = ""
@@ -97,9 +99,15 @@ class WebConsole:
             except TimeoutError:
                 if text and time.monotonic() - last > 0.8 and not until_prompt:
                     break
-            if until_prompt and re.search(
-                r"(?m)^" + re.escape(self.label) + r"(?:\([^\n]*\))?[>#]\s*$",
-                text.replace("\r", ""),
+            if command is not None and response_complete(text, command, self.label):
+                break
+            if (
+                command is None
+                and until_prompt
+                and re.search(
+                    r"(?m)^" + re.escape(self.label) + r"(?:\([^\n]*\))?[>#]\s*$",
+                    text.replace("\r", ""),
+                )
             ):
                 break
         return re.sub(r"\x1b\[[0-9;?]*[a-zA-Z]", "", text).replace("\r", "")
@@ -107,7 +115,10 @@ class WebConsole:
     def command(self, command, timeout=18):
         self.read(0.4)
         self.socket.send(command + "\r")
-        return self.read(timeout, until_prompt=True)
+        output = self.read(timeout, until_prompt=True, command=command)
+        if not response_complete(output, command, self.label):
+            raise TimeoutError("Console response did not finish after command echo")
+        return output
 
     def close(self):
         self.socket.close()
@@ -134,7 +145,7 @@ class SSHConsole:
             prompt = self.read(8)
             self.channel.send("\r")
             prompt += self.read(3)
-            if node.node_definition in ("iosv", "iosvl2"):
+            if node.node_definition in ("iosv", "iosvl2", "iol-xe", "ioll2-xe"):
                 deadline = time.monotonic() + 240
                 while (
                     not re.search(re.escape(node.label) + r"[>#]", prompt)
@@ -159,7 +170,7 @@ class SSHConsole:
             self.ssh.close()
             raise
 
-    def read(self, seconds, until_prompt=False):
+    def read(self, seconds, until_prompt=False, command=None):
         until = time.monotonic() + seconds
         last = time.monotonic()
         text = ""
@@ -169,12 +180,18 @@ class SSHConsole:
                 last = time.monotonic()
             elif text and time.monotonic() - last > 0.8 and not until_prompt:
                 break
-            if until_prompt and (
-                re.search(
-                    r"(?m)^" + re.escape(self.label) + r"(?:\([^\n]*\))?[>#]\s*$",
-                    text.replace("\r", ""),
+            if command is not None and response_complete(text, command, self.label):
+                break
+            if (
+                command is None
+                and until_prompt
+                and (
+                    re.search(
+                        r"(?m)^" + re.escape(self.label) + r"(?:\([^\n]*\))?[>#]\s*$",
+                        text.replace("\r", ""),
+                    )
+                    or re.search(r"(?m)^root@DEVBOX:[^\n]*#\s*$", text.replace("\r", ""))
                 )
-                or re.search(r"(?m)^root@DEVBOX:[^\n]*#\s*$", text.replace("\r", ""))
             ):
                 break
             time.sleep(0.05)
@@ -183,7 +200,10 @@ class SSHConsole:
     def command(self, command, timeout=18):
         self.read(0.4)
         self.channel.send(command + "\r")
-        return self.read(timeout, until_prompt=True)
+        output = self.read(timeout, until_prompt=True, command=command)
+        if not response_complete(output, command, self.label):
+            raise TimeoutError("Console response did not finish after command echo")
+        return output
 
     def close(self):
         self.ssh.close()
@@ -349,31 +369,21 @@ def main():
                     )
                     assert ok, "Expected deliberate fault was absent"
                     for command in plan["repair"]["commands"]:
-                        console(plan["repair"]["node"]).command(command, 3)
+                        output = console(plan["repair"]["node"]).command(command, 5)
+                        passed = command in output and not CLI_ERROR.search(output)
+                        row["checks"].append(
+                            {
+                                "phase": "repair",
+                                "kind": "configuration",
+                                "node": plan["repair"]["node"],
+                                "command": command,
+                                "passed": bool(passed),
+                                "output": output[-3500:],
+                            }
+                        )
+                        assert passed, "Repair command failed: " + command
                     time.sleep(12)
-                for check in plan["checks"]:
-                    ok = False
-                    output = ""
-                    for _ in range(5):
-                        output = console(check["node"]).command(check["command"])
-                        if (
-                            check["command"] in output
-                            and "% Invalid input" not in output
-                            and re.search(check["pattern"], output, re.MULTILINE | re.IGNORECASE)
-                        ):
-                            ok = True
-                            break
-                        time.sleep(8)
-                    row["checks"].append(
-                        {
-                            "node": check["node"],
-                            "command": check["command"],
-                            "expectation": check["expectation"],
-                            "passed": ok,
-                            "output": output[-3500:],
-                        }
-                    )
-                    assert ok, "Acceptance check failed: " + check["command"]
+                execute_plan(plan, console, row["checks"].append)
                 row["status"] = "passed"
             else:
                 row["status"] = "import-export-pass"

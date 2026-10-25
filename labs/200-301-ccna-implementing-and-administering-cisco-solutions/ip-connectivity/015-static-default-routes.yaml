@@ -1,49 +1,48 @@
 lab:
   title: Static And Default Routes
-  description: 200-301 CCNA - Implementing and Administering Cisco Solutions CML lab.
-  notes: '200-301 CCNA blueprint lab: Static And Default Routes
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# Static And Default Routes
 
 
-    Topics:
-
-    - static routing
-
-    - default route
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Suggested tasks:
-
-    1. Configure static routes
-
-    2. Configure default route
-
-    3. Verify route selection
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/200-301-015-static-default-routes.md
 
 
-    Suggested verification:
+    The loopbacks represent endpoint prefixes. R1 uses a default route; R2 needs a return route to the
+    source loopback. A route in only one direction does not establish bidirectional reachability.
 
-    - show ip interface brief
 
-    - show interfaces status
+    Objectives:
 
-    - show ip route
+    - Explain the forward default route and reverse host route.
 
-    - show running-config | section router
+    - Remove only the default route and observe the data-plane failure.
 
-    - ping between the lab endpoints'
+    - Restore it and prove end-to-end reachability.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
   node_definition: iosv
-  x: -200
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNA Static And Default Routes ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNA Static And Default Routes\n ip address 10.0.12.1 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description CCNA Static And Default Routes\n ip address\
-      \ 10.1.1.1 255.255.255.0\n no shutdown\nend"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.1 255.255.255.252\n no\
+      \ shutdown\n exit\nip route 0.0.0.0 0.0.0.0 198.18.0.2\nend\n"
+  cpu_limit: 50
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
@@ -64,19 +63,20 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
   label: R2
   node_definition: iosv
-  x: 200
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nbanner motd ^C CCNA Static And Default Routes ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNA Static And Default Routes\n ip address 10.0.12.2 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description CCNA Static And Default Routes\n ip address\
-      \ 10.2.2.1 255.255.255.0\n no shutdown\nend"
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface Loopback0\n ip address 192.0.2.2 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.2 255.255.255.252\n no\
+      \ shutdown\n exit\nip route 192.0.2.1 255.255.255.255 198.18.0.1\nend\n"
+  cpu_limit: 50
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
@@ -97,33 +97,6 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 99
-  tags: []
-- id: n2
-  label: PC1
-  node_definition: desktop
-  x: -400
-  y: 120
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  configuration: []
-  priority: 98
-  tags: []
-- id: n3
-  label: PC2
-  node_definition: desktop
-  x: 400
-  y: 120
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  configuration: []
-  priority: 97
   tags: []
 links:
 - id: l0
@@ -131,15 +104,5 @@ links:
   i1: i1
   n2: n1
   i2: i1
-- id: l1
-  n1: n0
-  i1: i2
-  n2: n2
-  i2: i0
-- id: l2
-  n1: n1
-  i1: i2
-  n2: n3
-  i2: i0
 annotations: []
 smart_annotations: []

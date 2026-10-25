@@ -329,6 +329,2549 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-24T18:46:46Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/015-static-default-routes.yaml",
+      "sha256": "8e248967bdba7bccdb65bb999573c85454f965bc1b71323ba1556906355871b2",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T11:29:07Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route static",
+          "expectation": "An installed static default route.",
+          "passed": true,
+          "output": "show ip route static\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\n       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP\n       a - application route\n       + - replicated route, % - next hop override, p - overrides from PfR\n\nGateway of last resort is 198.18.0.2 to network 0.0.0.0\n\nS*    0.0.0.0/0 [1/0] via 198.18.0.2\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/174/289 ms\nR1#"
+        },
+        {
+          "phase": "remove default",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "remove default",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no ip route 0.0.0.0 0.0.0.0 198.18.0.2",
+          "passed": true,
+          "output": "no ip route 0.0.0.0 0.0.0.0 198.18.0.2\nR1(config)#"
+        },
+        {
+          "phase": "remove default",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "remove default",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "All three probes fail while the route is removed.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n\n*Oct 25 11:35:06.319: %SYS-5-CONFIG_I: Configured from console by console...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "restore default",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore default",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip route 0.0.0.0 0.0.0.0 198.18.0.2",
+          "passed": true,
+          "output": "ip route 0.0.0.0 0.0.0.0 198.18.0.2\nR1(config)#"
+        },
+        {
+          "phase": "restore default",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "restore default",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/6 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "plan_sha256": "b78dc3338a105ce1490034834cba0f840e53f7a1c5e29edfce44776475d1c915",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T11:36:06Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/023-dhcp-server-relay.yaml",
+      "sha256": "3b266f7d1d6155d1b551f32a9140e06b60fc01e39cfd60a74809e4edca9933f0",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T11:37:39Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "show ip interface brief",
+          "expectation": "The client interface holds a DHCP lease.",
+          "passed": true,
+          "output": "show ip interface brief\nInterface                  IP-Address      OK? Method Status                Protocol\nGigabitEthernet0/0         198.18.10.10    YES DHCP   up                    up      \nGigabitEthernet0/1         unassigned      YES unset  administratively down down    \nGigabitEthernet0/2         unassigned      YES unset  administratively down down    \nGigabitEthernet0/3         unassigned      YES unset  administratively down down    \nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SERVER",
+          "command": "show ip dhcp binding",
+          "expectation": "The server records a client binding.",
+          "passed": true,
+          "output": "show ip dhcp binding\nBindings from all pools not associated with VRF:\nIP address          Client-ID/\t \t    Lease expiration        Type\n\t\t    Hardware address/\n\t\t    User name\n198.18.10.10        0063.6973.636f.2d35.    Oct 26 2026 11:42 AM    Automatic\n                    3235.342e.3030.6433.\n                    2e33.6161.392d.4769.\n                    302f.30\nSERVER#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The leased client reaches the DHCP server through the relay.",
+          "passed": true,
+          "output": "ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/4/4 ms\nCLIENT#"
+        }
+      ],
+      "images": {
+        "CLIENT": "iosv-159-3-m12",
+        "RELAY": "iosv-159-3-m12",
+        "SERVER": "iosv-159-3-m12"
+      },
+      "plan_sha256": "8cc9fcdab5be58c6bf005118b69044666f22fa79595c96e6deb5c8b56d469a79",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T11:44:27Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/021-routing-table-selection.yaml",
+      "sha256": "33301eea2832a186dd16cedb777e29183071c657d4e4a8805dd3b32f60bdbdc8",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T11:37:39Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.100",
+          "expectation": "The /32 through R3 wins longest-prefix matching.",
+          "passed": true,
+          "output": "show ip route 192.0.2.100\nRouting entry for 192.0.2.100/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.1.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.100 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.100 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.100, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 5/113/293 ms\nR1#"
+        },
+        {
+          "phase": "withdraw specific",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "withdraw specific",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no ip route 192.0.2.100 255.255.255.255 198.18.1.2",
+          "passed": true,
+          "output": "no ip route 192.0.2.100 255.255.255.255 198.18.1.2\nR1(config)#"
+        },
+        {
+          "phase": "withdraw specific",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "withdraw specific",
+          "node": "R1",
+          "command": "show ip route 192.0.2.100",
+          "expectation": "After withdrawing the /32, the /24 through R2 is selected.",
+          "passed": true,
+          "output": "show ip route 192.0.2.100\nRouting entry for 192.0.2.0/24\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "withdraw specific",
+          "node": "R1",
+          "command": "ping 192.0.2.100 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.100 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.100, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/6 ms\nR1#"
+        },
+        {
+          "phase": "restore specific",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore specific",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip route 192.0.2.100 255.255.255.255 198.18.1.2",
+          "passed": true,
+          "output": "ip route 192.0.2.100 255.255.255.255 198.18.1.2\nR1(config)#"
+        },
+        {
+          "phase": "restore specific",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "restore specific",
+          "node": "R1",
+          "command": "show ip route 192.0.2.100",
+          "expectation": "The /32 through R3 wins longest-prefix matching.",
+          "passed": true,
+          "output": "show ip route 192.0.2.100\nRouting entry for 192.0.2.100/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.1.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12",
+        "R3": "iosv-159-3-m12"
+      },
+      "plan_sha256": "c94f4cdd39589c1cf0e3f04280e1cf03e0271d7dcc793f6f1a7f0b2183092e2f",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T11:45:19Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/026-dns-client-resolution.yaml",
+      "sha256": "7ae788d0441193dbb2bbed8e00dce184c2fd39d9380b2b5b9d45a8b82cf83312",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T11:47:39Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping app.example.test repeat 3",
+          "expectation": "A name lookup and ICMP probes reach the server loopback.",
+          "passed": true,
+          "output": "G_WRITTEN: GRUB configuration was written to disk successfully.\n*Oct 25 11:53:41.729: %CVAC-4-CONFIG_DONE: Configuration generated from file flash2:/ios_config.txt was applied and saved to NVRAM. See 'show running-config' or 'show startup-config' for more details.terminal length 0\nR1#ping app.example.test repeat 3\nTranslating \"app.example.test\"...domain server (198.18.0.2) [OK]\n\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.100, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 205/211/218 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show hosts",
+          "expectation": "The name is present in the client cache.",
+          "passed": true,
+          "output": "show hosts\nDefault domain is not set\nName/address lookup uses domain service\nName servers are 198.18.0.2\n\nCodes: UN - unknown, EX - expired, OK - OK, ?? - revalidate\n       temp - temporary, perm - permanent\n       NA - Not Applicable None - Not defined\n\nHost                      Port  Flags      Age Type   Address(es)\napp.example.test          None  (temp, OK)  0   IP    192.0.2.100\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "plan_sha256": "13808b92a08b1e3fba9369abf73bb4dc79c29ed85c6085df920ddda39cf10e88",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T11:55:01Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/020-ipv6-static-routing.yaml",
+      "sha256": "29d4e1a919b2762ae063e768c6b92f6b32924902ac90ca2446b48e97b300e523",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T11:55:01Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ipv6 route static",
+          "expectation": "The remote /128 is installed as a static route.",
+          "passed": true,
+          "output": "show ipv6 route static\nIPv6 Routing Table - default - 5 entries\nCodes: C - Connected, L - Local, S - Static, U - Per-user Static route\n       B - BGP, HA - Home Agent, MR - Mobile Router, R - RIP\n       H - NHRP, I1 - ISIS L1, I2 - ISIS L2, IA - ISIS interarea\n       IS - ISIS summary, D - EIGRP, EX - EIGRP external, NM - NEMO\n       ND - ND Default, NDp - ND Prefix, DCE - Destination, NDr - Redirect\n       RL - RPL, O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1\n       OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2\n       la - LISP alt, lr - LISP site-registrations, ld - LISP dyn-eid\n       lA - LISP away, a - Application\nS   2001:DB8:2::2/128 [1/0]\n     via 2001:DB8:12::2\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping ipv6 2001:db8:2::2 source Loopback0 repeat 3",
+          "expectation": "The remote IPv6 loopback replies to all probes.",
+          "passed": true,
+          "output": "ping ipv6 2001:db8:2::2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:2::2, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:1::1\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/10/27 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "plan_sha256": "bf91296ffdb9829cd9377d70dc9d19dee3423f0a839752a7b568eafd88126af3",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:01:29Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/016-floating-static-routes.yaml",
+      "sha256": "aa2c58a77e26231ca71ce5920eee1e32c413e8c2d0da3081e56401390ca2d63d",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T11:55:01Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "Primary next hop is 198.18.0.2.",
+          "passed": true,
+          "output": "show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 204/208/213 ms\nR1#"
+        },
+        {
+          "phase": "local primary failure",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "local primary failure",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "interface GigabitEthernet0/0\nR1(config-if)#"
+        },
+        {
+          "phase": "local primary failure",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "shutdown",
+          "passed": true,
+          "output": "shutdown\nR1(config-if)#"
+        },
+        {
+          "phase": "local primary failure",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "local primary failure",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The floating route is installed with distance 200.",
+          "passed": true,
+          "output": "show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 200, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.1.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "local primary failure",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "All three probes fail while the route is removed.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n\n*Oct 25 12:01:10.172: %PLATFORM-5-SIGNATURE_VERIFIED: Image 'flash0:/vios-adventerprisek9-m' passed code signing verification\n*Oct 25 12:01:10.674: %SYS-5-CONFIG_I: Configured from console by console.\n*Oct 25 12:01:12.102: %LINK-5-CHANGED: Interface GigabitEthernet0/0, changed state to administratively down\n*Oct 25 12:01:13.104: %LINEPROTO-5-UPDOWN: Line protocol on Interface GigabitEthernet0/0, changed state to down..\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "remote primary failure",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "remote primary failure",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "interface GigabitEthernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "remote primary failure",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "shutdown",
+          "passed": true,
+          "output": "shutdown\nR2(config-if)#"
+        },
+        {
+          "phase": "remote primary failure",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "remote primary failure",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The floating route is installed with distance 200.",
+          "passed": true,
+          "output": "show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 200, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.1.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "remote primary failure",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/5 ms\nR1#"
+        },
+        {
+          "phase": "remote primary recovery",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "remote primary recovery",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "interface GigabitEthernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "remote primary recovery",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "no shutdown\n*Oct 25 12:01:27.583: %LINK-5-CHANGED: Interface GigabitEthernet0/0, changed state to administratively down\nR2(config-if)#"
+        },
+        {
+          "phase": "remote primary recovery",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#\n*Oct 25 12:01:28.585: %LINEPRO"
+        },
+        {
+          "phase": "remote primary recovery",
+          "node": "R2",
+          "command": "show ip interface brief",
+          "expectation": "The remote primary interface is restored.",
+          "passed": true,
+          "output": "show ip interface brief\nInterface                  IP-Address      OK? Method Status                Protocol\nGigabitEthernet0/0         198.18.0.2      YES TFTP   up                    up      \nGigabitEthernet0/1         198.18.1.2      YES TFTP   up                    up      \nGigabitEthernet0/2         unassigned      YES unset  administratively down down    \nGigabitEthernet0/3         unassigned      YES unset  administratively down down    \nLoopback0                  192.0.2.2       YES TFTP   up                    up      \nR2#\n*Oct 25 12:01:30.456"
+        },
+        {
+          "phase": "local primary recovery",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "local primary recovery",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "interface GigabitEthernet0/0\nR1(config-if)#"
+        },
+        {
+          "phase": "local primary recovery",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "no shutdown\nR1(config-if)#"
+        },
+        {
+          "phase": "local primary recovery",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "local primary recovery",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "Primary next hop is 198.18.0.2.",
+          "passed": true,
+          "output": "show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "local primary recovery",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/3/5 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "plan_sha256": "2db31702b145b68513434af45266ec1890ed7fd693f5e4945b297733f096d05e",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:02:44Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/002-ipv4-subnetting-vlsm.yaml",
+      "sha256": "96bc12f4c49883278aea00edb083e65d5978b5694eb9a7c2b97842af2ea2fa25",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:01:29Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route connected",
+          "expectation": "The /26 endpoint network is connected.",
+          "passed": true,
+          "output": "show ip route connected\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\n       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP\n       a - application route\n       + - replicated route, % - next hop override, p - overrides from PfR\n\nGateway of last resort is not set\n\n      192.0.2.0/24 is variably subnetted, 3 subnets, 3 masks\nC        192.0.2.0/26 is directly connected, Loopback0\nL        192.0.2.1/32 is directly connected, Loopback0\n      198.18.0.0/24 is variably subnetted, 2 subnets, 2 masks\nC        198.18.0.0/30 is directly connected, GigabitEthernet0/0\nL        198.18.0.1/32 is directly connected, GigabitEthernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip route connected",
+          "expectation": "The /27 endpoint network is connected.",
+          "passed": true,
+          "output": "show ip route connected\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\n       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP\n       a - application route\n       + - replicated route, % - next hop override, p - overrides from PfR\n\nGateway of last resort is not set\n\n      192.0.2.0/24 is variably subnetted, 3 subnets, 3 masks\nC        192.0.2.64/27 is directly connected, Loopback0\nL        192.0.2.65/32 is directly connected, Loopback0\n      198.18.0.0/24 is variably subnetted, 2 subnets, 2 masks\nC        198.18.0.0/30 is directly connected, GigabitEthernet0/0\nL        198.18.0.2/32 is directly connected, GigabitEthernet0/0\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.65 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.65 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.65, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/6/12 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "plan_sha256": "5501cb85a6386b615d2d1f191237ab8fe954dcfe8a21fc5310be90b1226b15e1",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:08:17Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/029-tftp-config-backup.yaml",
+      "sha256": "5c2025d8995249eb3987439ab10430be598d948dbad356fa57944d100742b3c8",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:25:55Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The TFTP server is reachable.",
+          "passed": true,
+          "output": "ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/6 ms\nR1#"
+        },
+        {
+          "phase": "download reference configuration",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "copy tftp://198.18.0.2/startup-config flash:lab-backup.cfg",
+          "passed": true,
+          "output": "copy tftp://198.18.0.2/startup-config flash:lab-backup.cfg\nAccessing tftp://198.18.0.2/startup-config...\nLoading startup-config from 198.18.0.2 (via GigabitEthernet0/0): !\n[OK - 3065 bytes]\n\n3065 bytes copied in 0.615 secs (4984 bytes/sec)\n\nR1#"
+        },
+        {
+          "phase": "download reference configuration",
+          "node": "R1",
+          "command": "more flash:lab-backup.cfg | include hostname",
+          "expectation": "The copied file contains the server hostname, not the client configuration.",
+          "passed": true,
+          "output": "more flash:lab-backup.cfg | include hostname\nhostname R2\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "plan_sha256": "0cb8c6137ffc2b6f08ffa7f4e94ee5e1de661e1f83c218b08ec2c8f0c9f29bce",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:32:45Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/migration/046-static-routes-to-ospf-migration.yaml",
+      "sha256": "71f38c219bcae860cb27176d0f7f44e5d5a1ef0578d1e8c2e1046df21819e9f8",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:26:28Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The OSPF adjacency is already established.",
+          "passed": true,
+          "output": "show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:36    198.18.0.2      GigabitEthernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "Primary next hop is 198.18.0.2.",
+          "passed": true,
+          "output": "show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/6 ms\nR1#"
+        },
+        {
+          "phase": "migrate R1",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "migrate R1",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no ip route 192.0.2.2 255.255.255.255 198.18.0.2",
+          "passed": true,
+          "output": "no ip route 192.0.2.2 255.255.255.255 198.18.0.2\nR1(config)#"
+        },
+        {
+          "phase": "migrate R1",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "migrate R1",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "OSPF supplies the installed route after the static is removed.",
+          "passed": true,
+          "output": "show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"ospf 1\", distance 110, metric 2, type intra area\n  Last update from 198.18.0.2 on GigabitEthernet0/0, 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 192.0.2.2, 00:00:01 ago, via GigabitEthernet0/0\n      Route metric is 2, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "migrate R1",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/5/7 ms\nR1#\n*Oct 25 12:32:25.475: %SYS-5-CONF"
+        },
+        {
+          "phase": "migrate return route",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "migrate return route",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no ip route 192.0.2.1 255.255.255.255 198.18.0.1",
+          "passed": true,
+          "output": "no ip route 192.0.2.1 255.255.255.255 198.18.0.1\nR2(config)#"
+        },
+        {
+          "phase": "migrate return route",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "migrate return route",
+          "node": "R2",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The return route is also learned through OSPF.",
+          "passed": true,
+          "output": "show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"ospf 1\", distance 110, metric 2, type intra area\n  Last update from 198.18.0.1 on GigabitEthernet0/0, 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.1, from 192.0.2.1, 00:00:01 ago, via GigabitEthernet0/0\n      Route metric is 2, traffic share count is 1\nR2#"
+        },
+        {
+          "phase": "migrate return route",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/6 ms\nR1#"
+        },
+        {
+          "phase": "rollback return route",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "rollback return route",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip route 192.0.2.1 255.255.255.255 198.18.0.1",
+          "passed": true,
+          "output": "ip route 192.0.2.1 255.255.255.255 198.18.0.1\nR2(config)#"
+        },
+        {
+          "phase": "rollback return route",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "rollback return route",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/5/9 ms\nR1#"
+        },
+        {
+          "phase": "rollback R1",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "rollback R1",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip route 192.0.2.2 255.255.255.255 198.18.0.2",
+          "passed": true,
+          "output": "ip route 192.0.2.2 255.255.255.255 198.18.0.2\nR1(config)#"
+        },
+        {
+          "phase": "rollback R1",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "rollback R1",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "Primary next hop is 198.18.0.2.",
+          "passed": true,
+          "output": "show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "rollback R1",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/5/9 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "plan_sha256": "103596d86c01c6d29403af3b217090b6da83241bd36a6bfe6c6dd33badde90f3",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:33:36Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/004-cdp-lldp-discovery.yaml",
+      "sha256": "f332821a9c42e23d3e2e705c053b498ebe4f30c5213277bf6a98d6f4c34d6e6d",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:41:07Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show cdp neighbors",
+          "expectation": "The Cisco discovery table contains SW2.",
+          "passed": true,
+          "output": "show cdp neighbors\nCapability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge\n                  S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone, \n                  D - Remote, C - CVTA, M - Two-port Mac Relay \n\nDevice ID        Local Intrfce     Holdtme    Capability  Platform  Port ID\nSW2              Eth 0/0           172             R S I  Linux Uni Eth 0/0\n\nTotal cdp entries displayed : 1\nSW1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show lldp neighbors",
+          "expectation": "The IEEE LLDP table independently contains SW2.",
+          "passed": true,
+          "output": "show lldp neighbors\nCapability codes:\n    (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device\n    (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other\n\nDevice ID           Local Intf     Hold-time  Capability      Port ID\nSW2                 Et0/0          120        B,R             Et0/0\n\nTotal entries displayed: 1\n\nSW1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "ping 198.18.0.2 source Vlan10 repeat 3",
+          "expectation": "The management SVIs communicate across VLAN 10.",
+          "passed": true,
+          "output": "ping 198.18.0.2 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\nPacket sent with a source address of 198.18.0.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nSW1#"
+        }
+      ],
+      "images": {
+        "SW1": "ioll2-xe-17-18-02",
+        "SW2": "ioll2-xe-17-18-02"
+      },
+      "plan_sha256": "ae8ea47b907b07ee20299f24313f277a782a7059794fcf2777e64dec6f0aa581",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:41:40Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/001-eigrp-classic-named-ipv4-ipv6.yaml",
+      "sha256": "53c0104d05b7c96f83ec785db123d7f6287b0869fe9117b6357c8f5da26b28f9",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:41:40Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip eigrp neighbors",
+          "expectation": "Classic IPv4 peers with the named IPv4 address family.",
+          "passed": true,
+          "output": "show ip eigrp neighbors\nEIGRP-IPv4 Neighbors for AS(100)\nH   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq\n                                                   (sec)         (ms)       Cnt Num\n0   198.18.0.2              Et0/0                    14 00:00:12    1   100  0  3\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ipv6 eigrp neighbors",
+          "expectation": "IPv6 has an independently established adjacency.",
+          "passed": true,
+          "output": "show ipv6 eigrp neighbors\nEIGRP-IPv6 Neighbors for AS(100)\nH   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq\n                                                   (sec)         (ms)       Cnt Num\n0   Link-local address:     Et0/0                    14 00:00:12    1   100  0  3\n    FE80::A8BB:CCFF:FE00:1000\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ipv6 route eigrp",
+          "expectation": "The remote IPv6 endpoint is learned dynamically.",
+          "passed": true,
+          "output": "show ipv6 route eigrp\nIPv6 Routing Table - default - 5 entries\nCodes: C - Connected, L - Local, S - Static, U - Per-user Static route\n       B - BGP, R - RIP, H - NHRP, HG - NHRP registered\n       Hg - NHRP registration summary, HE - NHRP External, I1 - ISIS L1\n       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP\n       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination\n       NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter\n       OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1\n       ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations\n       ld - LISP dyn-eid, lA - LISP away, le - LISP extranet-policy\n       lp - LISP publications, ls - LISP destinations-summary, a - Application\n       m - OMP\nD   2001:DB8:2::2/128 [90/281632]\n     via FE80::A8BB:CCFF:FE00:1000, Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping ipv6 2001:db8:2::2 source Loopback0 repeat 3",
+          "expectation": "IPv6 endpoint forwarding succeeds.",
+          "passed": true,
+          "output": "ping ipv6 2001:db8:2::2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:2::2, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:1::1\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "82f50b9dfccd29d52a65eefb30b6eaed4f16c6bbaee2179da127a592ace51dc3",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:42:12Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/020-gre-tunnel-routing.yaml",
+      "sha256": "e4ad3f7093b030bc4a4910e791ffac4e6c8729e6f6bbbb93d367591132786a7a",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:41:40Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show interfaces Tunnel0",
+          "expectation": "The GRE interface is up; this alone is not a data-plane proof.",
+          "passed": true,
+          "output": "show interfaces Tunnel0\nTunnel0 is up, line protocol is up \n  Hardware is Tunnel\n  Internet address is 172.16.0.1/30\n  MTU 17916 bytes, BW 100 Kbit/sec, DLY 50000 usec, \n     reliability 255/255, txload 1/255, rxload 1/255\n  Encapsulation TUNNEL, loopback not set\n  Keepalive not set\n  Tunnel linestate evaluation up\n  Tunnel source 198.18.0.1 (Ethernet0/0), destination 198.18.0.2\n   Tunnel Subblocks:\n      src-track:\n         Tunnel0 source tracking subblock associated with Ethernet0/0\n          Set of tunnels with source Ethernet0/0, 1 member (includes iterators), on interface <OK>\n  Tunnel protocol/transport GRE/IP\n    Key disabled, sequencing disabled\n    Checksumming of packets disabled\n  Tunnel TTL 255, Fast tunneling enabled\n  Tunnel transport MTU 1476 bytes\n  Tunnel transmit bandwidth 8000 (kbps)\n  Tunnel receive bandwidth 8000 (kbps)\n  Tunnel state info: \n    State change to up   : Oct 25 2026 12:42:03\n  Last input never, output never, output hang never\n  Last clearing of \"show interface\" counters 00:00:13\n  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0\n  Queueing strategy: fifo\n  Output queue: 0/0 (size/max)\n  5 minute input rate 0 bits/sec, 0 packets/sec\n  5 minute output rate 0 bits/sec, 0 packets/sec\n     0 packets input, 0 bytes, 0 no buffer\n     Received 0 broadcasts (0 IP multicasts)\n     0 runts, 0 giants, 0 throttles \n     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort\n     0 packets output, 0 bytes, 0 underruns\n     Output 0 broadcasts (0 IP multicasts)\n     0 output errors, 0 collisions, 0 interface resets\n     0 unknown protocol drops\n     0 output buffer failures, 0 output buffers swapped out\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "GRE is filtered",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "GRE is filtered",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-list extended BLOCK-GRE",
+          "passed": true,
+          "output": "ip access-list extended BLOCK-GRE\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "GRE is filtered",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "deny gre host 198.18.0.1 host 198.18.0.2",
+          "passed": true,
+          "output": "deny gre host 198.18.0.1 host 198.18.0.2\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "GRE is filtered",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "permit ip any any",
+          "passed": true,
+          "output": "permit ip any any\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "GRE is filtered",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "exit\nR2(config)#"
+        },
+        {
+          "phase": "GRE is filtered",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "interface Ethernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "GRE is filtered",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-group BLOCK-GRE in",
+          "passed": true,
+          "output": "ip access-group BLOCK-GRE in\nR2(config-if)#"
+        },
+        {
+          "phase": "GRE is filtered",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "GRE is filtered",
+          "node": "R1",
+          "command": "show interfaces Tunnel0",
+          "expectation": "The GRE interface is up; this alone is not a data-plane proof.",
+          "passed": true,
+          "output": "show interfaces Tunnel0\nTunnel0 is up, line protocol is up \n  Hardware is Tunnel\n  Internet address is 172.16.0.1/30\n  MTU 17916 bytes, BW 100 Kbit/sec, DLY 50000 usec, \n     reliability 255/255, txload 1/255, rxload 1/255\n  Encapsulation TUNNEL, loopback not set\n  Keepalive not set\n  Tunnel linestate evaluation up\n  Tunnel source 198.18.0.1 (Ethernet0/0), destination 198.18.0.2\n   Tunnel Subblocks:\n      src-track:\n         Tunnel0 source tracking subblock associated with Ethernet0/0\n          Set of tunnels with source Ethernet0/0, 1 member (includes iterators), on interface <OK>\n  Tunnel protocol/transport GRE/IP\n    Key disabled, sequencing disabled\n    Checksumming of packets disabled\n  Tunnel TTL 255, Fast tunneling enabled\n  Tunnel transport MTU 1476 bytes\n  Tunnel transmit bandwidth 8000 (kbps)\n  Tunnel receive bandwidth 8000 (kbps)\n  Tunnel state info: \n    State change to up   : Oct 25 2026 12:42:03\n  Last input 00:00:08, output 00:00:08, output hang never\n  Last clearing of \"show interface\" counters 00:00:22\n  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0\n  Queueing strategy: fifo\n  Output queue: 0/0 (size/max)\n  5 minute input rate 0 bits/sec, 0 packets/sec\n  5 minute output rate 0 bits/sec, 0 packets/sec\n     3 packets input, 372 bytes, 0 no buffer\n     Received 0 broadcasts (0 IP multicasts)\n     0 runts, 0 giants, 0 throttles \n     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort\n     3 packets output, 372 bytes, 0 underruns\n     Output 0 broadcasts (0 IP multicasts)\n     0 output errors, 0 collisions, 0 interface resets\n     0 unknown protocol drops\n     0 output buffer failures, 0 output buffers swapped out\nR1#"
+        },
+        {
+          "phase": "GRE is filtered",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "All three probes fail while the route is removed.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "GRE is filtered",
+          "node": "R2",
+          "command": "show access-lists BLOCK-GRE",
+          "expectation": "The filter counts actual blocked GRE packets.",
+          "passed": true,
+          "output": "show access-lists BLOCK-GRE\nExtended IP access list BLOCK-GRE\n    10 deny gre host 198.18.0.1 host 198.18.0.2 (3 matches)\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "GRE restored",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "GRE restored",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "interface Ethernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "GRE restored",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no ip access-group BLOCK-GRE in",
+          "passed": true,
+          "output": "no ip access-group BLOCK-GRE in\nR2(config-if)#"
+        },
+        {
+          "phase": "GRE restored",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "GRE restored",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "c10b5380a684873c7573d535eae61b9122b19b4c3691ebcef7135938eaa39720",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:42:29Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/012-vrf-lite-routing-protocols.yaml",
+      "sha256": "b3c88bb64ab266b9adbc720860f977e994451c3fc462abb3a43174454b4a9d98",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:41:40Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route vrf RED ospf",
+          "expectation": "RED learns its remote endpoint.",
+          "passed": true,
+          "output": "show ip route vrf RED ospf\n\nRouting Table: RED\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP\n       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\n       H - NHRP, G - NHRP registered, g - NHRP registration summary\n       o - ODR, P - periodic downloaded static route, l - LISP\n       a - application route\n       + - replicated route, % - next hop override, p - overrides from PfR\n       & - replicated local route overrides by connected\n\nGateway of last resort is not set\n\n      203.0.113.0/32 is subnetted, 2 subnets\nO        203.0.113.2 [110/11] via 198.18.0.2, 00:00:07, Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route vrf BLUE ospf",
+          "expectation": "BLUE separately learns the overlapping endpoint.",
+          "passed": true,
+          "output": "show ip route vrf BLUE ospf\n\nRouting Table: BLUE\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP\n       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\n       H - NHRP, G - NHRP registered, g - NHRP registration summary\n       o - ODR, P - periodic downloaded static route, l - LISP\n       a - application route\n       + - replicated route, % - next hop override, p - overrides from PfR\n       & - replicated local route overrides by connected\n\nGateway of last resort is not set\n\n      203.0.113.0/32 is subnetted, 2 subnets\nO        203.0.113.2 [110/11] via 198.18.0.2, 00:00:08, Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping vrf RED 203.0.113.2 source Loopback10 repeat 3",
+          "expectation": "RED forwards through its own link.",
+          "passed": true,
+          "output": "ping vrf RED 203.0.113.2 source Loopback10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 203.0.113.2, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping vrf BLUE 203.0.113.2 source Loopback20 repeat 3",
+          "expectation": "BLUE forwards through the other link.",
+          "passed": true,
+          "output": "ping vrf BLUE 203.0.113.2 source Loopback20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 203.0.113.2, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 203.0.113.2",
+          "expectation": "The overlapping endpoint is absent from the global routing table.",
+          "passed": true,
+          "output": "show ip route 203.0.113.2\n% Network not in table\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "abca995e37cfb10a310d0f26e8591301dca819b93e1dc00448ebaf720e6af17b",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:42:37Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/002-eigrp-stub-summary-default.yaml",
+      "sha256": "4f7485c2046125b7207b56132dc816c58253fed99d21b392094a4983217c00a8",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:42:29Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CORE",
+          "command": "show ip eigrp neighbors detail",
+          "expectation": "The downstream peer advertises its stub capability.",
+          "passed": true,
+          "output": "show ip eigrp neighbors detail\nEIGRP-IPv4 Neighbors for AS(100)\nH   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq\n                                                   (sec)         (ms)       Cnt Num\n1   198.18.1.2              Et0/1                    11 00:00:10 1599  5000  0  2\n   Version 28.0/2.0, Retrans: 1, Retries: 0, Prefixes: 1\n   Topology-ids from peer - 0 \n   Topologies advertised to peer:   base\n\n   Stub Peer Advertising (CONNECTED SUMMARY ) Routes\n   Suppressing queries\n0   198.18.0.1              Et0/0                    10 00:00:11    1   100  0  3\n   Version 28.0/2.0, Retrans: 1, Retries: 0, Prefixes: 1\n   Topology-ids from peer - 0 \n   Topologies advertised to peer:   base\n\nMax Nbrs: 0, Current Nbrs: 0\nCORE#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CORE",
+          "command": "show ip route 192.0.2.65",
+          "expectation": "CORE selects the received aggregate.",
+          "passed": true,
+          "output": "show ip route 192.0.2.65\nRouting entry for 192.0.2.0/25\n  Known via \"eigrp 100\", distance 90, metric 409600, precedence routine (0), type internal\n  Redistributing via eigrp 100\n  Last update from 198.18.1.2 on Ethernet0/1, 00:00:09 ago\n  Routing Descriptor Blocks:\n  * 198.18.1.2, from 198.18.1.2, 00:00:09 ago, via Ethernet0/1\n      Route metric is 409600, traffic share count is 1\n      Total delay is 6000 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\nCORE#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route eigrp",
+          "expectation": "R1 receives a dynamic default.",
+          "passed": true,
+          "output": "show ip route eigrp\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP\n       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\n       H - NHRP, G - NHRP registered, g - NHRP registration summary\n       o - ODR, P - periodic downloaded static route, l - LISP\n       a - application route\n       + - replicated route, % - next hop override, p - overrides from PfR\n       & - replicated local route overrides by connected\n\nGateway of last resort is 198.18.0.2 to network 0.0.0.0\n\nD*    0.0.0.0/0 [90/307200] via 198.18.0.2, 00:00:14, Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.65 source Loopback0 repeat 3",
+          "expectation": "The default, aggregate and return route all forward correctly.",
+          "passed": true,
+          "output": "ping 192.0.2.65 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.65, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.200 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "CORE": "iol-xe-17-18-02",
+        "STUB": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "b1ede7463967a952dfa18cb1d5966d0520dd131ff616058b0fd57eeeb6e53752",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:42:58Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/005-ospfv2-ospfv3-multiarea.yaml",
+      "sha256": "15ea6be4c5ebcb6e284c5f314bfbc8a1b647300a6c15d1591252a96b87ef009e",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:42:12Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route ospf",
+          "expectation": "OSPFv2 installs an inter-area route.",
+          "passed": true,
+          "output": "show ip route ospf\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP\n       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\n       H - NHRP, G - NHRP registered, g - NHRP registration summary\n       o - ODR, P - periodic downloaded static route, l - LISP\n       a - application route\n       + - replicated route, % - next hop override, p - overrides from PfR\n       & - replicated local route overrides by connected\n\nGateway of last resort is not set\n\n      192.0.2.0/32 is subnetted, 3 subnets\nO        192.0.2.2 [110/11] via 198.18.0.2, 00:00:06, Ethernet0/0\nO IA     192.0.2.3 [110/21] via 198.18.0.2, 00:00:04, Ethernet0/0\n      198.18.1.0/30 is subnetted, 1 subnets\nO IA     198.18.1.0 [110/20] via 198.18.0.2, 00:00:06, Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ipv6 route ospf",
+          "expectation": "OSPFv3 separately installs its inter-area route.",
+          "passed": true,
+          "output": "show ipv6 route ospf\nIPv6 Routing Table - default - 7 entries\nCodes: C - Connected, L - Local, S - Static, U - Per-user Static route\n       B - BGP, R - RIP, H - NHRP, HG - NHRP registered\n       Hg - NHRP registration summary, HE - NHRP External, I1 - ISIS L1\n       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP\n       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination\n       NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter\n       OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1\n       ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations\n       ld - LISP dyn-eid, lA - LISP away, le - LISP extranet-policy\n       lp - LISP publications, ls - LISP destinations-summary, a - Application\n       m - OMP\nO   2001:DB8:2::2/128 [110/10]\n     via FE80::A8BB:CCFF:FE00:1300, Ethernet0/0\nOI  2001:DB8:3::3/128 [110/20]\n     via FE80::A8BB:CCFF:FE00:1300, Ethernet0/0\nOI  2001:DB8:23::/64 [110/20]\n     via FE80::A8BB:CCFF:FE00:1300, Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping ipv6 2001:db8:3::3 source Loopback0 repeat 3",
+          "expectation": "IPv6 forwards through the ABR.",
+          "passed": true,
+          "output": "ping ipv6 2001:db8:3::3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:3::3, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:1::1\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "a4fc678a9d11f7cad250a67524fd9d3800d024ce524caae8ddcc6ad6d7c6b2f5",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:43:10Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/003-eigrp-authentication-load-balancing.yaml",
+      "sha256": "41f9c91b7ebfb0a6c24054e9156b68d395189a9a65da26d53913323211f2c7e1",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:42:37Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip eigrp neighbors",
+          "expectation": "Both authenticated peer links are established.",
+          "passed": true,
+          "output": "show ip eigrp neighbors\nEIGRP-IPv4 VR(SECURE) Address-Family Neighbors for AS(100)\nH   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq\n                                                   (sec)         (ms)       Cnt Num\n1   198.18.0.2              Et0/0                    13 00:00:08    1   100  0  6\n0   198.18.1.2              Et0/1                    13 00:00:09    1   100  0  5\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "Two equal-cost next hops are installed.",
+          "passed": true,
+          "output": "show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"eigrp 100\", distance 90, metric 1024640, precedence routine (0), type internal\n  Redistributing via eigrp 100\n  Last update from 198.18.0.2 on Ethernet0/0, 00:00:02 ago\n  Routing Descriptor Blocks:\n  * 198.18.1.2, from 198.18.1.2, 00:00:02 ago, via Ethernet0/1\n      Route metric is 1024640, traffic share count is 1\n      Total delay is 1001 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\n    198.18.0.2, from 198.18.0.2, 00:00:02 ago, via Ethernet0/0\n      Route metric is 1024640, traffic share count is 1\n      Total delay is 1001 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "wrong key on one peer",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\n*Oct 25 12:43:02.141: %PKI-6-SUDI_INFO: PKI: platform doesn't support sudi certificate\n*Oct 25 12:43:02.141: %PKI-6-SUDI_INFO: PKI: no sudi certificate is installed\n*Oct 25 12:43:02.142: %PKI-2-NON_AUTHORITATIVE_CLOCK: PKI functions can not be initialized until an authoritative time source, like NTP, can be obtained.\n*Oct 25 12:43:02.247: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt.\n*Oct 25 12:43:02.349: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 25 12:43:02.350: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 25 12:43:02.456: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "wrong key on one peer",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router eigrp SECURE",
+          "passed": true,
+          "output": "router eigrp SECURE\nR2(config-router)#"
+        },
+        {
+          "phase": "wrong key on one peer",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "address-family ipv4 unicast autonomous-system 100",
+          "passed": true,
+          "output": "\n*Oct 25 12:43:02.556: %PNP-6-PNP_TECH_SUMMARY_SAVED_OK: PnP tech summary (/pnp-tech/pnp-tech-discovery-summary) saved successfully (elapsed time: 1 seconds).\n*Oct 25 12:43:02.556: %PNP-6-PNP_DISCOVERY_STOPPED: PnP Discovery stopped (Config Wizard)\nR2(config-router)#address-family ipv4 unicast autonomous-system 100\nR2(config-router-af)#"
+        },
+        {
+          "phase": "wrong key on one peer",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "af-interface Ethernet0/0",
+          "passed": true,
+          "output": "af-interface Ethernet0/0\nR2(config-router-af-interface)#"
+        },
+        {
+          "phase": "wrong key on one peer",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "authentication mode hmac-sha-256 WRONG-LAB-KEY",
+          "passed": true,
+          "output": "authentication mode hmac-sha-256 WRONG-LAB-KEY\nR2(config-router-af-interface)#"
+        },
+        {
+          "phase": "wrong key on one peer",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "wrong key on one peer",
+          "node": "R1",
+          "command": "show ip eigrp neighbors",
+          "expectation": "Only the other authenticated link remains.",
+          "passed": true,
+          "output": "show ip eigrp neighbors\nEIGRP-IPv4 VR(SECURE) Address-Family Neighbors for AS(100)\nH   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq\n                                                   (sec)         (ms)       Cnt Num\n0   198.18.1.2              Et0/1                    14 00:00:18    1   100  0  7\nR1#"
+        },
+        {
+          "phase": "wrong key on one peer",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "authentication restored",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\n*Oct 25 12:43:04.770: %DUAL-5-NBRCHANGE: EIGRP-IPv4 100: Neighbor 198.18.0.1 (Ethernet0/0) is down: authentication HMAC-SHA-256 configured\n*Oct 25 12:43:05.272: %SYS-5-CONFIG_I: Configured from console by console\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "authentication restored",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router eigrp SECURE",
+          "passed": true,
+          "output": "router eigrp SECURE\nR2(config-router)#"
+        },
+        {
+          "phase": "authentication restored",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "address-family ipv4 unicast autonomous-system 100",
+          "passed": true,
+          "output": "address-family ipv4 unicast autonomous-system 100\nR2(config-router-af)#"
+        },
+        {
+          "phase": "authentication restored",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "af-interface Ethernet0/0",
+          "passed": true,
+          "output": "af-interface Ethernet0/0\nR2(config-router-af-interface)#"
+        },
+        {
+          "phase": "authentication restored",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "authentication mode hmac-sha-256 CML-LAB-ONLY",
+          "passed": true,
+          "output": "authentication mode hmac-sha-256 CML-LAB-ONLY\nR2(config-router-af-interface)#"
+        },
+        {
+          "phase": "authentication restored",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "authentication restored",
+          "node": "R1",
+          "command": "show ip eigrp neighbors",
+          "expectation": "Both authenticated peer links are established.",
+          "passed": true,
+          "output": "show ip eigrp neighbors\nEIGRP-IPv4 VR(SECURE) Address-Family Neighbors for AS(100)\nH   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq\n                                                   (sec)         (ms)       Cnt Num\n1   198.18.0.2              Et0/0                    14 00:00:00    1   100  0  11\n0   198.18.1.2              Et0/1                    14 00:00:22    1   100  0  10\nR1#"
+        },
+        {
+          "phase": "authentication restored",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "8fa5be56600a870117752631a08df5760431a48007d36a3eeca42ef2efba69a5",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:43:13Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/004-eigrp-troubleshooting.yaml",
+      "sha256": "f9ab639da85c069cf9ded0ec90e148bb0862e6451a5ca1ce6c2480247bfdac01",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:42:58Z",
+      "checks": [
+        {
+          "name": "initial fault: no FULL adjacency",
+          "passed": true
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip eigrp neighbors",
+          "expectation": "The repaired peer forms an adjacency.",
+          "passed": true,
+          "output": "show ip eigrp neighbors\nEIGRP-IPv4 Neighbors for AS(100)\nH   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq\n                                                   (sec)         (ms)       Cnt Num\n0   198.18.0.2              Et0/0                    12 00:00:14    1   100  0  3\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "f88d8bebf24e3acff727ae9a7466a18a0d21832c3400d4ccd49668c82e2c6a9f",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:43:41Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/008-ospf-troubleshooting.yaml",
+      "sha256": "7d46dada1aaa1762adc03b055ae68c62dbffc7d63938eedc774e50229903431b",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:43:10Z",
+      "checks": [
+        {
+          "name": "initial fault: no FULL adjacency",
+          "passed": true
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The repaired neighbor is FULL.",
+          "passed": true,
+          "output": "show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:34    198.18.0.2      Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "d234e7dc6f18e466ddd7dc23d6f50d2cd1113d9b28b88ecae0f9a49472858ca3",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:44:26Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/008-access-trunk-native-vlan.yaml",
+      "sha256": "9821883f46f80deff07b04339e44a57b1d520c5f5f31ef3bb262ad4ead8eb65d",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:48:28Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show interfaces trunk",
+          "expectation": "Gi0/0 is an 802.1Q trunk with native VLAN 99.",
+          "passed": true,
+          "output": "show interfaces trunk\n\nPort        Mode             Encapsulation  Status        Native vlan\nGi0/0       on               802.1q         trunking      99\n\nPort        Vlans allowed on trunk\nGi0/0       10,20,99\n\nPort        Vlans allowed and active in management domain\nGi0/0       10,20,99\n\nPort        Vlans in spanning tree forwarding state and not pruned\nGi0/0       10,20,99\nSW1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW2",
+          "command": "ping 192.0.2.1 source Vlan10 repeat 3",
+          "expectation": "VLAN 10 crosses the trunk.",
+          "passed": true,
+          "output": "ping 192.0.2.1 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/6/9 ms\nSW2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW2",
+          "command": "ping 192.0.2.65 source Vlan20 repeat 3",
+          "expectation": "VLAN 20 crosses the trunk.",
+          "passed": true,
+          "output": "ping 192.0.2.65 source Vlan20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.65, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.66 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/5/9 ms\nSW2#"
+        },
+        {
+          "phase": "prune service VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "prune service VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "interface GigabitEthernet0/0\nSW1(config-if)#"
+        },
+        {
+          "phase": "prune service VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "switchport trunk allowed vlan 10,99",
+          "passed": true,
+          "output": "switchport trunk allowed vlan 10,99\nSW1(config-if)#"
+        },
+        {
+          "phase": "prune service VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nSW1#"
+        },
+        {
+          "phase": "prune service VLAN",
+          "node": "SW2",
+          "command": "ping 192.0.2.65 source Vlan20 repeat 3",
+          "expectation": "The pruned VLAN no longer forwards.",
+          "passed": true,
+          "output": "ping 192.0.2.65 source Vlan20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.65, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.66 \n...\nSuccess rate is 0 percent (0/3)\nSW2#"
+        },
+        {
+          "phase": "restore service VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "restore service VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "interface GigabitEthernet0/0\nSW1(config-if)#"
+        },
+        {
+          "phase": "restore service VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "switchport trunk allowed vlan 10,20,99",
+          "passed": true,
+          "output": "switchport trunk allowed vlan 10,20,99\nSW1(config-if)#"
+        },
+        {
+          "phase": "restore service VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nSW1#"
+        },
+        {
+          "phase": "restore service VLAN",
+          "node": "SW2",
+          "command": "ping 192.0.2.65 source Vlan20 repeat 3",
+          "expectation": "VLAN 20 crosses the trunk.",
+          "passed": true,
+          "output": "ping 192.0.2.65 source Vlan20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.65, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.66 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/6/11 ms\nSW2#"
+        }
+      ],
+      "images": {
+        "SW1": "iosvl2-2020",
+        "SW2": "iosvl2-2020"
+      },
+      "plan_sha256": "c0c1ad1a0391392b4686de530c5bb2778f16bd1aeace418d29d5f4a2860baca0",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:59:26Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/012-etherchannel-lacp.yaml",
+      "sha256": "e2b678dded515342017c77dbc8dfa8ba83fa465599aae1168eff4b4d3018f47c",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:48:28Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show etherchannel summary",
+          "expectation": "Both physical ports are bundled in an in-use Layer-2 port-channel.",
+          "passed": true,
+          "output": "show etherchannel summary\nFlags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\n        H - Hot-standby (LACP only)\n        R - Layer3      S - Layer2\n        U - in use      N - not in use, no aggregation\n        f - failed to allocate aggregator\n\n        M - not in use, minimum links not met\n        m - not in use, port not aggregated due to minimum links not met\n        u - unsuitable for bundling\n        w - waiting to be aggregated\n        d - default port\n\n        A - formed by Auto LAG\n\n\nNumber of channel-groups in use: 1\nNumber of aggregators:           1\n\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+-----------------------------------------------\n1      Po1(SU)         LACP      Gi0/0(P)    Gi0/1(P)    \n\nSW1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW2",
+          "command": "ping 192.0.2.1 source Vlan10 repeat 3",
+          "expectation": "The SVI is reachable through the port-channel.",
+          "passed": true,
+          "output": "ping 192.0.2.1 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 5/6/9 ms\nSW2#"
+        },
+        {
+          "phase": "one member fails",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "one member fails",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "interface GigabitEthernet0/0\nSW1(config-if)#"
+        },
+        {
+          "phase": "one member fails",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "shutdown",
+          "passed": true,
+          "output": "shutdown\nSW1(config-if)#"
+        },
+        {
+          "phase": "one member fails",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nSW1#"
+        },
+        {
+          "phase": "one member fails",
+          "node": "SW1",
+          "command": "show etherchannel summary",
+          "expectation": "Po1 remains in use with Gi0/1 bundled.",
+          "passed": true,
+          "output": "show etherchannel summary\nFlags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\n        H - Hot-standby (LACP only)\n        R - Layer3      S - Layer2\n        U - in use      N - not in use, no aggregation\n        f - failed to allocate aggregator\n\n        M - not in use, minimum links not met\n        m - not in use, port not aggregated due to minimum links not met\n        u - unsuitable for bundling\n        w - waiting to be aggregated\n        d - default port\n\n        A - formed by Auto LAG\n\n\nNumber of channel-groups in use: 1\nNumber of aggregators:           1\n\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+-----------------------------------------------\n1      Po1(SU)         LACP      Gi0/0(D)    Gi0/1(P)    \n\nSW1#\n"
+        },
+        {
+          "phase": "one member fails",
+          "node": "SW2",
+          "command": "ping 192.0.2.1 source Vlan10 repeat 3",
+          "expectation": "The SVI is reachable through the port-channel.",
+          "passed": true,
+          "output": "ping 192.0.2.1 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/21/51 ms\nSW2#"
+        },
+        {
+          "phase": "member recovers",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": " state to down\nSW1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "member recovers",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "interface GigabitEthernet0/0\nSW1(config-if)#"
+        },
+        {
+          "phase": "member recovers",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "no shutdown\nSW1(config-if)#"
+        },
+        {
+          "phase": "member recovers",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nSW1#"
+        },
+        {
+          "phase": "member recovers",
+          "node": "SW1",
+          "command": "show etherchannel summary",
+          "expectation": "Both physical ports are bundled in an in-use Layer-2 port-channel.",
+          "passed": true,
+          "output": "show etherchannel summary\nFlags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\n        H - Hot-standby (LACP only)\n        R - Layer3      S - Layer2\n        U - in use      N - not in use, no aggregation\n        f - failed to allocate aggregator\n\n        M - not in use, minimum links not met\n        m - not in use, port not aggregated due to minimum links not met\n        u - unsuitable for bundling\n        w - waiting to be aggregated\n        d - default port\n\n        A - formed by Auto LAG\n\n\nNumber of channel-groups in use: 1\nNumber of aggregators:           1\n\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+-----------------------------------------------\n1      Po1(SU)         LACP      Gi0/0(P)    Gi0/1(P)    \n\nSW1#"
+        },
+        {
+          "phase": "member recovers",
+          "node": "SW2",
+          "command": "ping 192.0.2.1 source Vlan10 repeat 3",
+          "expectation": "The SVI is reachable through the port-channel.",
+          "passed": true,
+          "output": "ping 192.0.2.1 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/5/8 ms\nSW2#"
+        }
+      ],
+      "images": {
+        "SW1": "iosvl2-2020",
+        "SW2": "iosvl2-2020"
+      },
+      "plan_sha256": "b177e5acd24eed158bf6fb5457594e994fd14219d58ba72796b7a76ad5b37381",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T12:59:31Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/005-interface-status-duplex.yaml",
+      "sha256": "be216cb222018acfa883a26970d720b30cbe10b941ba5b5bbe1960be77744106",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:59:26Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show interfaces GigabitEthernet0/0",
+          "expectation": "The virtual interface and protocol are up.",
+          "passed": true,
+          "output": "show interfaces GigabitEthernet0/0\nGigabitEthernet0/0 is up, line protocol is up \n  Hardware is iGbE, address is 5254.00a4.b89c (bia 5254.00a4.b89c)\n  Internet address is 198.18.0.1/30\n  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, \n     reliability 255/255, txload 1/255, rxload 1/255\n  Encapsulation ARPA, loopback not set\n  Keepalive set (10 sec)\n  Auto Duplex, Auto Speed, link type is auto, media type is RJ45\n  output flow-control is unsupported, input flow-control is unsupported\n  ARP type: ARPA, ARP Timeout 04:00:00\n  Last input 00:00:06, output 00:00:09, output hang never\n  Last clearing of \"show interface\" counters never\n  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0\n  Queueing strategy: fifo\n  Output queue: 0/40 (size/max)\n  5 minute input rate 0 bits/sec, 0 packets/sec\n  5 minute output rate 0 bits/sec, 0 packets/sec\n     74 packets input, 17998 bytes, 0 no buffer\n     Received 74 broadcasts (0 IP multicasts)\n     0 runts, 0 giants, 0 throttles \n     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored\n     0 watchdog, 10 multicast, 0 pause input\n     82 packets output, 18495 bytes, 0 underruns\n     0 output errors, 0 collisions, 1 interface resets\n     0 unknown protocol drops\n     0 babbles, 0 late collision, 0 deferred\n     0 lost carrier, 0 no carrier, 0 pause output\n     0 output buffer failures, 0 output buffers swapped out\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The directly connected peer replies.",
+          "passed": true,
+          "output": "ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/4/6 ms\nR1#"
+        },
+        {
+          "phase": "administrative shutdown",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "administrative shutdown",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "interface GigabitEthernet0/0\nR1(config-if)#"
+        },
+        {
+          "phase": "administrative shutdown",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "shutdown",
+          "passed": true,
+          "output": "shutdown\nR1(config-if)#"
+        },
+        {
+          "phase": "administrative shutdown",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "administrative shutdown",
+          "node": "R1",
+          "command": "show interfaces GigabitEthernet0/0",
+          "expectation": "The local interface is explicitly disabled.",
+          "passed": true,
+          "output": "show interfaces GigabitEthernet0/0\nGigabitEthernet0/0 is administratively down, line protocol is down \n  Hardware is iGbE, address is 5254.00a4.b89c (bia 5254.00a4.b89c)\n  Internet address is 198.18.0.1/30\n  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, \n     reliability 255/255, txload 1/255, rxload 1/255\n  Encapsulation ARPA, loopback not set\n  Keepalive set (10 sec)\n  Auto Duplex, Auto Speed, link type is auto, media type is RJ45\n  output flow-control is unsupported, input flow-control is unsupported\n  ARP type: ARPA, ARP Timeout 04:00:00\n  Last input 00:00:03, output 00:00:01, output hang never\n  Last clearing of \"show interface\" counters never\n  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0\n  Queueing strategy: fifo\n  Output queue: 0/40 (size/max)\n  5 minute input rate 0 bits/sec, 0 packets/sec\n  5 minute output rate 0 bits/sec, 0 packets/sec\n     80 packets input, 18628 bytes, 0 no buffer\n     Received 74 broadcasts (0 IP multicasts)\n     0 runts, 0 giants, 0 throttles \n     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored\n     0 watchdog, 10 multicast, 0 pause input\n     91 packets output, 19344 bytes, 0 underruns\n     0 output errors, 0 collisions, 1 interface resets\n     0 unknown protocol drops\n     0 babbles, 0 late collision, 0 deferred\n     0 lost carrier, 0 no carrier, 0 pause output\n     0 output buffer failures, 0 output buffers swapped out\nR1#\n*Oct 25 13:05:30.095: %SYS-5-CONFIG_I: Conf"
+        },
+        {
+          "phase": "administrative recovery",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "bitEthernet0/0, changed state to down\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "administrative recovery",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "interface GigabitEthernet0/0\nR1(config-if)#"
+        },
+        {
+          "phase": "administrative recovery",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "no shutdown\nR1(config-if)#"
+        },
+        {
+          "phase": "administrative recovery",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "administrative recovery",
+          "node": "R1",
+          "command": "show interfaces GigabitEthernet0/0",
+          "expectation": "The virtual interface and protocol are up.",
+          "passed": true,
+          "output": "show interfaces GigabitEthernet0/0\nGigabitEthernet0/0 is up, line protocol is up \n  Hardware is iGbE, address is 5254.00a4.b89c (bia 5254.00a4.b89c)\n  Internet address is 198.18.0.1/30\n  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, \n     reliability 255/255, txload 1/255, rxload 1/255\n  Encapsulation ARPA, loopback not set\n  Keepalive set (10 sec)\n  Auto Duplex, Auto Speed, link type is auto, media type is RJ45\n  output flow-control is unsupported, input flow-control is unsupported\n  ARP type: ARPA, ARP Timeout 04:00:00\n  Last input 00:00:08, output 00:00:06, output hang never\n  Last clearing of \"show interface\" counters never\n  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0\n  Queueing strategy: fifo\n  Output queue: 0/40 (size/max)\n  5 minute input rate 0 bits/sec, 0 packets/sec\n  5 minute output rate 0 bits/sec, 0 packets/sec\n     80 packets input, 18628 bytes, 0 no buffer\n     Received 74 broadcasts (0 IP multicasts)\n     0 runts, 0 giants, 0 throttles \n     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored\n     0 watchdog, 10 multicast, 0 pause input\n     91 packets output, 19344 bytes, 0 underruns\n     0 output errors, 0 collisions, 2 interface resets\n     0 unknown protocol drops\n     0 babbles, 0 late collision, 0 deferred\n     0 lost carrier, 0 no carrier, 0 pause output\n     0 output buffer failures, 0 output buffers swapped out\nR1#\n"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "plan_sha256": "0a36d9a54142e0ee988dae96cfcad33d1cfb0ee1737ffea68eb0973d99386c20",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T13:06:29Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/030-sla-tracking-static-route.yaml",
+      "sha256": "c65809cd1b1cbc84741eee1922cb37a29fb76c871ff06634970a2a34e436e70d",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T12:59:31Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show track 1",
+          "expectation": "The ICMP reachability track is up.",
+          "passed": true,
+          "output": "show track 1\nTrack 1\n  IP SLA 1 reachability\n  Reachability is Up\n    4 changes, last change 00:00:43\n  Latest operation return code: OK\n  Latest RTT (millisecs) 47\n  Tracked by:\n    Static IP Routing 0\nR1#\n*Oct 25 13:05:24.8"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "Primary next hop is 198.18.0.2.",
+          "passed": true,
+          "output": "G: GRUB configuration is being updated on disk. Please wait...\nR1#\n*Oct 25 13:05:27.829: %GRUB-5-CONFIG_WRITTEN: GRUB configuration was written to disk successfully.show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#\n*Oct "
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": " %CVAC-4-CONFIG_DONE: Configuration generated from file flash2:/ios_config.txt was applied and saved to NVRAM. See 'show running-config' or 'show startup-config' for more details.\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 35/152/211 ms\nR1#\n*Oct"
+        },
+        {
+          "phase": "remote failure detected",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "remote failure detected",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "interface GigabitEthernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "remote failure detected",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "shutdown",
+          "passed": true,
+          "output": "shutdown\nR2(config-if)#"
+        },
+        {
+          "phase": "remote failure detected",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "remote failure detected",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The floating route is installed with distance 200.",
+          "passed": true,
+          "output": "show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 200, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.1.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "remote failure detected",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 5/13/26 ms\nR1#"
+        },
+        {
+          "phase": "remote primary restored",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "remote primary restored",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "interface GigabitEthernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "remote primary restored",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "no shutdown\nR2(config-if)#"
+        },
+        {
+          "phase": "remote primary restored",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "remote primary restored",
+          "node": "R1",
+          "command": "show track 1",
+          "expectation": "The ICMP reachability track is up.",
+          "passed": true,
+          "output": "show track 1\nTrack 1\n  IP SLA 1 reachability\n  Reachability is Up\n    6 changes, last change 00:00:01\n  Latest operation return code: OK\n  Latest RTT (millisecs) 6\n  Tracked by:\n    Static IP Routing 0\nR1#"
+        },
+        {
+          "phase": "remote primary restored",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "Primary next hop is 198.18.0.2.",
+          "passed": true,
+          "output": "show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "remote primary restored",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/13/29 ms\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "plan_sha256": "0b2d4bb067ccdb2de4730936c948b312f88a96855fe92343fc201a12a2351594",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T13:07:05Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/015-bgp-route-reflector.yaml",
+      "sha256": "b79f4cf409045b0cdd68ee619215c6876f8dc20d8f536e6ff0496a855cadf96e",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T13:14:22Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The iBGP session receives the remote endpoint prefix.",
+          "passed": true,
+          "output": "show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65000\nBGP table version is 1, main routing table version 1\n1 network entries using 248 bytes of memory\n1 path entries using 136 bytes of memory\n1/0 BGP path/bestpath attribute entries using 304 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 688 total bytes of memory\nBGP activity 1/0 prefixes, 1/0 paths, scan interval 60 secs\n1 networks peaked at 13:15:48 Oct 25 2026 UTC (00:00:01.581 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n192.0.2.1       4        65000       5       3        1    0    0 00:00:52        1\n192.0.2.3       4        65000       2       2        1    0    0 00:00:52        0\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The iBGP session receives the remote endpoint prefix.",
+          "passed": true,
+          "output": "show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65000\nBGP table version is 3, main routing table version 3\n2 network entries using 496 bytes of memory\n2 path entries using 272 bytes of memory\n1/1 BGP path/bestpath attribute entries using 304 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 1072 total bytes of memory\nBGP activity 2/0 prefixes, 2/0 paths, scan interval 60 secs\n2 networks peaked at 13:15:50 Oct 25 2026 UTC (00:00:08.618 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n192.0.2.1       4        65000       5       6        3    0    0 00:01:01        1\n192.0.2.3       4        65000       5       6        3    0    0 00:01:01        1\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R3",
+          "command": "show ip bgp 203.0.113.1",
+          "expectation": "The route carries originator and reflector cluster attributes.",
+          "passed": true,
+          "output": "show ip bgp 203.0.113.1\nBGP routing table entry for 203.0.113.1/32, version 3\nPaths: (1 available, best #1, table default)\n  Flag: 0x100\n  Not advertised to any peer\n  Refresh Epoch 1\n  Local\n    192.0.2.1 (metric 21) from 192.0.2.2 (192.0.2.2)\n      Origin IGP, metric 0, localpref 100, valid, internal, best\n      Originator: 192.0.2.1, Cluster list: 192.0.2.2\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Oct 25 2026 13:15:51 UTC\nR3#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R3",
+          "command": "ping 203.0.113.1 source Loopback1 repeat 3",
+          "expectation": "The reflected routes provide forward and return reachability.",
+          "passed": true,
+          "output": "ping 203.0.113.1 source Loopback1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 203.0.113.1, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.3 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR3#"
+        },
+        {
+          "phase": "remove both client roles",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "remove both client roles",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router bgp 65000",
+          "passed": true,
+          "output": "router bgp 65000\nR2(config-router)#"
+        },
+        {
+          "phase": "remove both client roles",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no neighbor 192.0.2.1 route-reflector-client",
+          "passed": true,
+          "output": "no neighbor 192.0.2.1 route-reflector-client\nR2(config-router)#"
+        },
+        {
+          "phase": "remove both client roles",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no neighbor 192.0.2.3 route-reflector-client",
+          "passed": true,
+          "output": "no neighbor 192.0.2.3 route-reflector-client\nR2(config-router)#"
+        },
+        {
+          "phase": "remove both client roles",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear ip bgp 192.0.2.1 soft out",
+          "passed": true,
+          "output": "do clear ip bgp 192.0.2.1 soft out\nR2(config-router)#"
+        },
+        {
+          "phase": "remove both client roles",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear ip bgp 192.0.2.3 soft out",
+          "passed": true,
+          "output": "do clear ip bgp 192.0.2.3 soft out\nR2(config-router)#"
+        },
+        {
+          "phase": "remove both client roles",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "remove both client roles",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The iBGP session receives the remote endpoint prefix.",
+          "passed": true,
+          "output": "show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65000\nBGP table version is 7, main routing table version 7\n2 network entries using 496 bytes of memory\n2 path entries using 272 bytes of memory\n1/1 BGP path/bestpath attribute entries using 304 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 1072 total bytes of memory\nBGP activity 4/2 prefixes, 4/2 paths, scan interval 60 secs\n2 networks peaked at 13:15:50 Oct 25 2026 UTC (00:00:17.751 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n192.0.2.1       4        65000       5       8        7    0    0 00:00:02        1\n192.0.2.3       4        65000       5       8        7    0    0 00:00:01        1\nR2#"
+        },
+        {
+          "phase": "remove both client roles",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The iBGP session receives the remote endpoint prefix.",
+          "passed": true,
+          "output": "show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65000\nBGP table version is 7, main routing table version 7\n2 network entries using 496 bytes of memory\n2 path entries using 272 bytes of memory\n1/1 BGP path/bestpath attribute entries using 304 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 1072 total bytes of memory\nBGP activity 4/2 prefixes, 4/2 paths, scan interval 60 secs\n2 networks peaked at 13:15:50 Oct 25 2026 UTC (00:00:18.254 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n192.0.2.1       4        65000       5       8        7    0    0 00:00:02        1\n192.0.2.3       4        65000       5       8        7    0    0 00:00:01        1\nR2#"
+        },
+        {
+          "phase": "remove both client roles",
+          "node": "R3",
+          "command": "show ip route 203.0.113.1",
+          "expectation": "The non-reflected endpoint route is withdrawn with both sessions still established.",
+          "passed": true,
+          "output": "show ip route 203.0.113.1\n% Subnet not in table\nR3#"
+        },
+        {
+          "phase": "restore client roles",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore client roles",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router bgp 65000",
+          "passed": true,
+          "output": "router bgp 65000\nR2(config-router)#"
+        },
+        {
+          "phase": "restore client roles",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "neighbor 192.0.2.1 route-reflector-client",
+          "passed": true,
+          "output": "neighbor 192.0.2.1 route-reflector-client\nR2(config-router)#"
+        },
+        {
+          "phase": "restore client roles",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "neighbor 192.0.2.3 route-reflector-client",
+          "passed": true,
+          "output": "neighbor 192.0.2.3 route-reflector-client\nR2(config-router)#"
+        },
+        {
+          "phase": "restore client roles",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear ip bgp 192.0.2.1 soft out",
+          "passed": true,
+          "output": "do clear ip bgp 192.0.2.1 soft out\nR2(config-router)#"
+        },
+        {
+          "phase": "restore client roles",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear ip bgp 192.0.2.3 soft out",
+          "passed": true,
+          "output": "do clear ip bgp 192.0.2.3 soft out\nR2(config-router)#"
+        },
+        {
+          "phase": "restore client roles",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "restore client roles",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The iBGP session receives the remote endpoint prefix.",
+          "passed": true,
+          "output": "show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65000\nBGP table version is 11, main routing table version 11\n2 network entries using 496 bytes of memory\n2 path entries using 272 bytes of memory\n1/1 BGP path/bestpath attribute entries using 304 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 1072 total bytes of memory\nBGP activity 6/4 prefixes, 6/4 paths, scan interval 60 secs\n2 networks peaked at 13:15:50 Oct 25 2026 UTC (00:00:22.777 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n192.0.2.1       4        65000       5       9       11    0    0 00:00:02        1\n192.0.2.3       4        65000       5      12       11    0    0 00:00:01        1\nR2#"
+        },
+        {
+          "phase": "restore client roles",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The iBGP session receives the remote endpoint prefix.",
+          "passed": true,
+          "output": "show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65000\nBGP table version is 11, main routing table version 11\n2 network entries using 496 bytes of memory\n2 path entries using 272 bytes of memory\n1/1 BGP path/bestpath attribute entries using 304 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 1072 total bytes of memory\nBGP activity 6/4 prefixes, 6/4 paths, scan interval 60 secs\n2 networks peaked at 13:15:50 Oct 25 2026 UTC (00:00:23.278 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n192.0.2.1       4        65000       5       9       11    0    0 00:00:02        1\n192.0.2.3       4        65000       5      12       11    0    0 00:00:01        1\nR2#"
+        },
+        {
+          "phase": "restore client roles",
+          "node": "R3",
+          "command": "show ip bgp 203.0.113.1",
+          "expectation": "The route carries originator and reflector cluster attributes.",
+          "passed": true,
+          "output": "show ip bgp 203.0.113.1\nBGP routing table entry for 203.0.113.1/32, version 9\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 3\n  Local\n    192.0.2.1 (metric 21) from 192.0.2.2 (192.0.2.2)\n      Origin IGP, metric 0, localpref 100, valid, internal, best\n      Originator: 192.0.2.1, Cluster list: 192.0.2.2\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Oct 25 2026 13:16:11 UTC\nR3#"
+        },
+        {
+          "phase": "restore client roles",
+          "node": "R3",
+          "command": "ping 203.0.113.1 source Loopback1 repeat 3",
+          "expectation": "The reflected routes provide forward and return reachability.",
+          "passed": true,
+          "output": "ping 203.0.113.1 source Loopback1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 203.0.113.1, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.3 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR3#"
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "5cc6bfedac40c5666843962063eedb0c0dca2ee60e9b84fff59fffaf31170062",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T13:16:16Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/019-first-hop-redundancy-hsrp.yaml",
+      "sha256": "1a1895e0a0822f63137428a510e050b8c52874387827c44d8b2d3e54c2a36494",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T13:14:22Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show interfaces trunk",
+          "expectation": "The shared VLAN crosses an operational dot1q trunk.",
+          "passed": true,
+          "output": "\n*Oct 25 13:14:49.543: %PKI-6-SUDI_INFO: PKI: platform doesn't support sudi certificate\n*Oct 25 13:14:49.543: %PKI-6-SUDI_INFO: PKI: no sudi certificate is installed\n*Oct 25 13:14:49.543: %PKI-2-NON_AUTHORITATIVE_CLOCK: PKI functions can not be initialized until an authoritative time source, like NTP, can be obtained.\n*Oct 25 13:14:49.609: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt.\n*Oct 25 13:14:49.711: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 25 13:14:49.712: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 25 13:14:49.817: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\nSW1#show interfaces trunk\n\nPort           Mode             Encapsulation  Status        Native vlan  \nEt0/0          on               802.1q         trunking      1\n\nPort           Vlans allowed on trunk\nEt0/0          10\n\nPort           Vlans allowed and active in management domain\nEt0/0          10\n\nPort           Vlans in spanning tree forwarding state and not pruned\nEt0/0          10\nSW1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show standby brief",
+          "expectation": "SW1 is the active gateway.",
+          "passed": true,
+          "output": "show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   110 P Active  local           unknown         198.18.10.1\nSW1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW2",
+          "command": "show standby brief",
+          "expectation": "SW2 is initially standby.",
+          "passed": true,
+          "output": "show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   100 P Standby 198.18.10.2     local           198.18.10.1\nSW2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The client reaches the virtual gateway.",
+          "passed": true,
+          "output": "ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "active SVI failure",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "active SVI failure",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface Vlan10",
+          "passed": true,
+          "output": "interface Vlan10\nSW1(config-if)#"
+        },
+        {
+          "phase": "active SVI failure",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "shutdown",
+          "passed": true,
+          "output": "shutdown\nSW1(config-if)#"
+        },
+        {
+          "phase": "active SVI failure",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nSW1#"
+        },
+        {
+          "phase": "active SVI failure",
+          "node": "SW2",
+          "command": "show standby brief",
+          "expectation": "SW2 takes over as active.",
+          "passed": true,
+          "output": "show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   100 P Active  local           unknown         198.18.10.1\nSW2#"
+        },
+        {
+          "phase": "active SVI failure",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The client reaches the virtual gateway.",
+          "passed": true,
+          "output": "ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "preferred gateway recovers",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "preferred gateway recovers",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface Vlan10",
+          "passed": true,
+          "output": "interface Vlan10\nSW1(config-if)#"
+        },
+        {
+          "phase": "preferred gateway recovers",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "no shutdown\nSW1(config-if)#"
+        },
+        {
+          "phase": "preferred gateway recovers",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nSW1#"
+        },
+        {
+          "phase": "preferred gateway recovers",
+          "node": "SW1",
+          "command": "show standby brief",
+          "expectation": "SW1 is the active gateway.",
+          "passed": true,
+          "output": "show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   110 P Active  local           unknown         198.18.10.1\nSW1#"
+        },
+        {
+          "phase": "preferred gateway recovers",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The client reaches the virtual gateway.",
+          "passed": true,
+          "output": "ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        }
+      ],
+      "images": {
+        "SW1": "ioll2-xe-17-18-02",
+        "SW2": "ioll2-xe-17-18-02",
+        "CLIENT": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "d721cb600801bbb200373c26e843d163e5ada671314a15396dad9491ed203d13",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T13:16:22Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/016-bgp-filtering-prefix-aspath.yaml",
+      "sha256": "126b84e03c034a340a9546a40e33b6073b6ed03d1034b1b027d4ce0e3d37b891",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T15:51:11Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip bgp 192.0.2.3",
+          "expectation": "R2 receives the route before applying outbound policy.",
+          "passed": true,
+          "output": "show ip bgp 192.0.2.3\nBGP routing table entry for 192.0.2.3/32, version 4\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65003\n    198.18.1.2 from 198.18.1.2 (192.0.2.3)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Oct 25 2026 15:52:15 UTC\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip bgp 192.0.2.2",
+          "expectation": "The allowed direct-AS prefix remains available.",
+          "passed": true,
+          "output": "show ip bgp 192.0.2.2\nBGP routing table entry for 192.0.2.2/32, version 3\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65002\n    198.18.0.2 from 198.18.0.2 (192.0.2.2)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Oct 25 2026 15:52:14 UTC\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The disallowed prefix has no installed route.",
+          "passed": true,
+          "output": "show ip route 192.0.2.3\n% Subnet not in table\nR1#"
+        },
+        {
+          "phase": "remove AS-path filter",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "remove AS-path filter",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router bgp 65002",
+          "passed": true,
+          "output": "router bgp 65002\nR2(config-router)#"
+        },
+        {
+          "phase": "remove AS-path filter",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no neighbor 198.18.0.1 filter-list 10 out",
+          "passed": true,
+          "output": "no neighbor 198.18.0.1 filter-list 10 out\nR2(config-router)#"
+        },
+        {
+          "phase": "remove AS-path filter",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear ip bgp 198.18.0.1 soft out",
+          "passed": true,
+          "output": "do clear ip bgp 198.18.0.1 soft out\nR2(config-router)#"
+        },
+        {
+          "phase": "remove AS-path filter",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "remove AS-path filter",
+          "node": "R1",
+          "command": "show ip bgp 192.0.2.3",
+          "expectation": "The advertised route has the expected two-AS path.",
+          "passed": true,
+          "output": "show ip bgp 192.0.2.3\nBGP routing table entry for 192.0.2.3/32, version 4\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65002 65003\n    198.18.0.2 from 198.18.0.2 (192.0.2.2)\n      Origin IGP, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Oct 25 2026 15:52:30 UTC\nR1#"
+        },
+        {
+          "phase": "remove AS-path filter",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        },
+        {
+          "phase": "remove AS-path filter",
+          "node": "R1",
+          "command": "show ip route 203.0.113.3",
+          "expectation": "The independent prefix whitelist still blocks the extra endpoint.",
+          "passed": true,
+          "output": "show ip route 203.0.113.3\n% Network not in table\nR1#"
+        },
+        {
+          "phase": "restore AS-path filter",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore AS-path filter",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router bgp 65002",
+          "passed": true,
+          "output": "router bgp 65002\nR2(config-router)#"
+        },
+        {
+          "phase": "restore AS-path filter",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "neighbor 198.18.0.1 filter-list 10 out",
+          "passed": true,
+          "output": "neighbor 198.18.0.1 filter-list 10 out\nR2(config-router)#"
+        },
+        {
+          "phase": "restore AS-path filter",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear ip bgp 198.18.0.1 soft out",
+          "passed": true,
+          "output": "do clear ip bgp 198.18.0.1 soft out\nR2(config-router)#"
+        },
+        {
+          "phase": "restore AS-path filter",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "restore AS-path filter",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The disallowed prefix has no installed route.",
+          "passed": true,
+          "output": "show ip route 192.0.2.3\n% Subnet not in table\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "7e21cf8523351181bfe73f5e848dd3c7e08af747cb2c3ca7da0d1f3b3b57b8c2",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T15:52:38Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/019-bgp-troubleshooting.yaml",
+      "sha256": "2bcfe60e813b8dcf820cb70f68435ec4f0725dcbf3fa5bfa28c18f29e4bbb3d1",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T15:56:18Z",
+      "checks": [
+        {
+          "name": "initial fault detected",
+          "passed": true,
+          "output": "show ip bgp summary\nBGP router identifier 192.0.2.1, local AS number 65001\nBGP table version is 1, main routing table version 1\n1 network entries using 248 bytes of memory\n1 path entries using 136 bytes of memory\n1/0 BGP path/bestpath attribute entries using 304 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 688 total bytes of memory\nBGP activity 1/0 prefixes, 1/0 paths, scan interval 60 secs\n1 networks peaked at 15:56:22 Oct 25 2026 UTC (00:00:15.078 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.2      4        65099       2       2        1    0    0 00:00:05 Closing\nR1#"
+        },
+        {
+          "phase": "repair",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "repair",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "router bgp 65001",
+          "passed": true,
+          "output": "router bgp 65001\nR1(config-router)#"
+        },
+        {
+          "phase": "repair",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "neighbor 198.18.0.2 remote-as 65002",
+          "passed": true,
+          "output": "neighbor 198.18.0.2 remote-as 65002\nR1(config-router)#"
+        },
+        {
+          "phase": "repair",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip bgp summary",
+          "expectation": "The corrected session is established and receives prefixes.",
+          "passed": true,
+          "output": "show ip bgp summary\nBGP router identifier 192.0.2.1, local AS number 65001\nBGP table version is 4, main routing table version 4\n3 network entries using 744 bytes of memory\n3 path entries using 408 bytes of memory\n3/3 BGP path/bestpath attribute entries using 912 bytes of memory\n2 BGP AS-PATH entries using 64 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 2128 total bytes of memory\nBGP activity 3/0 prefixes, 3/0 paths, scan interval 60 secs\n3 networks peaked at 15:57:30 Oct 25 2026 UTC (00:00:04.013 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.2      4        65002       7       5        4    0    0 00:00:54        2\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip bgp 192.0.2.3",
+          "expectation": "The advertised route has the expected two-AS path.",
+          "passed": true,
+          "output": "show ip bgp 192.0.2.3\nBGP routing table entry for 192.0.2.3/32, version 4\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65002 65003\n    198.18.0.2 from 198.18.0.2 (192.0.2.2)\n      Origin IGP, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Oct 25 2026 15:57:30 UTC\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        }
+      ],
+      "plan_sha256": "05dc11f7cf9efef5a998ab205d05df230daca3a10f0cbfdae2ebc22a2df6031f",
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T15:57:37Z"
     }
   ]
 }

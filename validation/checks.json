@@ -228,5 +228,1585 @@
     "initial": null,
     "repair": null,
     "ready_marker": "CML-LABS-READY"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/015-static-default-routes.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip route static",
+        "pattern": "S\\*.*0\\.0\\.0\\.0",
+        "expectation": "An installed static default route."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "remove default",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "no ip route 0.0.0.0 0.0.0.0 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "All three probes fail while the route is removed."
+          }
+        ]
+      },
+      {
+        "name": "restore default",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip route 0.0.0.0 0.0.0.0 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/016-floating-static-routes.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.2",
+        "pattern": "198\\.18\\.0\\.2",
+        "expectation": "Primary next hop is 198.18.0.2."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "local primary failure",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)distance 200.*198\\.18\\.1\\.2",
+            "expectation": "The floating route is installed with distance 200."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "All three probes fail while the route is removed."
+          }
+        ]
+      },
+      {
+        "name": "remote primary failure",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)distance 200.*198\\.18\\.1\\.2",
+            "expectation": "The floating route is installed with distance 200."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      },
+      {
+        "name": "remote primary recovery",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip interface brief",
+            "pattern": "GigabitEthernet0/0\\s+198\\.18\\.0\\.2.*up\\s+up",
+            "expectation": "The remote primary interface is restored."
+          }
+        ]
+      },
+      {
+        "name": "local primary recovery",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "198\\.18\\.0\\.2",
+            "expectation": "Primary next hop is 198.18.0.2."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/020-ipv6-static-routing.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ipv6 route static",
+        "pattern": "2001:DB8:2::2/128",
+        "expectation": "The remote /128 is installed as a static route."
+      },
+      {
+        "node": "R1",
+        "command": "ping ipv6 2001:db8:2::2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The remote IPv6 loopback replies to all probes."
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/021-routing-table-selection.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.100",
+        "pattern": "(?s)192\\.0\\.2\\.100/32.*198\\.18\\.1\\.2",
+        "expectation": "The /32 through R3 wins longest-prefix matching."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.100 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw specific",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.100 255.255.255.255 198.18.1.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.100",
+            "pattern": "(?s)192\\.0\\.2\\.0/24.*198\\.18\\.0\\.2",
+            "expectation": "After withdrawing the /32, the /24 through R2 is selected."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.100 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      },
+      {
+        "name": "restore specific",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip route 192.0.2.100 255.255.255.255 198.18.1.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.100",
+            "pattern": "(?s)192\\.0\\.2\\.100/32.*198\\.18\\.1\\.2",
+            "expectation": "The /32 through R3 wins longest-prefix matching."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/023-dhcp-server-relay.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "show ip interface brief",
+        "pattern": "GigabitEthernet0/0\\s+198\\.18\\.10\\.\\d+\\s+YES DHCP\\s+up\\s+up",
+        "expectation": "The client interface holds a DHCP lease."
+      },
+      {
+        "node": "SERVER",
+        "command": "show ip dhcp binding",
+        "pattern": "198\\.18\\.10\\.\\d+",
+        "expectation": "The server records a client binding."
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The leased client reaches the DHCP server through the relay."
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/025-ntp-time-sync.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The NTP transport network is reachable."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "verify local calendar configuration",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "clock calendar-valid",
+          "ntp master 3",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ntp status",
+            "pattern": "Clock is synchronized, stratum 3",
+            "expectation": "The isolated reference is selected.",
+            "attempts": 60,
+            "interval_seconds": 20
+          },
+          {
+            "node": "R1",
+            "command": "show ntp status",
+            "pattern": "Clock is synchronized, stratum 4",
+            "expectation": "The client synchronizes through the lab reference.",
+            "attempts": 60,
+            "interval_seconds": 20
+          },
+          {
+            "node": "R1",
+            "command": "show ntp associations",
+            "pattern": "\\*~?198\\.18\\.0\\.2",
+            "expectation": "The configured reference is selected."
+          }
+        ]
+      },
+      {
+        "name": "unavailable reference",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ntp server 198.18.0.3 version 4 maxpoll 4 minpoll 4",
+          "no ntp server 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ntp associations",
+            "pattern": "198\\.18\\.0\\.3",
+            "expectation": "Only the unavailable peer is configured; no upstream is selected.",
+            "absent_pattern": "198\\.18\\.0\\.2|\\*~"
+          }
+        ]
+      },
+      {
+        "name": "restore reference",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ntp server 198.18.0.2 version 4 maxpoll 4 minpoll 4",
+          "no ntp server 198.18.0.3",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ntp status",
+            "pattern": "Clock is synchronized, stratum 4",
+            "expectation": "The client synchronizes through the lab reference.",
+            "attempts": 60,
+            "interval_seconds": 20
+          },
+          {
+            "node": "R1",
+            "command": "show ntp associations",
+            "pattern": "\\*~?198\\.18\\.0\\.2",
+            "expectation": "The configured reference is selected."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/026-dns-client-resolution.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping app.example.test repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "A name lookup and ICMP probes reach the server loopback."
+      },
+      {
+        "node": "R1",
+        "command": "show hosts",
+        "pattern": "app\\.example\\.test",
+        "expectation": "The name is present in the client cache."
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/002-ipv4-subnetting-vlsm.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip route connected",
+        "pattern": "192\\.0\\.2\\.0/26",
+        "expectation": "The /26 endpoint network is connected."
+      },
+      {
+        "node": "R2",
+        "command": "show ip route connected",
+        "pattern": "192\\.0\\.2\\.64/27",
+        "expectation": "The /27 endpoint network is connected."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.65 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/004-cdp-lldp-discovery.yaml": {
+    "checks": [
+      {
+        "node": "SW1",
+        "command": "show cdp neighbors",
+        "pattern": "SW2",
+        "expectation": "The Cisco discovery table contains SW2."
+      },
+      {
+        "node": "SW1",
+        "command": "show lldp neighbors",
+        "pattern": "SW2",
+        "expectation": "The IEEE LLDP table independently contains SW2."
+      },
+      {
+        "node": "SW1",
+        "command": "ping 198.18.0.2 source Vlan10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The management SVIs communicate across VLAN 10."
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/008-access-trunk-native-vlan.yaml": {
+    "checks": [
+      {
+        "node": "SW1",
+        "command": "show interfaces trunk",
+        "pattern": "Gi0/0\\s+on\\s+802\\.1q\\s+trunking\\s+99",
+        "expectation": "Gi0/0 is an 802.1Q trunk with native VLAN 99."
+      },
+      {
+        "node": "SW2",
+        "command": "ping 192.0.2.1 source Vlan10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "VLAN 10 crosses the trunk."
+      },
+      {
+        "node": "SW2",
+        "command": "ping 192.0.2.65 source Vlan20 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "VLAN 20 crosses the trunk."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "prune service VLAN",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "switchport trunk allowed vlan 10,99",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW2",
+            "command": "ping 192.0.2.65 source Vlan20 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The pruned VLAN no longer forwards."
+          }
+        ]
+      },
+      {
+        "name": "restore service VLAN",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "switchport trunk allowed vlan 10,20,99",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW2",
+            "command": "ping 192.0.2.65 source Vlan20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "VLAN 20 crosses the trunk."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/012-etherchannel-lacp.yaml": {
+    "checks": [
+      {
+        "node": "SW1",
+        "command": "show etherchannel summary",
+        "pattern": "(?s)Po1\\(SU\\).*Gi0/0\\(P\\).*Gi0/1\\(P\\)",
+        "expectation": "Both physical ports are bundled in an in-use Layer-2 port-channel."
+      },
+      {
+        "node": "SW2",
+        "command": "ping 192.0.2.1 source Vlan10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The SVI is reachable through the port-channel."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "one member fails",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show etherchannel summary",
+            "pattern": "(?s)Po1\\(SU\\).*Gi0/1\\(P\\)",
+            "expectation": "Po1 remains in use with Gi0/1 bundled."
+          },
+          {
+            "node": "SW2",
+            "command": "ping 192.0.2.1 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The SVI is reachable through the port-channel."
+          }
+        ]
+      },
+      {
+        "name": "member recovers",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show etherchannel summary",
+            "pattern": "(?s)Po1\\(SU\\).*Gi0/0\\(P\\).*Gi0/1\\(P\\)",
+            "expectation": "Both physical ports are bundled in an in-use Layer-2 port-channel."
+          },
+          {
+            "node": "SW2",
+            "command": "ping 192.0.2.1 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The SVI is reachable through the port-channel."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/019-first-hop-redundancy-hsrp.yaml": {
+    "checks": [
+      {
+        "node": "SW1",
+        "command": "show interfaces trunk",
+        "pattern": "Et0/0\\s+on\\s+802\\.1q\\s+trunking",
+        "expectation": "The shared VLAN crosses an operational dot1q trunk."
+      },
+      {
+        "node": "SW1",
+        "command": "show standby brief",
+        "pattern": "Active\\s+local",
+        "expectation": "SW1 is the active gateway."
+      },
+      {
+        "node": "SW2",
+        "command": "show standby brief",
+        "pattern": "Vl10\\s+10\\s+100\\s+P\\s+Standby",
+        "expectation": "SW2 is initially standby."
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 198.18.10.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The client reaches the virtual gateway."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "active SVI failure",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface Vlan10",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW2",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "SW2 takes over as active."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The client reaches the virtual gateway."
+          }
+        ]
+      },
+      {
+        "name": "preferred gateway recovers",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface Vlan10",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "SW1 is the active gateway."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The client reaches the virtual gateway."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/005-interface-status-duplex.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show interfaces GigabitEthernet0/0",
+        "pattern": "GigabitEthernet0/0 is up, line protocol is up",
+        "expectation": "The virtual interface and protocol are up."
+      },
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The directly connected peer replies."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "administrative shutdown",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show interfaces GigabitEthernet0/0",
+            "pattern": "administratively down",
+            "expectation": "The local interface is explicitly disabled."
+          }
+        ]
+      },
+      {
+        "name": "administrative recovery",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show interfaces GigabitEthernet0/0",
+            "pattern": "GigabitEthernet0/0 is up, line protocol is up",
+            "expectation": "The virtual interface and protocol are up."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/030-sla-tracking-static-route.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show track 1",
+        "pattern": "Reachability is Up",
+        "expectation": "The ICMP reachability track is up."
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.2",
+        "pattern": "198\\.18\\.0\\.2",
+        "expectation": "Primary next hop is 198.18.0.2."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "remote failure detected",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)distance 200.*198\\.18\\.1\\.2",
+            "expectation": "The floating route is installed with distance 200."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      },
+      {
+        "name": "remote primary restored",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show track 1",
+            "pattern": "Reachability is Up",
+            "expectation": "The ICMP reachability track is up."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "198\\.18\\.0\\.2",
+            "expectation": "Primary next hop is 198.18.0.2."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/029-tftp-config-backup.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The TFTP server is reachable."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "download reference configuration",
+        "node": "R1",
+        "commands": [
+          "copy tftp://198.18.0.2/startup-config flash:lab-backup.cfg"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "more flash:lab-backup.cfg | include hostname",
+            "pattern": "hostname R2",
+            "expectation": "The copied file contains the server hostname, not the client configuration."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/migration/046-static-routes-to-ospf-migration.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip ospf neighbor",
+        "pattern": "FULL",
+        "expectation": "The OSPF adjacency is already established."
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.2",
+        "pattern": "198\\.18\\.0\\.2",
+        "expectation": "Primary next hop is 198.18.0.2."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "migrate R1",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.2 255.255.255.255 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)distance 110.*198\\.18\\.0\\.2",
+            "expectation": "OSPF supplies the installed route after the static is removed."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      },
+      {
+        "name": "migrate return route",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.1 255.255.255.255 198.18.0.1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "distance 110",
+            "expectation": "The return route is also learned through OSPF."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      },
+      {
+        "name": "rollback return route",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip route 192.0.2.1 255.255.255.255 198.18.0.1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      },
+      {
+        "name": "rollback R1",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip route 192.0.2.2 255.255.255.255 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "198\\.18\\.0\\.2",
+            "expectation": "Primary next hop is 198.18.0.2."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/020-gre-tunnel-routing.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show interfaces Tunnel0",
+        "pattern": "Tunnel0 is up, line protocol is up",
+        "expectation": "The GRE interface is up; this alone is not a data-plane proof."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "GRE is filtered",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended BLOCK-GRE",
+          "deny gre host 198.18.0.1 host 198.18.0.2",
+          "permit ip any any",
+          "exit",
+          "interface Ethernet0/0",
+          "ip access-group BLOCK-GRE in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show interfaces Tunnel0",
+            "pattern": "Tunnel0 is up, line protocol is up",
+            "expectation": "The GRE interface is up; this alone is not a data-plane proof."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "All three probes fail while the route is removed."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists BLOCK-GRE",
+            "pattern": "deny gre.*\\([1-9][0-9]* match",
+            "expectation": "The filter counts actual blocked GRE packets."
+          }
+        ]
+      },
+      {
+        "name": "GRE restored",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no ip access-group BLOCK-GRE in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/012-vrf-lite-routing-protocols.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip route vrf RED ospf",
+        "pattern": "203\\.0\\.113\\.2",
+        "expectation": "RED learns its remote endpoint."
+      },
+      {
+        "node": "R1",
+        "command": "show ip route vrf BLUE ospf",
+        "pattern": "203\\.0\\.113\\.2",
+        "expectation": "BLUE separately learns the overlapping endpoint."
+      },
+      {
+        "node": "R1",
+        "command": "ping vrf RED 203.0.113.2 source Loopback10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "RED forwards through its own link."
+      },
+      {
+        "node": "R1",
+        "command": "ping vrf BLUE 203.0.113.2 source Loopback20 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "BLUE forwards through the other link."
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 203.0.113.2",
+        "pattern": "Network not in table",
+        "expectation": "The overlapping endpoint is absent from the global routing table."
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/001-eigrp-classic-named-ipv4-ipv6.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip eigrp neighbors",
+        "pattern": "198\\.18\\.0\\.2",
+        "expectation": "Classic IPv4 peers with the named IPv4 address family."
+      },
+      {
+        "node": "R1",
+        "command": "show ipv6 eigrp neighbors",
+        "pattern": "Ethernet0/0|Et0/0",
+        "expectation": "IPv6 has an independently established adjacency."
+      },
+      {
+        "node": "R1",
+        "command": "show ipv6 route eigrp",
+        "pattern": "2001:DB8:2::2/128",
+        "expectation": "The remote IPv6 endpoint is learned dynamically."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      },
+      {
+        "node": "R1",
+        "command": "ping ipv6 2001:db8:2::2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "IPv6 endpoint forwarding succeeds."
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/005-ospfv2-ospfv3-multiarea.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip route ospf",
+        "pattern": "O IA\\s+192\\.0\\.2\\.3",
+        "expectation": "OSPFv2 installs an inter-area route."
+      },
+      {
+        "node": "R1",
+        "command": "show ipv6 route ospf",
+        "pattern": "OI\\s+2001:DB8:3::3/128",
+        "expectation": "OSPFv3 separately installs its inter-area route."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      },
+      {
+        "node": "R1",
+        "command": "ping ipv6 2001:db8:3::3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "IPv6 forwards through the ABR."
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/002-eigrp-stub-summary-default.yaml": {
+    "checks": [
+      {
+        "node": "CORE",
+        "command": "show ip eigrp neighbors detail",
+        "pattern": "Stub Peer",
+        "expectation": "The downstream peer advertises its stub capability."
+      },
+      {
+        "node": "CORE",
+        "command": "show ip route 192.0.2.65",
+        "pattern": "192\\.0\\.2\\.0/25",
+        "expectation": "CORE selects the received aggregate."
+      },
+      {
+        "node": "R1",
+        "command": "show ip route eigrp",
+        "pattern": "D\\*.*0\\.0\\.0\\.0",
+        "expectation": "R1 receives a dynamic default."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.65 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The default, aggregate and return route all forward correctly."
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/003-eigrp-authentication-load-balancing.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip eigrp neighbors",
+        "pattern": "(?s)198\\.18\\.0\\.2.*198\\.18\\.1\\.2|198\\.18\\.1\\.2[\\s\\S]*198\\.18\\.0\\.2",
+        "expectation": "Both authenticated peer links are established."
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.2",
+        "pattern": "(?s)198\\.18\\.0\\.2.*198\\.18\\.1\\.2|198\\.18\\.1\\.2[\\s\\S]*198\\.18\\.0\\.2",
+        "expectation": "Two equal-cost next hops are installed."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "wrong key on one peer",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router eigrp SECURE",
+          "address-family ipv4 unicast autonomous-system 100",
+          "af-interface Ethernet0/0",
+          "authentication mode hmac-sha-256 WRONG-LAB-KEY",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip eigrp neighbors",
+            "pattern": "198\\.18\\.1\\.2",
+            "expectation": "Only the other authenticated link remains.",
+            "absent_pattern": "198\\.18\\.0\\.2"
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      },
+      {
+        "name": "authentication restored",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router eigrp SECURE",
+          "address-family ipv4 unicast autonomous-system 100",
+          "af-interface Ethernet0/0",
+          "authentication mode hmac-sha-256 CML-LAB-ONLY",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip eigrp neighbors",
+            "pattern": "(?s)198\\.18\\.0\\.2.*198\\.18\\.1\\.2|198\\.18\\.1\\.2[\\s\\S]*198\\.18\\.0\\.2",
+            "expectation": "Both authenticated peer links are established."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/004-eigrp-troubleshooting.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip eigrp neighbors",
+        "pattern": "198\\.18\\.0\\.2",
+        "expectation": "The repaired peer forms an adjacency."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      }
+    ],
+    "repair": {
+      "node": "R2",
+      "commands": [
+        "configure terminal",
+        "no router eigrp 200",
+        "router eigrp 100",
+        "network 198.18.0.0 0.0.0.3",
+        "network 192.0.2.2 0.0.0.0",
+        "no auto-summary",
+        "end"
+      ]
+    },
+    "initial": "EIGRP AS mismatch on R2; the link works but no routing adjacency forms."
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/008-ospf-troubleshooting.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip ospf neighbor",
+        "pattern": "FULL",
+        "expectation": "The repaired neighbor is FULL."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      }
+    ],
+    "repair": {
+      "node": "R2",
+      "commands": [
+        "configure terminal",
+        "interface Ethernet0/0",
+        "ip ospf 1 area 0",
+        "interface Loopback0",
+        "ip ospf 1 area 0",
+        "end"
+      ]
+    },
+    "initial": "R2 advertises area 1 on the transit segment while R1 expects area 0."
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/015-bgp-route-reflector.yaml": {
+    "checks": [
+      {
+        "node": "R2",
+        "command": "show ip bgp summary",
+        "pattern": "192\\.0\\.2\\.1\\s+4\\s+65000[^\\n]*\\s+[1-9][0-9]*\\s*$",
+        "expectation": "The iBGP session receives the remote endpoint prefix.",
+        "attempts": 20
+      },
+      {
+        "node": "R2",
+        "command": "show ip bgp summary",
+        "pattern": "192\\.0\\.2\\.3\\s+4\\s+65000[^\\n]*\\s+[1-9][0-9]*\\s*$",
+        "expectation": "The iBGP session receives the remote endpoint prefix.",
+        "attempts": 20
+      },
+      {
+        "node": "R3",
+        "command": "show ip bgp 203.0.113.1",
+        "pattern": "(?s)Originator: 192\\.0\\.2\\.1.*Cluster list: 192\\.0\\.2\\.2",
+        "expectation": "The route carries originator and reflector cluster attributes."
+      },
+      {
+        "node": "R3",
+        "command": "ping 203.0.113.1 source Loopback1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The reflected routes provide forward and return reachability."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "remove both client roles",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router bgp 65000",
+          "no neighbor 192.0.2.1 route-reflector-client",
+          "no neighbor 192.0.2.3 route-reflector-client",
+          "do clear ip bgp 192.0.2.1 soft out",
+          "do clear ip bgp 192.0.2.3 soft out",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip bgp summary",
+            "pattern": "192\\.0\\.2\\.1\\s+4\\s+65000[^\\n]*\\s+[1-9][0-9]*\\s*$",
+            "expectation": "The iBGP session receives the remote endpoint prefix.",
+            "attempts": 20
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp summary",
+            "pattern": "192\\.0\\.2\\.3\\s+4\\s+65000[^\\n]*\\s+[1-9][0-9]*\\s*$",
+            "expectation": "The iBGP session receives the remote endpoint prefix.",
+            "attempts": 20
+          },
+          {
+            "node": "R3",
+            "command": "show ip route 203.0.113.1",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The non-reflected endpoint route is withdrawn with both sessions still established."
+          }
+        ]
+      },
+      {
+        "name": "restore client roles",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router bgp 65000",
+          "neighbor 192.0.2.1 route-reflector-client",
+          "neighbor 192.0.2.3 route-reflector-client",
+          "do clear ip bgp 192.0.2.1 soft out",
+          "do clear ip bgp 192.0.2.3 soft out",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip bgp summary",
+            "pattern": "192\\.0\\.2\\.1\\s+4\\s+65000[^\\n]*\\s+[1-9][0-9]*\\s*$",
+            "expectation": "The iBGP session receives the remote endpoint prefix.",
+            "attempts": 20
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp summary",
+            "pattern": "192\\.0\\.2\\.3\\s+4\\s+65000[^\\n]*\\s+[1-9][0-9]*\\s*$",
+            "expectation": "The iBGP session receives the remote endpoint prefix.",
+            "attempts": 20
+          },
+          {
+            "node": "R3",
+            "command": "show ip bgp 203.0.113.1",
+            "pattern": "(?s)Originator: 192\\.0\\.2\\.1.*Cluster list: 192\\.0\\.2\\.2",
+            "expectation": "The route carries originator and reflector cluster attributes."
+          },
+          {
+            "node": "R3",
+            "command": "ping 203.0.113.1 source Loopback1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The reflected routes provide forward and return reachability."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/016-bgp-filtering-prefix-aspath.yaml": {
+    "checks": [
+      {
+        "node": "R2",
+        "command": "show ip bgp 192.0.2.3",
+        "pattern": "65003",
+        "expectation": "R2 receives the route before applying outbound policy.",
+        "attempts": 20
+      },
+      {
+        "node": "R1",
+        "command": "show ip bgp 192.0.2.2",
+        "pattern": "65002",
+        "expectation": "The allowed direct-AS prefix remains available.",
+        "attempts": 20
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.3",
+        "pattern": "(?:Network|Subnet) not in table",
+        "expectation": "The disallowed prefix has no installed route."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "remove AS-path filter",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router bgp 65002",
+          "no neighbor 198.18.0.1 filter-list 10 out",
+          "do clear ip bgp 198.18.0.1 soft out",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip bgp 192.0.2.3",
+            "pattern": "65002 65003",
+            "expectation": "The advertised route has the expected two-AS path.",
+            "attempts": 20
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 203.0.113.3",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The independent prefix whitelist still blocks the extra endpoint."
+          }
+        ]
+      },
+      {
+        "name": "restore AS-path filter",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router bgp 65002",
+          "neighbor 198.18.0.1 filter-list 10 out",
+          "do clear ip bgp 198.18.0.1 soft out",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The disallowed prefix has no installed route."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/017-bgp-communities.yaml": {
+    "checks": [
+      {
+        "node": "R2",
+        "command": "show ip bgp 192.0.2.3",
+        "pattern": "Community: no-export",
+        "expectation": "R2 receives the standard no-export community.",
+        "attempts": 20
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.3",
+        "pattern": "(?:Network|Subnet) not in table",
+        "expectation": "The disallowed prefix has no installed route."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "ordinary community permits export",
+        "node": "R3",
+        "commands": [
+          "configure terminal",
+          "route-map MARK permit 10",
+          "no set community",
+          "set community 65000:100",
+          "exit",
+          "do clear ip bgp 198.18.1.1 soft out",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip bgp 192.0.2.3",
+            "pattern": "Community:\\s+65000:100\\s*$",
+            "expectation": "R2 sees only the replacement administrative community.",
+            "absent_pattern": "no-export"
+          },
+          {
+            "node": "R1",
+            "command": "show ip bgp 192.0.2.3",
+            "pattern": "65002 65003",
+            "expectation": "The advertised route has the expected two-AS path.",
+            "attempts": 20
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      },
+      {
+        "name": "restore no-export",
+        "node": "R3",
+        "commands": [
+          "configure terminal",
+          "route-map MARK permit 10",
+          "no set community",
+          "set community no-export",
+          "exit",
+          "do clear ip bgp 198.18.1.1 soft out",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip bgp 192.0.2.3",
+            "pattern": "Community: no-export",
+            "expectation": "R2 receives the standard no-export community.",
+            "attempts": 20
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The disallowed prefix has no installed route."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/010-route-map-filtering.yaml": {
+    "checks": [
+      {
+        "node": "R2",
+        "command": "show ip bgp 192.0.2.3",
+        "pattern": "65003",
+        "expectation": "R2 has the route before applying outbound policy.",
+        "attempts": 20
+      },
+      {
+        "node": "R1",
+        "command": "show ip bgp 192.0.2.2",
+        "pattern": "65002",
+        "expectation": "The route-map permits the local R2 endpoint.",
+        "attempts": 20
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.3",
+        "pattern": "(?:Network|Subnet) not in table",
+        "expectation": "The disallowed prefix has no installed route."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "permit transit endpoint",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "no ip prefix-list PUBLISH seq 10",
+          "ip prefix-list PUBLISH seq 10 permit 192.0.2.3/32",
+          "do clear ip bgp 198.18.0.1 soft out",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip bgp 192.0.2.3",
+            "pattern": "65002 65003",
+            "expectation": "The advertised route has the expected two-AS path.",
+            "attempts": 20
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      },
+      {
+        "name": "restore transit deny",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "no ip prefix-list PUBLISH seq 10",
+          "ip prefix-list PUBLISH seq 10 deny 192.0.2.3/32",
+          "do clear ip bgp 198.18.0.1 soft out",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The disallowed prefix has no installed route."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/019-bgp-troubleshooting.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip bgp summary",
+        "pattern": "198\\.18\\.0\\.2[^\\n]*\\s+[1-9][0-9]*\\s*$",
+        "expectation": "The corrected session is established and receives prefixes.",
+        "attempts": 20
+      },
+      {
+        "node": "R1",
+        "command": "show ip bgp 192.0.2.3",
+        "pattern": "65002 65003",
+        "expectation": "The advertised route has the expected two-AS path.",
+        "attempts": 20
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      }
+    ],
+    "repair": {
+      "node": "R1",
+      "commands": [
+        "configure terminal",
+        "router bgp 65001",
+        "neighbor 198.18.0.2 remote-as 65002",
+        "end"
+      ]
+    },
+    "initial": "The R1-to-R2 peer identity is incorrect; the BGP session cannot establish."
   }
 }

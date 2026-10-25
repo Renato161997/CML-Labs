@@ -1,51 +1,51 @@
 lab:
   title: Routing Table Selection
-  description: 200-301 CCNA - Implementing and Administering Cisco Solutions CML lab.
-  notes: '200-301 CCNA blueprint lab: Routing Table Selection
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# Routing Table Selection
 
 
-    Topics:
-
-    - longest prefix match
-
-    - AD
-
-    - metric
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Suggested tasks:
-
-    1. Install competing routes
-
-    2. Predict chosen route
-
-    3. Validate RIB behavior
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/200-301-021-routing-table-selection.md
 
 
-    Suggested verification:
+    R2 and R3 deliberately advertise the same educational loopback on separate routed links. The duplicate
+    /32 represents alternative destinations for the forwarding exercise; it is not a duplicate host address
+    on one Ethernet segment.
 
-    - show ip interface brief
 
-    - show interfaces status
+    Objectives:
 
-    - show ip route
+    - Distinguish prefix-length selection from administrative distance.
 
-    - show running-config | section router
+    - Withdraw the more-specific /32 and inspect the resulting next hop.
 
-    - ping between the lab endpoints'
+    - Restore the /32 without changing the covering aggregate.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
   node_definition: iosv
-  x: -300
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNA Routing Table Selection ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNA Routing Table Selection\n ip address 10.0.12.1 255.255.255.252\n\
-      \ no shutdown\ninterface Loopback0\n description CCNA Routing Table Selection\n ip address 10.1.1.1\
-      \ 255.255.255.255\n no shutdown\nend"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.1 255.255.255.252\n no\
+      \ shutdown\n exit\ninterface GigabitEthernet0/1\n ip address 198.18.1.1 255.255.255.252\n no shutdown\n\
+      \ exit\nip route 192.0.2.0 255.255.255.0 198.18.0.2\nip route 192.0.2.100 255.255.255.255 198.18.1.2\n\
+      end\n"
+  cpu_limit: 50
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
@@ -66,19 +66,20 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
   label: R2
   node_definition: iosv
-  x: 0
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nbanner motd ^C CCNA Routing Table Selection ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNA Routing Table Selection\n ip address 10.0.12.2 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description CCNA Routing Table Selection\n ip address\
-      \ 10.0.23.1 255.255.255.252\n no shutdown\nend"
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface Loopback0\n ip address 192.0.2.100 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.2 255.255.255.252\n no\
+      \ shutdown\n exit\nip route 192.0.2.1 255.255.255.255 198.18.0.1\nend\n"
+  cpu_limit: 50
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
@@ -99,19 +100,20 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 99
   tags: []
 - id: n2
   label: R3
   node_definition: iosv
-  x: 300
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R3\nno ip domain-lookup\nbanner motd ^C CCNA Routing Table Selection ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNA Routing Table Selection\n ip address 10.0.23.2 255.255.255.252\n\
-      \ no shutdown\ninterface Loopback0\n description CCNA Routing Table Selection\n ip address 10.3.3.3\
-      \ 255.255.255.255\n no shutdown\nend"
+    content: "hostname R3\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface Loopback0\n ip address 192.0.2.100 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.1.2 255.255.255.252\n no\
+      \ shutdown\n exit\nip route 192.0.2.1 255.255.255.255 198.18.1.1\nend\n"
+  cpu_limit: 50
+  priority: 98
+  x: 520
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
@@ -132,7 +134,6 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 98
   tags: []
 links:
 - id: l0
@@ -141,7 +142,7 @@ links:
   n2: n1
   i2: i1
 - id: l1
-  n1: n1
+  n1: n0
   i1: i2
   n2: n2
   i2: i1

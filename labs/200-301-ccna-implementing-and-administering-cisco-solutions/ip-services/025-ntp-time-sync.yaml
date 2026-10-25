@@ -1,147 +1,117 @@
 lab:
   title: NTP Time Sync
-  description: 200-301 CCNA - Implementing and Administering Cisco Solutions CML lab.
-  notes: '200-301 CCNA blueprint lab: NTP Time Sync
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# NTP Time Sync
 
 
-    Topics:
-
-    - NTP
-
-    - time synchronization
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Suggested tasks:
-
-    1. Set NTP master/client
-
-    2. Verify clock sync
-
-    3. Secure NTP peer
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/200-301-025-ntp-time-sync.md
 
 
-    Suggested verification:
+    Requires IOL-XE. This isolated reference deliberately trusts its local calendar, following the Cisco
+    clock calendar-valid / ntp master example. It is not a claim of accurate external UTC. No Internet
+    server is used. Each fresh device can need its own 15–20 minute frequency measurement (allow up to
+    40 minutes for this pair): wait for actual synchronized state instead of treating IP reachability
+    or a low stratum as success. Polling is 16 seconds only for this exercise. During a source failure
+    the clock can remain in holdover; the missing selected association is the failure evidence, not an
+    assumption of immediate loss of synchronization. A server reply with leap indicator 3 is unsynchronized
+    and must not be accepted merely because its stratum is low.
 
-    - show ip interface brief
 
-    - show interfaces status
+    Objectives:
 
-    - show ip route
+    - Distinguish a responding server from a trustworthy NTP reference.
 
-    - show running-config | section router
+    - Verify actual synchronization and selected peer.
 
-    - ping between the lab endpoints'
+    - Retarget the client to an unavailable peer, inspect the missing selected association, then restore
+    the real reference.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
-  node_definition: iosv
-  x: -300
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNA NTP Time Sync ^C\ninterface GigabitEthernet0/0\n\
-      \ description CCNA NTP Time Sync\n ip address 10.0.12.1 255.255.255.252\n no shutdown\ninterface\
-      \ Loopback0\n description CCNA NTP Time Sync\n ip address 10.1.1.1 255.255.255.255\n no shutdown\n\
-      end"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.0.1 255.255.255.252\n no shutdown\n exit\nntp server 198.18.0.2\
+      \ version 4 maxpoll 4 minpoll 4\nend\n"
+  cpu_limit: 50
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
   label: R2
-  node_definition: iosv
-  x: 0
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nbanner motd ^C CCNA NTP Time Sync ^C\ninterface GigabitEthernet0/0\n\
-      \ description CCNA NTP Time Sync\n ip address 10.0.12.2 255.255.255.252\n no shutdown\ninterface\
-      \ GigabitEthernet0/1\n description CCNA NTP Time Sync\n ip address 10.0.23.1 255.255.255.252\n no\
-      \ shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.2 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.0.2 255.255.255.252\n no shutdown\n exit\nclock calendar-valid\n\
+      ntp master 3\nend\n"
+  cpu_limit: 50
   priority: 99
-  tags: []
-- id: n2
-  label: R3
-  node_definition: iosv
-  x: 300
-  y: 0
-  configuration:
-  - name: ios_config.txt
-    content: "hostname R3\nno ip domain-lookup\nbanner motd ^C CCNA NTP Time Sync ^C\ninterface GigabitEthernet0/0\n\
-      \ description CCNA NTP Time Sync\n ip address 10.0.23.2 255.255.255.252\n no shutdown\ninterface\
-      \ Loopback0\n description CCNA NTP Time Sync\n ip address 10.3.3.3 255.255.255.255\n no shutdown\n\
-      end"
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 98
   tags: []
 links:
 - id: l0
   n1: n0
   i1: i1
   n2: n1
-  i2: i1
-- id: l1
-  n1: n1
-  i1: i2
-  n2: n2
   i2: i1
 annotations: []
 smart_annotations: []
