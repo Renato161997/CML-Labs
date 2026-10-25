@@ -534,7 +534,7 @@
         "node": "R1",
         "commands": [
           "configure terminal",
-          "ntp server 198.18.0.3 version 4 maxpoll 4 minpoll 4",
+          "ntp server 198.18.1.254 version 4 maxpoll 4 minpoll 4",
           "no ntp server 198.18.0.2",
           "end"
         ],
@@ -542,7 +542,7 @@
           {
             "node": "R1",
             "command": "show ntp associations",
-            "pattern": "198\\.18\\.0\\.3",
+            "pattern": "198\\.18\\.1\\.254",
             "expectation": "Only the unavailable peer is configured; no upstream is selected.",
             "absent_pattern": "198\\.18\\.0\\.2|\\*~"
           }
@@ -554,7 +554,7 @@
         "commands": [
           "configure terminal",
           "ntp server 198.18.0.2 version 4 maxpoll 4 minpoll 4",
-          "no ntp server 198.18.0.3",
+          "no ntp server 198.18.1.254",
           "end"
         ],
         "checks": [
@@ -1733,7 +1733,7 @@
         "node": "R2",
         "commands": [
           "configure terminal",
-          "no ip prefix-list PUBLISH seq 10",
+          "no ip prefix-list PUBLISH seq 10 deny 192.0.2.3/32",
           "ip prefix-list PUBLISH seq 10 permit 192.0.2.3/32",
           "do clear ip bgp 198.18.0.1 soft out",
           "end"
@@ -1759,7 +1759,7 @@
         "node": "R2",
         "commands": [
           "configure terminal",
-          "no ip prefix-list PUBLISH seq 10",
+          "no ip prefix-list PUBLISH seq 10 permit 192.0.2.3/32",
           "ip prefix-list PUBLISH seq 10 deny 192.0.2.3/32",
           "do clear ip bgp 198.18.0.1 soft out",
           "end"

@@ -2316,6 +2316,26 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T15:56:15Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/025-ntp-time-sync.yaml",
+      "sha256": "fc741641093be1e58b71fb2af29b4b5cf01fa61d94ddd6022a9d801e8f2d3161",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T16:32:22Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T16:32:22Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/017-bgp-communities.yaml",
+      "sha256": "a11e26fb309dcf7a02a447e63333f2365a5fb80814a4a7fdc91cdbd0d1f7ef0d",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T16:32:24Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T16:32:24Z"
     }
   ]
 }

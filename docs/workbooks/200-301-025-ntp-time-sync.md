@@ -50,7 +50,7 @@ On **R1**:
 
 ```ios
 configure terminal
-ntp server 198.18.0.3 version 4 maxpoll 4 minpoll 4
+ntp server 198.18.1.254 version 4 maxpoll 4 minpoll 4
 no ntp server 198.18.0.2
 end
 ```
@@ -64,7 +64,7 @@ On **R1**:
 ```ios
 configure terminal
 ntp server 198.18.0.2 version 4 maxpoll 4 minpoll 4
-no ntp server 198.18.0.3
+no ntp server 198.18.1.254
 end
 ```
 
@@ -132,4 +132,6 @@ end
 
 ## Platform scope
 
-[IOSv feature support](https://developer.cisco.com/docs/modeling-labs/iosv/) and [IOSvL2 feature support](https://developer.cisco.com/docs/modeling-labs/iosvl2/) describe the software platforms. This exercise verifies routing/control behavior, not hardware throughput, physical failure timing or certification coverage. A catalog entry is only marked passed after actual console acceptance and cleanup.
+Use the [reference-platform guide](../PLATFORMS.md) for the node models named by this workbook. Exact tested CML and image versions are recorded in the [results](../../validation/RESULTS.md). The checks verify the listed protocol and forwarding behavior, not hardware throughput, physical failure timing or complete certification coverage.
+
+Reference: [Cisco time and calendar configuration](https://www.cisco.com/c/en/us/td/docs/routers/ios-xe/system-management/system-management/m_bsm-time-calendar-set.html).

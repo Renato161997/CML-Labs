@@ -437,10 +437,10 @@
       "duration_minutes": 45,
       "workbook": "docs/workbooks/200-301-025-ntp-time-sync.md",
       "kind": "practice",
-      "runtime_status": "not-run",
-      "import_status": "not-run",
-      "cml_version": null,
-      "validated_utc": null,
+      "runtime_status": "passed",
+      "import_status": "import-export-pass",
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-25T17:03:03Z",
       "sha256": "fc741641093be1e58b71fb2af29b4b5cf01fa61d94ddd6022a9d801e8f2d3161"
     },
     {
@@ -1314,10 +1314,10 @@
       "duration_minutes": 50,
       "workbook": "docs/workbooks/300-410-017-bgp-communities.md",
       "kind": "practice",
-      "runtime_status": "not-run",
-      "import_status": "not-run",
-      "cml_version": null,
-      "validated_utc": null,
+      "runtime_status": "passed",
+      "import_status": "import-export-pass",
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-25T16:32:21Z",
       "sha256": "a11e26fb309dcf7a02a447e63333f2365a5fb80814a4a7fdc91cdbd0d1f7ef0d"
     },
     {
@@ -1816,10 +1816,10 @@
       "duration_minutes": 45,
       "workbook": "docs/workbooks/300-410-010-route-map-filtering.md",
       "kind": "practice",
-      "runtime_status": "not-run",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-25T17:04:38Z",
       "sha256": "478c54bbfd743c8d2f5f52164099336eb4f54f6a1264fd4febcd06a280b8faee"
     },
     {

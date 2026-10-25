@@ -2872,6 +2872,504 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T15:57:37Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/017-bgp-communities.yaml",
+      "sha256": "a11e26fb309dcf7a02a447e63333f2365a5fb80814a4a7fdc91cdbd0d1f7ef0d",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T16:30:48Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip bgp 192.0.2.3",
+          "expectation": "R2 receives the standard no-export community.",
+          "passed": true,
+          "output": "show ip bgp 192.0.2.3\nBGP routing table entry for 192.0.2.3/32, version 4\nPaths: (1 available, best #1, table default, not advertised to EBGP peer)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65003\n    198.18.1.2 from 198.18.1.2 (192.0.2.3)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      Community: no-export\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Oct 25 2026 16:31:52 UTC\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The disallowed prefix has no installed route.",
+          "passed": true,
+          "output": "show ip route 192.0.2.3\n% Subnet not in table\nR1#"
+        },
+        {
+          "phase": "ordinary community permits export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR3(config)#"
+        },
+        {
+          "phase": "ordinary community permits export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "route-map MARK permit 10",
+          "passed": true,
+          "output": "route-map MARK permit 10\nR3(config-route-map)#"
+        },
+        {
+          "phase": "ordinary community permits export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "no set community",
+          "passed": true,
+          "output": "no set community\nR3(config-route-map)#"
+        },
+        {
+          "phase": "ordinary community permits export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "set community 65000:100",
+          "passed": true,
+          "output": "set community 65000:100\nR3(config-route-map)#"
+        },
+        {
+          "phase": "ordinary community permits export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "exit",
+          "passed": true,
+          "output": "exit\nR3(config)#"
+        },
+        {
+          "phase": "ordinary community permits export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "do clear ip bgp 198.18.1.1 soft out",
+          "passed": true,
+          "output": "do clear ip bgp 198.18.1.1 soft out\nR3(config)#"
+        },
+        {
+          "phase": "ordinary community permits export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR3#"
+        },
+        {
+          "phase": "ordinary community permits export",
+          "node": "R2",
+          "command": "show ip bgp 192.0.2.3",
+          "expectation": "R2 sees only the replacement administrative community.",
+          "passed": true,
+          "output": "show ip bgp 192.0.2.3\nBGP routing table entry for 192.0.2.3/32, version 5\nPaths: (1 available, best #1, table default)\n  Advertised to update-groups:\n     1         \n  Refresh Epoch 2\n  65003\n    198.18.1.2 from 198.18.1.2 (192.0.2.3)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      Community: 65000:100\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Oct 25 2026 16:32:11 UTC\nR2#"
+        },
+        {
+          "phase": "ordinary community permits export",
+          "node": "R1",
+          "command": "show ip bgp 192.0.2.3",
+          "expectation": "The advertised route has the expected two-AS path.",
+          "passed": true,
+          "output": "show ip bgp 192.0.2.3\nBGP routing table entry for 192.0.2.3/32, version 4\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65002 65003\n    198.18.0.2 from 198.18.0.2 (192.0.2.2)\n      Origin IGP, localpref 100, valid, external, best\n      Community: 65000:100\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Oct 25 2026 16:32:11 UTC\nR1#"
+        },
+        {
+          "phase": "ordinary community permits export",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "restore no-export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR3(config)#"
+        },
+        {
+          "phase": "restore no-export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "route-map MARK permit 10",
+          "passed": true,
+          "output": "route-map MARK permit 10\nR3(config-route-map)#"
+        },
+        {
+          "phase": "restore no-export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "no set community",
+          "passed": true,
+          "output": "\n*Oct 25 16:32:14.944: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt.\nR3(config-route-map)#no set community\nR3(config-route-map)#"
+        },
+        {
+          "phase": "restore no-export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "set community no-export",
+          "passed": true,
+          "output": "set community no-export\nR3(config-route-map)#"
+        },
+        {
+          "phase": "restore no-export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "exit",
+          "passed": true,
+          "output": "*Oct 25 16:32:15.154: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\nR3(config-route-map)#exit\nR3(config)#"
+        },
+        {
+          "phase": "restore no-export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "do clear ip bgp 198.18.1.1 soft out",
+          "passed": true,
+          "output": "do clear ip bgp 198.18.1.1 soft out\nR3(config)#"
+        },
+        {
+          "phase": "restore no-export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "end",
+          "passed": true,
+          "output": "\nR3(config)#end\nR3#"
+        },
+        {
+          "phase": "restore no-export",
+          "node": "R2",
+          "command": "show ip bgp 192.0.2.3",
+          "expectation": "R2 receives the standard no-export community.",
+          "passed": true,
+          "output": "show ip bgp 192.0.2.3\nBGP routing table entry for 192.0.2.3/32, version 6\nPaths: (1 available, best #1, table default, not advertised to EBGP peer)\n  Not advertised to any peer\n  Refresh Epoch 3\n  65003\n    198.18.1.2 from 198.18.1.2 (192.0.2.3)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      Community: no-export\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Oct 25 2026 16:32:16 UTC\nR2#"
+        },
+        {
+          "phase": "restore no-export",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The disallowed prefix has no installed route.",
+          "passed": true,
+          "output": "show ip route 192.0.2.3\n% Subnet not in table\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "e329c8a2e3081e8582a27259b3f1f17d952d95c13feb63861f56693583110b68",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T16:32:21Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/025-ntp-time-sync.yaml",
+      "sha256": "fc741641093be1e58b71fb2af29b4b5cf01fa61d94ddd6022a9d801e8f2d3161",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T16:32:25Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The NTP transport network is reachable.",
+          "passed": true,
+          "output": "ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "verify local calendar configuration",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "verify local calendar configuration",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clock calendar-valid",
+          "passed": true,
+          "output": "clock calendar-valid\nR2(config)#"
+        },
+        {
+          "phase": "verify local calendar configuration",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ntp master 3",
+          "passed": true,
+          "output": "ntp master 3\nR2(config)#"
+        },
+        {
+          "phase": "verify local calendar configuration",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "verify local calendar configuration",
+          "node": "R2",
+          "command": "show ntp status",
+          "expectation": "The isolated reference is selected.",
+          "passed": true,
+          "output": "show ntp status\nClock is synchronized, stratum 3, reference is 127.127.1.1    \nnominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**10\nntp uptime is 90400 (1/100 of seconds), resolution is 4000\nreference time is EE88B123.9D70A588 (16:47:31.615 UTC Sun Oct 25 2026)\nclock offset is 0.0000 msec, root delay is 0.00 msec\nroot dispersion is 2.19 msec, peer dispersion is 1.20 msec\nloopfilter state is 'CTRL' (Normal Controlled Loop), drift is 0.000000000 s/s\nsystem poll interval is 16, last update was 1 sec ago.\nR2#"
+        },
+        {
+          "phase": "verify local calendar configuration",
+          "node": "R1",
+          "command": "show ntp status",
+          "expectation": "The client synchronizes through the lab reference.",
+          "passed": true,
+          "output": "show ntp status\nClock is synchronized, stratum 4, reference is 198.18.0.2     \nnominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**10\nntp uptime is 183000 (1/100 of seconds), resolution is 4000\nreference time is EE88B4BE.0D0E5628 (17:02:54.051 UTC Sun Oct 25 2026)\nclock offset is 0.0000 msec, root delay is 2.00 msec\nroot dispersion is 5.70 msec, peer dispersion is 2.40 msec\nloopfilter state is 'CTRL' (Normal Controlled Loop), drift is 0.000000000 s/s\nsystem poll interval is 16, last update was 0 sec ago.\nR1#"
+        },
+        {
+          "phase": "verify local calendar configuration",
+          "node": "R1",
+          "command": "show ntp associations",
+          "expectation": "The configured reference is selected.",
+          "passed": true,
+          "output": "show ntp associations\n\n  address         ref clock       st   when   poll reach  delay  offset   disp\n*~198.18.0.2      127.127.1.1      3      1     16   377  2.000   0.000  2.408\n * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured\nR1#"
+        },
+        {
+          "phase": "unavailable reference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "unavailable reference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ntp server 198.18.1.254 version 4 maxpoll 4 minpoll 4",
+          "passed": true,
+          "output": "ntp server 198.18.1.254 version 4 maxpoll 4 minpoll 4\n SECURITY WARNING - Module: NTP, Command: ntp server 198.18.1.254 version 4 maxpoll 4 minpoll 4 <cr>, Reason: NTP configuration lacks authentication, allowing potential time manipulation attacks, Description: NTP without authentication, Remediation: Configure a valid auth key and make it trusted using the command - ntp trusted-key\nR1(config)#"
+        },
+        {
+          "phase": "unavailable reference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no ntp server 198.18.0.2",
+          "passed": true,
+          "output": "no ntp server 198.18.0.2\nR1(config)#"
+        },
+        {
+          "phase": "unavailable reference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "unavailable reference",
+          "node": "R1",
+          "command": "show ntp associations",
+          "expectation": "Only the unavailable peer is configured; no upstream is selected.",
+          "passed": true,
+          "output": "show ntp associations\n\n  address         ref clock       st   when   poll reach  delay  offset   disp\n ~198.18.1.254    .INIT.          16      -     16     0  0.000   0.000 15937.\n * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured\nR1#"
+        },
+        {
+          "phase": "restore reference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore reference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ntp server 198.18.0.2 version 4 maxpoll 4 minpoll 4",
+          "passed": true,
+          "output": "ntp server 198.18.0.2 version 4 maxpoll 4 minpoll 4\n SECURITY WARNING - Module: NTP, Command: ntp server 198.18.0.2 version 4 maxpoll 4 minpoll 4 <cr>, Reason: NTP configuration lacks authentication, allowing potential time manipulation attacks, Description: NTP without authentication, Remediation: Configure a valid auth key and make it trusted using the command - ntp trusted-key\nR1(config)#"
+        },
+        {
+          "phase": "restore reference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no ntp server 198.18.1.254",
+          "passed": true,
+          "output": "no ntp server 198.18.1.254\nR1(config)#"
+        },
+        {
+          "phase": "restore reference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "restore reference",
+          "node": "R1",
+          "command": "show ntp status",
+          "expectation": "The client synchronizes through the lab reference.",
+          "passed": true,
+          "output": "show ntp status\nClock is synchronized, stratum 4, reference is 198.18.0.2     \nnominal freq is 250.0000 Hz, actual freq is 250.0000 Hz, precision is 2**10\nntp uptime is 183500 (1/100 of seconds), resolution is 4000\nreference time is EE88B4C3.0D0E5628 (17:02:59.051 UTC Sun Oct 25 2026)\nclock offset is 0.0000 msec, root delay is 2.00 msec\nroot dispersion is 7941.86 msec, peer dispersion is 7938.47 msec\nloopfilter state is 'CTRL' (Normal Controlled Loop), drift is 0.000000000 s/s\nsystem poll interval is 16, last update was 1 sec ago.\nR1#"
+        },
+        {
+          "phase": "restore reference",
+          "node": "R1",
+          "command": "show ntp associations",
+          "expectation": "The configured reference is selected.",
+          "passed": true,
+          "output": "show ntp associations\n\n  address         ref clock       st   when   poll reach  delay  offset   disp\n*~198.18.0.2      127.127.1.1      3      1     16     1  2.000   0.000 7938.4\n * sys.peer, # selected, + candidate, - outlyer, x falseticker, ~ configured\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "be91fc97b44c165ee05495ae076f701c43713cd3e9ea0d1fcf0c588f473f53e5",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T17:03:03Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/010-route-map-filtering.yaml",
+      "sha256": "478c54bbfd743c8d2f5f52164099336eb4f54f6a1264fd4febcd06a280b8faee",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T17:03:04Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip bgp 192.0.2.3",
+          "expectation": "R2 has the route before applying outbound policy.",
+          "passed": true,
+          "output": "show ip bgp 192.0.2.3\nBGP routing table entry for 192.0.2.3/32, version 4\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65003\n    198.18.1.2 from 198.18.1.2 (192.0.2.3)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Oct 25 2026 17:04:15 UTC\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip bgp 192.0.2.2",
+          "expectation": "The route-map permits the local R2 endpoint.",
+          "passed": true,
+          "output": "show ip bgp 192.0.2.2\nBGP routing table entry for 192.0.2.2/32, version 3\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65002\n    198.18.0.2 from 198.18.0.2 (192.0.2.2)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Oct 25 2026 17:04:15 UTC\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The disallowed prefix has no installed route.",
+          "passed": true,
+          "output": "show ip route 192.0.2.3\n% Subnet not in table\nR1#"
+        },
+        {
+          "phase": "permit transit endpoint",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "permit transit endpoint",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no ip prefix-list PUBLISH seq 10 deny 192.0.2.3/32",
+          "passed": true,
+          "output": "no ip prefix-list PUBLISH seq 10 deny 192.0.2.3/32\nR2(config)#"
+        },
+        {
+          "phase": "permit transit endpoint",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip prefix-list PUBLISH seq 10 permit 192.0.2.3/32",
+          "passed": true,
+          "output": "ip prefix-list PUBLISH seq 10 permit 192.0.2.3/32\nR2(config)#"
+        },
+        {
+          "phase": "permit transit endpoint",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear ip bgp 198.18.0.1 soft out",
+          "passed": true,
+          "output": "do clear ip bgp 198.18.0.1 soft out\nR2(config)#"
+        },
+        {
+          "phase": "permit transit endpoint",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "permit transit endpoint",
+          "node": "R1",
+          "command": "show ip bgp 192.0.2.3",
+          "expectation": "The advertised route has the expected two-AS path.",
+          "passed": true,
+          "output": "show ip bgp 192.0.2.3\nBGP routing table entry for 192.0.2.3/32, version 4\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 2\n  65002 65003\n    198.18.0.2 from 198.18.0.2 (192.0.2.2)\n      Origin IGP, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Oct 25 2026 17:04:30 UTC\nR1#"
+        },
+        {
+          "phase": "permit transit endpoint",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "restore transit deny",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore transit deny",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no ip prefix-list PUBLISH seq 10 permit 192.0.2.3/32",
+          "passed": true,
+          "output": "no ip prefix-list PUBLISH seq 10 permit 192.0.2.3/32\nR2(config)#"
+        },
+        {
+          "phase": "restore transit deny",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip prefix-list PUBLISH seq 10 deny 192.0.2.3/32",
+          "passed": true,
+          "output": "ip prefix-list PUBLISH seq 10 deny 192.0.2.3/32\nR2(config)#"
+        },
+        {
+          "phase": "restore transit deny",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear ip bgp 198.18.0.1 soft out",
+          "passed": true,
+          "output": "do clear ip bgp 198.18.0.1 soft out\nR2(config)#"
+        },
+        {
+          "phase": "restore transit deny",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR2#"
+        },
+        {
+          "phase": "restore transit deny",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The disallowed prefix has no installed route.",
+          "passed": true,
+          "output": "show ip route 192.0.2.3\n% Subnet not in table\nR1#"
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "fdb64e96d321bf84838bcdbd443794720d08978825730c458bb6b04729a5240c",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T17:04:38Z"
     }
   ]
 }
