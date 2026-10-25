@@ -640,46 +640,43 @@
       "title": "PortFast And BPDU Guard",
       "track": "200-301",
       "topic": "network-access",
-      "nodes": 5,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe",
+        "ioll2-xe"
       ],
       "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 45,
+      "workbook": "docs/workbooks/200-301-010-portfast-bpduguard.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "536eaa1a310c04141eda714838bf022d302306ac35f34707ba4e18cf57a8f59e"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-25T18:10:48Z",
+      "sha256": "d108903d4ce56160d1441a772d9cc8ae7ffc338a6414ef7f245d6c28715a1f1f"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/011-rapid-pvst-troubleshooting.yaml",
       "title": "Rapid PVST Troubleshooting",
       "track": "200-301",
       "topic": "network-access",
-      "nodes": 5,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "ioll2-xe"
       ],
       "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 50,
+      "workbook": "docs/workbooks/200-301-011-rapid-pvst-troubleshooting.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "fa604fe56d74469808e9755a320b9db43c743bd0a388f4afcda06fdd1576105b"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-25T18:06:22Z",
+      "sha256": "27e9d31e9997766516817d1db46515e32a97800bc1d20ba5d41f1fd7e033fd1c"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/012-etherchannel-lacp.yaml",
@@ -707,23 +704,21 @@
       "title": "Layer 2 Security Basics",
       "track": "200-301",
       "topic": "network-access",
-      "nodes": 5,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "ioll2-xe"
       ],
       "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 50,
+      "workbook": "docs/workbooks/200-301-013-layer2-security.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "a0a896be9bdbc59ab6ceacd8e9e831428699093b37dd8e1ca2013502f4aaa02a"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-25T18:13:11Z",
+      "sha256": "a1ef88ef8eade1a80cdb8fcb7ce0c2a60fabf0e4238467b7f98059fe8ba58ee0"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/014-wlan-client-vlan-mapping.yaml",

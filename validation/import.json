@@ -1538,36 +1538,6 @@
       "completed_utc": "2026-10-25T15:55:59Z"
     },
     {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/010-portfast-bpduguard.yaml",
-      "sha256": "536eaa1a310c04141eda714838bf022d302306ac35f34707ba4e18cf57a8f59e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:00Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/011-rapid-pvst-troubleshooting.yaml",
-      "sha256": "fa604fe56d74469808e9755a320b9db43c743bd0a388f4afcda06fdd1576105b",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:00Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:00Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/013-layer2-security.yaml",
-      "sha256": "a0a896be9bdbc59ab6ceacd8e9e831428699093b37dd8e1ca2013502f4aaa02a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:00Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:00Z"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/014-wlan-client-vlan-mapping.yaml",
       "sha256": "b4ab92ce8d74e1704c07626c7a73c930e9e987340785ed8d3c8884665d7480dd",
       "cml_version": "2.10.1+build.21",
@@ -2336,6 +2306,36 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T17:55:59Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/010-portfast-bpduguard.yaml",
+      "sha256": "d108903d4ce56160d1441a772d9cc8ae7ffc338a6414ef7f245d6c28715a1f1f",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T18:11:50Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T18:11:51Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/011-rapid-pvst-troubleshooting.yaml",
+      "sha256": "27e9d31e9997766516817d1db46515e32a97800bc1d20ba5d41f1fd7e033fd1c",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T18:11:52Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T18:11:53Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/013-layer2-security.yaml",
+      "sha256": "a1ef88ef8eade1a80cdb8fcb7ce0c2a60fabf0e4238467b7f98059fe8ba58ee0",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T18:11:54Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T18:11:54Z"
     }
   ]
 }

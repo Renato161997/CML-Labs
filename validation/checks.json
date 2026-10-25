@@ -2152,5 +2152,304 @@
         "command_timeout": 30
       }
     ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/010-portfast-bpduguard.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "ping 198.18.10.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 198.18.10.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      },
+      {
+        "node": "SW1",
+        "command": "show interfaces status",
+        "pattern": "(?:Et|Ethernet)0/0[^\\n]*connected",
+        "expectation": "The test-facing access port is connected."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "arm the interface guard",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "spanning-tree bpduguard enable",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show running-config interface Ethernet0/0",
+            "pattern": "spanning-tree bpduguard enable",
+            "expectation": "The interface guard is explicitly enabled."
+          }
+        ]
+      },
+      {
+        "name": "peer BPDU disables the edge port",
+        "node": "SW2",
+        "commands": [
+          "configure terminal",
+          "spanning-tree vlan 10 priority 0",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show interfaces status",
+            "pattern": "(?:Et|Ethernet)0/0[^\\n]*err-disabled",
+            "expectation": "The edge port is actually error-disabled."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.2 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The protected segment drops all three probes."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          }
+        ]
+      },
+      {
+        "name": "restore the peer bridge priority",
+        "node": "SW2",
+        "commands": [
+          "configure terminal",
+          "spanning-tree vlan 10 priority 32768",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW2",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "priority 32768 sys-id-ext 10",
+            "expectation": "The test bridge priority is restored before resetting the guarded port."
+          }
+        ]
+      },
+      {
+        "name": "restore the deliberately unprotected test baseline",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "spanning-tree bpduguard disable",
+          "shutdown",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show interfaces status",
+            "pattern": "(?:Et|Ethernet)0/0[^\\n]*connected",
+            "expectation": "The test-facing access port is connected."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/013-layer2-security.yaml": {
+    "checks": [
+      {
+        "node": "ACCESS",
+        "command": "show spanning-tree vlan 10",
+        "pattern": "(?:Et|Ethernet)0/0\\s+Root\\s+FWD",
+        "expectation": "The authorized upstream remains the root port."
+      },
+      {
+        "node": "ROGUE",
+        "command": "ping 198.18.10.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      },
+      {
+        "node": "ACCESS",
+        "command": "show spanning-tree inconsistentports",
+        "pattern": "Number of inconsistent ports[^\\n]*\\b0\\b",
+        "expectation": "No guarded port remains inconsistent.",
+        "absent_pattern": "(?:Et|Ethernet)0/1[^\\n]*Root\\s*Inconsistent"
+      }
+    ],
+    "transitions": [
+      {
+        "name": "superior downstream BPDUs",
+        "node": "ROGUE",
+        "commands": [
+          "configure terminal",
+          "spanning-tree vlan 10 priority 0",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "ACCESS",
+            "command": "show spanning-tree inconsistentports",
+            "pattern": "(?:Et|Ethernet)0/1[^\\n]*Root\\s*Inconsistent",
+            "expectation": "The guarded downstream interface is root-inconsistent."
+          },
+          {
+            "node": "ACCESS",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "(?:Et|Ethernet)0/0\\s+Root\\s+FWD",
+            "expectation": "The authorized upstream remains the root port."
+          },
+          {
+            "node": "ROOT",
+            "command": "ping 198.18.10.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "ROGUE",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The protected segment drops all three probes."
+          }
+        ]
+      },
+      {
+        "name": "legitimate downstream priority restored",
+        "node": "ROGUE",
+        "commands": [
+          "configure terminal",
+          "spanning-tree vlan 10 priority 61440",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "ACCESS",
+            "command": "show spanning-tree inconsistentports",
+            "pattern": "Number of inconsistent ports[^\\n]*\\b0\\b",
+            "expectation": "No guarded port remains inconsistent.",
+            "absent_pattern": "(?:Et|Ethernet)0/1[^\\n]*Root\\s*Inconsistent"
+          },
+          {
+            "node": "ACCESS",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "(?:Et|Ethernet)0/0\\s+Root\\s+FWD",
+            "expectation": "The authorized upstream remains the root port."
+          },
+          {
+            "node": "ROGUE",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "ACCESS",
+            "command": "show running-config interface Ethernet0/1",
+            "pattern": "spanning-tree guard root",
+            "expectation": "The boundary protection remains enabled."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/011-rapid-pvst-troubleshooting.yaml": {
+    "checks": [
+      {
+        "node": "SW1",
+        "command": "show spanning-tree vlan 10",
+        "pattern": "This bridge is the root",
+        "expectation": "SW1 is the intended VLAN 10 root."
+      },
+      {
+        "node": "SW3",
+        "command": "show spanning-tree vlan 10",
+        "pattern": "(?:Et|Ethernet)0/1\\s+Altn\\s+BLK",
+        "expectation": "The redundant path is correctly blocked, not a failed link."
+      },
+      {
+        "node": "SW2",
+        "command": "ping 198.18.10.3 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "unintended bridge wins election",
+        "node": "SW3",
+        "commands": [
+          "configure terminal",
+          "spanning-tree vlan 10 priority 0",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW3",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "This bridge is the root",
+            "expectation": "SW3 has actually become root."
+          },
+          {
+            "node": "SW1",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "(?:Et|Ethernet)0/1\\s+Root\\s+FWD",
+            "expectation": "SW1 now points toward the unintended root.",
+            "absent_pattern": "This bridge is the root"
+          },
+          {
+            "node": "SW2",
+            "command": "ping 198.18.10.3 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          }
+        ]
+      },
+      {
+        "name": "restore intended root policy",
+        "node": "SW3",
+        "commands": [
+          "configure terminal",
+          "spanning-tree vlan 10 priority 32768",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "This bridge is the root",
+            "expectation": "SW1 is the intended VLAN 10 root."
+          },
+          {
+            "node": "SW3",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "(?:Et|Ethernet)0/1\\s+Altn\\s+BLK",
+            "expectation": "The redundant path is correctly blocked, not a failed link."
+          },
+          {
+            "node": "SW2",
+            "command": "ping 198.18.10.3 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          }
+        ]
+      }
+    ]
   }
 }
