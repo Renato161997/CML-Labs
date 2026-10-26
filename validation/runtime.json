@@ -7463,6 +7463,1111 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-26T19:02:47Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/012-dual-stack-campus.yaml",
+      "sha256": "c89cd7de8a81428ec046415f6d12f55da63cc78382ce9cc5156da3fc4d2ecd3e",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T19:18:55Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "HOST10",
+          "command": "ping 198.18.20.20 repeat 3",
+          "expectation": "IPv4 crosses the routed VLAN boundary.",
+          "passed": true,
+          "output": "\nHOST10#ping 198.18.20.20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.20, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nHOST10#"
+        },
+        {
+          "phase": "baseline",
+          "node": "HOST10",
+          "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+          "expectation": "IPv6 crosses the same routed VLAN boundary.",
+          "passed": true,
+          "output": "\nHOST10#ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:20::20, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::10\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/3/9 ms\nHOST10#"
+        },
+        {
+          "phase": "IPv6 forwarding disabled",
+          "kind": "configuration",
+          "node": "CORE",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCORE#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCORE(config)#"
+        },
+        {
+          "phase": "IPv6 forwarding disabled",
+          "kind": "configuration",
+          "node": "CORE",
+          "command": "no ipv6 unicast-routing",
+          "passed": true,
+          "output": "\nCORE(config)#no ipv6 unicast-routing\nCORE(config)#"
+        },
+        {
+          "phase": "IPv6 forwarding disabled",
+          "kind": "configuration",
+          "node": "CORE",
+          "command": "end",
+          "passed": true,
+          "output": "\nCORE(config)#end\nCORE#"
+        },
+        {
+          "phase": "IPv6 forwarding disabled",
+          "node": "HOST10",
+          "command": "ping 198.18.20.20 repeat 3",
+          "expectation": "IPv4 crosses the routed VLAN boundary.",
+          "passed": true,
+          "output": "\nHOST10#ping 198.18.20.20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.20, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nHOST10#"
+        },
+        {
+          "phase": "IPv6 forwarding disabled",
+          "node": "HOST10",
+          "command": "ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3",
+          "expectation": "The local IPv6 gateway still responds.",
+          "passed": true,
+          "output": "\nHOST10#ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:10::1, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::10\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST10#"
+        },
+        {
+          "phase": "IPv6 forwarding disabled",
+          "node": "HOST10",
+          "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+          "expectation": "IPv6 transit fails independently of IPv4.",
+          "passed": true,
+          "output": "\nHOST10#ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:20::20, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::10\n...\nSuccess rate is 0 percent (0/3)\nHOST10#"
+        },
+        {
+          "phase": "IPv6 forwarding restored",
+          "kind": "configuration",
+          "node": "CORE",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCORE#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCORE(config)#"
+        },
+        {
+          "phase": "IPv6 forwarding restored",
+          "kind": "configuration",
+          "node": "CORE",
+          "command": "ipv6 unicast-routing",
+          "passed": true,
+          "output": "\nCORE(config)#ipv6 unicast-routing\nCORE(config)#"
+        },
+        {
+          "phase": "IPv6 forwarding restored",
+          "kind": "configuration",
+          "node": "CORE",
+          "command": "end",
+          "passed": true,
+          "output": "\nCORE(config)#end\nCORE#"
+        },
+        {
+          "phase": "IPv6 forwarding restored",
+          "node": "HOST10",
+          "command": "ping 198.18.20.20 repeat 3",
+          "expectation": "IPv4 crosses the routed VLAN boundary.",
+          "passed": true,
+          "output": "\nHOST10#ping 198.18.20.20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.20, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nHOST10#"
+        },
+        {
+          "phase": "IPv6 forwarding restored",
+          "node": "HOST10",
+          "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+          "expectation": "IPv6 crosses the same routed VLAN boundary.",
+          "passed": true,
+          "output": "\nHOST10#ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:20::20, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::10\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST10#"
+        }
+      ],
+      "startup_states": {
+        "CORE": "BOOTED",
+        "HOST10": "BOOTED",
+        "HOST20": "BOOTED"
+      },
+      "images": {
+        "CORE": "ioll2-xe-17-18-02",
+        "HOST10": "iol-xe-17-18-02",
+        "HOST20": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "e8569ce940951ee71388ccda577f982423a64f5692a8fd44ff62feb864f41e9d",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T19:19:51Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/019-multilayer-switching-svi-routing.yaml",
+      "sha256": "118763947207adfd468445dd9ad6db1a37a57d653f59186af6044193a83d0ff3",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T19:18:55Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "HOST10",
+          "command": "ping 198.18.20.20 repeat 3",
+          "expectation": "IPv4 crosses the routed VLAN boundary.",
+          "passed": true,
+          "output": "\nHOST10#ping 198.18.20.20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.20, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST10#"
+        },
+        {
+          "phase": "baseline",
+          "node": "HOST20",
+          "command": "ping 198.18.10.10 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "\n*Oct 26 19:19:19.248: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt.\nHOST20#\nHOST20#ping 198.18.10.10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.10, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST20#"
+        },
+        {
+          "phase": "disable inter-VLAN routing",
+          "kind": "configuration",
+          "node": "CORE",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCORE#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCORE(config)#"
+        },
+        {
+          "phase": "disable inter-VLAN routing",
+          "kind": "configuration",
+          "node": "CORE",
+          "command": "no ip routing",
+          "passed": true,
+          "output": "\nCORE(config)#no ip routing\nCORE(config)#"
+        },
+        {
+          "phase": "disable inter-VLAN routing",
+          "kind": "configuration",
+          "node": "CORE",
+          "command": "end",
+          "passed": true,
+          "output": "\nCORE(config)#end\nCORE#"
+        },
+        {
+          "phase": "disable inter-VLAN routing",
+          "node": "HOST10",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "\nHOST10#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST10#"
+        },
+        {
+          "phase": "disable inter-VLAN routing",
+          "node": "HOST20",
+          "command": "ping 198.18.20.1 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "\nHOST20#ping 198.18.20.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST20#"
+        },
+        {
+          "phase": "disable inter-VLAN routing",
+          "node": "HOST10",
+          "command": "ping 198.18.20.20 repeat 3",
+          "expectation": "The protected segment drops all three probes.",
+          "passed": true,
+          "output": "\nHOST10#ping 198.18.20.20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.20, timeout is 2 seconds:\n...\nSuccess rate is 0 percent (0/3)\nHOST10#"
+        },
+        {
+          "phase": "restore inter-VLAN routing",
+          "kind": "configuration",
+          "node": "CORE",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCORE#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCORE(config)#"
+        },
+        {
+          "phase": "restore inter-VLAN routing",
+          "kind": "configuration",
+          "node": "CORE",
+          "command": "ip routing",
+          "passed": true,
+          "output": "\nCORE(config)#ip routing\nCORE(config)#"
+        },
+        {
+          "phase": "restore inter-VLAN routing",
+          "kind": "configuration",
+          "node": "CORE",
+          "command": "end",
+          "passed": true,
+          "output": "\nCORE(config)#end\nCORE#"
+        },
+        {
+          "phase": "restore inter-VLAN routing",
+          "node": "HOST10",
+          "command": "ping 198.18.20.20 repeat 3",
+          "expectation": "IPv4 crosses the routed VLAN boundary.",
+          "passed": true,
+          "output": "\nHOST10#ping 198.18.20.20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.20, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nHOST10#"
+        },
+        {
+          "phase": "restore inter-VLAN routing",
+          "node": "HOST20",
+          "command": "ping 198.18.10.10 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "\nHOST20#ping 198.18.10.10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.10, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nHOST20#"
+        }
+      ],
+      "startup_states": {
+        "CORE": "BOOTED",
+        "HOST10": "STARTED",
+        "HOST20": "STARTED"
+      },
+      "images": {
+        "CORE": "ioll2-xe-17-18-02",
+        "HOST10": "iol-xe-17-18-02",
+        "HOST20": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "f548ef1e557b47803b21abb122069615bc8dd2e5fa0e86d712ff04a32eb51e2e",
+      "console_boot_fallback": [
+        "HOST10",
+        "HOST20"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T19:20:01Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/020-mst-rpvst-stp-tuning.yaml",
+      "sha256": "b23225c284fb6fc8327db581a416a181cef16bdc818083165ec18324a71042be",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T19:18:55Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show spanning-tree mst 1",
+          "expectation": "SW1 is the instance-1 root.",
+          "passed": true,
+          "output": "\nSW1#show spanning-tree mst 1\n\n##### MST1    vlans mapped:   10\nBridge        address aabb.cc00.be00  priority      4097  (4096 sysid 1)\nRoot          this switch for MST1\n\nInterface                        Role Sts Cost      Prio.Nbr Type\n----------------                 ---- --- --------- -------- --------------------------------\nEt0/0                            Desg FWD 2000000   128.1    P2p \n\nSW1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW2",
+          "command": "show spanning-tree mst 2",
+          "expectation": "SW2 is the instance-2 root.",
+          "passed": true,
+          "output": "\nSW2#show spanning-tree mst 2\n\n##### MST2    vlans mapped:   20\nBridge        address aabb.cc00.bf00  priority      4098  (4096 sysid 2)\nRoot          this switch for MST2\n\nInterface                        Role Sts Cost      Prio.Nbr Type\n----------------                 ---- --- --------- -------- --------------------------------\nEt0/0                            Desg FWD 2000000   128.1    P2p \n\nSW2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "ping 192.0.2.2 source Vlan10 repeat 3",
+          "expectation": "VLAN 10 crosses the inter-switch link.",
+          "passed": true,
+          "output": "\nSW1#ping 192.0.2.2 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nSW1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "ping 198.51.100.2 source Vlan20 repeat 3",
+          "expectation": "VLAN 20 crosses the inter-switch link.",
+          "passed": true,
+          "output": "\nSW1#ping 198.51.100.2 source Vlan20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.51.100.2, timeout is 2 seconds:\nPacket sent with a source address of 198.51.100.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSW1#"
+        },
+        {
+          "phase": "first peer becomes Rapid-PVST",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "first peer becomes Rapid-PVST",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "spanning-tree mode rapid-pvst",
+          "passed": true,
+          "output": "\nSW1(config)#spanning-tree mode rapid-pvst\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance window\nSW1(config)#"
+        },
+        {
+          "phase": "first peer becomes Rapid-PVST",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "spanning-tree vlan 10 priority 4096",
+          "passed": true,
+          "output": "\nSW1(config)#spanning-tree vlan 10 priority 4096\nSW1(config)#"
+        },
+        {
+          "phase": "first peer becomes Rapid-PVST",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "spanning-tree vlan 20 priority 32768",
+          "passed": true,
+          "output": "\nSW1(config)#spanning-tree vlan 20 priority 32768\nSW1(config)#"
+        },
+        {
+          "phase": "first peer becomes Rapid-PVST",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW1(config)#end\nSW1#"
+        },
+        {
+          "phase": "first peer becomes Rapid-PVST",
+          "node": "SW1",
+          "command": "show spanning-tree summary",
+          "expectation": "The first peer reports Rapid-PVST mode.",
+          "passed": true,
+          "output": "\nSW1#show spanning-tree summary\nSwitch is in rapid-pvst mode\nRoot bridge for: VLAN0010, VLAN0020\nEtherChannel misconfig guard            is enabled\nExtended system ID                      is enabled\nPortfast Default                        is disabled\nPortFast BPDU Guard Default            is disabled\nPortfast BPDU Filter Default           is disabled\nLoopguard Default                      is disabled\nUplinkFast                              is disabled\nBackboneFast                            is disabled\nConfigured Pathcost method used is short\n\nName                   Blocking Listening Learning Forwarding STP Active\n---------------------- -------- --------- -------- ---------- ----------\nVLAN0010                     1         0        0          0          1\nVLAN0020                     1         0        0          0          1\n---------------------- -------- --------- -------- ---------- ----------\n2 vlans                      2         0        0          0          2\nSW1#"
+        },
+        {
+          "phase": "second peer becomes Rapid-PVST",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW2(config)#"
+        },
+        {
+          "phase": "second peer becomes Rapid-PVST",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "spanning-tree mode rapid-pvst",
+          "passed": true,
+          "output": "\nSW2(config)#spanning-tree mode rapid-pvst\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance window\nSW2(config)#"
+        },
+        {
+          "phase": "second peer becomes Rapid-PVST",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "spanning-tree vlan 10 priority 32768",
+          "passed": true,
+          "output": "\nSW2(config)#spanning-tree vlan 10 priority 32768\nSW2(config)#"
+        },
+        {
+          "phase": "second peer becomes Rapid-PVST",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "spanning-tree vlan 20 priority 4096",
+          "passed": true,
+          "output": "\nSW2(config)#spanning-tree vlan 20 priority 4096\nSW2(config)#"
+        },
+        {
+          "phase": "second peer becomes Rapid-PVST",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW2(config)#end\nSW2#"
+        },
+        {
+          "phase": "second peer becomes Rapid-PVST",
+          "node": "SW1",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "SW1 is the Rapid-PVST VLAN-10 root.",
+          "passed": true,
+          "output": "\nSW1#show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc00.be00\n             This bridge is the root\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    4106   (priority 4096 sys-id-ext 10)\n             Address     aabb.cc00.be00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Desg FWD 100       128.1    P2p \n\n\nSW1#"
+        },
+        {
+          "phase": "second peer becomes Rapid-PVST",
+          "node": "SW2",
+          "command": "show spanning-tree vlan 20",
+          "expectation": "SW2 is the Rapid-PVST VLAN-20 root.",
+          "passed": true,
+          "output": "\nSW2#show spanning-tree vlan 20\n\nVLAN0020\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4116\n             Address     aabb.cc00.bf00\n             This bridge is the root\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    4116   (priority 4096 sys-id-ext 20)\n             Address     aabb.cc00.bf00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Desg FWD 100       128.1    P2p \n\n\nSW2#"
+        },
+        {
+          "phase": "second peer becomes Rapid-PVST",
+          "node": "SW1",
+          "command": "ping 192.0.2.2 source Vlan10 repeat 3",
+          "expectation": "VLAN 10 crosses the inter-switch link.",
+          "passed": true,
+          "output": "\nSW1#ping 192.0.2.2 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSW1#"
+        },
+        {
+          "phase": "second peer becomes Rapid-PVST",
+          "node": "SW1",
+          "command": "ping 198.51.100.2 source Vlan20 repeat 3",
+          "expectation": "VLAN 20 crosses the inter-switch link.",
+          "passed": true,
+          "output": "\nSW1#ping 198.51.100.2 source Vlan20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.51.100.2, timeout is 2 seconds:\nPacket sent with a source address of 198.51.100.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSW1#"
+        },
+        {
+          "phase": "first peer returns to MST",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "first peer returns to MST",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "spanning-tree mode mst",
+          "passed": true,
+          "output": "\nSW1(config)#spanning-tree mode mst\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance window\nSW1(config)#"
+        },
+        {
+          "phase": "first peer returns to MST",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "spanning-tree mst 1 priority 4096",
+          "passed": true,
+          "output": "\nSW1(config)#spanning-tree mst 1 priority 4096\nSW1(config)#"
+        },
+        {
+          "phase": "first peer returns to MST",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW1(config)#end\nSW1#"
+        },
+        {
+          "phase": "first peer returns to MST",
+          "node": "SW1",
+          "command": "show spanning-tree summary",
+          "expectation": "The first peer reports MST mode.",
+          "passed": true,
+          "output": "\nSW1#show spanning-tree summary\nSwitch is in mst mode (IEEE Standard)\nRoot bridge for: MST0-MST2\nEtherChannel misconfig guard            is enabled\nExtended system ID                      is enabled\nPortfast Default                        is disabled\nPortFast BPDU Guard Default            is disabled\nPortfast BPDU Filter Default           is disabled\nLoopguard Default                      is disabled\nUplinkFast                              is disabled\nBackboneFast                            is disabled\nConfigured Pathcost method used is short (Operational value is long)\n\nName                   Blocking Listening Learning Forwarding STP Active\n---------------------- -------- --------- -------- ---------- ----------\nMST0                         1         0        0          0          1\nMST1                         1         0        0          0          1\nMST2                         1         0        0          0          1\n---------------------- -------- --------- -------- ---------- ----------\n3 msts                       3         0        0          0          3\nSW1#"
+        },
+        {
+          "phase": "second peer returns to MST",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW2(config)#"
+        },
+        {
+          "phase": "second peer returns to MST",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "spanning-tree mode mst",
+          "passed": true,
+          "output": "\nSW2(config)#spanning-tree mode mst\nWarning: Changing STP mode can disrupt the traffic and make system unstable\nRecommend to change STP mode only during maintenance window\nSW2(config)#"
+        },
+        {
+          "phase": "second peer returns to MST",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "spanning-tree mst 2 priority 4096",
+          "passed": true,
+          "output": "\nSW2(config)#spanning-tree mst 2 priority 4096\nSW2(config)#"
+        },
+        {
+          "phase": "second peer returns to MST",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW2(config)#end\nSW2#"
+        },
+        {
+          "phase": "second peer returns to MST",
+          "node": "SW1",
+          "command": "show spanning-tree mst 1",
+          "expectation": "SW1 is the instance-1 root.",
+          "passed": true,
+          "output": "\nSW1#show spanning-tree mst 1\n\n##### MST1    vlans mapped:   10\nBridge        address aabb.cc00.be00  priority      4097  (4096 sysid 1)\nRoot          this switch for MST1\n\nInterface                        Role Sts Cost      Prio.Nbr Type\n----------------                 ---- --- --------- -------- --------------------------------\nEt0/0                            Desg BKN*2000000   128.1    P2p *PVST_Inc \n\nSW1#"
+        },
+        {
+          "phase": "second peer returns to MST",
+          "node": "SW2",
+          "command": "show spanning-tree mst 2",
+          "expectation": "SW2 is the instance-2 root.",
+          "passed": true,
+          "output": "\nSW2#show spanning-tree mst 2\n\n##### MST2    vlans mapped:   20\nBridge        address aabb.cc00.bf00  priority      4098  (4096 sysid 2)\nRoot          this switch for MST2\n\nInterface                        Role Sts Cost      Prio.Nbr Type\n----------------                 ---- --- --------- -------- --------------------------------\nEt0/0                            Desg BLK 2000000   128.1    P2p \n\nSW2#"
+        },
+        {
+          "phase": "second peer returns to MST",
+          "node": "SW1",
+          "command": "ping 192.0.2.2 source Vlan10 repeat 3",
+          "expectation": "VLAN 10 crosses the inter-switch link.",
+          "passed": true,
+          "output": "\nSW1#ping 192.0.2.2 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSW1#"
+        },
+        {
+          "phase": "second peer returns to MST",
+          "node": "SW1",
+          "command": "ping 198.51.100.2 source Vlan20 repeat 3",
+          "expectation": "VLAN 20 crosses the inter-switch link.",
+          "passed": true,
+          "output": "\nSW1#ping 198.51.100.2 source Vlan20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.51.100.2, timeout is 2 seconds:\nPacket sent with a source address of 198.51.100.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSW1#"
+        }
+      ],
+      "startup_states": {
+        "SW1": "BOOTED",
+        "SW2": "STARTED"
+      },
+      "images": {
+        "SW1": "ioll2-xe-17-18-02",
+        "SW2": "ioll2-xe-17-18-02"
+      },
+      "plan_sha256": "dff0e814ce71e1693d3560f82ceadcd72c070f8f55b897f87438a7764d5a4f54",
+      "console_boot_fallback": [
+        "SW2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T19:20:19Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/021-lacp-pagp-etherchannel.yaml",
+      "sha256": "9bf45a88d8f3b9ffa19821e0beb7ceb140a9a99bb5270448a89551e2ae927fa4",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T19:24:20Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show etherchannel summary",
+          "expectation": "Both links are actually bundled using PAgP.",
+          "passed": true,
+          "output": "\nSW1#show etherchannel summary\nFlags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\n        H - Hot-standby (LACP only)\n        R - Layer3      S - Layer2\n        U - in use      f - failed to allocate aggregator\n\n        M - not in use, minimum links not met\n        u - unsuitable for bundling\n        w - waiting to be aggregated\n        d - default port\n\n        A - formed by Auto LAG\n\n\nNumber of channel-groups in use: 1\nNumber of aggregators:           1\n\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+-----------------------------------------------\n1      Po1(SU)         PAgP        Et0/0(P)        Et0/1(P)        \n\nSW1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "ping 192.0.2.2 source Vlan10 repeat 3",
+          "expectation": "The SVI data path crosses the negotiated bundle.",
+          "passed": true,
+          "output": "\nSW1#ping 192.0.2.2 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSW1#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface range Ethernet0/0 - 1",
+          "passed": true,
+          "output": "\nSW1(config)#interface range Ethernet0/0 - 1\nSW1(config-if-range)#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "no channel-group 1",
+          "passed": true,
+          "output": "\nSW1(config-if-range)#no channel-group 1\nSW1(config-if-range)#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nSW1(config-if-range)#exit\nSW1(config)#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "no interface Port-channel1",
+          "passed": true,
+          "output": "\nSW1(config)#no interface Port-channel1\nSW1(config)#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface range Ethernet0/0 - 1",
+          "passed": true,
+          "output": "\nSW1(config)#interface range Ethernet0/0 - 1\nSW1(config-if-range)#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "channel-protocol lacp",
+          "passed": true,
+          "output": "\nSW1(config-if-range)#channel-protocol lacp\nSW1(config-if-range)#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "channel-group 1 mode active",
+          "passed": true,
+          "output": "\nSW1(config-if-range)#channel-group 1 mode active\nCreating a port-channel interface Port-channel 1\n\nSW1(config-if-range)#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nSW1(config-if-range)#exit\nSW1(config)#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface Port-channel1",
+          "passed": true,
+          "output": "\nSW1(config)#interface Port-channel1\nSW1(config-if)#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "switchport trunk encapsulation dot1q",
+          "passed": true,
+          "output": "\nSW1(config-if)#switchport trunk encapsulation dot1q\nSW1(config-if)#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "switchport mode trunk",
+          "passed": true,
+          "output": "\nSW1(config-if)#switchport mode trunk\nSW1(config-if)#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "switchport trunk allowed vlan 10,20",
+          "passed": true,
+          "output": "\nSW1(config-if)#switchport trunk allowed vlan 10,20\nSW1(config-if)#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nSW1(config-if)#no shutdown\nSW1(config-if)#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW1(config-if)#end\nSW1#"
+        },
+        {
+          "phase": "first peer changes to LACP",
+          "node": "SW1",
+          "command": "show etherchannel summary",
+          "expectation": "The changed peer reports its new protocol without a usable negotiated bundle.",
+          "passed": true,
+          "output": "\nSW1#show etherchannel summary\nFlags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\n        H - Hot-standby (LACP only)\n        R - Layer3      S - Layer2\n        U - in use      f - failed to allocate aggregator\n\n        M - not in use, minimum links not met\n        u - unsuitable for bundling\n        w - waiting to be aggregated\n        d - default port\n\n        A - formed by Auto LAG\n\n\nNumber of channel-groups in use: 1\nNumber of aggregators:           1\n\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+-----------------------------------------------\n1      Po1(SD)         LACP        Et0/0(w)        Et0/1(w)        \n\nSW1#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW2(config)#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "interface range Ethernet0/0 - 1",
+          "passed": true,
+          "output": "\nSW2(config)#interface range Ethernet0/0 - 1\nSW2(config-if-range)#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "no channel-group 1",
+          "passed": true,
+          "output": "\nSW2(config-if-range)#no channel-group 1\nSW2(config-if-range)#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nSW2(config-if-range)#exit\nSW2(config)#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "no interface Port-channel1",
+          "passed": true,
+          "output": "\nSW2(config)#no interface Port-channel1\nSW2(config)#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "interface range Ethernet0/0 - 1",
+          "passed": true,
+          "output": "\nSW2(config)#interface range Ethernet0/0 - 1\nSW2(config-if-range)#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "channel-protocol lacp",
+          "passed": true,
+          "output": "\nSW2(config-if-range)#channel-protocol lacp\nSW2(config-if-range)#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "channel-group 1 mode passive",
+          "passed": true,
+          "output": "\nSW2(config-if-range)#channel-group 1 mode passive\nCreating a port-channel interface Port-channel 1\n\nSW2(config-if-range)#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nSW2(config-if-range)#exit\nSW2(config)#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "interface Port-channel1",
+          "passed": true,
+          "output": "\nSW2(config)#interface Port-channel1\nSW2(config-if)#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "switchport trunk encapsulation dot1q",
+          "passed": true,
+          "output": "\nSW2(config-if)#switchport trunk encapsulation dot1q\nSW2(config-if)#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "switchport mode trunk",
+          "passed": true,
+          "output": "\nSW2(config-if)#switchport mode trunk\nSW2(config-if)#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "switchport trunk allowed vlan 10,20",
+          "passed": true,
+          "output": "\nSW2(config-if)#switchport trunk allowed vlan 10,20\nSW2(config-if)#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nSW2(config-if)#no shutdown\nSW2(config-if)#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW2(config-if)#end\nSW2#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "node": "SW1",
+          "command": "show etherchannel summary",
+          "expectation": "Both links are actually bundled using LACP.",
+          "passed": true,
+          "output": "\nSW1#show etherchannel summary\nFlags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\n        H - Hot-standby (LACP only)\n        R - Layer3      S - Layer2\n        U - in use      f - failed to allocate aggregator\n\n        M - not in use, minimum links not met\n        u - unsuitable for bundling\n        w - waiting to be aggregated\n        d - default port\n\n        A - formed by Auto LAG\n\n\nNumber of channel-groups in use: 1\nNumber of aggregators:           1\n\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+-----------------------------------------------\n1      Po1(SU)         LACP        Et0/0(P)        Et0/1(P)        \n\nSW1#"
+        },
+        {
+          "phase": "second peer changes to LACP",
+          "node": "SW1",
+          "command": "ping 192.0.2.2 source Vlan10 repeat 3",
+          "expectation": "The SVI data path crosses the negotiated bundle.",
+          "passed": true,
+          "output": "\nSW1#ping 192.0.2.2 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSW1#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface range Ethernet0/0 - 1",
+          "passed": true,
+          "output": "\nSW1(config)#interface range Ethernet0/0 - 1\nSW1(config-if-range)#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "no channel-group 1",
+          "passed": true,
+          "output": "\nSW1(config-if-range)#no channel-group 1\nSW1(config-if-range)#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nSW1(config-if-range)#exit\nSW1(config)#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "no interface Port-channel1",
+          "passed": true,
+          "output": "\nSW1(config)#no interface Port-channel1\nSW1(config)#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface range Ethernet0/0 - 1",
+          "passed": true,
+          "output": "\nSW1(config)#interface range Ethernet0/0 - 1\nSW1(config-if-range)#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "channel-protocol pagp",
+          "passed": true,
+          "output": "\nSW1(config-if-range)#channel-protocol pagp\nSW1(config-if-range)#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "channel-group 1 mode desirable",
+          "passed": true,
+          "output": "\nSW1(config-if-range)#channel-group 1 mode desirable\nCreating a port-channel interface Port-channel 1\n\nSW1(config-if-range)#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nSW1(config-if-range)#exit\nSW1(config)#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface Port-channel1",
+          "passed": true,
+          "output": "\nSW1(config)#interface Port-channel1\nSW1(config-if)#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "switchport trunk encapsulation dot1q",
+          "passed": true,
+          "output": "\nSW1(config-if)#switchport trunk encapsulation dot1q\nSW1(config-if)#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "switchport mode trunk",
+          "passed": true,
+          "output": "\nSW1(config-if)#switchport mode trunk\nSW1(config-if)#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "switchport trunk allowed vlan 10,20",
+          "passed": true,
+          "output": "\nSW1(config-if)#switchport trunk allowed vlan 10,20\nSW1(config-if)#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nSW1(config-if)#no shutdown\nSW1(config-if)#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW1(config-if)#end\nSW1#"
+        },
+        {
+          "phase": "first peer restores PAgP",
+          "node": "SW1",
+          "command": "show etherchannel summary",
+          "expectation": "The changed peer reports its new protocol without a usable negotiated bundle.",
+          "passed": true,
+          "output": "\nSW1#show etherchannel summary\nFlags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\n        H - Hot-standby (LACP only)\n        R - Layer3      S - Layer2\n        U - in use      f - failed to allocate aggregator\n\n        M - not in use, minimum links not met\n        u - unsuitable for bundling\n        w - waiting to be aggregated\n        d - default port\n\n        A - formed by Auto LAG\n\n\nNumber of channel-groups in use: 1\nNumber of aggregators:           1\n\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+-----------------------------------------------\n1      Po1(SD)         PAgP        Et0/0(w)        Et0/1(w)        \n\nSW1#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW2(config)#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "interface range Ethernet0/0 - 1",
+          "passed": true,
+          "output": "\nSW2(config)#interface range Ethernet0/0 - 1\nSW2(config-if-range)#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "no channel-group 1",
+          "passed": true,
+          "output": "\nSW2(config-if-range)#no channel-group 1\nSW2(config-if-range)#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nSW2(config-if-range)#exit\nSW2(config)#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "no interface Port-channel1",
+          "passed": true,
+          "output": "\nSW2(config)#no interface Port-channel1\nSW2(config)#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "interface range Ethernet0/0 - 1",
+          "passed": true,
+          "output": "\nSW2(config)#interface range Ethernet0/0 - 1\nSW2(config-if-range)#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "channel-protocol pagp",
+          "passed": true,
+          "output": "\nSW2(config-if-range)#channel-protocol pagp\nSW2(config-if-range)#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "channel-group 1 mode auto",
+          "passed": true,
+          "output": "\nSW2(config-if-range)#channel-group 1 mode auto\nCreating a port-channel interface Port-channel 1\n\nSW2(config-if-range)#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nSW2(config-if-range)#exit\nSW2(config)#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "interface Port-channel1",
+          "passed": true,
+          "output": "\nSW2(config)#interface Port-channel1\nSW2(config-if)#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "switchport trunk encapsulation dot1q",
+          "passed": true,
+          "output": "\nSW2(config-if)#switchport trunk encapsulation dot1q\nSW2(config-if)#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "switchport mode trunk",
+          "passed": true,
+          "output": "\nSW2(config-if)#switchport mode trunk\nSW2(config-if)#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "switchport trunk allowed vlan 10,20",
+          "passed": true,
+          "output": "\nSW2(config-if)#switchport trunk allowed vlan 10,20\nSW2(config-if)#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nSW2(config-if)#no shutdown\nSW2(config-if)#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW2(config-if)#end\nSW2#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "node": "SW1",
+          "command": "show etherchannel summary",
+          "expectation": "Both links are actually bundled using PAgP.",
+          "passed": true,
+          "output": "\nSW1#show etherchannel summary\nFlags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\n        H - Hot-standby (LACP only)\n        R - Layer3      S - Layer2\n        U - in use      f - failed to allocate aggregator\n\n        M - not in use, minimum links not met\n        u - unsuitable for bundling\n        w - waiting to be aggregated\n        d - default port\n\n        A - formed by Auto LAG\n\n\nNumber of channel-groups in use: 1\nNumber of aggregators:           1\n\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+-----------------------------------------------\n1      Po1(SU)         PAgP        Et0/0(P)        Et0/1(P)        \n\nSW1#"
+        },
+        {
+          "phase": "second peer restores PAgP",
+          "node": "SW1",
+          "command": "ping 192.0.2.2 source Vlan10 repeat 3",
+          "expectation": "The SVI data path crosses the negotiated bundle.",
+          "passed": true,
+          "output": "\nSW1#ping 192.0.2.2 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSW1#"
+        }
+      ],
+      "plan_sha256": "7640cfd67bba856449810d92c4decf8097bc2d357ebb598e82022adbe3e9510f",
+      "startup_states": {
+        "SW1": "BOOTED",
+        "SW2": "STARTED"
+      },
+      "images": {
+        "SW1": "ioll2-xe-17-18-02",
+        "SW2": "ioll2-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [
+        "SW2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T19:25:31Z"
     }
   ]
 }

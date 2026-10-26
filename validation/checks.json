@@ -4077,5 +4077,436 @@
         ]
       }
     ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/019-multilayer-switching-svi-routing.yaml": {
+    "checks": [
+      {
+        "node": "HOST10",
+        "command": "ping 198.18.20.20 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "IPv4 crosses the routed VLAN boundary."
+      },
+      {
+        "node": "HOST20",
+        "command": "ping 198.18.10.10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "disable inter-VLAN routing",
+        "node": "CORE",
+        "commands": [
+          "configure terminal",
+          "no ip routing",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST10",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "HOST20",
+            "command": "ping 198.18.20.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "HOST10",
+            "command": "ping 198.18.20.20 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The protected segment drops all three probes."
+          }
+        ]
+      },
+      {
+        "name": "restore inter-VLAN routing",
+        "node": "CORE",
+        "commands": [
+          "configure terminal",
+          "ip routing",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST10",
+            "command": "ping 198.18.20.20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "IPv4 crosses the routed VLAN boundary."
+          },
+          {
+            "node": "HOST20",
+            "command": "ping 198.18.10.10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/012-dual-stack-campus.yaml": {
+    "checks": [
+      {
+        "node": "HOST10",
+        "command": "ping 198.18.20.20 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "IPv4 crosses the routed VLAN boundary."
+      },
+      {
+        "node": "HOST10",
+        "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "IPv6 crosses the same routed VLAN boundary."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "IPv6 forwarding disabled",
+        "node": "CORE",
+        "commands": [
+          "configure terminal",
+          "no ipv6 unicast-routing",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST10",
+            "command": "ping 198.18.20.20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "IPv4 crosses the routed VLAN boundary."
+          },
+          {
+            "node": "HOST10",
+            "command": "ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The local IPv6 gateway still responds."
+          },
+          {
+            "node": "HOST10",
+            "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "IPv6 transit fails independently of IPv4."
+          }
+        ]
+      },
+      {
+        "name": "IPv6 forwarding restored",
+        "node": "CORE",
+        "commands": [
+          "configure terminal",
+          "ipv6 unicast-routing",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST10",
+            "command": "ping 198.18.20.20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "IPv4 crosses the routed VLAN boundary."
+          },
+          {
+            "node": "HOST10",
+            "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "IPv6 crosses the same routed VLAN boundary."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/020-mst-rpvst-stp-tuning.yaml": {
+    "checks": [
+      {
+        "node": "SW1",
+        "command": "show spanning-tree mst 1",
+        "pattern": "Root\\s+this switch|This bridge is the root",
+        "expectation": "SW1 is the instance-1 root."
+      },
+      {
+        "node": "SW2",
+        "command": "show spanning-tree mst 2",
+        "pattern": "Root\\s+this switch|This bridge is the root",
+        "expectation": "SW2 is the instance-2 root."
+      },
+      {
+        "node": "SW1",
+        "command": "ping 192.0.2.2 source Vlan10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "VLAN 10 crosses the inter-switch link."
+      },
+      {
+        "node": "SW1",
+        "command": "ping 198.51.100.2 source Vlan20 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "VLAN 20 crosses the inter-switch link."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "first peer becomes Rapid-PVST",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "spanning-tree mode rapid-pvst",
+          "spanning-tree vlan 10 priority 4096",
+          "spanning-tree vlan 20 priority 32768",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show spanning-tree summary",
+            "pattern": "rapid-pvst",
+            "expectation": "The first peer reports Rapid-PVST mode."
+          }
+        ]
+      },
+      {
+        "name": "second peer becomes Rapid-PVST",
+        "node": "SW2",
+        "commands": [
+          "configure terminal",
+          "spanning-tree mode rapid-pvst",
+          "spanning-tree vlan 10 priority 32768",
+          "spanning-tree vlan 20 priority 4096",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "This bridge is the root",
+            "expectation": "SW1 is the Rapid-PVST VLAN-10 root."
+          },
+          {
+            "node": "SW2",
+            "command": "show spanning-tree vlan 20",
+            "pattern": "This bridge is the root",
+            "expectation": "SW2 is the Rapid-PVST VLAN-20 root."
+          },
+          {
+            "node": "SW1",
+            "command": "ping 192.0.2.2 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "VLAN 10 crosses the inter-switch link."
+          },
+          {
+            "node": "SW1",
+            "command": "ping 198.51.100.2 source Vlan20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "VLAN 20 crosses the inter-switch link."
+          }
+        ]
+      },
+      {
+        "name": "first peer returns to MST",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "spanning-tree mode mst",
+          "spanning-tree mst 1 priority 4096",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show spanning-tree summary",
+            "pattern": "mst mode",
+            "expectation": "The first peer reports MST mode."
+          }
+        ]
+      },
+      {
+        "name": "second peer returns to MST",
+        "node": "SW2",
+        "commands": [
+          "configure terminal",
+          "spanning-tree mode mst",
+          "spanning-tree mst 2 priority 4096",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show spanning-tree mst 1",
+            "pattern": "Root\\s+this switch|This bridge is the root",
+            "expectation": "SW1 is the instance-1 root."
+          },
+          {
+            "node": "SW2",
+            "command": "show spanning-tree mst 2",
+            "pattern": "Root\\s+this switch|This bridge is the root",
+            "expectation": "SW2 is the instance-2 root."
+          },
+          {
+            "node": "SW1",
+            "command": "ping 192.0.2.2 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "VLAN 10 crosses the inter-switch link."
+          },
+          {
+            "node": "SW1",
+            "command": "ping 198.51.100.2 source Vlan20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "VLAN 20 crosses the inter-switch link."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/021-lacp-pagp-etherchannel.yaml": {
+    "checks": [
+      {
+        "node": "SW1",
+        "command": "show etherchannel summary",
+        "pattern": "(?s)Po1\\(SU\\).*PAgP.*Et0/0\\(P\\).*Et0/1\\(P\\)",
+        "expectation": "Both links are actually bundled using PAgP.",
+        "attempts": 12
+      },
+      {
+        "node": "SW1",
+        "command": "ping 192.0.2.2 source Vlan10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The SVI data path crosses the negotiated bundle."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "first peer changes to LACP",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface range Ethernet0/0 - 1",
+          "no channel-group 1",
+          "exit",
+          "no interface Port-channel1",
+          "interface range Ethernet0/0 - 1",
+          "channel-protocol lacp",
+          "channel-group 1 mode active",
+          "exit",
+          "interface Port-channel1",
+          "switchport trunk encapsulation dot1q",
+          "switchport mode trunk",
+          "switchport trunk allowed vlan 10,20",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show etherchannel summary",
+            "pattern": "LACP",
+            "expectation": "The changed peer reports its new protocol without a usable negotiated bundle.",
+            "absent_pattern": "Po1\\(SU\\)|Et0/[01]\\(P\\)"
+          }
+        ]
+      },
+      {
+        "name": "second peer changes to LACP",
+        "node": "SW2",
+        "commands": [
+          "configure terminal",
+          "interface range Ethernet0/0 - 1",
+          "no channel-group 1",
+          "exit",
+          "no interface Port-channel1",
+          "interface range Ethernet0/0 - 1",
+          "channel-protocol lacp",
+          "channel-group 1 mode passive",
+          "exit",
+          "interface Port-channel1",
+          "switchport trunk encapsulation dot1q",
+          "switchport mode trunk",
+          "switchport trunk allowed vlan 10,20",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show etherchannel summary",
+            "pattern": "(?s)Po1\\(SU\\).*LACP.*Et0/0\\(P\\).*Et0/1\\(P\\)",
+            "expectation": "Both links are actually bundled using LACP.",
+            "attempts": 12
+          },
+          {
+            "node": "SW1",
+            "command": "ping 192.0.2.2 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The SVI data path crosses the negotiated bundle."
+          }
+        ]
+      },
+      {
+        "name": "first peer restores PAgP",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface range Ethernet0/0 - 1",
+          "no channel-group 1",
+          "exit",
+          "no interface Port-channel1",
+          "interface range Ethernet0/0 - 1",
+          "channel-protocol pagp",
+          "channel-group 1 mode desirable",
+          "exit",
+          "interface Port-channel1",
+          "switchport trunk encapsulation dot1q",
+          "switchport mode trunk",
+          "switchport trunk allowed vlan 10,20",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show etherchannel summary",
+            "pattern": "PAgP",
+            "expectation": "The changed peer reports its new protocol without a usable negotiated bundle.",
+            "absent_pattern": "Po1\\(SU\\)|Et0/[01]\\(P\\)"
+          }
+        ]
+      },
+      {
+        "name": "second peer restores PAgP",
+        "node": "SW2",
+        "commands": [
+          "configure terminal",
+          "interface range Ethernet0/0 - 1",
+          "no channel-group 1",
+          "exit",
+          "no interface Port-channel1",
+          "interface range Ethernet0/0 - 1",
+          "channel-protocol pagp",
+          "channel-group 1 mode auto",
+          "exit",
+          "interface Port-channel1",
+          "switchport trunk encapsulation dot1q",
+          "switchport mode trunk",
+          "switchport trunk allowed vlan 10,20",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show etherchannel summary",
+            "pattern": "(?s)Po1\\(SU\\).*PAgP.*Et0/0\\(P\\).*Et0/1\\(P\\)",
+            "expectation": "Both links are actually bundled using PAgP.",
+            "attempts": 12
+          },
+          {
+            "node": "SW1",
+            "command": "ping 192.0.2.2 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The SVI data path crosses the negotiated bundle."
+          }
+        ]
+      }
+    ]
   }
 }
