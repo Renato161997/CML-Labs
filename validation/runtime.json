@@ -4522,6 +4522,414 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T18:13:11Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/022-intervlan-troubleshooting.yaml",
+      "sha256": "b7ef603557174ac4c76e361b24bdcb1588a9ede6f3582d03f8d17ad3b47635d5",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T18:16:14Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "USERS",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nUSERS#"
+        },
+        {
+          "phase": "baseline",
+          "node": "USERS",
+          "command": "ping 198.18.20.20 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.20.20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.20, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/2/4 ms\nUSERS#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SERVICES",
+          "command": "ping 198.18.10.10 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.10, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nSERVICES#"
+        },
+        {
+          "phase": "incorrect service VLAN tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "incorrect service VLAN tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/0.20",
+          "passed": true,
+          "output": "\n*Oct 25 18:17:23.861: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt.\n*Oct 25 18:17:23.964: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 25 18:17:23.965: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 25 18:17:24.071: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\nR1(config)#interface Ethernet0/0.20\nR1(config-subif)#"
+        },
+        {
+          "phase": "incorrect service VLAN tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "encapsulation dot1Q 21",
+          "passed": true,
+          "output": "encapsulation dot1Q 21\nR1(config-subif)#"
+        },
+        {
+          "phase": "incorrect service VLAN tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\n*Oct 25 18:17:24.172: %PNP-6-PNP_TECH_SUMMARY_SAVED_OK: PnP tech summary (/pnp-tech/pnp-tech-discovery-summary) saved successfully (elapsed time: 1 seconds).\n*Oct 25 18:17:24.172: %PNP-6-PNP_DISCOVERY_STOPPED: PnP Discovery stopped (Config Wizard)\nR1(config-subif)#end\nR1#"
+        },
+        {
+          "phase": "incorrect service VLAN tag",
+          "node": "R1",
+          "command": "show running-config interface Ethernet0/0.20",
+          "expectation": "The fault is the actual subinterface tag, not a missing IP address.",
+          "passed": true,
+          "output": "show running-config interface Ethernet0/0.20\nBuilding configuration...\n\nCurrent configuration : 94 bytes\n!\ninterface Ethernet0/0.20\n encapsulation dot1Q 21\n ip address 198.18.20.1 255.255.255.0\nend\n\nR1#"
+        },
+        {
+          "phase": "incorrect service VLAN tag",
+          "node": "USERS",
+          "command": "ping 198.18.20.20 repeat 3",
+          "expectation": "The protected segment drops all three probes.",
+          "passed": true,
+          "output": "ping 198.18.20.20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.20, timeout is 2 seconds:\n...\nSuccess rate is 0 percent (0/3)\nUSERS#"
+        },
+        {
+          "phase": "incorrect service VLAN tag",
+          "node": "USERS",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nUSERS#"
+        },
+        {
+          "phase": "restore service VLAN tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore service VLAN tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/0.20",
+          "passed": true,
+          "output": "interface Ethernet0/0.20\nR1(config-subif)#"
+        },
+        {
+          "phase": "restore service VLAN tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "encapsulation dot1Q 20",
+          "passed": true,
+          "output": "encapsulation dot1Q 20\nR1(config-subif)#"
+        },
+        {
+          "phase": "restore service VLAN tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "end\nR1#"
+        },
+        {
+          "phase": "restore service VLAN tag",
+          "node": "USERS",
+          "command": "ping 198.18.20.20 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.20.20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.20, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/2/3 ms\nUSERS#"
+        },
+        {
+          "phase": "restore service VLAN tag",
+          "node": "SERVICES",
+          "command": "ping 198.18.10.10 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "ping 198.18.10.10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.10, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/2/2 ms\nSERVICES#"
+        }
+      ],
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "SW1": "ioll2-xe-17-18-02",
+        "USERS": "iol-xe-17-18-02",
+        "SERVICES": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "5fed12ca1711b0d61022e3bacf2908a77aa8fdff6fdac9b9dacdcf321cfef82e",
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T18:17:39Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/033-dhcp-snooping-dai.yaml",
+      "sha256": "b1051bf9a1a72440fca92f83b152b8fc4b924d53c6ff3f488dfa7ce12cf60c55",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-25T18:53:19Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "show ip interface brief",
+          "expectation": "The legitimate client actually holds the first DHCP lease.",
+          "passed": true,
+          "output": "\nCLIENT#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.10.100   YES DHCP   up                    up      \nEthernet0/1            unassigned      YES TFTP   administratively down down    \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show ip dhcp snooping binding",
+          "expectation": "The real DHCP lease is bound to the legitimate client port.",
+          "passed": true,
+          "output": "\nSW1#show ip dhcp snooping binding\nMacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface\n------------------  ---------------  ----------  -------------  ----  --------------------\nAA:BB:CC:00:96:00   198.18.10.100    86337       dhcp-snooping   10    GigabitEthernet0/1\nTotal number of bindings: 1\n\nSW1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/16/44 ms\nCLIENT#"
+        },
+        {
+          "phase": "fresh baseline counters",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "clear ip arp inspection statistics",
+          "passed": true,
+          "output": "\nSW1#clear ip arp inspection statistics\nSW1#"
+        },
+        {
+          "phase": "fresh baseline counters",
+          "node": "SW1",
+          "command": "show ip arp inspection statistics vlan 10",
+          "expectation": "The Forwarded/Dropped table contains no dropped ARP packets.",
+          "passed": true,
+          "output": "\nSW1#show ip arp inspection statistics vlan 10\n\n Vlan      Forwarded        Dropped     DHCP Drops      ACL Drops\n ----      ---------        -------     ----------      ---------\n   10              0              0              0              0\n\n Vlan   DHCP Permits    ACL Permits  Probe Permits   Source MAC Failures\n ----   ------------    -----------  -------------   -------------------\n   10              0              0              0                     0\n\n Vlan   Dest MAC Failures   IP Validation Failures   Invalid Protocol Data\n ----   -----------------   ----------------------   ---------------------\n   10                   0                        0                       0\nSW1#"
+        },
+        {
+          "phase": "fresh baseline counters",
+          "node": "SW1",
+          "command": "show ip dhcp snooping binding",
+          "expectation": "The real DHCP lease is bound to the legitimate client port.",
+          "passed": true,
+          "output": "\nSW1#show ip dhcp snooping binding\nMacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface\n------------------  ---------------  ----------  -------------  ----  --------------------\nAA:BB:CC:00:96:00   198.18.10.100    86320       dhcp-snooping   10    GigabitEthernet0/1\nTotal number of bindings: 1\n\nSW1#"
+        },
+        {
+          "phase": "static address impersonation",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSPOOFER#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSPOOFER(config)#"
+        },
+        {
+          "phase": "static address impersonation",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nSPOOFER(config)#interface Ethernet0/0\nSPOOFER(config-if)#"
+        },
+        {
+          "phase": "static address impersonation",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nSPOOFER(config-if)#no shutdown\nSPOOFER(config-if)#"
+        },
+        {
+          "phase": "static address impersonation",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "end",
+          "passed": true,
+          "output": "\nSPOOFER(config-if)#end\nSPOOFER#"
+        },
+        {
+          "phase": "static address impersonation",
+          "node": "SPOOFER",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The protected segment drops all three probes.",
+          "passed": true,
+          "output": "\nSPOOFER#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n\n*Oct 25 18:56:01.743: %SYS-5-CONFIG_I: Configured from console by console.\n*Oct 25 18:56:03.243: %LINK-3-UPDOWN: Interface Ethernet0/0, changed state to up\n*Oct 25 18:56:04.243: %LINEPROTO-5-UPDOWN: Line protocol on Interface Ethernet0/0, changed state to up..\nSuccess rate is 0 percent (0/3)\nSPOOFER#"
+        },
+        {
+          "phase": "static address impersonation",
+          "node": "SW1",
+          "command": "show ip arp inspection statistics vlan 10",
+          "expectation": "The Forwarded/Dropped table records actual DHCP-binding-related ARP drops.",
+          "passed": true,
+          "output": "abb.cc00.9700/198.18.10.100/ffff.ffff.ffff/198.18.10.100/18:55:43 UTC Sun Oct 25 2026])\n*Oct 25 18:55:43.497: %SW_DAI-4-DHCP_SNOOPING_DENY: 1 Invalid ARPs (Req) on Gi0/2, vlan 10.([aabb.cc00.9700/198.18.10.100/0000.0000.0000/198.18.10.1/18:55:43 UTC Sun Oct 25 2026])\nSW1#\nSW1#show ip arp inspection statistics vlan 10\n\n Vlan      Forwarded        Dropped     DHCP Drops      ACL Drops\n ----      ---------        -------     ----------      ---------\n   10              0              5              5              0\n\n Vlan   DHCP Permits    ACL Permits  Probe Permits   Source MAC Failures\n ----   ------------    -----------  -------------   -------------------\n   10              0              0              0                     0\n\n Vlan   Dest MAC Failures   IP Validation Failures   Invalid Protocol Data\n ----   -----------------   ----------------------   ---------------------\n   10                   0                        0                       0\nSW1#\n*Oct 25 18:55:45.733: "
+        },
+        {
+          "phase": "static address impersonation",
+          "node": "SW1",
+          "command": "show interfaces status",
+          "expectation": "The offending port remains physically connected; filtering is not a link shutdown.",
+          "passed": true,
+          "output": "NOOPING_DENY: 1 Invalid ARPs (Req) on Gi0/2, vlan 10.([aabb.cc00.9700/198.18.10.100/0000.0000.0000/198.18.10.1/18:55:45 UTC Sun Oct 25 2026])\nSW1#\nSW1#show interfaces status\n\nPort      Name               Status       Vlan       Duplex  Speed Type \nGi0/0                        connected    10         a-full   auto RJ45\nGi0/1                        connected    10         a-full   auto RJ45\nGi0/2                        connected    10         a-full   auto RJ45\nGi0/3                        disabled     1            auto   auto RJ45\nSW1#"
+        },
+        {
+          "phase": "static address impersonation",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/3/6 ms\nCLIENT#"
+        },
+        {
+          "phase": "static address impersonation",
+          "node": "SW1",
+          "command": "show ip dhcp snooping binding",
+          "expectation": "The real DHCP lease is bound to the legitimate client port.",
+          "passed": true,
+          "output": "\nSW1#show ip dhcp snooping binding\nMacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface\n------------------  ---------------  ----------  -------------  ----  --------------------\nAA:BB:CC:00:96:00   198.18.10.100    86286       dhcp-snooping   10    GigabitEthernet0/1\nTotal number of bindings: 1\n\nSW1#"
+        },
+        {
+          "phase": "remove impersonating endpoint",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSPOOFER#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSPOOFER(config)#"
+        },
+        {
+          "phase": "remove impersonating endpoint",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nSPOOFER(config)#interface Ethernet0/0\nSPOOFER(config-if)#"
+        },
+        {
+          "phase": "remove impersonating endpoint",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nSPOOFER(config-if)#shutdown\nSPOOFER(config-if)#"
+        },
+        {
+          "phase": "remove impersonating endpoint",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "end",
+          "passed": true,
+          "output": "\nSPOOFER(config-if)#end\nSPOOFER#"
+        },
+        {
+          "phase": "remove impersonating endpoint",
+          "node": "SPOOFER",
+          "command": "show ip interface brief",
+          "expectation": "The deliberate impersonator has been stopped.",
+          "passed": true,
+          "output": "\nSPOOFER#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.10.100   YES TFTP   administratively down down    \nEthernet0/1            unassigned      YES TFTP   administratively down down    \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nSPOOFER#"
+        },
+        {
+          "phase": "prepare legitimate ARP measurement",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "clear ip arp inspection statistics",
+          "passed": true,
+          "output": "\nSW1#clear ip arp inspection statistics\nSW1#"
+        },
+        {
+          "phase": "prepare legitimate ARP measurement",
+          "node": "SW1",
+          "command": "show ip arp inspection statistics vlan 10",
+          "expectation": "The Forwarded/Dropped table contains no dropped ARP packets.",
+          "passed": true,
+          "output": "\nSW1#show ip arp inspection statistics vlan 10\n\n Vlan      Forwarded        Dropped     DHCP Drops      ACL Drops\n ----      ---------        -------     ----------      ---------\n   10              0              0              0              0\n\n Vlan   DHCP Permits    ACL Permits  Probe Permits   Source MAC Failures\n ----   ------------    -----------  -------------   -------------------\n   10              0              0              0                     0\n\n Vlan   Dest MAC Failures   IP Validation Failures   Invalid Protocol Data\n ----   -----------------   ----------------------   ---------------------\n   10                   0                        0                       0\nSW1#"
+        },
+        {
+          "phase": "prepare legitimate ARP measurement",
+          "node": "SW1",
+          "command": "show ip dhcp snooping binding",
+          "expectation": "The real DHCP lease is bound to the legitimate client port.",
+          "passed": true,
+          "output": "\nSW1#show ip dhcp snooping binding\nMacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface\n------------------  ---------------  ----------  -------------  ----  --------------------\nAA:BB:CC:00:96:00   198.18.10.100    86277       dhcp-snooping   10    GigabitEthernet0/1\nTotal number of bindings: 1\n\nSW1#"
+        },
+        {
+          "phase": "fresh legitimate ARP",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "clear arp-cache",
+          "passed": true,
+          "output": "\nCLIENT#clear arp-cache\nCLIENT#"
+        },
+        {
+          "phase": "fresh legitimate ARP",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "All three probes succeed.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/3/3 ms\nCLIENT#"
+        },
+        {
+          "phase": "fresh legitimate ARP",
+          "node": "SW1",
+          "command": "show ip arp inspection statistics vlan 10",
+          "expectation": "Fresh ARP from the bound client is actually permitted, measured in the DHCP Permits table.",
+          "passed": true,
+          "output": "\nSW1#show ip arp inspection statistics vlan 10\n\n Vlan      Forwarded        Dropped     DHCP Drops      ACL Drops\n ----      ---------        -------     ----------      ---------\n   10              3              0              0              0\n\n Vlan   DHCP Permits    ACL Permits  Probe Permits   Source MAC Failures\n ----   ------------    -----------  -------------   -------------------\n   10              2              0              0                     0\n\n Vlan   Dest MAC Failures   IP Validation Failures   Invalid Protocol Data\n ----   -----------------   ----------------------   ---------------------\n   10                   0                        0                       0\nSW1#"
+        },
+        {
+          "phase": "fresh legitimate ARP",
+          "node": "SW1",
+          "command": "show ip arp inspection statistics vlan 10",
+          "expectation": "The Forwarded/Dropped table contains no dropped ARP packets.",
+          "passed": true,
+          "output": "\nSW1#show ip arp inspection statistics vlan 10\n\n Vlan      Forwarded        Dropped     DHCP Drops      ACL Drops\n ----      ---------        -------     ----------      ---------\n   10              3              0              0              0\n\n Vlan   DHCP Permits    ACL Permits  Probe Permits   Source MAC Failures\n ----   ------------    -----------  -------------   -------------------\n   10              2              0              0                     0\n\n Vlan   Dest MAC Failures   IP Validation Failures   Invalid Protocol Data\n ----   -----------------   ----------------------   ---------------------\n   10                   0                        0                       0\nSW1#"
+        },
+        {
+          "phase": "fresh legitimate ARP",
+          "node": "SW1",
+          "command": "show ip dhcp snooping binding",
+          "expectation": "The real DHCP lease is bound to the legitimate client port.",
+          "passed": true,
+          "output": "\nSW1#show ip dhcp snooping binding\nMacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface\n------------------  ---------------  ----------  -------------  ----  --------------------\nAA:BB:CC:00:96:00   198.18.10.100    86272       dhcp-snooping   10    GigabitEthernet0/1\nTotal number of bindings: 1\n\nSW1#"
+        },
+        {
+          "phase": "fresh legitimate ARP",
+          "node": "SW1",
+          "command": "show running-config | include ip arp inspection vlan",
+          "expectation": "DAI remains enabled after recovery.",
+          "passed": true,
+          "output": "\nSW1#show running-config | include ip arp inspection vlan\nip arp inspection vlan 10\nSW1#"
+        }
+      ],
+      "plan_sha256": "a47497fde098a048ddd9acb5b93092623dae9930cc2f549864e246e9d0d59a75",
+      "startup_states": {
+        "SW1": "STARTED",
+        "SERVER": "BOOTED",
+        "CLIENT": "BOOTED",
+        "SPOOFER": "STARTED"
+      },
+      "images": {
+        "SW1": "iosvl2-2020",
+        "SERVER": "iol-xe-17-18-02",
+        "CLIENT": "iol-xe-17-18-02",
+        "SPOOFER": "iol-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [
+        "SW1",
+        "SPOOFER"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-25T18:56:55Z"
     }
   ]
 }

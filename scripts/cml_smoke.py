@@ -36,6 +36,7 @@ from labtools import (
     plan_digest,
     validate,
 )
+from readiness import running_node_states, verify_unconfirmed_consoles
 from virl2_client import ClientLibrary
 from virl2_client.exceptions import APIError
 from websockets.sync.client import connect
@@ -115,7 +116,7 @@ class WebConsole:
 
     def command(self, command, timeout=18):
         self.read(0.4)
-        self.socket.send(command + "\r")
+        self.socket.send("\r" + command + "\r")
         output = self.read(timeout, until_prompt=True, command=command)
         if not response_complete(output, command, self.label):
             raise TimeoutError("Console response did not finish after command echo")
@@ -201,7 +202,7 @@ class SSHConsole:
 
     def command(self, command, timeout=18):
         self.read(0.4)
-        self.channel.send(command + "\r")
+        self.channel.send("\r" + command + "\r")
         output = self.read(timeout, until_prompt=True, command=command)
         if not response_complete(output, command, self.label):
             raise TimeoutError("Console response did not finish after command echo")
@@ -327,7 +328,8 @@ def main():
                 deadline = time.monotonic() + 720
                 while time.monotonic() < deadline:
                     try:
-                        ready = all(str(n.state) == "BOOTED" for n in lab.nodes())
+                        states = running_node_states(lab.nodes())
+                        ready = bool(states)
                     except (APIError, HTTPError):
                         ready = False
                     if ready:
@@ -335,6 +337,7 @@ def main():
                     time.sleep(8)
                 else:
                     raise TimeoutError("Node boot/readiness timed out")
+                row["startup_states"] = states
                 row["images"] = {n.label: n.image_definition for n in lab.nodes()}
                 row["image_selection"] = (
                     "explicit private overrides"
@@ -358,6 +361,8 @@ def main():
                             else WebConsole(client, args.url, node)
                         )
                     return connections[label]
+
+                row["console_boot_fallback"] = verify_unconfirmed_consoles(states, console)
 
                 if plan.get("repair"):
                     check = plan["checks"][0]

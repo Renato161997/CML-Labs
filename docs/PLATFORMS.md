@@ -30,7 +30,9 @@ unverified.
 [IOSvL2 documentation](https://developer.cisco.com/docs/modeling-labs/iosvl2/) ·
 [IOSv documentation](https://developer.cisco.com/docs/modeling-labs/iosv/).
 
-The harness checks a privileged, responsive console after CML reports `BOOTED`.
+The harness requires a running node process and checks a privileged, responsive
+console. A `STARTED` API state still needs explicit interactive confirmation; it
+is recorded as observed and is never relabeled `BOOTED`.
 First boots can take several minutes. Results count observational assertions
 separately from transition/configuration commands; a successful command echo alone
 does not establish that a protocol converged or that traffic passed.

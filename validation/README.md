@@ -82,3 +82,15 @@ application credential or a production secret.
 
 See [platform scope](../docs/PLATFORMS.md) before substituting IOL for IOSv or
 selecting a platform for an API/controller exercise.
+
+The API process state `STARTED` is not treated as a guest boot or functional pass.
+Some reference VMs can keep that state after their boot messages. The harness
+records the observed `startup_states` and requires the expected interactive
+console for each such guest before running acceptance. Console establishment
+failure still aborts the test. `console_boot_fallback` identifies the guests
+checked this way; no API state is rewritten or promoted to `BOOTED`.
+
+Console requests begin on a fresh input line, so an unsolicited syslog tail
+cannot concatenate with the command echo. The parser still requires the exact
+whole-line command and a subsequent matching prompt; a command-shaped substring
+inside a log message is rejected.

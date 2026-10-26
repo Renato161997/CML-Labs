@@ -288,5 +288,17 @@
     "duration_minutes": 50,
     "kind": "practice",
     "workbook": "docs/workbooks/200-301-011-rapid-pvst-troubleshooting.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/022-intervlan-troubleshooting.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-022-intervlan-troubleshooting.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/033-dhcp-snooping-dai.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 60,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-033-dhcp-snooping-dai.md"
   }
 }

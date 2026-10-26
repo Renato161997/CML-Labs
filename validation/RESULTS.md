@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **48**.
+Import/export passes: **233/233**. Functional passes: **50**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -15,6 +15,7 @@ Import/export passes: **233/233**. Functional passes: **48**.
 | [First Hop Redundancy HSRP](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/019-first-hop-redundancy-hsrp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 8 | 8 | 2026-10-25T13:16:22Z |
 | [IPv6 Static Routing](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/020-ipv6-static-routing.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 0 | 2026-10-25T12:01:29Z |
 | [Routing Table Selection](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/021-routing-table-selection.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 5 | 6 | 2026-10-25T11:45:19Z |
+| [Inter-VLAN Routing Troubleshooting](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/022-intervlan-troubleshooting.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 8 | 8 | 2026-10-25T18:17:39Z |
 | [DHCP Server And Relay](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/023-dhcp-server-relay.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 3 | 0 | 2026-10-25T11:44:27Z |
 | [NAT PAT Internet Edge](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/024-nat-pat-edge.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 0 | 2026-10-24T18:29:48Z |
 | [NTP Time Sync](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/025-ntp-time-sync.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 7 | 12 | 2026-10-25T17:03:03Z |
@@ -37,6 +38,7 @@ Import/export passes: **233/233**. Functional passes: **48**.
 | [Interface Status Duplex Speed](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/005-interface-status-duplex.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 4 | 8 | 2026-10-25T13:06:29Z |
 | [SSH Local Users Hardening](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/031-ssh-local-users-hardening.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ubuntu-24-04-20260307 | 4 | 4 | 2026-10-25T17:57:46Z |
 | [Standard And Extended ACLs](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/032-standard-extended-acls.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 3 | 0 | 2026-10-24T18:30:00Z |
+| [DHCP Snooping And DAI](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/033-dhcp-snooping-dai.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, iosvl2-2020 | 18 | 11 | 2026-10-25T18:56:55Z |
 | [Port Security Sticky MAC](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/034-port-security-sticky.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 5 | 8 | 2026-10-25T17:11:24Z |
 | [Passwords Banners Secure Management](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/036-passwords-banners-secure-management.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ubuntu-24-04-20260307 | 5 | 4 | 2026-10-25T17:55:21Z |
 | [iBGP eBGP Neighbors](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/013-ibgp-ebgp-neighbors.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 0 | 2026-10-24T18:35:49Z |
