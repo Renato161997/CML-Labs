@@ -2700,5 +2700,764 @@
         ]
       }
     ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/007-ospf-authentication-filtering.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip ospf neighbor",
+        "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+        "expectation": "The authenticated R1-R2 adjacency is FULL."
+      },
+      {
+        "node": "R2",
+        "command": "show ip ospf neighbor",
+        "pattern": "192\\.0\\.2\\.3\\s+\\d+\\s+FULL",
+        "expectation": "The second transit adjacency is FULL before checking remote routes.",
+        "attempts": 12
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.3",
+        "pattern": "(?s)Known via \"ospf 1\".*198\\.18\\.12\\.2",
+        "expectation": "R1 learns the destination through OSPF and R2."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Traffic between the remote loopbacks actually forwards."
+      },
+      {
+        "node": "R1",
+        "command": "show ip ospf interface Ethernet0/0",
+        "pattern": "(?s)Cryptographic authentication enabled.*Youngest key id is 1",
+        "expectation": "Cryptographic authentication reports the intended key ID."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "incorrect authenticated-link key",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ip ospf message-digest-key 1 md5 INCORRECT-LAB",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The destination prefix is absent from this RIB.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The withdrawn route cannot forward."
+          },
+          {
+            "node": "R2",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.3\\s+\\d+\\s+FULL",
+            "expectation": "The separate unauthenticated R2-R3 adjacency remains FULL."
+          }
+        ]
+      },
+      {
+        "name": "restore matching link key",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ip ospf message-digest-key 1 md5 CML-OSPF-LAB",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The authenticated R1-R2 adjacency is FULL."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?s)Known via \"ospf 1\".*198\\.18\\.12\\.2",
+            "expectation": "R1 learns the destination through OSPF and R2."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Traffic between the remote loopbacks actually forwards."
+          }
+        ]
+      },
+      {
+        "name": "filter only the transit router RIB",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip prefix-list RIBFILTER seq 5 deny 192.0.2.3/32",
+          "ip prefix-list RIBFILTER seq 10 permit 0.0.0.0/0 le 32",
+          "router ospf 1",
+          "distribute-list prefix RIBFILTER in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The destination prefix is absent from this RIB.",
+            "attempts": 12
+          },
+          {
+            "node": "R2",
+            "command": "show ip ospf database router 192.0.2.3",
+            "pattern": "Advertising Router: 192\\.0\\.2\\.3",
+            "expectation": "R3 remains in the actual link-state database."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?s)Known via \"ospf 1\".*198\\.18\\.12\\.2",
+            "expectation": "R1 learns the destination through OSPF and R2."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "An advertised route alone does not guarantee transit forwarding."
+          }
+        ]
+      },
+      {
+        "name": "restore transit route installation",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "no distribute-list prefix RIBFILTER in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?s)Known via \"ospf 1\".*198\\.18\\.23\\.2",
+            "expectation": "The transit RIB again installs the remote loopback."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Traffic between the remote loopbacks actually forwards."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/006-ospf-stub-nssa.yaml": {
+    "checks": [
+      {
+        "node": "R3",
+        "command": "show ip ospf neighbor",
+        "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+        "expectation": "The leaf and ABR agree on the area type and form a FULL adjacency."
+      },
+      {
+        "node": "R2",
+        "command": "show ip ospf database nssa-external",
+        "pattern": "(?s)Type-7.*192\\.0\\.2\\.3",
+        "expectation": "The NSSA carries the exported loopback in an actual Type-7 LSA."
+      },
+      {
+        "node": "R1",
+        "command": "show ip ospf database external",
+        "pattern": "(?s)Type-5.*192\\.0\\.2\\.3",
+        "expectation": "The ABR translates the NSSA export into a Type-5 LSA outside area 10."
+      },
+      {
+        "node": "R2",
+        "command": "show ip route ospf",
+        "pattern": "O\\s+N2\\s+192\\.0\\.2\\.3",
+        "expectation": "The ABR installs an NSSA external route."
+      },
+      {
+        "node": "R1",
+        "command": "show ip route ospf",
+        "pattern": "O\\s+E2\\s+192\\.0\\.2\\.3",
+        "expectation": "The normal area installs the translated external route."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The exported loopback is reachable with a working return route."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw the NSSA export before conversion",
+        "node": "R3",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "no redistribute connected",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The destination prefix is absent from this RIB.",
+            "attempts": 12
+          }
+        ]
+      },
+      {
+        "name": "convert ABR to stub",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "no area 10 nssa",
+          "area 10 stub",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show running-config | section router ospf",
+            "pattern": "area 10 stub",
+            "expectation": "The ABR is configured for a stub area; the peer still needs conversion."
+          }
+        ]
+      },
+      {
+        "name": "convert leaf to matching stub",
+        "node": "R3",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "no area 10 nssa",
+          "area 10 stub",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R3",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The leaf and ABR agree on the area type and form a FULL adjacency."
+          },
+          {
+            "node": "R3",
+            "command": "show ip route 0.0.0.0",
+            "pattern": "(?s)Routing entry for 0\\.0\\.0\\.0/0.*Known via \"ospf 1\".*198\\.18\\.23\\.1",
+            "expectation": "The stub receives the actual ABR default route."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The destination prefix is absent from this RIB.",
+            "attempts": 12
+          }
+        ]
+      },
+      {
+        "name": "restore ABR NSSA mode",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "no area 10 stub",
+          "area 10 nssa",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show running-config | section router ospf",
+            "pattern": "area 10 nssa",
+            "expectation": "The ABR is back in NSSA mode; the peer still needs restoration."
+          }
+        ]
+      },
+      {
+        "name": "restore matching leaf NSSA mode",
+        "node": "R3",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "no area 10 stub",
+          "area 10 nssa",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R3",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The leaf and ABR agree on the area type and form a FULL adjacency."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The destination prefix is absent from this RIB.",
+            "attempts": 12
+          }
+        ]
+      },
+      {
+        "name": "restore controlled NSSA export",
+        "node": "R3",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "redistribute connected subnets route-map EXPORT-LOOP",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip ospf database nssa-external",
+            "pattern": "(?s)Type-7.*192\\.0\\.2\\.3",
+            "expectation": "The NSSA carries the exported loopback in an actual Type-7 LSA."
+          },
+          {
+            "node": "R1",
+            "command": "show ip ospf database external",
+            "pattern": "(?s)Type-5.*192\\.0\\.2\\.3",
+            "expectation": "The ABR translates the NSSA export into a Type-5 LSA outside area 10."
+          },
+          {
+            "node": "R2",
+            "command": "show ip route ospf",
+            "pattern": "O\\s+N2\\s+192\\.0\\.2\\.3",
+            "expectation": "The ABR installs an NSSA external route."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route ospf",
+            "pattern": "O\\s+E2\\s+192\\.0\\.2\\.3",
+            "expectation": "The normal area installs the translated external route."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The exported loopback is reachable with a working return route."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/011-pbr-local-policy.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "ping 192.0.2.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The client flow reaches the real remote loopback."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Ethernet0/2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The router-originated flow uses its LAN source address."
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.2",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+        "expectation": "The ordinary RIB still selects the primary next hop."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "observe forwarded client policy",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters OBSERVE-PRIMARY",
+          "clear access-list counters OBSERVE-POLICY"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The client flow reaches the real remote loopback."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-POLICY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh matching requests are observed on OBSERVE-POLICY."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-PRIMARY",
+            "pattern": "permit icmp",
+            "expectation": "No matching request is observed on OBSERVE-PRIMARY.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The ordinary RIB still selects the primary next hop."
+          }
+        ]
+      },
+      {
+        "name": "observe unmodified local forwarding",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters OBSERVE-PRIMARY",
+          "clear access-list counters OBSERVE-POLICY"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Ethernet0/2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The router-originated flow uses its LAN source address."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-POLICY",
+            "pattern": "permit icmp",
+            "expectation": "No matching request is observed on OBSERVE-POLICY.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-PRIMARY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh matching requests are observed on OBSERVE-PRIMARY."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The ordinary RIB still selects the primary next hop."
+          }
+        ]
+      },
+      {
+        "name": "enable router-originated policy",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip local policy route-map PBR",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip local policy",
+            "pattern": "PBR",
+            "expectation": "The local policy map is enabled."
+          }
+        ]
+      },
+      {
+        "name": "observe local policy path",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters OBSERVE-PRIMARY",
+          "clear access-list counters OBSERVE-POLICY"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Ethernet0/2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The router-originated flow uses its LAN source address."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-POLICY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh matching requests are observed on OBSERVE-POLICY."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-PRIMARY",
+            "pattern": "permit icmp",
+            "expectation": "No matching request is observed on OBSERVE-PRIMARY.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The ordinary RIB still selects the primary next hop."
+          }
+        ]
+      },
+      {
+        "name": "restore local RIB forwarding",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "no ip local policy route-map PBR",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show running-config | include ip local policy",
+            "pattern": "R1#",
+            "expectation": "No local policy remains configured.",
+            "absent_pattern": "ip local policy route-map PBR"
+          }
+        ]
+      },
+      {
+        "name": "observe restored local forwarding",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters OBSERVE-PRIMARY",
+          "clear access-list counters OBSERVE-POLICY"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Ethernet0/2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The router-originated flow uses its LAN source address."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-POLICY",
+            "pattern": "permit icmp",
+            "expectation": "No matching request is observed on OBSERVE-POLICY.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-PRIMARY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh matching requests are observed on OBSERVE-PRIMARY."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The ordinary RIB still selects the primary next hop."
+          }
+        ]
+      },
+      {
+        "name": "confirm interface policy still applies",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters OBSERVE-PRIMARY",
+          "clear access-list counters OBSERVE-POLICY"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The client flow reaches the real remote loopback."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-POLICY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh matching requests are observed on OBSERVE-POLICY."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-PRIMARY",
+            "pattern": "permit icmp",
+            "expectation": "No matching request is observed on OBSERVE-PRIMARY.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The ordinary RIB still selects the primary next hop."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/services/040-pbr-with-ip-sla-fallback.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show track 1",
+        "pattern": "Reachability is Up",
+        "expectation": "The actual SLA reachability object is Up."
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 192.0.2.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The client flow reaches the real remote loopback."
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.2",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+        "expectation": "The ordinary RIB still selects the primary next hop."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "observe healthy tracked policy",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters OBSERVE-PRIMARY",
+          "clear access-list counters OBSERVE-POLICY"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The client flow reaches the real remote loopback."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-POLICY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh matching requests are observed on OBSERVE-POLICY."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-PRIMARY",
+            "pattern": "permit icmp",
+            "expectation": "No matching request is observed on OBSERVE-PRIMARY.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The ordinary RIB still selects the primary next hop."
+          }
+        ]
+      },
+      {
+        "name": "deny only SLA probes",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended OBSERVE-POLICY",
+          "5 deny icmp host 198.18.1.1 host 198.18.1.2 echo",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show track 1",
+            "pattern": "Reachability is Down",
+            "expectation": "The actual SLA reachability object is Down."
+          }
+        ]
+      },
+      {
+        "name": "observe tracked next-hop fallback",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters OBSERVE-PRIMARY",
+          "clear access-list counters OBSERVE-POLICY"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The client flow reaches the real remote loopback."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-POLICY",
+            "pattern": "permit icmp",
+            "expectation": "No matching request is observed on OBSERVE-POLICY.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-PRIMARY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh matching requests are observed on OBSERVE-PRIMARY."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The ordinary RIB still selects the primary next hop."
+          }
+        ]
+      },
+      {
+        "name": "restore SLA probes",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended OBSERVE-POLICY",
+          "no 5",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show track 1",
+            "pattern": "Reachability is Up",
+            "expectation": "The actual SLA reachability object is Up."
+          }
+        ]
+      },
+      {
+        "name": "observe policy recovery",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters OBSERVE-PRIMARY",
+          "clear access-list counters OBSERVE-POLICY"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The client flow reaches the real remote loopback."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-POLICY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh matching requests are observed on OBSERVE-POLICY."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists OBSERVE-PRIMARY",
+            "pattern": "permit icmp",
+            "expectation": "No matching request is observed on OBSERVE-PRIMARY.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The ordinary RIB still selects the primary next hop."
+          }
+        ]
+      }
+    ]
   }
 }

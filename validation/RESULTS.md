@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **50**.
+Import/export passes: **233/233**. Functional passes: **54**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -52,9 +52,13 @@ Import/export passes: **233/233**. Functional passes: **50**.
 | [EIGRP Authentication Load Balancing](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/003-eigrp-authentication-load-balancing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 7 | 12 | 2026-10-25T12:43:13Z |
 | [EIGRP Troubleshooting](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/004-eigrp-troubleshooting.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 3 | 0 | 2026-10-25T12:43:41Z |
 | [OSPFv2 OSPFv3 Multiarea](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/005-ospfv2-ospfv3-multiarea.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 4 | 0 | 2026-10-25T12:43:10Z |
+| [OSPF Stub And NSSA](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/006-ospf-stub-nssa.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 19 | 28 | 2026-10-26T18:38:16Z |
+| [OSPF Authentication Filtering](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/007-ospf-authentication-filtering.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 18 | 2026-10-26T18:45:05Z |
 | [OSPF Troubleshooting](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/008-ospf-troubleshooting.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 3 | 0 | 2026-10-25T12:44:26Z |
 | [Route Map Filtering](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/010-route-map-filtering.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 6 | 10 | 2026-10-25T17:04:38Z |
+| [Policy Based Routing Local Policy](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/011-pbr-local-policy.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 25 | 16 | 2026-10-26T18:44:03Z |
 | [VRF Lite Routing Protocols](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/012-vrf-lite-routing-protocols.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 5 | 0 | 2026-10-25T12:42:37Z |
+| [PBR With IP SLA Fallback](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/services/040-pbr-with-ip-sla-fallback.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 14 | 2026-10-26T18:46:57Z |
 | [GRE Tunnel Routing](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/020-gre-tunnel-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 6 | 12 | 2026-10-25T12:42:29Z |
 | [Webhook Receiver](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:46:46Z |
 | [Webhook Receiver Config Validation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/webhooks/035-webhook-receiver-config-validation.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:37:45Z |

@@ -1798,26 +1798,6 @@
       "completed_utc": "2026-10-25T15:56:11Z"
     },
     {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/006-ospf-stub-nssa.yaml",
-      "sha256": "0a01ec93131bd8fb695a6ee37905bdac24fcbd4e617704c03449db724f8d867b",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:11Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:12Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/007-ospf-authentication-filtering.yaml",
-      "sha256": "fe1b6848c74ae41b9b39d9c90979fa8470e2ec0eb563d34e23aa197aee647b4a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:12Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:12Z"
-    },
-    {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/009-route-redistribution-tags.yaml",
       "sha256": "e6d0afead8e96be1f9c8b6e7b20fe555e61403082e901b79b2b8985214c4607b",
       "cml_version": "2.10.1+build.21",
@@ -1828,28 +1808,8 @@
       "completed_utc": "2026-10-25T15:56:12Z"
     },
     {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/011-pbr-local-policy.yaml",
-      "sha256": "2e1a2e9ad5eec173283e1e31f432b4856e15a92c5078c9c72833d35b34bdeba0",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:12Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:13Z"
-    },
-    {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/migration/043-static-edge-to-dynamic-routing.yaml",
       "sha256": "454b6eff07883a54f663047fa4459b62272fe293aeffd00d0a3fb67f1e8a966d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:13Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:13Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/services/040-pbr-with-ip-sla-fallback.yaml",
-      "sha256": "8456c4ca6220bbd0694c7f90476839271fcfaeb3ee7ec341b38e046c6f4bf0d4",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-25T15:56:13Z",
       "checks": [],
@@ -2336,6 +2296,46 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T18:30:10Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/006-ospf-stub-nssa.yaml",
+      "sha256": "f634cebf99ab2c324c79aee1175fc5285b41126350bac291871a3056dc0d922f",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T18:45:54Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T18:45:54Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/007-ospf-authentication-filtering.yaml",
+      "sha256": "ed7148be6510dec2ed993b878c2c29addcf20635271f8fb24dce2894fc89c880",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T18:45:56Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T18:45:56Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/011-pbr-local-policy.yaml",
+      "sha256": "415bc11677b7ffe0544b8dda883a3f7b1c594a5693a2efeb47091766c1bf55e2",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T18:45:58Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T18:45:58Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/services/040-pbr-with-ip-sla-fallback.yaml",
+      "sha256": "392de954ae2ee68cc89968d81988c74b9c9eb04b7a19df5f90a9eebc82f949e2",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T18:46:00Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T18:46:00Z"
     }
   ]
 }

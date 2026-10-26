@@ -4930,6 +4930,1337 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T18:56:55Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/006-ospf-stub-nssa.yaml",
+      "sha256": "f634cebf99ab2c324c79aee1175fc5285b41126350bac291871a3056dc0d922f",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T18:36:21Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R3",
+          "command": "show ip ospf neighbor",
+          "expectation": "The leaf and ABR agree on the area type and form a FULL adjacency.",
+          "passed": true,
+          "output": "\nR3#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/BDR        00:00:39    198.18.23.1     Ethernet0/0\nR3#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip ospf database nssa-external",
+          "expectation": "The NSSA carries the exported loopback in an actual Type-7 LSA.",
+          "passed": true,
+          "output": "\nR2#show ip ospf database nssa-external\n\n            OSPF Router with ID (192.0.2.2) (Process ID 1)\n\n\t\tType-7 AS External Link States (Area 10)\n\n  LS age: 41\n  Options: (No TOS-capability, Type 7/5 translation, DC, Upward)\n  LS Type: AS External Link\n  Link State ID: 192.0.2.3 (External Network Number )\n  Advertising Router: 192.0.2.3\n  LS Seq Number: 80000001\n  Checksum: 0x1AFE\n  Length: 36\n  Network Mask: /32\n\tMetric Type: 2 (Larger than any link state path)\n\tMTID: 0 \n\tMetric: 20 \n\tForward Address: 198.18.23.2\n\tExternal Route Tag: 0\n\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip ospf database external",
+          "expectation": "The ABR translates the NSSA export into a Type-5 LSA outside area 10.",
+          "passed": true,
+          "output": "\nR1#show ip ospf database external\n\n            OSPF Router with ID (192.0.2.1) (Process ID 1)\n\n\t\tType-5 AS External Link States\n\n  LS age: 9\n  Options: (No TOS-capability, DC, Upward)\n  LS Type: AS External Link\n  Link State ID: 192.0.2.3 (External Network Number )\n  Advertising Router: 192.0.2.2\n  LS Seq Number: 80000001\n  Checksum: 0xB46F\n  Length: 36\n  Network Mask: /32\n\tMetric Type: 2 (Larger than any link state path)\n\tMTID: 0 \n\tMetric: 20 \n\tForward Address: 198.18.23.2\n\tExternal Route Tag: 0\n\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip route ospf",
+          "expectation": "The ABR installs an NSSA external route.",
+          "passed": true,
+          "output": "\nR2#show ip route ospf\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP\n       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\n       H - NHRP, G - NHRP registered, g - NHRP registration summary\n       o - ODR, P - periodic downloaded static route, l - LISP\n       a - application route\n       + - replicated route, % - next hop override, p - overrides from PfR\n       & - replicated local route overrides by connected\n\nGateway of last resort is not set\n\n      192.0.2.0/32 is subnetted, 3 subnets\nO        192.0.2.1 [110/11] via 198.18.12.1, 00:00:15, Ethernet0/0\nO N2     192.0.2.3 [110/20] via 198.18.23.2, 00:00:13, Ethernet0/1\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route ospf",
+          "expectation": "The normal area installs the translated external route.",
+          "passed": true,
+          "output": "\nR1#show ip route ospf\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP\n       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\n       H - NHRP, G - NHRP registered, g - NHRP registration summary\n       o - ODR, P - periodic downloaded static route, l - LISP\n       a - application route\n       + - replicated route, % - next hop override, p - overrides from PfR\n       & - replicated local route overrides by connected\n\nGateway of last resort is not set\n\n      192.0.2.0/32 is subnetted, 3 subnets\nO        192.0.2.2 [110/11] via 198.18.12.2, 00:00:16, Ethernet0/0\nO E2     192.0.2.3 [110/20] via 198.18.12.2, 00:00:09, Ethernet0/0\n      198.18.23.0/30 is subnetted, 1 subnets\nO IA     198.18.23.0 [110/20] via 198.18.12.2, 00:00:16, Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The exported loopback is reachable with a working return route.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        },
+        {
+          "phase": "withdraw the NSSA export before conversion",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR3#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR3(config)#"
+        },
+        {
+          "phase": "withdraw the NSSA export before conversion",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR3(config)#router ospf 1\nR3(config-router)#"
+        },
+        {
+          "phase": "withdraw the NSSA export before conversion",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "no redistribute connected",
+          "passed": true,
+          "output": "\nR3(config-router)#no redistribute connected\nR3(config-router)#"
+        },
+        {
+          "phase": "withdraw the NSSA export before conversion",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "end",
+          "passed": true,
+          "output": "\nR3(config-router)#end\nR3#"
+        },
+        {
+          "phase": "withdraw the NSSA export before conversion",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The destination prefix is absent from this RIB.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.3\n% Subnet not in table\nR1#"
+        },
+        {
+          "phase": "convert ABR to stub",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "convert ABR to stub",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR2(config)#router ospf 1\nR2(config-router)#"
+        },
+        {
+          "phase": "convert ABR to stub",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no area 10 nssa",
+          "passed": true,
+          "output": "\nR2(config-router)#no area 10 nssa\nR2(config-router)#"
+        },
+        {
+          "phase": "convert ABR to stub",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "area 10 stub",
+          "passed": true,
+          "output": "\nR2(config-router)#area 10 stub\nR2(config-router)#"
+        },
+        {
+          "phase": "convert ABR to stub",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router)#end\nR2#"
+        },
+        {
+          "phase": "convert ABR to stub",
+          "node": "R2",
+          "command": "show running-config | section router ospf",
+          "expectation": "The ABR is configured for a stub area; the peer still needs conversion.",
+          "passed": true,
+          "output": "\nR2#show running-config | section router ospf\nrouter ospf 1\n router-id 192.0.2.2\n area 10 stub\n network 192.0.2.2 0.0.0.0 area 0\n network 198.18.12.0 0.0.0.3 area 0\n network 198.18.23.0 0.0.0.3 area 10\nR2#"
+        },
+        {
+          "phase": "convert leaf to matching stub",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR3#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR3(config)#"
+        },
+        {
+          "phase": "convert leaf to matching stub",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR3(config)#router ospf 1\nR3(config-router)#"
+        },
+        {
+          "phase": "convert leaf to matching stub",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "no area 10 nssa",
+          "passed": true,
+          "output": "\nR3(config-router)#no area 10 nssa\nR3(config-router)#"
+        },
+        {
+          "phase": "convert leaf to matching stub",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "area 10 stub",
+          "passed": true,
+          "output": "\nR3(config-router)#area 10 stub\nR3(config-router)#"
+        },
+        {
+          "phase": "convert leaf to matching stub",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "end",
+          "passed": true,
+          "output": "\nR3(config-router)#end\nR3#"
+        },
+        {
+          "phase": "convert leaf to matching stub",
+          "node": "R3",
+          "command": "show ip ospf neighbor",
+          "expectation": "The leaf and ABR agree on the area type and form a FULL adjacency.",
+          "passed": true,
+          "output": "\nR3#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/BDR        00:00:37    198.18.23.1     Ethernet0/0\nR3#"
+        },
+        {
+          "phase": "convert leaf to matching stub",
+          "node": "R3",
+          "command": "show ip route 0.0.0.0",
+          "expectation": "The stub receives the actual ABR default route.",
+          "passed": true,
+          "output": "\nR3#show ip route 0.0.0.0\nRouting entry for 0.0.0.0/0, supernet\n  Known via \"ospf 1\", distance 110, metric 11, candidate default path, type inter area\n  Last update from 198.18.23.1 on Ethernet0/0, 00:00:06 ago\n  Routing Descriptor Blocks:\n  * 198.18.23.1, from 192.0.2.2, 00:00:06 ago, via Ethernet0/0\n      Route metric is 11, traffic share count is 1\nR3#"
+        },
+        {
+          "phase": "convert leaf to matching stub",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The destination prefix is absent from this RIB.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.3\n% Subnet not in table\nR1#"
+        },
+        {
+          "phase": "restore ABR NSSA mode",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore ABR NSSA mode",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR2(config)#router ospf 1\nR2(config-router)#"
+        },
+        {
+          "phase": "restore ABR NSSA mode",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no area 10 stub",
+          "passed": true,
+          "output": "\nR2(config-router)#no area 10 stub\nR2(config-router)#"
+        },
+        {
+          "phase": "restore ABR NSSA mode",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "area 10 nssa",
+          "passed": true,
+          "output": "\nR2(config-router)#area 10 nssa\nR2(config-router)#"
+        },
+        {
+          "phase": "restore ABR NSSA mode",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router)#end\nR2#"
+        },
+        {
+          "phase": "restore ABR NSSA mode",
+          "node": "R2",
+          "command": "show running-config | section router ospf",
+          "expectation": "The ABR is back in NSSA mode; the peer still needs restoration.",
+          "passed": true,
+          "output": "\nR2#show running-config | section router ospf\nrouter ospf 1\n router-id 192.0.2.2\n area 10 nssa\n network 192.0.2.2 0.0.0.0 area 0\n network 198.18.12.0 0.0.0.3 area 0\n network 198.18.23.0 0.0.0.3 area 10\nR2#"
+        },
+        {
+          "phase": "restore matching leaf NSSA mode",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR3#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR3(config)#"
+        },
+        {
+          "phase": "restore matching leaf NSSA mode",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR3(config)#router ospf 1\nR3(config-router)#"
+        },
+        {
+          "phase": "restore matching leaf NSSA mode",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "no area 10 stub",
+          "passed": true,
+          "output": "\nR3(config-router)#no area 10 stub\nR3(config-router)#"
+        },
+        {
+          "phase": "restore matching leaf NSSA mode",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "area 10 nssa",
+          "passed": true,
+          "output": "\nR3(config-router)#area 10 nssa\nR3(config-router)#"
+        },
+        {
+          "phase": "restore matching leaf NSSA mode",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "end",
+          "passed": true,
+          "output": "\nR3(config-router)#end\nR3#"
+        },
+        {
+          "phase": "restore matching leaf NSSA mode",
+          "node": "R3",
+          "command": "show ip ospf neighbor",
+          "expectation": "The leaf and ABR agree on the area type and form a FULL adjacency.",
+          "passed": true,
+          "output": "\nR3#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DROTHER    00:00:39    198.18.23.1     Ethernet0/0\nR3#"
+        },
+        {
+          "phase": "restore matching leaf NSSA mode",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The destination prefix is absent from this RIB.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.3\n% Subnet not in table\nR1#"
+        },
+        {
+          "phase": "restore controlled NSSA export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR3#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR3(config)#"
+        },
+        {
+          "phase": "restore controlled NSSA export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR3(config)#router ospf 1\nR3(config-router)#"
+        },
+        {
+          "phase": "restore controlled NSSA export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "redistribute connected subnets route-map EXPORT-LOOP",
+          "passed": true,
+          "output": "\nR3(config-router)#redistribute connected subnets route-map EXPORT-LOOP\nR3(config-router)#"
+        },
+        {
+          "phase": "restore controlled NSSA export",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "end",
+          "passed": true,
+          "output": "\nR3(config-router)#end\nR3#"
+        },
+        {
+          "phase": "restore controlled NSSA export",
+          "node": "R2",
+          "command": "show ip ospf database nssa-external",
+          "expectation": "The NSSA carries the exported loopback in an actual Type-7 LSA.",
+          "passed": true,
+          "output": "\nR2#show ip ospf database nssa-external\n\n            OSPF Router with ID (192.0.2.2) (Process ID 1)\n\n\t\tType-7 AS External Link States (Area 10)\n\n  LS age: 1\n  Options: (No TOS-capability, Type 7/5 translation, DC, Upward)\n  LS Type: AS External Link\n  Link State ID: 192.0.2.3 (External Network Number )\n  Advertising Router: 192.0.2.3\n  LS Seq Number: 80000001\n  Checksum: 0x1AFE\n  Length: 36\n  Network Mask: /32\n\tMetric Type: 2 (Larger than any link state path)\n\tMTID: 0 \n\tMetric: 20 \n\tForward Address: 198.18.23.2\n\tExternal Route Tag: 0\n\nR2#"
+        },
+        {
+          "phase": "restore controlled NSSA export",
+          "node": "R1",
+          "command": "show ip ospf database external",
+          "expectation": "The ABR translates the NSSA export into a Type-5 LSA outside area 10.",
+          "passed": true,
+          "output": "\nR1#show ip ospf database external\n\n            OSPF Router with ID (192.0.2.1) (Process ID 1)\n\n\t\tType-5 AS External Link States\n\n  LS age: 1\n  Options: (No TOS-capability, DC, Upward)\n  LS Type: AS External Link\n  Link State ID: 192.0.2.3 (External Network Number )\n  Advertising Router: 192.0.2.2\n  LS Seq Number: 80000001\n  Checksum: 0xB46F\n  Length: 36\n  Network Mask: /32\n\tMetric Type: 2 (Larger than any link state path)\n\tMTID: 0 \n\tMetric: 20 \n\tForward Address: 198.18.23.2\n\tExternal Route Tag: 0\n\nR1#"
+        },
+        {
+          "phase": "restore controlled NSSA export",
+          "node": "R2",
+          "command": "show ip route ospf",
+          "expectation": "The ABR installs an NSSA external route.",
+          "passed": true,
+          "output": "\nR2#show ip route ospf\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP\n       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\n       H - NHRP, G - NHRP registered, g - NHRP registration summary\n       o - ODR, P - periodic downloaded static route, l - LISP\n       a - application route\n       + - replicated route, % - next hop override, p - overrides from PfR\n       & - replicated local route overrides by connected\n\nGateway of last resort is not set\n\n      192.0.2.0/32 is subnetted, 3 subnets\nO        192.0.2.1 [110/11] via 198.18.12.1, 00:00:17, Ethernet0/0\nO N2     192.0.2.3 [110/20] via 198.18.23.2, 00:00:01, Ethernet0/1\nR2#"
+        },
+        {
+          "phase": "restore controlled NSSA export",
+          "node": "R1",
+          "command": "show ip route ospf",
+          "expectation": "The normal area installs the translated external route.",
+          "passed": true,
+          "output": "\nR1#show ip route ospf\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP\n       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\n       H - NHRP, G - NHRP registered, g - NHRP registration summary\n       o - ODR, P - periodic downloaded static route, l - LISP\n       a - application route\n       + - replicated route, % - next hop override, p - overrides from PfR\n       & - replicated local route overrides by connected\n\nGateway of last resort is not set\n\n      192.0.2.0/32 is subnetted, 3 subnets\nO        192.0.2.2 [110/11] via 198.18.12.2, 00:00:54, Ethernet0/0\nO E2     192.0.2.3 [110/20] via 198.18.12.2, 00:00:02, Ethernet0/0\n      198.18.23.0/30 is subnetted, 1 subnets\nO IA     198.18.23.0 [110/20] via 198.18.12.2, 00:00:54, Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "restore controlled NSSA export",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The exported loopback is reachable with a working return route.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        }
+      ],
+      "startup_states": {
+        "R1": "BOOTED",
+        "R2": "BOOTED",
+        "R3": "BOOTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "892878391063397367a9fb19d523690ebc7f5421d55f25bad9dad8a00962bf65",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T18:38:16Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/011-pbr-local-policy.yaml",
+      "sha256": "415bc11677b7ffe0544b8dda883a3f7b1c594a5693a2efeb47091766c1bf55e2",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T18:43:03Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.2 repeat 3",
+          "expectation": "The client flow reaches the real remote loopback.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Ethernet0/2 repeat 3",
+          "expectation": "The router-originated flow uses its LAN source address.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Ethernet0/2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The ordinary RIB still selects the primary next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "observe forwarded client policy",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-PRIMARY\nR2#"
+        },
+        {
+          "phase": "observe forwarded client policy",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-POLICY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-POLICY\nR2#"
+        },
+        {
+          "phase": "observe forwarded client policy",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.2 repeat 3",
+          "expectation": "The client flow reaches the real remote loopback.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "observe forwarded client policy",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-POLICY",
+          "expectation": "Fresh matching requests are observed on OBSERVE-POLICY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-POLICY\nExtended IP access list OBSERVE-POLICY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2 (6 matches)\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe forwarded client policy",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-PRIMARY",
+          "expectation": "No matching request is observed on OBSERVE-PRIMARY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-PRIMARY\nExtended IP access list OBSERVE-PRIMARY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe forwarded client policy",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The ordinary RIB still selects the primary next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "observe unmodified local forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-PRIMARY\nR2#"
+        },
+        {
+          "phase": "observe unmodified local forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-POLICY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-POLICY\nR2#"
+        },
+        {
+          "phase": "observe unmodified local forwarding",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Ethernet0/2 repeat 3",
+          "expectation": "The router-originated flow uses its LAN source address.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Ethernet0/2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "observe unmodified local forwarding",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-POLICY",
+          "expectation": "No matching request is observed on OBSERVE-POLICY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-POLICY\nExtended IP access list OBSERVE-POLICY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe unmodified local forwarding",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-PRIMARY",
+          "expectation": "Fresh matching requests are observed on OBSERVE-PRIMARY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-PRIMARY\nExtended IP access list OBSERVE-PRIMARY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2 (6 matches)\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe unmodified local forwarding",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The ordinary RIB still selects the primary next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "enable router-originated policy",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "enable router-originated policy",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip local policy route-map PBR",
+          "passed": true,
+          "output": "\nR1(config)#ip local policy route-map PBR\nR1(config)#"
+        },
+        {
+          "phase": "enable router-originated policy",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "enable router-originated policy",
+          "node": "R1",
+          "command": "show ip local policy",
+          "expectation": "The local policy map is enabled.",
+          "passed": true,
+          "output": "\nR1#show ip local policy\nLocal policy routing is enabled, using route map PBR\nroute-map PBR, permit, sequence 10\n  Match clauses:\n    ip address (access-lists): SELECT-LAN \n  Set clauses:\n    ip next-hop 198.18.1.2\n  Policy routing matches: 6 packets, 684 bytes\nR1#"
+        },
+        {
+          "phase": "observe local policy path",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-PRIMARY\nR2#"
+        },
+        {
+          "phase": "observe local policy path",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-POLICY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-POLICY\nR2#"
+        },
+        {
+          "phase": "observe local policy path",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Ethernet0/2 repeat 3",
+          "expectation": "The router-originated flow uses its LAN source address.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Ethernet0/2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "observe local policy path",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-POLICY",
+          "expectation": "Fresh matching requests are observed on OBSERVE-POLICY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-POLICY\nExtended IP access list OBSERVE-POLICY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2 (6 matches)\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe local policy path",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-PRIMARY",
+          "expectation": "No matching request is observed on OBSERVE-PRIMARY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-PRIMARY\nExtended IP access list OBSERVE-PRIMARY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe local policy path",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The ordinary RIB still selects the primary next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "restore local RIB forwarding",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore local RIB forwarding",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no ip local policy route-map PBR",
+          "passed": true,
+          "output": "\nR1(config)#no ip local policy route-map PBR\nR1(config)#"
+        },
+        {
+          "phase": "restore local RIB forwarding",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "restore local RIB forwarding",
+          "node": "R1",
+          "command": "show running-config | include ip local policy",
+          "expectation": "No local policy remains configured.",
+          "passed": true,
+          "output": "\nR1#show running-config | include ip local policy\nR1#"
+        },
+        {
+          "phase": "observe restored local forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-PRIMARY\nR2#"
+        },
+        {
+          "phase": "observe restored local forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-POLICY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-POLICY\nR2#"
+        },
+        {
+          "phase": "observe restored local forwarding",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Ethernet0/2 repeat 3",
+          "expectation": "The router-originated flow uses its LAN source address.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Ethernet0/2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "observe restored local forwarding",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-POLICY",
+          "expectation": "No matching request is observed on OBSERVE-POLICY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-POLICY\nExtended IP access list OBSERVE-POLICY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe restored local forwarding",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-PRIMARY",
+          "expectation": "Fresh matching requests are observed on OBSERVE-PRIMARY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-PRIMARY\nExtended IP access list OBSERVE-PRIMARY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2 (6 matches)\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe restored local forwarding",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The ordinary RIB still selects the primary next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "confirm interface policy still applies",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-PRIMARY\nR2#"
+        },
+        {
+          "phase": "confirm interface policy still applies",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-POLICY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-POLICY\nR2#"
+        },
+        {
+          "phase": "confirm interface policy still applies",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.2 repeat 3",
+          "expectation": "The client flow reaches the real remote loopback.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "confirm interface policy still applies",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-POLICY",
+          "expectation": "Fresh matching requests are observed on OBSERVE-POLICY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-POLICY\nExtended IP access list OBSERVE-POLICY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2 (6 matches)\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "confirm interface policy still applies",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-PRIMARY",
+          "expectation": "No matching request is observed on OBSERVE-PRIMARY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-PRIMARY\nExtended IP access list OBSERVE-PRIMARY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "confirm interface policy still applies",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The ordinary RIB still selects the primary next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        }
+      ],
+      "startup_states": {
+        "R1": "BOOTED",
+        "R2": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "CLIENT": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "f66e95943537aabd3b9e3a793cccd8f197eae179ae43a6a745bf5c6db1a2afcb",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T18:44:03Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/007-ospf-authentication-filtering.yaml",
+      "sha256": "ed7148be6510dec2ed993b878c2c29addcf20635271f8fb24dce2894fc89c880",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T18:43:03Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The authenticated R1-R2 adjacency is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:07    198.18.12.2     Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip ospf neighbor",
+          "expectation": "The second transit adjacency is FULL before checking remote routes.",
+          "passed": true,
+          "output": "\nR2#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.3         1   FULL/DR         00:00:39    198.18.23.2     Ethernet0/1\n192.0.2.1         1   FULL/BDR        00:00:07    198.18.12.1     Ethernet0/0\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "R1 learns the destination through OSPF and R2.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"ospf 1\", distance 110, metric 21, type intra area\n  Last update from 198.18.12.2 on Ethernet0/0, 00:00:03 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 192.0.2.3, 00:00:03 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "Traffic between the remote loopbacks actually forwards.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip ospf interface Ethernet0/0",
+          "expectation": "Cryptographic authentication reports the intended key ID.",
+          "passed": true,
+          "output": "\nR1#show ip ospf interface Ethernet0/0\nEthernet0/0 is up, line protocol is up \n  Internet Address 198.18.12.1/30, Interface ID 2, Area 0\n  Attached via Network Statement\n  Process ID 1, Router ID 192.0.2.1, Network Type BROADCAST, Cost: 10\n  Topology-MTID    Cost    Disabled    Shutdown      Topology Name\n        0           10        no          no            Base\n  Transmit Delay is 1 sec, State BDR, Priority 1\n  Designated Router (ID) 192.0.2.2, Interface address 198.18.12.2\n  Backup Designated router (ID) 192.0.2.1, Interface address 198.18.12.1\n  Timer intervals configured, Hello 2, Dead 8, Wait 8, Retransmit 5\n    oob-resync timeout 40\n    Hello due in 00:00:00\n  Supports Link-local Signaling (LLS)\n  Cisco NSF helper support enabled\n  IETF NSF helper support enabled\n  Can be protected by per-prefix Loop-Free FastReroute\n  Can be used for per-prefix Loop-Free FastReroute repair paths\n  Not Protected by per-prefix TI-LFA\n  Index 1/1/1, flood queue length 0\n  Next 0x0(0)/0x0(0)/0x0(0)\n  Last flood scan length is 1, maximum is 1\n  Last flood scan time is 0 msec, maximum is 0 msec\n  Neighbor Count is 1, Adjacent neighbor count is 1 \n    Adjacent with neighbor 192.0.2.2  (Designated Router)\n  Suppress hello for 0 neighbor(s)\n  Cryptographic authentication enabled\n    Youngest key id is 1\nR1#"
+        },
+        {
+          "phase": "incorrect authenticated-link key",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "incorrect authenticated-link key",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR2(config)#interface Ethernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "incorrect authenticated-link key",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip ospf message-digest-key 1 md5 INCORRECT-LAB",
+          "passed": true,
+          "output": "\nR2(config-if)#ip ospf message-digest-key 1 md5 INCORRECT-LAB\nR2(config-if)#"
+        },
+        {
+          "phase": "incorrect authenticated-link key",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "incorrect authenticated-link key",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The destination prefix is absent from this RIB.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.3\n% Subnet not in table\nR1#"
+        },
+        {
+          "phase": "incorrect authenticated-link key",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The withdrawn route cannot forward.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "incorrect authenticated-link key",
+          "node": "R2",
+          "command": "show ip ospf neighbor",
+          "expectation": "The separate unauthenticated R2-R3 adjacency remains FULL.",
+          "passed": true,
+          "output": "\nR2#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.3         1   FULL/DR         00:00:35    198.18.23.2     Ethernet0/1\nR2#"
+        },
+        {
+          "phase": "restore matching link key",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore matching link key",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR2(config)#interface Ethernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "restore matching link key",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip ospf message-digest-key 1 md5 CML-OSPF-LAB",
+          "passed": true,
+          "output": "\nR2(config-if)#ip ospf message-digest-key 1 md5 CML-OSPF-LAB\nR2(config-if)#"
+        },
+        {
+          "phase": "restore matching link key",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "restore matching link key",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The authenticated R1-R2 adjacency is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:07    198.18.12.2     Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "restore matching link key",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "R1 learns the destination through OSPF and R2.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"ospf 1\", distance 110, metric 21, type intra area\n  Last update from 198.18.12.2 on Ethernet0/0, 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 192.0.2.3, 00:00:01 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "restore matching link key",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "Traffic between the remote loopbacks actually forwards.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "filter only the transit router RIB",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "filter only the transit router RIB",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip prefix-list RIBFILTER seq 5 deny 192.0.2.3/32",
+          "passed": true,
+          "output": "\nR2(config)#ip prefix-list RIBFILTER seq 5 deny 192.0.2.3/32\nR2(config)#"
+        },
+        {
+          "phase": "filter only the transit router RIB",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip prefix-list RIBFILTER seq 10 permit 0.0.0.0/0 le 32",
+          "passed": true,
+          "output": "\nR2(config)#ip prefix-list RIBFILTER seq 10 permit 0.0.0.0/0 le 32\nR2(config)#"
+        },
+        {
+          "phase": "filter only the transit router RIB",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR2(config)#router ospf 1\nR2(config-router)#"
+        },
+        {
+          "phase": "filter only the transit router RIB",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "distribute-list prefix RIBFILTER in",
+          "passed": true,
+          "output": "\nR2(config-router)#distribute-list prefix RIBFILTER in\nR2(config-router)#"
+        },
+        {
+          "phase": "filter only the transit router RIB",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router)#end\nR2#"
+        },
+        {
+          "phase": "filter only the transit router RIB",
+          "node": "R2",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The destination prefix is absent from this RIB.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.3\n% Subnet not in table\nR2#"
+        },
+        {
+          "phase": "filter only the transit router RIB",
+          "node": "R2",
+          "command": "show ip ospf database router 192.0.2.3",
+          "expectation": "R3 remains in the actual link-state database.",
+          "passed": true,
+          "output": "\nR2#show ip ospf database router 192.0.2.3\n\n            OSPF Router with ID (192.0.2.2) (Process ID 1)\n\n\t\tRouter Link States (Area 0)\n\n  LS age: 34\n  Options: (No TOS-capability, DC)\n  LS Type: Router Links\n  Link State ID: 192.0.2.3\n  Advertising Router: 192.0.2.3\n  LS Seq Number: 80000005\n  Checksum: 0x439C\n  Length: 48\n  Number of Links: 2\n\n    Link connected to: a Stub Network\n     (Link ID) Network/subnet number: 192.0.2.3\n     (Link Data) Network Mask: 255.255.255.255\n      Number of MTID metrics: 0\n       TOS 0 Metrics: 1\n\n    Link connected to: a Transit Network\n     (Link ID) Designated Router address: 198.18.23.2\n     (Link Data) Router Interface address: 198.18.23.2\n      Number of MTID metrics: 0\n       TOS 0 Metrics: 10\n\n\nR2#"
+        },
+        {
+          "phase": "filter only the transit router RIB",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "R1 learns the destination through OSPF and R2.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"ospf 1\", distance 110, metric 21, type intra area\n  Last update from 198.18.12.2 on Ethernet0/0, 00:00:19 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 192.0.2.3, 00:00:19 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "filter only the transit router RIB",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "An advertised route alone does not guarantee transit forwarding.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \nU.U\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "restore transit route installation",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore transit route installation",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR2(config)#router ospf 1\nR2(config-router)#"
+        },
+        {
+          "phase": "restore transit route installation",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no distribute-list prefix RIBFILTER in",
+          "passed": true,
+          "output": "\nR2(config-router)#no distribute-list prefix RIBFILTER in\nR2(config-router)#"
+        },
+        {
+          "phase": "restore transit route installation",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router)#end\nR2#"
+        },
+        {
+          "phase": "restore transit route installation",
+          "node": "R2",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The transit RIB again installs the remote loopback.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"ospf 1\", distance 110, metric 11, type intra area\n  Last update from 198.18.23.2 on Ethernet0/1, 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.23.2, from 192.0.2.3, 00:00:01 ago, via Ethernet0/1\n      Route metric is 11, traffic share count is 1\nR2#"
+        },
+        {
+          "phase": "restore transit route installation",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "Traffic between the remote loopbacks actually forwards.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        }
+      ],
+      "startup_states": {
+        "R1": "BOOTED",
+        "R2": "BOOTED",
+        "R3": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "2c7f0d58102d35b6d058089089c0e3b3308e08d7c8ac6ae75e14adff223fd623",
+      "console_boot_fallback": [
+        "R3"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T18:45:05Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/services/040-pbr-with-ip-sla-fallback.yaml",
+      "sha256": "392de954ae2ee68cc89968d81988c74b9c9eb04b7a19df5f90a9eebc82f949e2",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T18:46:02Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show track 1",
+          "expectation": "The actual SLA reachability object is Up.",
+          "passed": true,
+          "output": "\nR1#show track 1\nTrack 1\n  IP SLA 1 reachability\n  Reachability is Up\n    2 changes, last change 00:00:04\n  Latest operation return code: OK\n  Latest RTT (millisecs) 1\n  Tracked by:\n    Route Map 0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.2 repeat 3",
+          "expectation": "The client flow reaches the real remote loopback.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The ordinary RIB still selects the primary next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "observe healthy tracked policy",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-PRIMARY\nR2#"
+        },
+        {
+          "phase": "observe healthy tracked policy",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-POLICY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-POLICY\nR2#"
+        },
+        {
+          "phase": "observe healthy tracked policy",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.2 repeat 3",
+          "expectation": "The client flow reaches the real remote loopback.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "observe healthy tracked policy",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-POLICY",
+          "expectation": "Fresh matching requests are observed on OBSERVE-POLICY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-POLICY\nExtended IP access list OBSERVE-POLICY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2 (6 matches)\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe healthy tracked policy",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-PRIMARY",
+          "expectation": "No matching request is observed on OBSERVE-PRIMARY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-PRIMARY\nExtended IP access list OBSERVE-PRIMARY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe healthy tracked policy",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The ordinary RIB still selects the primary next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "deny only SLA probes",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "deny only SLA probes",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-list extended OBSERVE-POLICY",
+          "passed": true,
+          "output": "\nR2(config)#ip access-list extended OBSERVE-POLICY\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "deny only SLA probes",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "5 deny icmp host 198.18.1.1 host 198.18.1.2 echo",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#5 deny icmp host 198.18.1.1 host 198.18.1.2 echo\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "deny only SLA probes",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#end\nR2#"
+        },
+        {
+          "phase": "deny only SLA probes",
+          "node": "R1",
+          "command": "show track 1",
+          "expectation": "The actual SLA reachability object is Down.",
+          "passed": true,
+          "output": "\nR1#show track 1\nTrack 1\n  IP SLA 1 reachability\n  Reachability is Down\n    3 changes, last change 00:00:04\n  Latest operation return code: Timeout\n  Tracked by:\n    Route Map 0\nR1#"
+        },
+        {
+          "phase": "observe tracked next-hop fallback",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-PRIMARY\nR2#"
+        },
+        {
+          "phase": "observe tracked next-hop fallback",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-POLICY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-POLICY\nR2#"
+        },
+        {
+          "phase": "observe tracked next-hop fallback",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.2 repeat 3",
+          "expectation": "The client flow reaches the real remote loopback.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "observe tracked next-hop fallback",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-POLICY",
+          "expectation": "No matching request is observed on OBSERVE-POLICY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-POLICY\nExtended IP access list OBSERVE-POLICY\n    5 deny icmp host 198.18.1.1 host 198.18.1.2 echo (1 match)\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe tracked next-hop fallback",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-PRIMARY",
+          "expectation": "Fresh matching requests are observed on OBSERVE-PRIMARY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-PRIMARY\nExtended IP access list OBSERVE-PRIMARY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2 (6 matches)\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe tracked next-hop fallback",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The ordinary RIB still selects the primary next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "restore SLA probes",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore SLA probes",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-list extended OBSERVE-POLICY",
+          "passed": true,
+          "output": "\nR2(config)#ip access-list extended OBSERVE-POLICY\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "restore SLA probes",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no 5",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#no 5\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "restore SLA probes",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#end\nR2#"
+        },
+        {
+          "phase": "restore SLA probes",
+          "node": "R1",
+          "command": "show track 1",
+          "expectation": "The actual SLA reachability object is Up.",
+          "passed": true,
+          "output": "\nR1#show track 1\nTrack 1\n  IP SLA 1 reachability\n  Reachability is Up\n    4 changes, last change 00:00:03\n  Latest operation return code: OK\n  Latest RTT (millisecs) 3\n  Tracked by:\n    Route Map 0\nR1#"
+        },
+        {
+          "phase": "observe policy recovery",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-PRIMARY\nR2#"
+        },
+        {
+          "phase": "observe policy recovery",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters OBSERVE-POLICY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters OBSERVE-POLICY\nR2#"
+        },
+        {
+          "phase": "observe policy recovery",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.2 repeat 3",
+          "expectation": "The client flow reaches the real remote loopback.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "observe policy recovery",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-POLICY",
+          "expectation": "Fresh matching requests are observed on OBSERVE-POLICY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-POLICY\nExtended IP access list OBSERVE-POLICY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2 (6 matches)\n    20 permit ip any any (2 matches)\nR2#"
+        },
+        {
+          "phase": "observe policy recovery",
+          "node": "R2",
+          "command": "show access-lists OBSERVE-PRIMARY",
+          "expectation": "No matching request is observed on OBSERVE-PRIMARY.",
+          "passed": true,
+          "output": "\nR2#show access-lists OBSERVE-PRIMARY\nExtended IP access list OBSERVE-PRIMARY\n    10 permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe policy recovery",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The ordinary RIB still selects the primary next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        }
+      ],
+      "plan_sha256": "55449cb40b5834ae0fa24b5ea5d607941ad6932b2e1206438d657bbd1bb514fc",
+      "startup_states": {
+        "R1": "BOOTED",
+        "R2": "STARTED",
+        "CLIENT": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "CLIENT": "iol-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [
+        "R2",
+        "CLIENT"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T18:46:57Z"
     }
   ]
 }

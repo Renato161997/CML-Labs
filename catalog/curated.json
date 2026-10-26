@@ -300,5 +300,29 @@
     "duration_minutes": 60,
     "kind": "practice",
     "workbook": "docs/workbooks/200-301-033-dhcp-snooping-dai.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/007-ospf-authentication-filtering.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-007-ospf-authentication-filtering.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/006-ospf-stub-nssa.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 75,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-006-ospf-stub-nssa.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/011-pbr-local-policy.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-011-pbr-local-policy.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/services/040-pbr-with-ip-sla-fallback.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-040-pbr-with-ip-sla-fallback.md"
   }
 }
