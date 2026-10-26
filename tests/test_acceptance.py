@@ -66,6 +66,14 @@ class AcceptanceTests(unittest.TestCase):
         self.assertEqual(waits, [20] * 20)
         self.assertTrue(rows[-1]["passed"])
 
+    def test_log_tail_cannot_be_accepted_as_a_complete_command_echo(self):
+        command = "show ip arp inspection statistics vlan 10"
+        log = "*Oct 25 00:00:00.000: %SW_DAI-4-DHCP_SNOOPING_DENY: synthetic event])"
+        self.assertFalse(response_complete(log + command + "\nCOUNTERS\nSW1#", command, "SW1"))
+        self.assertTrue(
+            response_complete(log + "\r\nSW1#" + command + "\r\nCOUNTERS\r\nSW1#", command, "SW1")
+        )
+
     def test_asynchronous_prompt_before_echo_cannot_finish_a_response(self):
         self.assertFalse(response_complete("Sending three probes\nR1#", "end", "R1"))
         self.assertFalse(response_complete("%LINK interface shutdown\nR1#", "shutdown", "R1"))

@@ -2451,5 +2451,254 @@
         ]
       }
     ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/022-intervlan-troubleshooting.yaml": {
+    "checks": [
+      {
+        "node": "USERS",
+        "command": "ping 198.18.10.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      },
+      {
+        "node": "USERS",
+        "command": "ping 198.18.20.20 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      },
+      {
+        "node": "SERVICES",
+        "command": "ping 198.18.10.10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "incorrect service VLAN tag",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0.20",
+          "encapsulation dot1Q 21",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show running-config interface Ethernet0/0.20",
+            "pattern": "encapsulation dot1Q 21",
+            "expectation": "The fault is the actual subinterface tag, not a missing IP address."
+          },
+          {
+            "node": "USERS",
+            "command": "ping 198.18.20.20 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The protected segment drops all three probes."
+          },
+          {
+            "node": "USERS",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          }
+        ]
+      },
+      {
+        "name": "restore service VLAN tag",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0.20",
+          "encapsulation dot1Q 20",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "USERS",
+            "command": "ping 198.18.20.20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "SERVICES",
+            "command": "ping 198.18.10.10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/033-dhcp-snooping-dai.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "show ip interface brief",
+        "pattern": "Ethernet0/0\\s+198\\.18\\.10\\.100\\s+YES DHCP\\s+up\\s+up",
+        "expectation": "The legitimate client actually holds the first DHCP lease.",
+        "attempts": 20
+      },
+      {
+        "node": "SW1",
+        "command": "show ip dhcp snooping binding",
+        "pattern": "198\\.18\\.10\\.100\\s+\\d+\\s+dhcp-snooping\\s+10\\s+GigabitEthernet0/1",
+        "expectation": "The real DHCP lease is bound to the legitimate client port.",
+        "attempts": 20
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 198.18.10.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "fresh baseline counters",
+        "node": "SW1",
+        "commands": [
+          "clear ip arp inspection statistics"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show ip arp inspection statistics vlan 10",
+            "pattern": "(?m)^[ \\t]*Vlan[ \\t]+Forwarded[ \\t]+Dropped[ \\t]+DHCP[ \\t]+Drops[ \\t]+ACL[ \\t]+Drops[ \\t]*\\r?\\n[ \\t-]+\\r?\\n[ \\t]*10[ \\t]+\\d+[ \\t]+0[ \\t]+0[ \\t]+0[ \\t]*\\r?$",
+            "expectation": "The Forwarded/Dropped table contains no dropped ARP packets."
+          },
+          {
+            "node": "SW1",
+            "command": "show ip dhcp snooping binding",
+            "pattern": "198\\.18\\.10\\.100\\s+\\d+\\s+dhcp-snooping\\s+10\\s+GigabitEthernet0/1",
+            "expectation": "The real DHCP lease is bound to the legitimate client port.",
+            "attempts": 20
+          }
+        ]
+      },
+      {
+        "name": "static address impersonation",
+        "node": "SPOOFER",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SPOOFER",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The protected segment drops all three probes."
+          },
+          {
+            "node": "SW1",
+            "command": "show ip arp inspection statistics vlan 10",
+            "pattern": "(?m)^[ \\t]*Vlan[ \\t]+Forwarded[ \\t]+Dropped[ \\t]+DHCP[ \\t]+Drops[ \\t]+ACL[ \\t]+Drops[ \\t]*\\r?\\n[ \\t-]+\\r?\\n[ \\t]*10[ \\t]+\\d+[ \\t]+[1-9][0-9]*[ \\t]+[1-9][0-9]*[ \\t]+\\d+[ \\t]*\\r?$",
+            "expectation": "The Forwarded/Dropped table records actual DHCP-binding-related ARP drops."
+          },
+          {
+            "node": "SW1",
+            "command": "show interfaces status",
+            "pattern": "Gi0/2[^\\n]*connected",
+            "expectation": "The offending port remains physically connected; filtering is not a link shutdown."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "SW1",
+            "command": "show ip dhcp snooping binding",
+            "pattern": "198\\.18\\.10\\.100\\s+\\d+\\s+dhcp-snooping\\s+10\\s+GigabitEthernet0/1",
+            "expectation": "The real DHCP lease is bound to the legitimate client port.",
+            "attempts": 20
+          }
+        ]
+      },
+      {
+        "name": "remove impersonating endpoint",
+        "node": "SPOOFER",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SPOOFER",
+            "command": "show ip interface brief",
+            "pattern": "Ethernet0/0[^\\n]*administratively down",
+            "expectation": "The deliberate impersonator has been stopped."
+          }
+        ]
+      },
+      {
+        "name": "prepare legitimate ARP measurement",
+        "node": "SW1",
+        "commands": [
+          "clear ip arp inspection statistics"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show ip arp inspection statistics vlan 10",
+            "pattern": "(?m)^[ \\t]*Vlan[ \\t]+Forwarded[ \\t]+Dropped[ \\t]+DHCP[ \\t]+Drops[ \\t]+ACL[ \\t]+Drops[ \\t]*\\r?\\n[ \\t-]+\\r?\\n[ \\t]*10[ \\t]+\\d+[ \\t]+0[ \\t]+0[ \\t]+0[ \\t]*\\r?$",
+            "expectation": "The Forwarded/Dropped table contains no dropped ARP packets."
+          },
+          {
+            "node": "SW1",
+            "command": "show ip dhcp snooping binding",
+            "pattern": "198\\.18\\.10\\.100\\s+\\d+\\s+dhcp-snooping\\s+10\\s+GigabitEthernet0/1",
+            "expectation": "The real DHCP lease is bound to the legitimate client port.",
+            "attempts": 20
+          }
+        ]
+      },
+      {
+        "name": "fresh legitimate ARP",
+        "node": "CLIENT",
+        "commands": [
+          "clear arp-cache"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "SW1",
+            "command": "show ip arp inspection statistics vlan 10",
+            "pattern": "(?m)^[ \\t]*Vlan[ \\t]+DHCP[ \\t]+Permits[^\\r\\n]*\\r?\\n[ \\t-]+\\r?\\n[ \\t]*10[ \\t]+[1-9][0-9]*\\b",
+            "expectation": "Fresh ARP from the bound client is actually permitted, measured in the DHCP Permits table."
+          },
+          {
+            "node": "SW1",
+            "command": "show ip arp inspection statistics vlan 10",
+            "pattern": "(?m)^[ \\t]*Vlan[ \\t]+Forwarded[ \\t]+Dropped[ \\t]+DHCP[ \\t]+Drops[ \\t]+ACL[ \\t]+Drops[ \\t]*\\r?\\n[ \\t-]+\\r?\\n[ \\t]*10[ \\t]+\\d+[ \\t]+0[ \\t]+0[ \\t]+0[ \\t]*\\r?$",
+            "expectation": "The Forwarded/Dropped table contains no dropped ARP packets."
+          },
+          {
+            "node": "SW1",
+            "command": "show ip dhcp snooping binding",
+            "pattern": "198\\.18\\.10\\.100\\s+\\d+\\s+dhcp-snooping\\s+10\\s+GigabitEthernet0/1",
+            "expectation": "The real DHCP lease is bound to the legitimate client port.",
+            "attempts": 20
+          },
+          {
+            "node": "SW1",
+            "command": "show running-config | include ip arp inspection vlan",
+            "pattern": "ip arp inspection vlan 10",
+            "expectation": "DAI remains enabled after recovery."
+          }
+        ]
+      }
+    ]
   }
 }
