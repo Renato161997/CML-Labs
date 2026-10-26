@@ -5235,6 +5235,12 @@
   "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/027-syslog-siem-correlation.yaml": {
     "checks": [
       {
+        "node": "R1",
+        "command": "ping 198.18.1.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The collector data path and neighbor resolution are ready before emitting security events."
+      },
+      {
         "node": "LOG",
         "command": "python3 /lab/correlate.py baseline",
         "pattern": "\"status\": \"passed\"",

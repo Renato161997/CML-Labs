@@ -4164,8 +4164,8 @@
       "runtime_status": "passed",
       "import_status": "import-export-pass",
       "cml_version": "2.10.1+build.21",
-      "validated_utc": "2026-10-26T20:24:43Z",
-      "sha256": "07ef4f2df25456cf911f6c6a76550d6985e0d5560e0bdf09a3f0e76314a7454d"
+      "validated_utc": "2026-10-26T20:42:59Z",
+      "sha256": "6d4d53a73ec0e82917ff24039708af880f8b768e17483d4a97e45ab7cddcf89b"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/028-packet-capture-span.yaml",

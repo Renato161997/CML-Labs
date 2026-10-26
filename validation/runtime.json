@@ -9673,269 +9673,6 @@
       "completed_utc": "2026-10-26T19:54:02Z"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/027-syslog-siem-correlation.yaml",
-      "sha256": "07ef4f2df25456cf911f6c6a76550d6985e0d5560e0bdf09a3f0e76314a7454d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T20:23:50Z",
-      "checks": [
-        {
-          "phase": "baseline",
-          "node": "LOG",
-          "command": "python3 /lab/correlate.py baseline",
-          "expectation": "The receive-time correlator validates the baseline event-family condition.",
-          "passed": true,
-          "output": "\nroot@LOG:~# python3 /lab/correlate.py baseline\n{\"correlation_count\": 0, \"correlations\": [], \"event_counts\": {\"interface_disabled\": 0, \"packet_denied\": 0}, \"mode\": \"baseline\", \"source\": \"198.18.1.1\", \"status\": \"passed\", \"window_seconds\": 120}\nroot@LOG:~# "
-        },
-        {
-          "phase": "baseline",
-          "node": "TOOLS",
-          "command": "LC_ALL=C ping -c 3 -W 1 192.0.2.1",
-          "expectation": "All three packets reach the routed endpoint.",
-          "passed": true,
-          "output": "\nroot@TOOLS:~# LC_ALL=C ping -c 3 -W 1 192.0.2.1\nPING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\n64 bytes from 192.0.2.1: icmp_seq=1 ttl=255 time=1.63 ms\n64 bytes from 192.0.2.1: icmp_seq=2 ttl=255 time=0.641 ms\n64 bytes from 192.0.2.1: icmp_seq=3 ttl=255 time=0.641 ms\n\n--- 192.0.2.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2001ms\nrtt min/avg/max/mdev = 0.641/0.971/1.631/0.466 ms\nroot@TOOLS:~# "
-        },
-        {
-          "phase": "baseline",
-          "node": "R1",
-          "command": "show ip interface brief",
-          "expectation": "The spare loopback is operational.",
-          "passed": true,
-          "output": "\nR1#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.0.1      YES TFTP   up                    up      \nEthernet0/1            198.18.1.1      YES TFTP   up                    up      \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nLoopback0              192.0.2.1       YES TFTP   up                    up      \nLoopback1              192.0.2.99      YES TFTP   up                    up      \nR1#"
-        },
-        {
-          "phase": "apply a logging ingress filter",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "configure terminal",
-          "passed": true,
-          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
-        },
-        {
-          "phase": "apply a logging ingress filter",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "ip access-list extended CML-DENY",
-          "passed": true,
-          "output": "\nR1(config)#ip access-list extended CML-DENY\nR1(config-ext-nacl)#"
-        },
-        {
-          "phase": "apply a logging ingress filter",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "deny icmp host 198.18.0.2 host 192.0.2.1 log",
-          "passed": true,
-          "output": "\nR1(config-ext-nacl)#deny icmp host 198.18.0.2 host 192.0.2.1 log\nR1(config-ext-nacl)#"
-        },
-        {
-          "phase": "apply a logging ingress filter",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "permit ip any any",
-          "passed": true,
-          "output": "\nR1(config-ext-nacl)#permit ip any any\nR1(config-ext-nacl)#"
-        },
-        {
-          "phase": "apply a logging ingress filter",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "exit",
-          "passed": true,
-          "output": "\nR1(config-ext-nacl)#exit\nR1(config)#"
-        },
-        {
-          "phase": "apply a logging ingress filter",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "interface Ethernet0/0",
-          "passed": true,
-          "output": "\nR1(config)#interface Ethernet0/0\nR1(config-if)#"
-        },
-        {
-          "phase": "apply a logging ingress filter",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "ip access-group CML-DENY in",
-          "passed": true,
-          "output": "\nR1(config-if)#ip access-group CML-DENY in\nR1(config-if)#"
-        },
-        {
-          "phase": "apply a logging ingress filter",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "end",
-          "passed": true,
-          "output": "\nR1(config-if)#end\nR1#"
-        },
-        {
-          "phase": "apply a logging ingress filter",
-          "node": "TOOLS",
-          "command": "LC_ALL=C ping -c 3 -W 1 192.0.2.1",
-          "expectation": "All three packets are blocked by the router ingress ACL.",
-          "passed": true,
-          "output": "\nroot@TOOLS:~# LC_ALL=C ping -c 3 -W 1 192.0.2.1\nPING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\nFrom 198.18.0.1 icmp_seq=1 Packet filtered\nFrom 198.18.0.1 icmp_seq=2 Packet filtered\nFrom 198.18.0.1 icmp_seq=3 Packet filtered\n\n--- 192.0.2.1 ping statistics ---\n3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2032ms\n\nroot@TOOLS:~# "
-        },
-        {
-          "phase": "apply a logging ingress filter",
-          "node": "R1",
-          "command": "show access-lists CML-DENY",
-          "expectation": "The deny counts actual client probes.",
-          "passed": true,
-          "output": "\nR1#show access-lists CML-DENY\nExtended IP access list CML-DENY\n    10 deny icmp host 198.18.0.2 host 192.0.2.1 log (3 matches)\n    20 permit ip any any\nR1#"
-        },
-        {
-          "phase": "apply a logging ingress filter",
-          "node": "LOG",
-          "command": "python3 /lab/correlate.py single",
-          "expectation": "The receive-time correlator validates the single event-family condition.",
-          "passed": true,
-          "output": "\nroot@LOG:~# python3 /lab/correlate.py single\n{\"correlation_count\": 0, \"correlations\": [], \"event_counts\": {\"interface_disabled\": 0, \"packet_denied\": 1}, \"mode\": \"single\", \"source\": \"198.18.1.1\", \"status\": \"passed\", \"window_seconds\": 120}\nroot@LOG:~# "
-        },
-        {
-          "phase": "disable only the spare interface",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "configure terminal",
-          "passed": true,
-          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
-        },
-        {
-          "phase": "disable only the spare interface",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "interface Loopback1",
-          "passed": true,
-          "output": "\n*Oct 26 20:24:19.963: %PNP-6-PNP_TECH_SUMMARY_SAVED_OK: PnP tech summary (/pnp-tech/pnp-tech-discovery-summary) saved successfully (elapsed time: 1 seconds).\n*Oct 26 20:24:19.963: %PNP-6-PNP_DISCOVERY_STOPPED: PnP Discovery stopped (Config Wizard)\nR1(config)#\nR1(config)#interface Loopback1\nR1(config-if)#"
-        },
-        {
-          "phase": "disable only the spare interface",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "shutdown",
-          "passed": true,
-          "output": "\nR1(config-if)#shutdown\nR1(config-if)#"
-        },
-        {
-          "phase": "disable only the spare interface",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "end",
-          "passed": true,
-          "output": "\nR1(config-if)#end\nR1#"
-        },
-        {
-          "phase": "disable only the spare interface",
-          "node": "R1",
-          "command": "show ip interface brief",
-          "expectation": "The spare loopback is administratively disabled.",
-          "passed": true,
-          "output": "\nR1#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.0.1      YES TFTP   up                    up      \nEthernet0/1            198.18.1.1      YES TFTP   up                    up      \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nLoopback0              192.0.2.1       YES TFTP   up                    up      \nLoopback1              192.0.2.99      YES TFTP   administratively down down    \nR1#"
-        },
-        {
-          "phase": "disable only the spare interface",
-          "node": "LOG",
-          "command": "python3 /lab/correlate.py incident",
-          "expectation": "The receive-time correlator validates the incident event-family condition.",
-          "passed": true,
-          "output": "\nroot@LOG:~# python3 /lab/correlate.py incident\n{\"correlation_count\": 1, \"correlations\": [{\"interface_disabled\": {\"message\": \"<189>49: *Oct 26 20:24:23.739: %LINK-5-CHANGED: Interface Loopback1, changed state to administratively down\", \"received_monotonic\": 373280.054728803, \"received_utc\": \"2026-10-26T20:24:24.740576+00:00\", \"source\": \"198.18.1.1\", \"truncated\": false}, \"packet_denied\": {\"message\": \"<190>40: *Oct 26 20:24:17.339: %SEC-6-IPACCESSLOGDP: list CML-DENY denied icmp 198.18.0.2 -> 192.0.2.1 (8/0), 1 packet\", \"received_monotonic\": 373273.654558315, \"received_utc\": \"2026-10-26T20:24:18.340410+00:00\", \"source\": \"198.18.1.1\", \"truncated\": false}}], \"event_counts\": {\"interface_disabled\": 1, \"packet_denied\": 1}, \"mode\": \"incident\", \"source\": \"198.18.1.1\", \"status\": \"passed\", \"window_seconds\": 120}\nroot@LOG:~# "
-        },
-        {
-          "phase": "restore forwarding and spare interface",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "configure terminal",
-          "passed": true,
-          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
-        },
-        {
-          "phase": "restore forwarding and spare interface",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "interface Ethernet0/0",
-          "passed": true,
-          "output": "\nR1(config)#interface Ethernet0/0\nR1(config-if)#"
-        },
-        {
-          "phase": "restore forwarding and spare interface",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "no ip access-group CML-DENY in",
-          "passed": true,
-          "output": "\nR1(config-if)#no ip access-group CML-DENY in\nR1(config-if)#"
-        },
-        {
-          "phase": "restore forwarding and spare interface",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "exit",
-          "passed": true,
-          "output": "\nR1(config-if)#exit\nR1(config)#"
-        },
-        {
-          "phase": "restore forwarding and spare interface",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "interface Loopback1",
-          "passed": true,
-          "output": "\nR1(config)#interface Loopback1\nR1(config-if)#"
-        },
-        {
-          "phase": "restore forwarding and spare interface",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "no shutdown",
-          "passed": true,
-          "output": "\nR1(config-if)#no shutdown\nR1(config-if)#"
-        },
-        {
-          "phase": "restore forwarding and spare interface",
-          "kind": "configuration",
-          "node": "R1",
-          "command": "end",
-          "passed": true,
-          "output": "\nR1(config-if)#end\nR1#"
-        },
-        {
-          "phase": "restore forwarding and spare interface",
-          "node": "TOOLS",
-          "command": "LC_ALL=C ping -c 3 -W 1 192.0.2.1",
-          "expectation": "All three packets reach the routed endpoint.",
-          "passed": true,
-          "output": "\nroot@TOOLS:~# LC_ALL=C ping -c 3 -W 1 192.0.2.1\nPING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\n64 bytes from 192.0.2.1: icmp_seq=1 ttl=255 time=0.988 ms\n64 bytes from 192.0.2.1: icmp_seq=2 ttl=255 time=0.979 ms\n64 bytes from 192.0.2.1: icmp_seq=3 ttl=255 time=0.806 ms\n\n--- 192.0.2.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 0.806/0.924/0.988/0.083 ms\nroot@TOOLS:~# "
-        },
-        {
-          "phase": "restore forwarding and spare interface",
-          "node": "R1",
-          "command": "show ip interface brief",
-          "expectation": "The spare loopback is operational.",
-          "passed": true,
-          "output": "\nR1#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.0.1      YES TFTP   up                    up      \nEthernet0/1            198.18.1.1      YES TFTP   up                    up      \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nLoopback0              192.0.2.1       YES TFTP   up                    up      \nLoopback1              192.0.2.99      YES TFTP   up                    up      \nR1#"
-        },
-        {
-          "phase": "restore forwarding and spare interface",
-          "node": "LOG",
-          "command": "python3 /lab/correlate.py incident",
-          "expectation": "The receive-time correlator validates the incident event-family condition.",
-          "passed": true,
-          "output": "\nroot@LOG:~# python3 /lab/correlate.py incident\n{\"correlation_count\": 1, \"correlations\": [{\"interface_disabled\": {\"message\": \"<189>49: *Oct 26 20:24:23.739: %LINK-5-CHANGED: Interface Loopback1, changed state to administratively down\", \"received_monotonic\": 373280.054728803, \"received_utc\": \"2026-10-26T20:24:24.740576+00:00\", \"source\": \"198.18.1.1\", \"truncated\": false}, \"packet_denied\": {\"message\": \"<190>40: *Oct 26 20:24:17.339: %SEC-6-IPACCESSLOGDP: list CML-DENY denied icmp 198.18.0.2 -> 192.0.2.1 (8/0), 1 packet\", \"received_monotonic\": 373273.654558315, \"received_utc\": \"2026-10-26T20:24:18.340410+00:00\", \"source\": \"198.18.1.1\", \"truncated\": false}}], \"event_counts\": {\"interface_disabled\": 1, \"packet_denied\": 1}, \"mode\": \"incident\", \"source\": \"198.18.1.1\", \"status\": \"passed\", \"window_seconds\": 120}\nroot@LOG:~# "
-        }
-      ],
-      "startup_states": {
-        "R1": "BOOTED",
-        "TOOLS": "BOOTED",
-        "LOG": "BOOTED"
-      },
-      "images": {
-        "R1": "iol-xe-17-18-02",
-        "TOOLS": "net-tools-2-10-1-3",
-        "LOG": "net-tools-2-10-1-3"
-      },
-      "plan_sha256": "987b4a4e8054232927dceded6763d85e9f87bc7075f4c956142020ba146784a4",
-      "console_boot_fallback": [],
-      "status": "passed",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T20:24:43Z"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/027-syslog-snmp.yaml",
       "sha256": "14216f696fc821f6fe2cfdf65c7625bc1cb7b56a10931c921bd54d0147c4f898",
       "cml_version": "2.10.1+build.21",
@@ -10177,6 +9914,281 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-26T20:36:16Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/027-syslog-siem-correlation.yaml",
+      "sha256": "6d4d53a73ec0e82917ff24039708af880f8b768e17483d4a97e45ab7cddcf89b",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T20:41:55Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.1.2 repeat 3",
+          "expectation": "The collector data path and neighbor resolution are ready before emitting security events.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.1.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.1.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "LOG",
+          "command": "python3 /lab/correlate.py baseline",
+          "expectation": "The receive-time correlator validates the baseline event-family condition.",
+          "passed": true,
+          "output": "\nroot@LOG:~# python3 /lab/correlate.py baseline\n{\"correlation_count\": 0, \"correlations\": [], \"event_counts\": {\"interface_disabled\": 0, \"packet_denied\": 0}, \"mode\": \"baseline\", \"source\": \"198.18.1.1\", \"status\": \"passed\", \"window_seconds\": 120}\nroot@LOG:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "TOOLS",
+          "command": "LC_ALL=C ping -c 3 -W 1 192.0.2.1",
+          "expectation": "All three packets reach the routed endpoint.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# LC_ALL=C ping -c 3 -W 1 192.0.2.1\nPING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\n64 bytes from 192.0.2.1: icmp_seq=1 ttl=255 time=1.35 ms\n64 bytes from 192.0.2.1: icmp_seq=2 ttl=255 time=1.12 ms\n64 bytes from 192.0.2.1: icmp_seq=3 ttl=255 time=1.10 ms\n\n--- 192.0.2.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 1.102/1.191/1.351/0.112 ms\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip interface brief",
+          "expectation": "The spare loopback is operational.",
+          "passed": true,
+          "output": "\nR1#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.0.1      YES TFTP   up                    up      \nEthernet0/1            198.18.1.1      YES TFTP   up                    up      \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nLoopback0              192.0.2.1       YES TFTP   up                    up      \nLoopback1              192.0.2.99      YES TFTP   up                    up      \nR1#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip access-list extended CML-DENY",
+          "passed": true,
+          "output": "\nR1(config)#ip access-list extended CML-DENY\nR1(config-ext-nacl)#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "deny icmp host 198.18.0.2 host 192.0.2.1 log",
+          "passed": true,
+          "output": "\nR1(config-ext-nacl)#deny icmp host 198.18.0.2 host 192.0.2.1 log\nR1(config-ext-nacl)#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "permit ip any any",
+          "passed": true,
+          "output": "\nR1(config-ext-nacl)#permit ip any any\nR1(config-ext-nacl)#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-ext-nacl)#exit\nR1(config)#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR1(config)#interface Ethernet0/0\nR1(config-if)#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip access-group CML-DENY in",
+          "passed": true,
+          "output": "\nR1(config-if)#ip access-group CML-DENY in\nR1(config-if)#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "node": "TOOLS",
+          "command": "LC_ALL=C ping -c 3 -W 1 192.0.2.1",
+          "expectation": "All three packets are blocked by the router ingress ACL.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# LC_ALL=C ping -c 3 -W 1 192.0.2.1\nPING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\nFrom 198.18.0.1 icmp_seq=1 Packet filtered\nFrom 198.18.0.1 icmp_seq=2 Packet filtered\nFrom 198.18.0.1 icmp_seq=3 Packet filtered\n\n--- 192.0.2.1 ping statistics ---\n3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2013ms\n\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "node": "R1",
+          "command": "show access-lists CML-DENY",
+          "expectation": "The deny counts actual client probes.",
+          "passed": true,
+          "output": "\nR1#show access-lists CML-DENY\nExtended IP access list CML-DENY\n    10 deny icmp host 198.18.0.2 host 192.0.2.1 log (3 matches)\n    20 permit ip any any\nR1#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "node": "LOG",
+          "command": "python3 /lab/correlate.py single",
+          "expectation": "The receive-time correlator validates the single event-family condition.",
+          "passed": true,
+          "output": "\nroot@LOG:~# python3 /lab/correlate.py single\n{\"correlation_count\": 0, \"correlations\": [], \"event_counts\": {\"interface_disabled\": 0, \"packet_denied\": 1}, \"mode\": \"single\", \"source\": \"198.18.1.1\", \"status\": \"passed\", \"window_seconds\": 120}\nroot@LOG:~# "
+        },
+        {
+          "phase": "disable only the spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "disable only the spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Loopback1",
+          "passed": true,
+          "output": "\nR1(config)#interface Loopback1\nR1(config-if)#"
+        },
+        {
+          "phase": "disable only the spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nR1(config-if)#shutdown\nR1(config-if)#"
+        },
+        {
+          "phase": "disable only the spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "disable only the spare interface",
+          "node": "R1",
+          "command": "show ip interface brief",
+          "expectation": "The spare loopback is administratively disabled.",
+          "passed": true,
+          "output": "\nR1#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.0.1      YES TFTP   up                    up      \nEthernet0/1            198.18.1.1      YES TFTP   up                    up      \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nLoopback0              192.0.2.1       YES TFTP   up                    up      \nLoopback1              192.0.2.99      YES TFTP   administratively down down    \nR1#"
+        },
+        {
+          "phase": "disable only the spare interface",
+          "node": "LOG",
+          "command": "python3 /lab/correlate.py incident",
+          "expectation": "The receive-time correlator validates the incident event-family condition.",
+          "passed": true,
+          "output": "\nroot@LOG:~# python3 /lab/correlate.py incident\n{\"correlation_count\": 1, \"correlations\": [{\"interface_disabled\": {\"message\": \"<189>49: *Oct 26 20:42:38.762: %LINK-5-CHANGED: Interface Loopback1, changed state to administratively down\", \"received_monotonic\": 374375.076783924, \"received_utc\": \"2026-10-26T20:42:39.762631+00:00\", \"source\": \"198.18.1.1\", \"truncated\": false}, \"packet_denied\": {\"message\": \"<190>46: *Oct 26 20:42:32.376: %SEC-6-IPACCESSLOGDP: list CML-DENY denied icmp 198.18.0.2 -> 192.0.2.1 (8/0), 1 packet\", \"received_monotonic\": 374368.692132196, \"received_utc\": \"2026-10-26T20:42:33.377986+00:00\", \"source\": \"198.18.1.1\", \"truncated\": false}}], \"event_counts\": {\"interface_disabled\": 1, \"packet_denied\": 1}, \"mode\": \"incident\", \"source\": \"198.18.1.1\", \"status\": \"passed\", \"window_seconds\": 120}\nroot@LOG:~# "
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR1(config)#interface Ethernet0/0\nR1(config-if)#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no ip access-group CML-DENY in",
+          "passed": true,
+          "output": "\nR1(config-if)#no ip access-group CML-DENY in\nR1(config-if)#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-if)#exit\nR1(config)#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Loopback1",
+          "passed": true,
+          "output": "\nR1(config)#interface Loopback1\nR1(config-if)#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nR1(config-if)#no shutdown\nR1(config-if)#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "node": "TOOLS",
+          "command": "LC_ALL=C ping -c 3 -W 1 192.0.2.1",
+          "expectation": "All three packets reach the routed endpoint.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# LC_ALL=C ping -c 3 -W 1 192.0.2.1\nPING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\n64 bytes from 192.0.2.1: icmp_seq=1 ttl=255 time=0.755 ms\n64 bytes from 192.0.2.1: icmp_seq=2 ttl=255 time=1.26 ms\n64 bytes from 192.0.2.1: icmp_seq=3 ttl=255 time=1.58 ms\n\n--- 192.0.2.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2043ms\nrtt min/avg/max/mdev = 0.755/1.196/1.575/0.337 ms\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "node": "R1",
+          "command": "show ip interface brief",
+          "expectation": "The spare loopback is operational.",
+          "passed": true,
+          "output": "\nR1#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.0.1      YES TFTP   up                    up      \nEthernet0/1            198.18.1.1      YES TFTP   up                    up      \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nLoopback0              192.0.2.1       YES TFTP   up                    up      \nLoopback1              192.0.2.99      YES TFTP   up                    up      \nR1#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "node": "LOG",
+          "command": "python3 /lab/correlate.py incident",
+          "expectation": "The receive-time correlator validates the incident event-family condition.",
+          "passed": true,
+          "output": "\nroot@LOG:~# python3 /lab/correlate.py incident\n{\"correlation_count\": 1, \"correlations\": [{\"interface_disabled\": {\"message\": \"<189>49: *Oct 26 20:42:38.762: %LINK-5-CHANGED: Interface Loopback1, changed state to administratively down\", \"received_monotonic\": 374375.076783924, \"received_utc\": \"2026-10-26T20:42:39.762631+00:00\", \"source\": \"198.18.1.1\", \"truncated\": false}, \"packet_denied\": {\"message\": \"<190>46: *Oct 26 20:42:32.376: %SEC-6-IPACCESSLOGDP: list CML-DENY denied icmp 198.18.0.2 -> 192.0.2.1 (8/0), 1 packet\", \"received_monotonic\": 374368.692132196, \"received_utc\": \"2026-10-26T20:42:33.377986+00:00\", \"source\": \"198.18.1.1\", \"truncated\": false}}], \"event_counts\": {\"interface_disabled\": 1, \"packet_denied\": 1}, \"mode\": \"incident\", \"source\": \"198.18.1.1\", \"status\": \"passed\", \"window_seconds\": 120}\nroot@LOG:~# "
+        }
+      ],
+      "plan_sha256": "681eac5b5ecfdbf21d957b149eb42d41b9891628a90fce2b692e55a33c35938f",
+      "startup_states": {
+        "R1": "BOOTED",
+        "TOOLS": "BOOTED",
+        "LOG": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "TOOLS": "net-tools-2-10-1-3",
+        "LOG": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [
+        "LOG"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T20:42:59Z"
     }
   ]
 }
