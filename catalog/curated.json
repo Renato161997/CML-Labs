@@ -348,5 +348,29 @@
     "duration_minutes": 70,
     "kind": "practice",
     "workbook": "docs/workbooks/300-410-009-route-redistribution-tags.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/019-multilayer-switching-svi-routing.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 45,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-019-multilayer-switching-svi-routing.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/012-dual-stack-campus.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-012-dual-stack-campus.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/020-mst-rpvst-stp-tuning.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 60,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-020-mst-rpvst-stp-tuning.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/021-lacp-pagp-etherchannel.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-021-lacp-pagp-etherchannel.md"
   }
 }
