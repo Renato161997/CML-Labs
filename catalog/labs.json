@@ -1926,46 +1926,42 @@
       "title": "Summarization And Filtering Faults",
       "track": "300-410",
       "topic": "troubleshooting",
-      "nodes": 6,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 60,
+      "workbook": "docs/workbooks/300-410-041-summarization-and-filtering-faults.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "95c67c9d0e2240c8348274872eb1ee2eaa294c8740e2419a9ad9d6e96bd0f628"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T18:56:20Z",
+      "sha256": "bcae07f4d7813c0d64a66f0335b8aa1b81e75ac914f85d5266ffb2c1e8250fd0"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/042-wrong-administrative-distance.yaml",
       "title": "Wrong Administrative Distance",
       "track": "300-410",
       "topic": "troubleshooting",
-      "nodes": 6,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 55,
+      "workbook": "docs/workbooks/300-410-042-wrong-administrative-distance.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "c2377f638b8b0fdbe5c1370b05394ad58465276ebff917bed4560859f9343b7a"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T18:52:47Z",
+      "sha256": "9bb4ae347756b6a3cf38f3127a816117b691815e4feef4902c2964f49c70a036"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/020-gre-tunnel-routing.yaml",

@@ -1828,26 +1828,6 @@
       "completed_utc": "2026-10-25T15:56:14Z"
     },
     {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/041-summarization-and-filtering-faults.yaml",
-      "sha256": "95c67c9d0e2240c8348274872eb1ee2eaa294c8740e2419a9ad9d6e96bd0f628",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:14Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:14Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/042-wrong-administrative-distance.yaml",
-      "sha256": "c2377f638b8b0fdbe5c1370b05394ad58465276ebff917bed4560859f9343b7a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:14Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:15Z"
-    },
-    {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/021-dmvpn-phase2.yaml",
       "sha256": "9cb35a6253dcdc096abea39e15be139e018e1ae0066739bc40c452faa18501cb",
       "cml_version": "2.10.1+build.21",
@@ -2336,6 +2316,26 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-26T18:46:00Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/041-summarization-and-filtering-faults.yaml",
+      "sha256": "bcae07f4d7813c0d64a66f0335b8aa1b81e75ac914f85d5266ffb2c1e8250fd0",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T18:54:53Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T18:54:54Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/042-wrong-administrative-distance.yaml",
+      "sha256": "9bb4ae347756b6a3cf38f3127a816117b691815e4feef4902c2964f49c70a036",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T18:54:56Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T18:54:56Z"
     }
   ]
 }

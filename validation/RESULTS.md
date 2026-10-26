@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **54**.
+Import/export passes: **233/233**. Functional passes: **56**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -59,6 +59,8 @@ Import/export passes: **233/233**. Functional passes: **54**.
 | [Policy Based Routing Local Policy](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/011-pbr-local-policy.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 25 | 16 | 2026-10-26T18:44:03Z |
 | [VRF Lite Routing Protocols](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/012-vrf-lite-routing-protocols.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 5 | 0 | 2026-10-25T12:42:37Z |
 | [PBR With IP SLA Fallback](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/services/040-pbr-with-ip-sla-fallback.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 14 | 2026-10-26T18:46:57Z |
+| [Summarization And Filtering Faults](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/041-summarization-and-filtering-faults.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 15 | 8 | 2026-10-26T18:56:20Z |
+| [Wrong Administrative Distance](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/042-wrong-administrative-distance.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 16 | 14 | 2026-10-26T18:52:47Z |
 | [GRE Tunnel Routing](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/020-gre-tunnel-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 6 | 12 | 2026-10-25T12:42:29Z |
 | [Webhook Receiver](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:46:46Z |
 | [Webhook Receiver Config Validation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/webhooks/035-webhook-receiver-config-validation.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:37:45Z |

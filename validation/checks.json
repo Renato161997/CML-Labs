@@ -3459,5 +3459,294 @@
         ]
       }
     ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/042-wrong-administrative-distance.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip ospf neighbor",
+        "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+        "expectation": "The OSPF adjacency remains FULL.",
+        "attempts": 12
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.2",
+        "pattern": "(?s)Known via \"ospf 1\".*distance 110.*198\\.18\\.0\\.2",
+        "expectation": "OSPF wins over the intended distance-250 backup."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The destination still responds, despite the changed request path."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "observe preferred OSPF path",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters AD-PRIMARY",
+          "clear access-list counters AD-SECONDARY"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The destination still responds, despite the changed request path."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists AD-PRIMARY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh request counters identify AD-PRIMARY as used."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists AD-SECONDARY",
+            "pattern": "permit icmp",
+            "expectation": "Fresh request counters identify AD-SECONDARY as unused.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          }
+        ]
+      },
+      {
+        "name": "incorrect static preference",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.2 255.255.255.255 198.18.1.2 250",
+          "ip route 192.0.2.2 255.255.255.255 198.18.1.2 5",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)Known via \"static\".*distance 5.*198\\.18\\.1\\.2",
+            "expectation": "The incorrect distance-5 static route preempts OSPF."
+          },
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The OSPF adjacency remains FULL.",
+            "attempts": 12
+          }
+        ]
+      },
+      {
+        "name": "observe unintended backup usage",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters AD-PRIMARY",
+          "clear access-list counters AD-SECONDARY"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The destination still responds, despite the changed request path."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists AD-PRIMARY",
+            "pattern": "permit icmp",
+            "expectation": "Fresh request counters identify AD-PRIMARY as unused.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists AD-SECONDARY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh request counters identify AD-SECONDARY as used."
+          }
+        ]
+      },
+      {
+        "name": "restore floating preference",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.2 255.255.255.255 198.18.1.2 5",
+          "ip route 192.0.2.2 255.255.255.255 198.18.1.2 250",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)Known via \"ospf 1\".*distance 110.*198\\.18\\.0\\.2",
+            "expectation": "OSPF wins over the intended distance-250 backup."
+          },
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The OSPF adjacency remains FULL.",
+            "attempts": 12
+          }
+        ]
+      },
+      {
+        "name": "observe restored primary path",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters AD-PRIMARY",
+          "clear access-list counters AD-SECONDARY"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The destination still responds, despite the changed request path."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists AD-PRIMARY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh request counters identify AD-PRIMARY as used."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists AD-SECONDARY",
+            "pattern": "permit icmp",
+            "expectation": "Fresh request counters identify AD-SECONDARY as unused.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/041-summarization-and-filtering-faults.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip ospf neighbor",
+        "pattern": "203\\.0\\.113\\.2\\s+\\d+\\s+FULL",
+        "expectation": "The backbone adjacency is FULL.",
+        "attempts": 12
+      },
+      {
+        "node": "R2",
+        "command": "show ip ospf neighbor",
+        "pattern": "203\\.0\\.113\\.3\\s+\\d+\\s+FULL",
+        "expectation": "The component-area adjacency is FULL.",
+        "attempts": 12
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.1",
+        "pattern": "(?s)Routing entry for 192\\.0\\.2\\.0/24.*Known via \"ospf 1\"",
+        "expectation": "R1 selects the actual /24 aggregate, not an individual host route.",
+        "attempts": 12
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The documented component responds."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The documented component responds."
+      },
+      {
+        "node": "R2",
+        "command": "show ip route 192.0.2.99",
+        "pattern": "Null0",
+        "expectation": "The ABR has a discard route for the covering aggregate."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.99 source Loopback0 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "The documented component is unreachable."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "suppress the component range",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "area 10 range 192.0.2.0 255.255.255.0 not-advertise",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The suppressed component range is absent from the backbone RIB.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "203\\.0\\.113\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The backbone adjacency is FULL.",
+            "attempts": 12
+          },
+          {
+            "node": "R2",
+            "command": "show ip ospf neighbor",
+            "pattern": "203\\.0\\.113\\.3\\s+\\d+\\s+FULL",
+            "expectation": "The component-area adjacency is FULL.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The documented component is unreachable."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The documented component is unreachable."
+          }
+        ]
+      },
+      {
+        "name": "restore range advertisement",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "area 10 range 192.0.2.0 255.255.255.0 advertise",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)Routing entry for 192\\.0\\.2\\.0/24.*Known via \"ospf 1\"",
+            "expectation": "R1 selects the actual /24 aggregate, not an individual host route.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The documented component responds."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The documented component responds."
+          }
+        ]
+      }
+    ]
   }
 }

@@ -6261,6 +6261,482 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-26T18:46:57Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/042-wrong-administrative-distance.yaml",
+      "sha256": "9bb4ae347756b6a3cf38f3127a816117b691815e4feef4902c2964f49c70a036",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T18:51:31Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The OSPF adjacency remains FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:39    198.18.0.2      Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "OSPF wins over the intended distance-250 backup.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"ospf 1\", distance 110, metric 11, type intra area\n  Last update from 198.18.0.2 on Ethernet0/0, 00:00:03 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 192.0.2.2, 00:00:03 ago, via Ethernet0/0\n      Route metric is 11, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The destination still responds, despite the changed request path.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "observe preferred OSPF path",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters AD-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters AD-PRIMARY\nR2#"
+        },
+        {
+          "phase": "observe preferred OSPF path",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters AD-SECONDARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters AD-SECONDARY\nR2#"
+        },
+        {
+          "phase": "observe preferred OSPF path",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The destination still responds, despite the changed request path.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "observe preferred OSPF path",
+          "node": "R2",
+          "command": "show access-lists AD-PRIMARY",
+          "expectation": "Fresh request counters identify AD-PRIMARY as used.",
+          "passed": true,
+          "output": "\nR2#show access-lists AD-PRIMARY\nExtended IP access list AD-PRIMARY\n    10 permit icmp host 192.0.2.1 host 192.0.2.2 (6 matches)\n    20 permit ip any any (1 match)\nR2#"
+        },
+        {
+          "phase": "observe preferred OSPF path",
+          "node": "R2",
+          "command": "show access-lists AD-SECONDARY",
+          "expectation": "Fresh request counters identify AD-SECONDARY as unused.",
+          "passed": true,
+          "output": "\nR2#show access-lists AD-SECONDARY\nExtended IP access list AD-SECONDARY\n    10 permit icmp host 192.0.2.1 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "incorrect static preference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "incorrect static preference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no ip route 192.0.2.2 255.255.255.255 198.18.1.2 250",
+          "passed": true,
+          "output": "\nR1(config)#no ip route 192.0.2.2 255.255.255.255 198.18.1.2 250\nR1(config)#"
+        },
+        {
+          "phase": "incorrect static preference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip route 192.0.2.2 255.255.255.255 198.18.1.2 5",
+          "passed": true,
+          "output": "\nR1(config)#ip route 192.0.2.2 255.255.255.255 198.18.1.2 5\nR1(config)#"
+        },
+        {
+          "phase": "incorrect static preference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "incorrect static preference",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The incorrect distance-5 static route preempts OSPF.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 5, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.1.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "incorrect static preference",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The OSPF adjacency remains FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:37    198.18.0.2      Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "observe unintended backup usage",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters AD-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters AD-PRIMARY\nR2#"
+        },
+        {
+          "phase": "observe unintended backup usage",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters AD-SECONDARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters AD-SECONDARY\nR2#"
+        },
+        {
+          "phase": "observe unintended backup usage",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The destination still responds, despite the changed request path.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "observe unintended backup usage",
+          "node": "R2",
+          "command": "show access-lists AD-PRIMARY",
+          "expectation": "Fresh request counters identify AD-PRIMARY as unused.",
+          "passed": true,
+          "output": "\nR2#show access-lists AD-PRIMARY\nExtended IP access list AD-PRIMARY\n    10 permit icmp host 192.0.2.1 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe unintended backup usage",
+          "node": "R2",
+          "command": "show access-lists AD-SECONDARY",
+          "expectation": "Fresh request counters identify AD-SECONDARY as used.",
+          "passed": true,
+          "output": "\nR2#show access-lists AD-SECONDARY\nExtended IP access list AD-SECONDARY\n    10 permit icmp host 192.0.2.1 host 192.0.2.2 (6 matches)\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "restore floating preference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore floating preference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no ip route 192.0.2.2 255.255.255.255 198.18.1.2 5",
+          "passed": true,
+          "output": "\nR1(config)#no ip route 192.0.2.2 255.255.255.255 198.18.1.2 5\nR1(config)#"
+        },
+        {
+          "phase": "restore floating preference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip route 192.0.2.2 255.255.255.255 198.18.1.2 250",
+          "passed": true,
+          "output": "\nR1(config)#ip route 192.0.2.2 255.255.255.255 198.18.1.2 250\nR1(config)#"
+        },
+        {
+          "phase": "restore floating preference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "restore floating preference",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "OSPF wins over the intended distance-250 backup.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"ospf 1\", distance 110, metric 11, type intra area\n  Last update from 198.18.0.2 on Ethernet0/0, 00:00:02 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 192.0.2.2, 00:00:02 ago, via Ethernet0/0\n      Route metric is 11, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "restore floating preference",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The OSPF adjacency remains FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:37    198.18.0.2      Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "observe restored primary path",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters AD-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters AD-PRIMARY\nR2#"
+        },
+        {
+          "phase": "observe restored primary path",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters AD-SECONDARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters AD-SECONDARY\nR2#"
+        },
+        {
+          "phase": "observe restored primary path",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The destination still responds, despite the changed request path.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "observe restored primary path",
+          "node": "R2",
+          "command": "show access-lists AD-PRIMARY",
+          "expectation": "Fresh request counters identify AD-PRIMARY as used.",
+          "passed": true,
+          "output": "\nR2#show access-lists AD-PRIMARY\nExtended IP access list AD-PRIMARY\n    10 permit icmp host 192.0.2.1 host 192.0.2.2 (6 matches)\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "observe restored primary path",
+          "node": "R2",
+          "command": "show access-lists AD-SECONDARY",
+          "expectation": "Fresh request counters identify AD-SECONDARY as unused.",
+          "passed": true,
+          "output": "\nR2#show access-lists AD-SECONDARY\nExtended IP access list AD-SECONDARY\n    10 permit icmp host 192.0.2.1 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        }
+      ],
+      "startup_states": {
+        "R1": "STARTED",
+        "R2": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "3230d1a4abfce9f107e50d57d1df562ab98df9754602db3d7f2e72dae83b5bca",
+      "console_boot_fallback": [
+        "R1",
+        "R2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T18:52:47Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/041-summarization-and-filtering-faults.yaml",
+      "sha256": "bcae07f4d7813c0d64a66f0335b8aa1b81e75ac914f85d5266ffb2c1e8250fd0",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T18:54:58Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The backbone adjacency is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n203.0.113.2       1   FULL/DR         00:00:39    198.18.12.2     Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip ospf neighbor",
+          "expectation": "The component-area adjacency is FULL.",
+          "passed": true,
+          "output": "\nR2#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n203.0.113.1       1   FULL/BDR        00:00:38    198.18.12.1     Ethernet0/0\n203.0.113.3       1   FULL/DR         00:00:37    198.18.23.2     Ethernet0/1\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "R1 selects the actual /24 aggregate, not an individual host route.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.1\nRouting entry for 192.0.2.0/24\n  Known via \"ospf 1\", distance 110, metric 21, type inter area\n  Last update from 198.18.12.2 on Ethernet0/0, 00:00:05 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 203.0.113.2, 00:00:05 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "The documented component responds.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The documented component responds.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip route 192.0.2.99",
+          "expectation": "The ABR has a discard route for the covering aggregate.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.99\nRouting entry for 192.0.2.0/24\n  Known via \"ospf 1\", distance 110, metric 11, type intra area\n  Routing Descriptor Blocks:\n  * directly connected, via Null0\n      Route metric is 11, traffic share count is 1\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.99 source Loopback0 repeat 3",
+          "expectation": "The documented component is unreachable.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.99 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.99, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \nU.U\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "suppress the component range",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "suppress the component range",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR2(config)#router ospf 1\nR2(config-router)#"
+        },
+        {
+          "phase": "suppress the component range",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "area 10 range 192.0.2.0 255.255.255.0 not-advertise",
+          "passed": true,
+          "output": "\nR2(config-router)#area 10 range 192.0.2.0 255.255.255.0 not-advertise\nR2(config-router)#"
+        },
+        {
+          "phase": "suppress the component range",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router)#end\nR2#"
+        },
+        {
+          "phase": "suppress the component range",
+          "node": "R1",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The suppressed component range is absent from the backbone RIB.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.1\n% Network not in table\nR1#"
+        },
+        {
+          "phase": "suppress the component range",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The backbone adjacency is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n203.0.113.2       1   FULL/DR         00:00:38    198.18.12.2     Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "suppress the component range",
+          "node": "R2",
+          "command": "show ip ospf neighbor",
+          "expectation": "The component-area adjacency is FULL.",
+          "passed": true,
+          "output": "\nR2#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n203.0.113.1       1   FULL/BDR        00:00:38    198.18.12.1     Ethernet0/0\n203.0.113.3       1   FULL/DR         00:00:37    198.18.23.2     Ethernet0/1\nR2#"
+        },
+        {
+          "phase": "suppress the component range",
+          "node": "R1",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "The documented component is unreachable.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "suppress the component range",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The documented component is unreachable.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "restore range advertisement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore range advertisement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR2(config)#router ospf 1\nR2(config-router)#"
+        },
+        {
+          "phase": "restore range advertisement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "area 10 range 192.0.2.0 255.255.255.0 advertise",
+          "passed": true,
+          "output": "\nR2(config-router)#area 10 range 192.0.2.0 255.255.255.0 advertise\nR2(config-router)#"
+        },
+        {
+          "phase": "restore range advertisement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router)#end\nR2#"
+        },
+        {
+          "phase": "restore range advertisement",
+          "node": "R1",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "R1 selects the actual /24 aggregate, not an individual host route.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.1\nRouting entry for 192.0.2.0/24\n  Known via \"ospf 1\", distance 110, metric 21, type inter area\n  Last update from 198.18.12.2 on Ethernet0/0, 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 203.0.113.2, 00:00:01 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "restore range advertisement",
+          "node": "R1",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "The documented component responds.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "restore range advertisement",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The documented component responds.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        }
+      ],
+      "plan_sha256": "57355e655f720186235a6f853fe7d6ae82a75dda1e2a0191ca576e04885d86d2",
+      "startup_states": {
+        "R1": "STARTED",
+        "R2": "BOOTED",
+        "R3": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [
+        "R1",
+        "R3"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T18:56:20Z"
     }
   ]
 }
