@@ -148,46 +148,6 @@
       "completed_utc": "2026-10-24T18:50:00Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/014-ospf-summarization-filtering.yaml",
-      "sha256": "1dea72ff60f1fe030edd71a39bdd00c7daf7a77b32d68434a465237a927f66c0",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:01Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:01Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/016-ospf-eigrp-redistribution.yaml",
-      "sha256": "a8b24fc6f2e90155394bf9ca8b8b267f039366fa1ff4d34bd4d1e246d0da8d70",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:01Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:01Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/017-ebgp-ibgp-basics.yaml",
-      "sha256": "872841b2f51e1fec2232ddb0baee61f971cc0b809fd1b988d0b6823cef6c3574",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:01Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:01Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/018-bgp-path-selection.yaml",
-      "sha256": "0032f7e2ca0592be838d1e9bd276eed26b1380ba9ac8aa7062688db8ffe871e7",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:01Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:02Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/022-ipv6-first-hop-and-routing.yaml",
       "sha256": "7e99846008ad88ecda2b4f6c2cbeecbd924ec80aa64e9ad72508f37834296913",
       "cml_version": "2.10.1+build.21",
@@ -300,16 +260,6 @@
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/045-dual-isp-bgp-edge.yaml",
       "sha256": "6fbd30cbcd7cdc45164fece5c6a230c62e8b56cc01f8a63a57da5c2339aa9c79",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:05Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:05Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml",
-      "sha256": "e6316644a34b29686b98f02c25f6c70ec5f6aa3b0af1b243f4ff85bc2015c232",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-24T18:50:05Z",
       "checks": [],
@@ -1628,16 +1578,6 @@
       "completed_utc": "2026-10-25T15:56:09Z"
     },
     {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/030-aaa-radius-tacacs.yaml",
-      "sha256": "f080f1ca667b74a0de812392cb1651c3fff55e2be62dd7c6ba4cda3d38e01f40",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:09Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:09Z"
-    },
-    {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/031-acl-uRPF.yaml",
       "sha256": "36b32e404aac2f049e341044e77cecae085bc58c58be83b0a045fd0da97879b9",
       "cml_version": "2.10.1+build.21",
@@ -2336,6 +2276,66 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-26T20:41:54Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml",
+      "sha256": "4af983a172a6c493e396efa25858164603208abe24b1c65a0e47d40bb5d4b318",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T21:18:51Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T21:18:51Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/030-aaa-radius-tacacs.yaml",
+      "sha256": "aeacec3473e8c130724cd2636eb402a667f1ebf12956c17da29a5bdc40743f11",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T21:18:53Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T21:18:53Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/014-ospf-summarization-filtering.yaml",
+      "sha256": "cd3cf5d21d29e5465e1df691480ca7ce8efba0960270a496795e4b93782e0217",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T21:18:55Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T21:18:55Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/016-ospf-eigrp-redistribution.yaml",
+      "sha256": "5657bac1cb259fc05be563498521ceb19a8992e22e7bd8c52e8a5cf3583bc9da",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T21:18:57Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T21:18:57Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/017-ebgp-ibgp-basics.yaml",
+      "sha256": "22f475970a7bca157c7d73d95cd759206f5b6acc6aa38be421a49f84d7a172ab",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T21:18:59Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T21:18:59Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/018-bgp-path-selection.yaml",
+      "sha256": "757c815de51ce2e68462ba5cf653fb7be927f417e778abbe1c0c8d30e7bb4ea4",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T21:19:01Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T21:19:01Z"
     }
   ]
 }

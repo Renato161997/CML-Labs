@@ -410,5 +410,41 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-701-027-syslog-siem-correlation.md",
     "example_profile": "native-siem"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 60,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-029-aaa-radius-tacacs.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/030-aaa-radius-tacacs.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-030-aaa-radius-tacacs.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/014-ospf-summarization-filtering.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 55,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-014-ospf-summarization-filtering.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/016-ospf-eigrp-redistribution.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 60,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-016-ospf-eigrp-redistribution.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/017-ebgp-ibgp-basics.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 55,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-017-ebgp-ibgp-basics.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/018-bgp-path-selection.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 70,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-018-bgp-path-selection.md"
   }
 }

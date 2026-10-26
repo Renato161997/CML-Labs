@@ -1,125 +1,227 @@
 lab:
-  title: AAA RADIUS TACACS
-  description: CCNP-ENCOR CML lab generated from blueprint coverage.
-  notes: 'CCNP-ENCOR blueprint lab: AAA RADIUS TACACS
+  title: ENCOR 029 - RADIUS and TACACS+ authentication
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# ENCOR 029 - RADIUS and TACACS+ authentication
 
 
-    Topics:
-
-    - AAA
-
-    - RADIUS
-
-    - TACACS+
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Suggested tasks:
-
-    1. Configure AAA method lists
-
-    2. Separate authentication and authorization
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-401-029-aaa-radius-tacacs.md
 
 
-    Suggested verification:
+    The IOL-XE NAS sends real authentication exchanges to separate native FreeRADIUS and tac_plus services.
+    Fixed lab-only users and shared keys are public teaching fixtures. FreeRADIUS accepts only the configured
+    NAS source address and requires Message-Authenticator; password logging is disabled. The router has
+    a deliberately unauthenticated CML serial console with privilege15 so an authentication fault cannot
+    lock out the exercise owner. Acceptance covers server authentication and rejection, not an interactive
+    SSH login, command authorization, accounting or a commercial ISE integration. The failure changes
+    one shared-key relationship. A negative result alone does not identify a network or credential cause;
+    the preceding network and credential controls and the independent TACACS+ success narrow this controlled
+    experiment.
 
-    - show ip interface brief
 
-    - show interfaces status
+    Objectives:
 
-    - show ip route
+    - Compare actual RADIUS and TACACS+ authentication from the same NAS.
 
-    - show running-config | section router
+    - Reject incorrect user passwords and recheck the working credentials.
 
-    - ping between the lab endpoints'
+    - Break only the RADIUS shared key while preserving TACACS+, then recover.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
-  node_definition: iosv
-  x: -200
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR AAA RADIUS TACACS ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNP-ENCOR AAA RADIUS TACACS\n ip address 10.10.10.1 255.255.255.0\n\
-      \ no shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.0.1 255.255.255.252\n no shutdown\n exit\ninterface Ethernet0/1\n\
+      \ ip address 198.18.1.1 255.255.255.252\n no shutdown\n exit\naaa new-model\naaa authentication\
+      \ login CONSOLE none\nline console 0\n login authentication CONSOLE\n privilege level 15\n exit\n\
+      ip radius source-interface Ethernet0/0\nip tacacs source-interface Ethernet0/1\nradius server LAB-RADIUS\n\
+      \ address ipv4 198.18.0.2 auth-port 1812 acct-port 1813\n timeout 2\n retransmit 0\n key 0 Cml-Radius-Lab-Only-983\n\
+      \ exit\ntacacs server LAB-TACACS\n address ipv4 198.18.1.2\n timeout 2\n key 0 Cml-Tacacs-Lab-Only-983\n\
+      \ exit\naaa group server radius RAD-GROUP\n server name LAB-RADIUS\n send-ma\n validate-ma\n exit\n\
+      aaa group server tacacs+ TAC-GROUP\n server name LAB-TACACS\n exit\nend\n"
+  cpu_limit: 50
   priority: 100
-  tags: []
-- id: n1
-  label: SW1
-  node_definition: iosvl2
   x: 0
   y: 0
-  configuration:
-  - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR AAA RADIUS TACACS ^C\nvlan\
-      \ 10\n name USERS\nvlan 20\n name SERVICES\nvlan 99\n name MGMT\ninterface range GigabitEthernet0/1-3\n\
-      \ switchport mode access\n spanning-tree portfast\nend"
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 99
   tags: []
-- id: n2
-  label: DEVBOX
-  node_definition: desktop
-  x: 200
-  y: 0
+- id: n1
+  label: RADIUS
+  node_definition: radius
+  configuration:
+  - name: radiusd.conf
+    content: "# Basic freeRADIUS onfiguration\n\nprefix = /usr\nexec_prefix = /usr\nsysconfdir = /etc\n\
+      localstatedir = /var\nsbindir = ${exec_prefix}/sbin\nlogdir = /var/log/freeradius\nraddbdir = /etc/freeradius/3.0\n\
+      radacctdir = ${logdir}/radacct\nname = freeradius\nconfdir = ${raddbdir}\nmodconfdir = ${confdir}/mods-config\n\
+      certdir = ${confdir}/certs\ncadir   = ${confdir}/certs\nrun_dir = ${localstatedir}/run/${name}\n\
+      db_dir = ${raddbdir}\nlibdir = /usr/lib/freeradius\npidfile = ${run_dir}/${name}.pid\nmax_request_time\
+      \ = 30\ncleanup_delay = 5\nmax_requests = 16384\nhostname_lookups = no\n\nlog {\n    destination\
+      \ = syslog\n    colourise = no\n    file = ${logdir}/radius.log\n    syslog_facility = daemon\n\
+      \    stripped_names = no\n    auth = yes\n    auth_reject = yes\n    auth_badpass = no\n    auth_goodpass\
+      \ = no\n    msg_denied = \"You are already logged in - access denied\"\n}\n\ncheckrad = ${sbindir}/checkrad\n\
+      \n#ENV {\n#}\n\nsecurity {\n    user = freerad\n    group = freerad\n    allow_core_dumps = no\n\
+      \    max_attributes = 200\n    reject_delay = 1\n    status_server = yes\n}\n\nproxy_requests =\
+      \ no\n#$INCLUDE proxy.conf\n\n#$INCLUDE clients.conf\nclient all-devices {\n    ipaddr = 198.18.0.1/32\n\
+      \    secret = Cml-Radius-Lab-Only-983\n    require_message_authenticator = yes\n    nas_type = cisco\n\
+      }\n\nthread pool {\n    start_servers = 5\n    max_servers = 32\n    min_spare_servers = 3\n   \
+      \ max_spare_servers = 10\n    max_requests_per_server = 0\n    auto_limit_acct = no\n}\n\nmodules\
+      \ {\n    $INCLUDE mods-enabled/\n}\n\n#instantiate {\n#}\n\npolicy {\n    $INCLUDE policy.d/\n}\n\
+      \n$INCLUDE sites-enabled/"
+  - name: users
+    content: 'labuser Cleartext-Password := "Cml-User-Only-983"
+
+      '
+  - name: environment
+    content: 'ARGS=-f -lstdout
+
+      '
+  - name: boot.sh
+    content: '#!/bin/bash
+
+      set -eu
+
+      ip address add 198.18.0.2/30 dev eth1
+
+      ip link set eth1 up
+
+      ip route add 192.0.2.1/32 via 198.18.0.1 dev eth1
+
+      mkdir -p /lab
+
+      echo READY >/dev/console
+
+      exit 0
+
+      '
+  - name: mounts
+    content: '# Can map a volume with radius server data into the container
+
+      # it. By default, only type=volume is allowed, see
+
+      # /etc/default/docker-shim.env
+
+      # Note: Use source=<name> below; docker-shim scopes volumes to the lab
+
+      # by prefixing the name with the lab ID. Docker creates the volume on
+
+      # first use if it does not already exist. Only type, source, target,
+
+      # readonly, and tmpfs-* options are accepted in this file.
+
+      #
+
+      # type=volume,source=radiusdata,target=/var/somedir'
+  cpu_limit: 50
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
-  - id: i0
+  - id: i1
     label: eth0
     type: physical
     slot: 0
-  configuration: []
+  - id: i2
+    label: eth1
+    type: physical
+    slot: 1
+  - id: i3
+    label: eth2
+    type: physical
+    slot: 2
+  - id: i4
+    label: eth3
+    type: physical
+    slot: 3
+  tags: []
+- id: n2
+  label: TACACS
+  node_definition: tacplus
+  configuration:
+  - name: tac_plus.conf
+    content: "key = \"Cml-Tacacs-Lab-Only-983\"\naccounting file = /var/log/tacplus-acct.log\ngroup =\
+      \ netadmin {\n  default service = permit\n  service = exec { priv-lvl = 15 }\n}\nuser = labuser\
+      \ {\n  login = cleartext \"Cml-User-Only-983\"\n  member = netadmin\n}\n"
+  - name: boot.sh
+    content: '#!/bin/bash
+
+      set -eu
+
+      ip address add 198.18.1.2/30 dev eth1
+
+      ip link set eth1 up
+
+      mkdir -p /lab
+
+      echo READY >/dev/console
+
+      exit 0
+
+      '
+  cpu_limit: 50
   priority: 98
+  x: 520
+  y: 0
+  interfaces:
+  - id: i1
+    label: eth0
+    type: physical
+    slot: 0
+  - id: i2
+    label: eth1
+    type: physical
+    slot: 1
+  - id: i3
+    label: eth2
+    type: physical
+    slot: 2
+  - id: i4
+    label: eth3
+    type: physical
+    slot: 3
   tags: []
 links:
 - id: l0
   n1: n0
   i1: i1
   n2: n1
-  i2: i1
+  i2: i2
 - id: l1
-  n1: n1
+  n1: n0
   i1: i2
   n2: n2
-  i2: i0
+  i2: i2
 annotations: []
 smart_annotations: []

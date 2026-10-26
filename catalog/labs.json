@@ -1446,25 +1446,26 @@
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/030-aaa-radius-tacacs.yaml",
-      "title": "AAA RADIUS TACACS",
+      "title": "ENARSI 030 - AAA NAS source troubleshooting",
       "track": "300-410",
       "topic": "infra-security",
       "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv"
+        "iol-xe",
+        "radius",
+        "tacplus"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 65,
+      "workbook": "docs/workbooks/300-410-030-aaa-radius-tacacs.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "f080f1ca667b74a0de812392cb1651c3fff55e2be62dd7c6ba4cda3d38e01f40"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T21:10:50Z",
+      "sha256": "aeacec3473e8c130724cd2636eb402a667f1ebf12956c17da29a5bdc40743f11"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/031-acl-uRPF.yaml",
@@ -2482,19 +2483,19 @@
       "topic": "infrastructure",
       "nodes": 3,
       "node_types": [
-        "iosv"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 55,
+      "workbook": "docs/workbooks/350-401-014-ospf-summarization-filtering.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "1dea72ff60f1fe030edd71a39bdd00c7daf7a77b32d68434a465237a927f66c0"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T21:11:15Z",
+      "sha256": "cd3cf5d21d29e5465e1df691480ca7ce8efba0960270a496795e4b93782e0217"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/015-eigrp-named-mode.yaml",
@@ -2524,19 +2525,19 @@
       "topic": "infrastructure",
       "nodes": 3,
       "node_types": [
-        "iosv"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 60,
+      "workbook": "docs/workbooks/350-401-016-ospf-eigrp-redistribution.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "a8b24fc6f2e90155394bf9ca8b8b267f039366fa1ff4d34bd4d1e246d0da8d70"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T21:11:46Z",
+      "sha256": "5657bac1cb259fc05be563498521ceb19a8992e22e7bd8c52e8a5cf3583bc9da"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/017-ebgp-ibgp-basics.yaml",
@@ -2545,40 +2546,40 @@
       "topic": "infrastructure",
       "nodes": 3,
       "node_types": [
-        "iosv"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 55,
+      "workbook": "docs/workbooks/350-401-017-ebgp-ibgp-basics.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "872841b2f51e1fec2232ddb0baee61f971cc0b809fd1b988d0b6823cef6c3574"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T21:12:22Z",
+      "sha256": "22f475970a7bca157c7d73d95cd759206f5b6acc6aa38be421a49f84d7a172ab"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/018-bgp-path-selection.yaml",
       "title": "BGP Path Selection",
       "track": "350-401",
       "topic": "infrastructure",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "iosv"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 70,
+      "workbook": "docs/workbooks/350-401-018-bgp-path-selection.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "0032f7e2ca0592be838d1e9bd276eed26b1380ba9ac8aa7062688db8ffe871e7"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T21:22:43Z",
+      "sha256": "757c815de51ce2e68462ba5cf653fb7be927f417e778abbe1c0c8d30e7bb4ea4"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/019-multilayer-switching-svi-routing.yaml",
@@ -2917,26 +2918,26 @@
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml",
-      "title": "AAA RADIUS TACACS",
+      "title": "ENCOR 029 - RADIUS and TACACS+ authentication",
       "track": "350-401",
       "topic": "security",
       "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe",
+        "radius",
+        "tacplus"
       ],
-      "nominal_ram_mib": 1792,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 60,
+      "workbook": "docs/workbooks/350-401-029-aaa-radius-tacacs.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "e6316644a34b29686b98f02c25f6c70ec5f6aa3b0af1b243f4ff85bc2015c232"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T21:19:56Z",
+      "sha256": "4af983a172a6c493e396efa25858164603208abe24b1c65a0e47d40bb5d4b318"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/030-8021x-mab-concepts.yaml",

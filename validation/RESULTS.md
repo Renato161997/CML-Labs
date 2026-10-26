@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **68**.
+Import/export passes: **233/233**. Functional passes: **74**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -48,6 +48,7 @@ Import/export passes: **233/233**. Functional passes: **68**.
 | [BGP Filtering Prefix AS Path](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/016-bgp-filtering-prefix-aspath.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 7 | 10 | 2026-10-25T15:52:38Z |
 | [BGP Communities](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/017-bgp-communities.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 7 | 14 | 2026-10-25T16:32:21Z |
 | [BGP Troubleshooting](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/019-bgp-troubleshooting.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 4 | 4 | 2026-10-25T15:57:37Z |
+| [ENARSI 030 - AAA NAS source troubleshooting](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/030-aaa-radius-tacacs.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 14 | 6 | 2026-10-26T21:10:50Z |
 | [EIGRP Classic Named IPv4 IPv6](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/001-eigrp-classic-named-ipv4-ipv6.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 5 | 0 | 2026-10-25T12:42:12Z |
 | [EIGRP Stub Summary Default](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/002-eigrp-stub-summary-default.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 4 | 0 | 2026-10-25T12:42:58Z |
 | [EIGRP Authentication Load Balancing](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/003-eigrp-authentication-load-balancing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 7 | 12 | 2026-10-25T12:43:13Z |
@@ -68,10 +69,15 @@ Import/export passes: **233/233**. Functional passes: **68**.
 | [CEF CAM TCAM RIB FIB](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 21 | 18 | 2026-10-26T19:52:51Z |
 | [Dual Stack Campus](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/012-dual-stack-campus.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 7 | 6 | 2026-10-26T19:19:51Z |
 | [OSPF Network Types](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/013-ospf-network-types.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 11 | 16 | 2026-10-26T19:45:13Z |
+| [OSPF Summarization Filtering](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/014-ospf-summarization-filtering.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 15 | 10 | 2026-10-26T21:11:15Z |
 | [EIGRP Named Mode](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/015-eigrp-named-mode.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 10 | 12 | 2026-10-26T19:41:55Z |
+| [OSPF EIGRP Redistribution](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/016-ospf-eigrp-redistribution.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 10 | 12 | 2026-10-26T21:11:46Z |
+| [eBGP And iBGP Basics](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/017-ebgp-ibgp-basics.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 10 | 10 | 2026-10-26T21:12:22Z |
+| [BGP Path Selection](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/018-bgp-path-selection.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 19 | 35 | 2026-10-26T21:22:43Z |
 | [Multilayer Switching SVI Routing](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/019-multilayer-switching-svi-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 7 | 6 | 2026-10-26T19:20:01Z |
 | [MST RPVST STP Tuning](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/020-mst-rpvst-stp-tuning.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 14 | 18 | 2026-10-26T19:20:19Z |
 | [LACP PAgP EtherChannel](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/021-lacp-pagp-etherchannel.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 8 | 60 | 2026-10-26T19:25:31Z |
+| [ENCOR 029 - RADIUS and TACACS+ authentication](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 13 | 8 | 2026-10-26T21:19:56Z |
 | [GRE Overlay Underlay](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 22 | 16 | 2026-10-26T19:54:02Z |
 | [Syslog SIEM Correlation](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/027-syslog-siem-correlation.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3 | 12 | 19 | 2026-10-26T20:42:59Z |
 | [Webhook Receiver](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:46:46Z |
