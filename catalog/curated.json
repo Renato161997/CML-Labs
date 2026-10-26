@@ -372,5 +372,29 @@
     "duration_minutes": 65,
     "kind": "practice",
     "workbook": "docs/workbooks/350-401-021-lacp-pagp-etherchannel.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/013-ospf-network-types.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 45,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-013-ospf-network-types.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/015-eigrp-named-mode.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-015-eigrp-named-mode.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-008-gre-overlay-underlay.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 60,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-006-cef-cam-tcam-rib-fib.md"
   }
 }

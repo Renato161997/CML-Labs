@@ -20,9 +20,14 @@ PHYSICAL = {
     "desktop": [f"eth{i}" for i in range(4)],
     "alpine": [f"eth{i}" for i in range(4)],
     "ubuntu": [f"ens{i}" for i in range(2, 10)],
+    "csr1000v": [f"GigabitEthernet{i}" for i in range(1, 27)],
 }
+PHYSICAL.update(
+    {kind: [f"eth{i}" for i in range(4)] for kind in ("net-tools", "radius", "syslog", "tacplus")}
+)
 RAM_MIB = {"iosv": 512, "iosvl2": 768, "desktop": 512, "alpine": 512, "ubuntu": 2048}
 RAM_MIB.update({"iol-xe": 1024, "ioll2-xe": 1024})
+RAM_MIB.update({"csr1000v": 3072, "net-tools": 512, "radius": 512, "syslog": 512, "tacplus": 512})
 
 
 class UniqueLoader(yaml.SafeLoader):

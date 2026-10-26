@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **62**.
+Import/export passes: **233/233**. Functional passes: **66**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -64,10 +64,14 @@ Import/export passes: **233/233**. Functional passes: **62**.
 | [Summarization And Filtering Faults](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/041-summarization-and-filtering-faults.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 15 | 8 | 2026-10-26T18:56:20Z |
 | [Wrong Administrative Distance](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/042-wrong-administrative-distance.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 16 | 14 | 2026-10-26T18:52:47Z |
 | [GRE Tunnel Routing](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/020-gre-tunnel-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 6 | 12 | 2026-10-25T12:42:29Z |
+| [CEF CAM TCAM RIB FIB](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 21 | 18 | 2026-10-26T19:52:51Z |
 | [Dual Stack Campus](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/012-dual-stack-campus.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 7 | 6 | 2026-10-26T19:19:51Z |
+| [OSPF Network Types](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/013-ospf-network-types.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 11 | 16 | 2026-10-26T19:45:13Z |
+| [EIGRP Named Mode](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/015-eigrp-named-mode.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 10 | 12 | 2026-10-26T19:41:55Z |
 | [Multilayer Switching SVI Routing](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/019-multilayer-switching-svi-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 7 | 6 | 2026-10-26T19:20:01Z |
 | [MST RPVST STP Tuning](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/020-mst-rpvst-stp-tuning.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 14 | 18 | 2026-10-26T19:20:19Z |
 | [LACP PAgP EtherChannel](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/021-lacp-pagp-etherchannel.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 8 | 60 | 2026-10-26T19:25:31Z |
+| [GRE Overlay Underlay](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 22 | 16 | 2026-10-26T19:54:02Z |
 | [Webhook Receiver](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:46:46Z |
 | [Webhook Receiver Config Validation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/webhooks/035-webhook-receiver-config-validation.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:37:45Z |
 

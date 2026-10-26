@@ -11,6 +11,9 @@ exact image IDs used in the observed run. Vendor images are never distributed he
 | IOL-XE | Ethernet0/0, then Ethernet1/0 | 1024 MiB | Additional routing exercises |
 | IOL-L2 XE | Ethernet0/0, then Ethernet1/0 | 1024 MiB | Available for compatible switching exercises |
 | Ubuntu | ens2 | 2048 MiB | Existing offline application exercises |
+| CSR 1000v | GigabitEthernet1 | 3072 MiB | Full IOS XE console/API prerequisites; check each workbook's live result |
+| net-tools | eth0 management, eth1 first lab data interface | 512 MiB | Native Python, requests, curl and Net-SNMP client tools |
+| RADIUS / TACACS+ / syslog | eth0 management, eth1 first lab data interface | 512 MiB | Dedicated native server definitions; service-specific configurations |
 
 RAM figures are planning defaults, not measured peak consumption. IOL uses a
 container-based implementation rather than a full IOSv VM. It does **not** support
@@ -33,6 +36,11 @@ unverified.
 The harness requires a running node process and checks a privileged, responsive
 console. A `STARTED` API state still needs explicit interactive confirmation; it
 is recorded as observed and is never relabeled `BOOTED`.
+Native server containers must answer `id -u` with zero before the harness assigns
+an identifying shell prompt. This changes only the disposable console's PS1, not
+users or credentials. The SSH and WebSocket console paths have both been checked
+on the native net-tools reference image. Keep native shell acceptance commands
+short: interactive line editing can redraw and corrupt long command echoes.
 First boots can take several minutes. Results count observational assertions
 separately from transition/configuration commands; a successful command echo alone
 does not establish that a protocol converged or that traffic passed.

@@ -4508,5 +4508,592 @@
         ]
       }
     ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/013-ospf-network-types.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip ospf interface Ethernet0/0",
+        "pattern": "Network Type BROADCAST",
+        "expectation": "The active OSPF interface reports BROADCAST."
+      },
+      {
+        "node": "R1",
+        "command": "show ip ospf neighbor",
+        "pattern": "FULL/\\s*(?:DR|BDR)",
+        "expectation": "The adjacency is FULL with the expected network-type role.",
+        "attempts": 12
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "first peer becomes point-to-point",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ip ospf network point-to-point",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf interface Ethernet0/0",
+            "pattern": "Network Type POINT_TO_POINT",
+            "expectation": "The active OSPF interface reports POINT_TO_POINT."
+          }
+        ]
+      },
+      {
+        "name": "second peer becomes point-to-point",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ip ospf network point-to-point",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf interface Ethernet0/0",
+            "pattern": "Network Type POINT_TO_POINT",
+            "expectation": "The active OSPF interface reports POINT_TO_POINT."
+          },
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "FULL/\\s*-",
+            "expectation": "The adjacency is FULL with the expected network-type role.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      },
+      {
+        "name": "first peer returns to broadcast",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ip ospf network broadcast",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf interface Ethernet0/0",
+            "pattern": "Network Type BROADCAST",
+            "expectation": "The active OSPF interface reports BROADCAST."
+          }
+        ]
+      },
+      {
+        "name": "second peer returns to broadcast",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ip ospf network broadcast",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf interface Ethernet0/0",
+            "pattern": "Network Type BROADCAST",
+            "expectation": "The active OSPF interface reports BROADCAST."
+          },
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "FULL/\\s*(?:DR|BDR)",
+            "expectation": "The adjacency is FULL with the expected network-type role.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/015-eigrp-named-mode.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show running-config | section router eigrp",
+        "pattern": "router eigrp CAMPUS",
+        "expectation": "The process uses named-mode configuration."
+      },
+      {
+        "node": "R1",
+        "command": "show ip eigrp neighbors",
+        "pattern": "198\\.18\\.0\\.2",
+        "expectation": "The named IPv4 address family has an actual peer."
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.2",
+        "pattern": "Known via \"eigrp 100\"",
+        "expectation": "EIGRP installs the remote endpoint route."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "transit address-family interface becomes passive",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router eigrp CAMPUS",
+          "address-family ipv4 unicast autonomous-system 100",
+          "af-interface Ethernet0/0",
+          "passive-interface",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip eigrp neighbors",
+            "pattern": "Neighbors.*100",
+            "expectation": "The neighbor table exists but the transit peer has expired.",
+            "absent_pattern": "198\\.18\\.0\\.2",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The endpoint route is actually withdrawn."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "All three probes fail while the route is removed."
+          }
+        ]
+      },
+      {
+        "name": "restore transit hello exchange",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router eigrp CAMPUS",
+          "address-family ipv4 unicast autonomous-system 100",
+          "af-interface Ethernet0/0",
+          "no passive-interface",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip eigrp neighbors",
+            "pattern": "198\\.18\\.0\\.2",
+            "expectation": "The named IPv4 address family has an actual peer."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "Known via \"eigrp 100\"",
+            "expectation": "EIGRP installs the remote endpoint route."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show interfaces Tunnel0",
+        "pattern": "Tunnel protocol/transport GRE/IP",
+        "expectation": "The live tunnel uses GRE over IP."
+      },
+      {
+        "node": "R1",
+        "command": "show ip interface Tunnel0",
+        "pattern": "MTU is 1400 bytes",
+        "expectation": "The active tunnel IP MTU is 1400."
+      },
+      {
+        "node": "R2",
+        "command": "show ip interface Tunnel0",
+        "pattern": "MTU is 1400 bytes",
+        "expectation": "The active tunnel IP MTU is 1400."
+      },
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 size 1401 df-bit repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The same-sized DF request succeeds on the direct underlay."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 size 1400 df-bit repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The 1400-byte DF request crosses the configured tunnel MTU."
+      },
+      {
+        "node": "R2",
+        "command": "ping 192.0.2.1 source Loopback0 size 1400 df-bit repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The 1400-byte DF request crosses the configured tunnel MTU."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 size 1401 df-bit repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "The 1401-byte DF request is larger than the configured tunnel IP MTU."
+      },
+      {
+        "node": "R2",
+        "command": "ping 192.0.2.1 source Loopback0 size 1401 df-bit repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "The 1401-byte DF request is larger than the configured tunnel IP MTU."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "increase first tunnel MTU",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Tunnel0",
+          "ip mtu 1450",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip interface Tunnel0",
+            "pattern": "MTU is 1450 bytes",
+            "expectation": "The active tunnel IP MTU is 1450."
+          }
+        ]
+      },
+      {
+        "name": "increase second tunnel MTU",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface Tunnel0",
+          "ip mtu 1450",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip interface Tunnel0",
+            "pattern": "MTU is 1450 bytes",
+            "expectation": "The active tunnel IP MTU is 1450."
+          },
+          {
+            "node": "R2",
+            "command": "show ip interface Tunnel0",
+            "pattern": "MTU is 1450 bytes",
+            "expectation": "The active tunnel IP MTU is 1450."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 size 1401 df-bit repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The same-sized DF request succeeds on the direct underlay."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 size 1401 df-bit repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The 1401-byte DF request crosses the configured tunnel MTU."
+          },
+          {
+            "node": "R2",
+            "command": "ping 192.0.2.1 source Loopback0 size 1401 df-bit repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The 1401-byte DF request crosses the configured tunnel MTU."
+          }
+        ]
+      },
+      {
+        "name": "restore first tunnel MTU",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Tunnel0",
+          "ip mtu 1400",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip interface Tunnel0",
+            "pattern": "MTU is 1400 bytes",
+            "expectation": "The active tunnel IP MTU is 1400."
+          }
+        ]
+      },
+      {
+        "name": "restore second tunnel MTU",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface Tunnel0",
+          "ip mtu 1400",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip interface Tunnel0",
+            "pattern": "MTU is 1400 bytes",
+            "expectation": "The active tunnel IP MTU is 1400."
+          },
+          {
+            "node": "R2",
+            "command": "show ip interface Tunnel0",
+            "pattern": "MTU is 1400 bytes",
+            "expectation": "The active tunnel IP MTU is 1400."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 size 1401 df-bit repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The same-sized DF request succeeds on the direct underlay."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 size 1400 df-bit repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The 1400-byte DF request crosses the configured tunnel MTU."
+          },
+          {
+            "node": "R2",
+            "command": "ping 192.0.2.1 source Loopback0 size 1400 df-bit repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The 1400-byte DF request crosses the configured tunnel MTU."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 size 1401 df-bit repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The 1401-byte DF request is larger than the configured tunnel IP MTU."
+          },
+          {
+            "node": "R2",
+            "command": "ping 192.0.2.1 source Loopback0 size 1401 df-bit repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The 1401-byte DF request is larger than the configured tunnel IP MTU."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.2",
+        "pattern": "Known via \"static\"",
+        "expectation": "The RIB contains the endpoint static route."
+      },
+      {
+        "node": "R1",
+        "command": "show ip cef 192.0.2.2 detail",
+        "pattern": "(?s)192\\.0\\.2\\.2/32,.*recursive via 198\\.18\\.0\\.2\\s+attached to Ethernet0/0",
+        "expectation": "CEF resolves the expected next hop and egress interface."
+      },
+      {
+        "node": "SW",
+        "command": "show mac address-table dynamic",
+        "pattern": "(?s)(?=.*10\\s+\\S+\\s+DYNAMIC\\s+Et0/0)(?=.*10\\s+\\S+\\s+DYNAMIC\\s+Et0/1)",
+        "expectation": "The switch has learned both endpoint MACs on VLAN10."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw only the RIB route",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.2 255.255.255.255 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The destination is absent from the RIB."
+          },
+          {
+            "node": "R1",
+            "command": "show ip cef 192.0.2.2 detail",
+            "pattern": "no route|drop|not found",
+            "expectation": "CEF has no usable destination forwarding entry."
+          },
+          {
+            "node": "SW",
+            "command": "show mac address-table dynamic",
+            "pattern": "(?s)(?=.*10\\s+\\S+\\s+DYNAMIC\\s+Et0/0)(?=.*10\\s+\\S+\\s+DYNAMIC\\s+Et0/1)",
+            "expectation": "The switch has learned both endpoint MACs on VLAN10."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "All three probes fail while the route is removed."
+          }
+        ]
+      },
+      {
+        "name": "restore the endpoint route",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip route 192.0.2.2 255.255.255.255 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "Known via \"static\"",
+            "expectation": "The RIB contains the endpoint static route."
+          },
+          {
+            "node": "R1",
+            "command": "show ip cef 192.0.2.2 detail",
+            "pattern": "(?s)192\\.0\\.2\\.2/32,.*recursive via 198\\.18\\.0\\.2\\s+attached to Ethernet0/0",
+            "expectation": "CEF resolves the expected next hop and egress interface."
+          },
+          {
+            "node": "SW",
+            "command": "show mac address-table dynamic",
+            "pattern": "(?s)(?=.*10\\s+\\S+\\s+DYNAMIC\\s+Et0/0)(?=.*10\\s+\\S+\\s+DYNAMIC\\s+Et0/1)",
+            "expectation": "The switch has learned both endpoint MACs on VLAN10."
+          }
+        ]
+      },
+      {
+        "name": "filter endpoint ICMP on receive",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended ENDPOINT-FILTER",
+          "deny icmp host 192.0.2.1 host 192.0.2.2",
+          "permit ip any any",
+          "exit",
+          "interface Ethernet0/0",
+          "ip access-group ENDPOINT-FILTER in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "All three probes are blocked while the RIB, CEF and CAM remain healthy."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "Known via \"static\"",
+            "expectation": "The RIB contains the endpoint static route."
+          },
+          {
+            "node": "R1",
+            "command": "show ip cef 192.0.2.2 detail",
+            "pattern": "(?s)192\\.0\\.2\\.2/32,.*recursive via 198\\.18\\.0\\.2\\s+attached to Ethernet0/0",
+            "expectation": "CEF resolves the expected next hop and egress interface."
+          },
+          {
+            "node": "SW",
+            "command": "show mac address-table dynamic",
+            "pattern": "(?s)(?=.*10\\s+\\S+\\s+DYNAMIC\\s+Et0/0)(?=.*10\\s+\\S+\\s+DYNAMIC\\s+Et0/1)",
+            "expectation": "The switch has learned both endpoint MACs on VLAN10."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists ENDPOINT-FILTER",
+            "pattern": "deny icmp.*\\([1-9][0-9]* match",
+            "expectation": "The classifier counts the actual dropped probes."
+          }
+        ]
+      },
+      {
+        "name": "restore unfiltered forwarding",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no ip access-group ENDPOINT-FILTER in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three replies."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "Known via \"static\"",
+            "expectation": "The RIB contains the endpoint static route."
+          },
+          {
+            "node": "R1",
+            "command": "show ip cef 192.0.2.2 detail",
+            "pattern": "(?s)192\\.0\\.2\\.2/32,.*recursive via 198\\.18\\.0\\.2\\s+attached to Ethernet0/0",
+            "expectation": "CEF resolves the expected next hop and egress interface."
+          },
+          {
+            "node": "SW",
+            "command": "show mac address-table dynamic",
+            "pattern": "(?s)(?=.*10\\s+\\S+\\s+DYNAMIC\\s+Et0/0)(?=.*10\\s+\\S+\\s+DYNAMIC\\s+Et0/1)",
+            "expectation": "The switch has learned both endpoint MACs on VLAN10."
+          }
+        ]
+      }
+    ]
   }
 }

@@ -58,16 +58,6 @@
       "completed_utc": "2026-10-24T18:49:58Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml",
-      "sha256": "8d061335fea75bbcc31d29eca2a49a8060d9a29ebaabfc2cb29c8e597b754789",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:49:58Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:49:58Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/assessment/049-encor-practical-checkpoint.yaml",
       "sha256": "72ffceb58e3e614f6d0f1a554bd1449573742475a733fc8a68f2abf704bfdd43",
       "cml_version": "2.10.1+build.21",
@@ -158,28 +148,8 @@
       "completed_utc": "2026-10-24T18:50:00Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/013-ospf-network-types.yaml",
-      "sha256": "78f75151cb0a3c0689fca680e215609ae23baf86e40e1b7b49fcba509af9ddb1",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:00Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:01Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/014-ospf-summarization-filtering.yaml",
       "sha256": "1dea72ff60f1fe030edd71a39bdd00c7daf7a77b32d68434a465237a927f66c0",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:01Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:01Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/015-eigrp-named-mode.yaml",
-      "sha256": "d1eb8e1167500e3c5cbf0798a43d9beef589e01477a510e85fdf3ee0202c5192",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-24T18:50:01Z",
       "checks": [],
@@ -430,16 +400,6 @@
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/007-vrf-lite-route-leaking.yaml",
       "sha256": "2bf493f8ea094b785b2d9eb063d59ea9a9a5213ed01190735a014fda6c518170",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:08Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:08Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml",
-      "sha256": "f2e0ea62ef8e75610f702f5440f421377599740f9ea8dcb1f4b5db7b067d318c",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-24T18:50:08Z",
       "checks": [],
@@ -2336,6 +2296,46 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-26T19:24:18Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/013-ospf-network-types.yaml",
+      "sha256": "8a0a2cb9daf4a0b5fc7f6d63459208daae9cf985392ca06145c1b101d0556111",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T19:52:53Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T19:52:53Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/015-eigrp-named-mode.yaml",
+      "sha256": "f597838bb4da123ffb243b6d29158927cfcb0f66887f20c058599392467debee",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T19:52:55Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T19:52:55Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml",
+      "sha256": "f19393f807de2dc123e21e441c9bf613355f728ae548db385695ad53dca1ed1f",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T19:52:56Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T19:52:57Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml",
+      "sha256": "5411cbad60f350fc341baa4f34b115ffaea789a7914c12db804329c35c1b7f0a",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T19:52:58Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T19:52:58Z"
     }
   ]
 }

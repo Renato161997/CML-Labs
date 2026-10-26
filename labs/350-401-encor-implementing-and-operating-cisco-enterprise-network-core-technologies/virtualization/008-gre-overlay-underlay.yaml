@@ -1,149 +1,117 @@
 lab:
   title: GRE Overlay Underlay
-  description: CCNP-ENCOR CML lab generated from blueprint coverage.
-  notes: 'CCNP-ENCOR blueprint lab: GRE Overlay Underlay
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# GRE Overlay Underlay
 
 
-    Topics:
-
-    - GRE
-
-    - overlay
-
-    - underlay
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Suggested tasks:
-
-    1. Build underlay routing
-
-    2. Create tunnel
-
-    3. Route over tunnel
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-401-008-gre-overlay-underlay.md
 
 
-    Suggested verification:
+    Two IOL-XE routers provide an unencrypted GRE overlay with routed loopback endpoints. The tunnel IP
+    MTU is deliberately limited to1400, below the underlying Ethernet limit; a1401-byte DF request provides
+    a precise negative control. Both directions are tested independently because an echo reply need not
+    copy the request DF bit. This measures configured L3 tunnel limits, not an unknown physical path MTU,
+    encryption, wire capture or hardware fragmentation performance.
 
-    - show ip interface brief
 
-    - show interfaces status
+    Objectives:
 
-    - show ip route
+    - Separate direct underlay reachability from GRE overlay endpoint routing.
 
-    - show running-config | section router
+    - Measure both request directions at the configured tunnel IP MTU with DF set.
 
-    - ping between the lab endpoints'
+    - Increase and restore both tunnel MTUs while checking the unchanged underlay.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
-  node_definition: iosv
-  x: -300
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR GRE Overlay Underlay ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNP-ENCOR GRE Overlay Underlay\n ip address 10.0.12.1 255.255.255.252\n\
-      \ no shutdown\ninterface Loopback0\n description CCNP-ENCOR GRE Overlay Underlay\n ip address 10.1.1.1\
-      \ 255.255.255.255\n no shutdown\nend"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.0.1 255.255.255.252\n no shutdown\n exit\ninterface Tunnel0\n\
+      \ ip address 172.16.0.1 255.255.255.252\n ip mtu 1400\n tunnel source Ethernet0/0\n tunnel destination\
+      \ 198.18.0.2\n tunnel mode gre ip\n no shutdown\n exit\nip route 192.0.2.2 255.255.255.255 172.16.0.2\n\
+      end\n"
+  cpu_limit: 50
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
   label: R2
-  node_definition: iosv
-  x: 0
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR GRE Overlay Underlay ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNP-ENCOR GRE Overlay Underlay\n ip address 10.0.12.2 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description CCNP-ENCOR GRE Overlay Underlay\n ip address\
-      \ 10.0.23.1 255.255.255.252\n no shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.2 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.0.2 255.255.255.252\n no shutdown\n exit\ninterface Tunnel0\n\
+      \ ip address 172.16.0.2 255.255.255.252\n ip mtu 1400\n tunnel source Ethernet0/0\n tunnel destination\
+      \ 198.18.0.1\n tunnel mode gre ip\n no shutdown\n exit\nip route 192.0.2.1 255.255.255.255 172.16.0.1\n\
+      end\n"
+  cpu_limit: 50
   priority: 99
-  tags: []
-- id: n2
-  label: R3
-  node_definition: iosv
-  x: 300
-  y: 0
-  configuration:
-  - name: ios_config.txt
-    content: "hostname R3\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR GRE Overlay Underlay ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNP-ENCOR GRE Overlay Underlay\n ip address 10.0.23.2 255.255.255.252\n\
-      \ no shutdown\ninterface Loopback0\n description CCNP-ENCOR GRE Overlay Underlay\n ip address 10.3.3.3\
-      \ 255.255.255.255\n no shutdown\nend"
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 98
   tags: []
 links:
 - id: l0
   n1: n0
   i1: i1
   n2: n1
-  i2: i1
-- id: l1
-  n1: n1
-  i1: i2
-  n2: n2
   i2: i1
 annotations: []
 smart_annotations: []
