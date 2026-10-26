@@ -36,6 +36,7 @@ from labtools import (
     plan_digest,
     validate,
 )
+from linux_console import NATIVE_LINUX, establish_linux_shell
 from readiness import running_node_states, verify_unconfirmed_consoles
 from virl2_client import ClientLibrary
 from virl2_client.exceptions import APIError
@@ -70,12 +71,14 @@ class WebConsole:
             prompt = self.read(8)
             self.socket.send("\x03\r")
             prompt += self.read(3)
-            if node.node_definition in ("iosv", "iosvl2", "iol-xe", "ioll2-xe"):
+            if node.node_definition in ("iosv", "iosvl2", "iol-xe", "ioll2-xe", "csr1000v"):
                 prompt = self.command("enable", 3)
                 if not re.search(re.escape(node.label) + r"#", prompt):
                     raise RuntimeError("Privileged console prompt was not established")
                 self.command("terminal length 0", 3)
                 self.command("terminal width 511", 3)
+            elif node.node_definition in NATIVE_LINUX:
+                establish_linux_shell(self.label, self.socket.send, self.read)
             elif node.node_definition == "ubuntu":
                 deadline = time.monotonic() + 120
                 while not re.search(r"root@DEVBOX", prompt) and time.monotonic() < deadline:
@@ -147,7 +150,7 @@ class SSHConsole:
             prompt = self.read(8)
             self.channel.send("\r")
             prompt += self.read(3)
-            if node.node_definition in ("iosv", "iosvl2", "iol-xe", "ioll2-xe"):
+            if node.node_definition in ("iosv", "iosvl2", "iol-xe", "ioll2-xe", "csr1000v"):
                 deadline = time.monotonic() + 240
                 while (
                     not re.search(re.escape(node.label) + r"[>#]", prompt)
@@ -160,6 +163,8 @@ class SSHConsole:
                     raise RuntimeError("Privileged SSH console prompt was not established")
                 self.command("terminal length 0", 3)
                 self.command("terminal width 511", 3)
+            elif node.node_definition in NATIVE_LINUX:
+                establish_linux_shell(self.label, self.channel.send, self.read)
             elif node.node_definition == "ubuntu":
                 deadline = time.monotonic() + 120
                 while not re.search(r"root@DEVBOX", prompt) and time.monotonic() < deadline:

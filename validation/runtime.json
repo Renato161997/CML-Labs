@@ -8568,6 +8568,1109 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-26T19:25:31Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/015-eigrp-named-mode.yaml",
+      "sha256": "f597838bb4da123ffb243b6d29158927cfcb0f66887f20c058599392467debee",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T19:40:55Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show running-config | section router eigrp",
+          "expectation": "The process uses named-mode configuration.",
+          "passed": true,
+          "output": "\nR1#show running-config | section router eigrp\nrouter eigrp CAMPUS\n !\n address-family ipv4 unicast autonomous-system 100\n  !\n  af-interface default\n   passive-interface\n  exit-af-interface\n  !\n  af-interface Ethernet0/0\n   hello-interval 2\n   hold-time 6\n   no passive-interface\n  exit-af-interface\n  !\n  topology base\n  exit-af-topology\n  network 192.0.2.1 0.0.0.0\n  network 198.18.0.0 0.0.0.3\n exit-address-family\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip eigrp neighbors",
+          "expectation": "The named IPv4 address family has an actual peer.",
+          "passed": true,
+          "output": "\nR1#show ip eigrp neighbors\nEIGRP-IPv4 VR(CAMPUS) Address-Family Neighbors for AS(100)\nH   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq\n                                                   (sec)         (ms)       Cnt Num\n0   198.18.0.2              Et0/0                     4 00:00:08    2   100  0  3\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "EIGRP installs the remote endpoint route.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"eigrp 100\", distance 90, metric 1024640, precedence routine (0), type internal\n  Redistributing via eigrp 100\n  Last update from 198.18.0.2 on Ethernet0/0, 00:00:08 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 198.18.0.2, 00:00:08 ago, via Ethernet0/0\n      Route metric is 1024640, traffic share count is 1\n      Total delay is 1001 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "transit address-family interface becomes passive",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "transit address-family interface becomes passive",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router eigrp CAMPUS",
+          "passed": true,
+          "output": "\nR2(config)#router eigrp CAMPUS\nR2(config-router)#"
+        },
+        {
+          "phase": "transit address-family interface becomes passive",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "address-family ipv4 unicast autonomous-system 100",
+          "passed": true,
+          "output": "\nR2(config-router)#address-family ipv4 unicast autonomous-system 100\nR2(config-router-af)#"
+        },
+        {
+          "phase": "transit address-family interface becomes passive",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "af-interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR2(config-router-af)#af-interface Ethernet0/0\nR2(config-router-af-interface)#"
+        },
+        {
+          "phase": "transit address-family interface becomes passive",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "passive-interface",
+          "passed": true,
+          "output": "\nR2(config-router-af-interface)#passive-interface\nR2(config-router-af-interface)#"
+        },
+        {
+          "phase": "transit address-family interface becomes passive",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router-af-interface)#end\nR2#"
+        },
+        {
+          "phase": "transit address-family interface becomes passive",
+          "node": "R1",
+          "command": "show ip eigrp neighbors",
+          "expectation": "The neighbor table exists but the transit peer has expired.",
+          "passed": true,
+          "output": "\nR1#show ip eigrp neighbors\nEIGRP-IPv4 VR(CAMPUS) Address-Family Neighbors for AS(100)\nR1#"
+        },
+        {
+          "phase": "transit address-family interface becomes passive",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The endpoint route is actually withdrawn.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\n% Subnet not in table\nR1#"
+        },
+        {
+          "phase": "transit address-family interface becomes passive",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "All three probes fail while the route is removed.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "restore transit hello exchange",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore transit hello exchange",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router eigrp CAMPUS",
+          "passed": true,
+          "output": "\nR2(config)#router eigrp CAMPUS\nR2(config-router)#"
+        },
+        {
+          "phase": "restore transit hello exchange",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "address-family ipv4 unicast autonomous-system 100",
+          "passed": true,
+          "output": "\nR2(config-router)#address-family ipv4 unicast autonomous-system 100\nR2(config-router-af)#"
+        },
+        {
+          "phase": "restore transit hello exchange",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "af-interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR2(config-router-af)#af-interface Ethernet0/0\nR2(config-router-af-interface)#"
+        },
+        {
+          "phase": "restore transit hello exchange",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no passive-interface",
+          "passed": true,
+          "output": "\nR2(config-router-af-interface)#no passive-interface\nR2(config-router-af-interface)#"
+        },
+        {
+          "phase": "restore transit hello exchange",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router-af-interface)#end\nR2#"
+        },
+        {
+          "phase": "restore transit hello exchange",
+          "node": "R1",
+          "command": "show ip eigrp neighbors",
+          "expectation": "The named IPv4 address family has an actual peer.",
+          "passed": true,
+          "output": "\nR1#show ip eigrp neighbors\nEIGRP-IPv4 VR(CAMPUS) Address-Family Neighbors for AS(100)\nH   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq\n                                                   (sec)         (ms)       Cnt Num\n0   198.18.0.2              Et0/0                     5 00:00:00    1   100  0  6\nR1#"
+        },
+        {
+          "phase": "restore transit hello exchange",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "EIGRP installs the remote endpoint route.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"eigrp 100\", distance 90, metric 1024640, precedence routine (0), type internal\n  Redistributing via eigrp 100\n  Last update from 198.18.0.2 on Ethernet0/0, 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 198.18.0.2, 00:00:01 ago, via Ethernet0/0\n      Route metric is 1024640, traffic share count is 1\n      Total delay is 1001 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\nR1#"
+        },
+        {
+          "phase": "restore transit hello exchange",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        }
+      ],
+      "startup_states": {
+        "R1": "BOOTED",
+        "R2": "BOOTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "2f78023a645e503cbd2d5c7d9c3076df2fdf66c29709b924fe548032126d81e9",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T19:41:55Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/013-ospf-network-types.yaml",
+      "sha256": "8a0a2cb9daf4a0b5fc7f6d63459208daae9cf985392ca06145c1b101d0556111",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T19:44:30Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip ospf interface Ethernet0/0",
+          "expectation": "The active OSPF interface reports BROADCAST.",
+          "passed": true,
+          "output": "\nR1#show ip ospf interface Ethernet0/0\nEthernet0/0 is up, line protocol is up \n  Internet Address 198.18.0.1/30, Interface ID 2, Area 0\n  Attached via Network Statement\n  Process ID 1, Router ID 192.0.2.1, Network Type BROADCAST, Cost: 10\n  Topology-MTID    Cost    Disabled    Shutdown      Topology Name\n        0           10        no          no            Base\n  Transmit Delay is 1 sec, State BDR, Priority 1\n  Designated Router (ID) 192.0.2.2, Interface address 198.18.0.2\n  Backup Designated router (ID) 192.0.2.1, Interface address 198.18.0.1\n  Timer intervals configured, Hello 2, Dead 8, Wait 8, Retransmit 5\n    oob-resync timeout 40\n    Hello due in 00:00:00\n  Supports Link-local Signaling (LLS)\n  Cisco NSF helper support enabled\n  IETF NSF helper support enabled\n  Can be protected by per-prefix Loop-Free FastReroute\n  Can be used for per-prefix Loop-Free FastReroute repair paths\n  Not Protected by per-prefix TI-LFA\n  Index 1/2/2, flood queue length 0\n  Next 0x0(0)/0x0(0)/0x0(0)\n  Last flood scan length is 1, maximum is 1\n  Last flood scan time is 0 msec, maximum is 0 msec\n  Neighbor Count is 1, Adjacent neighbor count is 1 \n    Adjacent with neighbor 192.0.2.2  (Designated Router)\n  Suppress hello for 0 neighbor(s)\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The adjacency is FULL with the expected network-type role.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:06    198.18.0.2      Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "first peer becomes point-to-point",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "first peer becomes point-to-point",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR1(config)#interface Ethernet0/0\nR1(config-if)#"
+        },
+        {
+          "phase": "first peer becomes point-to-point",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip ospf network point-to-point",
+          "passed": true,
+          "output": "\nR1(config-if)#ip ospf network point-to-point\nR1(config-if)#"
+        },
+        {
+          "phase": "first peer becomes point-to-point",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "first peer becomes point-to-point",
+          "node": "R1",
+          "command": "show ip ospf interface Ethernet0/0",
+          "expectation": "The active OSPF interface reports POINT_TO_POINT.",
+          "passed": true,
+          "output": "\nR1#show ip ospf interface Ethernet0/0\nEthernet0/0 is up, line protocol is up \n  Internet Address 198.18.0.1/30, Interface ID 2, Area 0\n  Attached via Network Statement\n  Process ID 1, Router ID 192.0.2.1, Network Type POINT_TO_POINT, Cost: 10\n  Topology-MTID    Cost    Disabled    Shutdown      Topology Name\n        0           10        no          no            Base\n  Transmit Delay is 1 sec, State POINT_TO_POINT\n  Timer intervals configured, Hello 2, Dead 8, Wait 8, Retransmit 5\n    oob-resync timeout 40\n    Hello due in 00:00:00\n  Supports Link-local Signaling (LLS)\n  Cisco NSF helper support enabled\n  IETF NSF helper support enabled\n  Can be protected by per-prefix Loop-Free FastReroute\n  Can be used for per-prefix Loop-Free FastReroute repair paths\n  Not Protected by per-prefix TI-LFA\n  Index 1/2/2, flood queue length 0\n  Next 0x0(0)/0x0(0)/0x0(0)\n  Last flood scan length is 1, maximum is 1\n  Last flood scan time is 0 msec, maximum is 0 msec\n  Neighbor Count is 1, Adjacent neighbor count is 1 \n    Adjacent with neighbor 192.0.2.2\n  Suppress hello for 0 neighbor(s)\nR1#"
+        },
+        {
+          "phase": "second peer becomes point-to-point",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "second peer becomes point-to-point",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR2(config)#interface Ethernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "second peer becomes point-to-point",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip ospf network point-to-point",
+          "passed": true,
+          "output": "\nR2(config-if)#ip ospf network point-to-point\nR2(config-if)#"
+        },
+        {
+          "phase": "second peer becomes point-to-point",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "second peer becomes point-to-point",
+          "node": "R1",
+          "command": "show ip ospf interface Ethernet0/0",
+          "expectation": "The active OSPF interface reports POINT_TO_POINT.",
+          "passed": true,
+          "output": "\nR1#show ip ospf interface Ethernet0/0\nEthernet0/0 is up, line protocol is up \n  Internet Address 198.18.0.1/30, Interface ID 2, Area 0\n  Attached via Network Statement\n  Process ID 1, Router ID 192.0.2.1, Network Type POINT_TO_POINT, Cost: 10\n  Topology-MTID    Cost    Disabled    Shutdown      Topology Name\n        0           10        no          no            Base\n  Transmit Delay is 1 sec, State POINT_TO_POINT\n  Timer intervals configured, Hello 2, Dead 8, Wait 8, Retransmit 5\n    oob-resync timeout 40\n    Hello due in 00:00:00\n  Supports Link-local Signaling (LLS)\n  Cisco NSF helper support enabled\n  IETF NSF helper support enabled\n  Can be protected by per-prefix Loop-Free FastReroute\n  Can be used for per-prefix Loop-Free FastReroute repair paths\n  Not Protected by per-prefix TI-LFA\n  Index 1/2/2, flood queue length 0\n  Next 0x0(0)/0x0(0)/0x0(0)\n  Last flood scan length is 1, maximum is 1\n  Last flood scan time is 0 msec, maximum is 0 msec\n  Neighbor Count is 1, Adjacent neighbor count is 1 \n    Adjacent with neighbor 192.0.2.2\n  Suppress hello for 0 neighbor(s)\nR1#"
+        },
+        {
+          "phase": "second peer becomes point-to-point",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The adjacency is FULL with the expected network-type role.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         0   FULL/  -        00:00:06    198.18.0.2      Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "second peer becomes point-to-point",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "first peer returns to broadcast",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "first peer returns to broadcast",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR1(config)#interface Ethernet0/0\nR1(config-if)#"
+        },
+        {
+          "phase": "first peer returns to broadcast",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip ospf network broadcast",
+          "passed": true,
+          "output": "\nR1(config-if)#ip ospf network broadcast\nR1(config-if)#"
+        },
+        {
+          "phase": "first peer returns to broadcast",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "first peer returns to broadcast",
+          "node": "R1",
+          "command": "show ip ospf interface Ethernet0/0",
+          "expectation": "The active OSPF interface reports BROADCAST.",
+          "passed": true,
+          "output": "\nR1#show ip ospf interface Ethernet0/0\nEthernet0/0 is up, line protocol is up \n  Internet Address 198.18.0.1/30, Interface ID 2, Area 0\n  Attached via Network Statement\n  Process ID 1, Router ID 192.0.2.1, Network Type BROADCAST, Cost: 10\n  Topology-MTID    Cost    Disabled    Shutdown      Topology Name\n        0           10        no          no            Base\n  Transmit Delay is 1 sec, State WAITING, Priority 1\n  No designated router on this network\n  No backup designated router on this network\n  Timer intervals configured, Hello 2, Dead 8, Wait 8, Retransmit 5\n    oob-resync timeout 40\n    Hello due in 00:00:00\n    Wait time before Designated router selection 00:00:06\n  Supports Link-local Signaling (LLS)\n  Cisco NSF helper support enabled\n  IETF NSF helper support enabled\n  Can be protected by per-prefix Loop-Free FastReroute\n  Can be used for per-prefix Loop-Free FastReroute repair paths\n  Not Protected by per-prefix TI-LFA\n  Index 1/2/2, flood queue length 0\n  Next 0x0(0)/0x0(0)/0x0(0)\n  Last flood scan length is 1, maximum is 1\n  Last flood scan time is 0 msec, maximum is 0 msec\n  Neighbor Count is 1, Adjacent neighbor count is 0 \n  Suppress hello for 0 neighbor(s)\nR1#"
+        },
+        {
+          "phase": "second peer returns to broadcast",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "second peer returns to broadcast",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR2(config)#interface Ethernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "second peer returns to broadcast",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip ospf network broadcast",
+          "passed": true,
+          "output": "\nR2(config-if)#ip ospf network broadcast\nR2(config-if)#"
+        },
+        {
+          "phase": "second peer returns to broadcast",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "second peer returns to broadcast",
+          "node": "R1",
+          "command": "show ip ospf interface Ethernet0/0",
+          "expectation": "The active OSPF interface reports BROADCAST.",
+          "passed": true,
+          "output": "\nR1#show ip ospf interface Ethernet0/0\nEthernet0/0 is up, line protocol is up \n  Internet Address 198.18.0.1/30, Interface ID 2, Area 0\n  Attached via Network Statement\n  Process ID 1, Router ID 192.0.2.1, Network Type BROADCAST, Cost: 10\n  Topology-MTID    Cost    Disabled    Shutdown      Topology Name\n        0           10        no          no            Base\n  Transmit Delay is 1 sec, State WAITING, Priority 1\n  No designated router on this network\n  No backup designated router on this network\n  Timer intervals configured, Hello 2, Dead 8, Wait 8, Retransmit 5\n    oob-resync timeout 40\n    Hello due in 00:00:00\n    Wait time before Designated router selection 00:00:04\n  Supports Link-local Signaling (LLS)\n  Cisco NSF helper support enabled\n  IETF NSF helper support enabled\n  Can be protected by per-prefix Loop-Free FastReroute\n  Can be used for per-prefix Loop-Free FastReroute repair paths\n  Not Protected by per-prefix TI-LFA\n  Index 1/2/2, flood queue length 0\n  Next 0x0(0)/0x0(0)/0x0(0)\n  Last flood scan length is 1, maximum is 1\n  Last flood scan time is 0 msec, maximum is 0 msec\n  Neighbor Count is 1, Adjacent neighbor count is 0 \n  Suppress hello for 0 neighbor(s)\nR1#"
+        },
+        {
+          "phase": "second peer returns to broadcast",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The adjacency is FULL with the expected network-type role.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:07    198.18.0.2      Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "second peer returns to broadcast",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        }
+      ],
+      "startup_states": {
+        "R1": "BOOTED",
+        "R2": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "a612b96c7c38a1a00665484dfc707b0b69ead0b60c9fe582a553850b29b46a31",
+      "console_boot_fallback": [
+        "R2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T19:45:13Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml",
+      "sha256": "5411cbad60f350fc341baa4f34b115ffaea789a7914c12db804329c35c1b7f0a",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T19:51:59Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The RIB contains the endpoint static route.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip cef 192.0.2.2 detail",
+          "expectation": "CEF resolves the expected next hop and egress interface.",
+          "passed": true,
+          "output": "\nR1#show ip cef 192.0.2.2 detail\n192.0.2.2/32, epoch 0\n  recursive via 198.18.0.2\n    attached to Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW",
+          "command": "show mac address-table dynamic",
+          "expectation": "The switch has learned both endpoint MACs on VLAN10.",
+          "passed": true,
+          "output": "\nSW#show mac address-table dynamic\n          Mac Address Table\n-------------------------------------------\n\nVlan    Mac Address       Type        Ports\n----    -----------       --------    -----\n  10    aabb.cc00.d900    DYNAMIC     Et0/0\n  10    aabb.cc00.da00    DYNAMIC     Et0/1\nTotal Mac Addresses for this criterion: 2\nSW#"
+        },
+        {
+          "phase": "withdraw only the RIB route",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "withdraw only the RIB route",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no ip route 192.0.2.2 255.255.255.255 198.18.0.2",
+          "passed": true,
+          "output": "\n*Oct 26 19:52:22.543: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\nR1(config)#\nR1(config)#no ip route 192.0.2.2 255.255.255.255 198.18.0.2\nR1(config)#"
+        },
+        {
+          "phase": "withdraw only the RIB route",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "withdraw only the RIB route",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The destination is absent from the RIB.",
+          "passed": true,
+          "output": "\n*Oct 26 19:52:22.643: %PNP-6-PNP_TECH_SUMMARY_SAVED_OK: PnP tech summary (/pnp-tech/pnp-tech-discovery-summary) saved successfully (elapsed time: 10 seconds).\n*Oct 26 19:52:22.643: %PNP-6-PNP_DISCOVERY_STOPPED: PnP Discovery stopped (Config Wizard)\nR1#\nR1#show ip route 192.0.2.2\n% Subnet not in table\nR1#"
+        },
+        {
+          "phase": "withdraw only the RIB route",
+          "node": "R1",
+          "command": "show ip cef 192.0.2.2 detail",
+          "expectation": "CEF has no usable destination forwarding entry.",
+          "passed": true,
+          "output": "\nR1#show ip cef 192.0.2.2 detail\n0.0.0.0/0, epoch 0, flags [default route handler, default route]\n  no route\nR1#"
+        },
+        {
+          "phase": "withdraw only the RIB route",
+          "node": "SW",
+          "command": "show mac address-table dynamic",
+          "expectation": "The switch has learned both endpoint MACs on VLAN10.",
+          "passed": true,
+          "output": "\nSW#show mac address-table dynamic\n          Mac Address Table\n-------------------------------------------\n\nVlan    Mac Address       Type        Ports\n----    -----------       --------    -----\n  10    aabb.cc00.d900    DYNAMIC     Et0/0\n  10    aabb.cc00.da00    DYNAMIC     Et0/1\nTotal Mac Addresses for this criterion: 2\nSW#"
+        },
+        {
+          "phase": "withdraw only the RIB route",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "All three probes fail while the route is removed.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "restore the endpoint route",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore the endpoint route",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip route 192.0.2.2 255.255.255.255 198.18.0.2",
+          "passed": true,
+          "output": "\nR1(config)#ip route 192.0.2.2 255.255.255.255 198.18.0.2\nR1(config)#"
+        },
+        {
+          "phase": "restore the endpoint route",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "restore the endpoint route",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "restore the endpoint route",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The RIB contains the endpoint static route.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "restore the endpoint route",
+          "node": "R1",
+          "command": "show ip cef 192.0.2.2 detail",
+          "expectation": "CEF resolves the expected next hop and egress interface.",
+          "passed": true,
+          "output": "\nR1#show ip cef 192.0.2.2 detail\n192.0.2.2/32, epoch 0\n  recursive via 198.18.0.2\n    attached to Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "restore the endpoint route",
+          "node": "SW",
+          "command": "show mac address-table dynamic",
+          "expectation": "The switch has learned both endpoint MACs on VLAN10.",
+          "passed": true,
+          "output": "\nSW#show mac address-table dynamic\n          Mac Address Table\n-------------------------------------------\n\nVlan    Mac Address       Type        Ports\n----    -----------       --------    -----\n  10    aabb.cc00.d900    DYNAMIC     Et0/0\n  10    aabb.cc00.da00    DYNAMIC     Et0/1\nTotal Mac Addresses for this criterion: 2\nSW#"
+        },
+        {
+          "phase": "filter endpoint ICMP on receive",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "filter endpoint ICMP on receive",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-list extended ENDPOINT-FILTER",
+          "passed": true,
+          "output": "\nR2(config)#ip access-list extended ENDPOINT-FILTER\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "filter endpoint ICMP on receive",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "deny icmp host 192.0.2.1 host 192.0.2.2",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#deny icmp host 192.0.2.1 host 192.0.2.2\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "filter endpoint ICMP on receive",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "permit ip any any",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#permit ip any any\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "filter endpoint ICMP on receive",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#exit\nR2(config)#"
+        },
+        {
+          "phase": "filter endpoint ICMP on receive",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR2(config)#interface Ethernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "filter endpoint ICMP on receive",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-group ENDPOINT-FILTER in",
+          "passed": true,
+          "output": "\nR2(config-if)#ip access-group ENDPOINT-FILTER in\nR2(config-if)#"
+        },
+        {
+          "phase": "filter endpoint ICMP on receive",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "filter endpoint ICMP on receive",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "All three probes are blocked while the RIB, CEF and CAM remain healthy.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \nU.U\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "filter endpoint ICMP on receive",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The RIB contains the endpoint static route.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "filter endpoint ICMP on receive",
+          "node": "R1",
+          "command": "show ip cef 192.0.2.2 detail",
+          "expectation": "CEF resolves the expected next hop and egress interface.",
+          "passed": true,
+          "output": "\nR1#show ip cef 192.0.2.2 detail\n192.0.2.2/32, epoch 0\n  recursive via 198.18.0.2\n    attached to Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "filter endpoint ICMP on receive",
+          "node": "SW",
+          "command": "show mac address-table dynamic",
+          "expectation": "The switch has learned both endpoint MACs on VLAN10.",
+          "passed": true,
+          "output": "\nSW#show mac address-table dynamic\n          Mac Address Table\n-------------------------------------------\n\nVlan    Mac Address       Type        Ports\n----    -----------       --------    -----\n  10    aabb.cc00.d900    DYNAMIC     Et0/0\n  10    aabb.cc00.da00    DYNAMIC     Et0/1\nTotal Mac Addresses for this criterion: 2\nSW#"
+        },
+        {
+          "phase": "filter endpoint ICMP on receive",
+          "node": "R2",
+          "command": "show access-lists ENDPOINT-FILTER",
+          "expectation": "The classifier counts the actual dropped probes.",
+          "passed": true,
+          "output": "\nR2#show access-lists ENDPOINT-FILTER\nExtended IP access list ENDPOINT-FILTER\n    10 deny icmp host 192.0.2.1 host 192.0.2.2 (3 matches)\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "restore unfiltered forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore unfiltered forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR2(config)#interface Ethernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "restore unfiltered forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no ip access-group ENDPOINT-FILTER in",
+          "passed": true,
+          "output": "\nR2(config-if)#no ip access-group ENDPOINT-FILTER in\nR2(config-if)#"
+        },
+        {
+          "phase": "restore unfiltered forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "restore unfiltered forwarding",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        },
+        {
+          "phase": "restore unfiltered forwarding",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The RIB contains the endpoint static route.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "restore unfiltered forwarding",
+          "node": "R1",
+          "command": "show ip cef 192.0.2.2 detail",
+          "expectation": "CEF resolves the expected next hop and egress interface.",
+          "passed": true,
+          "output": "\nR1#show ip cef 192.0.2.2 detail\n192.0.2.2/32, epoch 0\n  recursive via 198.18.0.2\n    attached to Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "restore unfiltered forwarding",
+          "node": "SW",
+          "command": "show mac address-table dynamic",
+          "expectation": "The switch has learned both endpoint MACs on VLAN10.",
+          "passed": true,
+          "output": "\nSW#show mac address-table dynamic\n          Mac Address Table\n-------------------------------------------\n\nVlan    Mac Address       Type        Ports\n----    -----------       --------    -----\n  10    aabb.cc00.d900    DYNAMIC     Et0/0\n  10    aabb.cc00.da00    DYNAMIC     Et0/1\nTotal Mac Addresses for this criterion: 2\nSW#"
+        }
+      ],
+      "startup_states": {
+        "R1": "STARTED",
+        "R2": "STARTED",
+        "SW": "BOOTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "SW": "ioll2-xe-17-18-02"
+      },
+      "plan_sha256": "0e16a5cbc56df710cd0794e29aa2adc219905a077e24d422403447611ba664c2",
+      "console_boot_fallback": [
+        "R1",
+        "R2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T19:52:51Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml",
+      "sha256": "f19393f807de2dc123e21e441c9bf613355f728ae548db385695ad53dca1ed1f",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T19:53:00Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show interfaces Tunnel0",
+          "expectation": "The live tunnel uses GRE over IP.",
+          "passed": true,
+          "output": "\nR1#show interfaces Tunnel0\nTunnel0 is up, line protocol is up \n  Hardware is Tunnel\n  Internet address is 172.16.0.1/30\n  MTU 17916 bytes, BW 100 Kbit/sec, DLY 50000 usec, \n     reliability 255/255, txload 1/255, rxload 1/255\n  Encapsulation TUNNEL, loopback not set\n  Keepalive not set\n  Tunnel linestate evaluation up\n  Tunnel source 198.18.0.1 (Ethernet0/0), destination 198.18.0.2\n   Tunnel Subblocks:\n      src-track:\n         Tunnel0 source tracking subblock associated with Ethernet0/0\n          Set of tunnels with source Ethernet0/0, 1 member (includes iterators), on interface <OK>\n  Tunnel protocol/transport GRE/IP\n    Key disabled, sequencing disabled\n    Checksumming of packets disabled\n  Tunnel TTL 255, Fast tunneling enabled\n  Tunnel transport MTU 1476 bytes\n  Tunnel transmit bandwidth 8000 (kbps)\n  Tunnel receive bandwidth 8000 (kbps)\n  Tunnel state info: \n    State change to up   : Oct 26 2026 19:53:10\n  Last input never, output never, output hang never\n  Last clearing of \"show interface\" counters 00:00:16\n  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0\n  Queueing strategy: fifo\n  Output queue: 0/0 (size/max)\n  5 minute input rate 0 bits/sec, 0 packets/sec\n  5 minute output rate 0 bits/sec, 0 packets/sec\n     0 packets input, 0 bytes, 0 no buffer\n     Received 0 broadcasts (0 IP multicasts)\n     0 runts, 0 giants, 0 throttles \n     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort\n     0 packets output, 0 bytes, 0 underruns\n     Output 0 broadcasts (0 IP multicasts)\n     0 output errors, 0 collisions, 0 interface resets\n     0 unknown protocol drops\n     0 output buffer failures, 0 output buffers swapped out\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip interface Tunnel0",
+          "expectation": "The active tunnel IP MTU is 1400.",
+          "passed": true,
+          "output": "\nR1#show ip interface Tunnel0\nTunnel0 is up, line protocol is up\n  Internet address is 172.16.0.1/30\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1400 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is not set\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip interface Tunnel0",
+          "expectation": "The active tunnel IP MTU is 1400.",
+          "passed": true,
+          "output": "\nR2#show ip interface Tunnel0\nTunnel0 is up, line protocol is up\n  Internet address is 172.16.0.2/30\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1400 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is not set\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.0.2 size 1401 df-bit repeat 3",
+          "expectation": "The same-sized DF request succeeds on the direct underlay.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 size 1401 df-bit repeat 3\nType escape sequence to abort.\nSending 3, 1401-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\nPacket sent with the DF bit set\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 size 1400 df-bit repeat 3",
+          "expectation": "The 1400-byte DF request crosses the configured tunnel MTU.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 size 1400 df-bit repeat 3\nType escape sequence to abort.\nSending 3, 1400-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \nPacket sent with the DF bit set\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "ping 192.0.2.1 source Loopback0 size 1400 df-bit repeat 3",
+          "expectation": "The 1400-byte DF request crosses the configured tunnel MTU.",
+          "passed": true,
+          "output": "\nR2#ping 192.0.2.1 source Loopback0 size 1400 df-bit repeat 3\nType escape sequence to abort.\nSending 3, 1400-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.2 \nPacket sent with the DF bit set\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 size 1401 df-bit repeat 3",
+          "expectation": "The 1401-byte DF request is larger than the configured tunnel IP MTU.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 size 1401 df-bit repeat 3\nType escape sequence to abort.\nSending 3, 1401-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \nPacket sent with the DF bit set\n\n*Oct 26 19:53:20.274: %PKI-6-SUDI_INFO: PKI: platform doesn't support sudi certificate\n*Oct 26 19:53:20.274: %PKI-6-SUDI_INFO: PKI: no sudi certificate is installed\n*Oct 26 19:53:20.275: %PKI-2-NON_AUTHORITATIVE_CLOCK: PKI functions can not be initialized until an authoritative time source, like NTP, can be obtained.\n*Oct 26 19:53:20.342: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt.\n*Oct 26 19:53:20.445: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 26 19:53:20.446: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 26 19:53:20.552: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0.\n*Oct 26 19:53:20.653: %PNP-6-PNP_TECH_SUMMARY_SAVED_OK: PnP tech summary (/pnp-tech/pnp-tech-discovery-summary) saved successfully (elapsed time: 1 seconds).\n*Oct 26 19:53:20.653: %PNP-6-PNP_DISCOVERY_STOPPED: PnP Discovery stopped (Config Wizard)..\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "ping 192.0.2.1 source Loopback0 size 1401 df-bit repeat 3",
+          "expectation": "The 1401-byte DF request is larger than the configured tunnel IP MTU.",
+          "passed": true,
+          "output": "\nR2#ping 192.0.2.1 source Loopback0 size 1401 df-bit repeat 3\nType escape sequence to abort.\nSending 3, 1401-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.2 \nPacket sent with the DF bit set\n\n*Oct 26 19:53:24.233: %PNP-6-PNP_TECH_SUMMARY_SAVED_OK: PnP tech summary (/pnp-tech/pnp-tech-discovery-summary) saved successfully (elapsed time: 10 seconds).\n*Oct 26 19:53:24.233: %PNP-6-PNP_DISCOVERY_STOPPED: PnP Discovery stopped (Config Wizard)...\nSuccess rate is 0 percent (0/3)\nR2#"
+        },
+        {
+          "phase": "increase first tunnel MTU",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "increase first tunnel MTU",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Tunnel0",
+          "passed": true,
+          "output": "\nR1(config)#interface Tunnel0\nR1(config-if)#"
+        },
+        {
+          "phase": "increase first tunnel MTU",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip mtu 1450",
+          "passed": true,
+          "output": "\nR1(config-if)#ip mtu 1450\nR1(config-if)#"
+        },
+        {
+          "phase": "increase first tunnel MTU",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "increase first tunnel MTU",
+          "node": "R1",
+          "command": "show ip interface Tunnel0",
+          "expectation": "The active tunnel IP MTU is 1450.",
+          "passed": true,
+          "output": "\nR1#show ip interface Tunnel0\nTunnel0 is up, line protocol is up\n  Internet address is 172.16.0.1/30\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1450 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is not set\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        },
+        {
+          "phase": "increase second tunnel MTU",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "increase second tunnel MTU",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface Tunnel0",
+          "passed": true,
+          "output": "\nR2(config)#interface Tunnel0\nR2(config-if)#"
+        },
+        {
+          "phase": "increase second tunnel MTU",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip mtu 1450",
+          "passed": true,
+          "output": "\nR2(config-if)#ip mtu 1450\nR2(config-if)#"
+        },
+        {
+          "phase": "increase second tunnel MTU",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "increase second tunnel MTU",
+          "node": "R1",
+          "command": "show ip interface Tunnel0",
+          "expectation": "The active tunnel IP MTU is 1450.",
+          "passed": true,
+          "output": "\nR1#show ip interface Tunnel0\nTunnel0 is up, line protocol is up\n  Internet address is 172.16.0.1/30\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1450 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is not set\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        },
+        {
+          "phase": "increase second tunnel MTU",
+          "node": "R2",
+          "command": "show ip interface Tunnel0",
+          "expectation": "The active tunnel IP MTU is 1450.",
+          "passed": true,
+          "output": "\nR2#show ip interface Tunnel0\nTunnel0 is up, line protocol is up\n  Internet address is 172.16.0.2/30\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1450 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is not set\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR2#"
+        },
+        {
+          "phase": "increase second tunnel MTU",
+          "node": "R1",
+          "command": "ping 198.18.0.2 size 1401 df-bit repeat 3",
+          "expectation": "The same-sized DF request succeeds on the direct underlay.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 size 1401 df-bit repeat 3\nType escape sequence to abort.\nSending 3, 1401-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\nPacket sent with the DF bit set\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "increase second tunnel MTU",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 size 1401 df-bit repeat 3",
+          "expectation": "The 1401-byte DF request crosses the configured tunnel MTU.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 size 1401 df-bit repeat 3\nType escape sequence to abort.\nSending 3, 1401-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \nPacket sent with the DF bit set\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "increase second tunnel MTU",
+          "node": "R2",
+          "command": "ping 192.0.2.1 source Loopback0 size 1401 df-bit repeat 3",
+          "expectation": "The 1401-byte DF request crosses the configured tunnel MTU.",
+          "passed": true,
+          "output": "\nR2#ping 192.0.2.1 source Loopback0 size 1401 df-bit repeat 3\nType escape sequence to abort.\nSending 3, 1401-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.2 \nPacket sent with the DF bit set\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR2#"
+        },
+        {
+          "phase": "restore first tunnel MTU",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore first tunnel MTU",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Tunnel0",
+          "passed": true,
+          "output": "\nR1(config)#interface Tunnel0\nR1(config-if)#"
+        },
+        {
+          "phase": "restore first tunnel MTU",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip mtu 1400",
+          "passed": true,
+          "output": "\nR1(config-if)#ip mtu 1400\nR1(config-if)#"
+        },
+        {
+          "phase": "restore first tunnel MTU",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "restore first tunnel MTU",
+          "node": "R1",
+          "command": "show ip interface Tunnel0",
+          "expectation": "The active tunnel IP MTU is 1400.",
+          "passed": true,
+          "output": "\nR1#show ip interface Tunnel0\nTunnel0 is up, line protocol is up\n  Internet address is 172.16.0.1/30\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1400 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is not set\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        },
+        {
+          "phase": "restore second tunnel MTU",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore second tunnel MTU",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface Tunnel0",
+          "passed": true,
+          "output": "\nR2(config)#interface Tunnel0\nR2(config-if)#"
+        },
+        {
+          "phase": "restore second tunnel MTU",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip mtu 1400",
+          "passed": true,
+          "output": "\nR2(config-if)#ip mtu 1400\nR2(config-if)#"
+        },
+        {
+          "phase": "restore second tunnel MTU",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "restore second tunnel MTU",
+          "node": "R1",
+          "command": "show ip interface Tunnel0",
+          "expectation": "The active tunnel IP MTU is 1400.",
+          "passed": true,
+          "output": "\nR1#show ip interface Tunnel0\nTunnel0 is up, line protocol is up\n  Internet address is 172.16.0.1/30\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1400 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is not set\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        },
+        {
+          "phase": "restore second tunnel MTU",
+          "node": "R2",
+          "command": "show ip interface Tunnel0",
+          "expectation": "The active tunnel IP MTU is 1400.",
+          "passed": true,
+          "output": "\nR2#show ip interface Tunnel0\nTunnel0 is up, line protocol is up\n  Internet address is 172.16.0.2/30\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1400 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is not set\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR2#"
+        },
+        {
+          "phase": "restore second tunnel MTU",
+          "node": "R1",
+          "command": "ping 198.18.0.2 size 1401 df-bit repeat 3",
+          "expectation": "The same-sized DF request succeeds on the direct underlay.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 size 1401 df-bit repeat 3\nType escape sequence to abort.\nSending 3, 1401-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\nPacket sent with the DF bit set\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "restore second tunnel MTU",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 size 1400 df-bit repeat 3",
+          "expectation": "The 1400-byte DF request crosses the configured tunnel MTU.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 size 1400 df-bit repeat 3\nType escape sequence to abort.\nSending 3, 1400-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \nPacket sent with the DF bit set\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "restore second tunnel MTU",
+          "node": "R2",
+          "command": "ping 192.0.2.1 source Loopback0 size 1400 df-bit repeat 3",
+          "expectation": "The 1400-byte DF request crosses the configured tunnel MTU.",
+          "passed": true,
+          "output": "\nR2#ping 192.0.2.1 source Loopback0 size 1400 df-bit repeat 3\nType escape sequence to abort.\nSending 3, 1400-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.2 \nPacket sent with the DF bit set\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR2#"
+        },
+        {
+          "phase": "restore second tunnel MTU",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 size 1401 df-bit repeat 3",
+          "expectation": "The 1401-byte DF request is larger than the configured tunnel IP MTU.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 size 1401 df-bit repeat 3\nType escape sequence to abort.\nSending 3, 1401-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \nPacket sent with the DF bit set\n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "restore second tunnel MTU",
+          "node": "R2",
+          "command": "ping 192.0.2.1 source Loopback0 size 1401 df-bit repeat 3",
+          "expectation": "The 1401-byte DF request is larger than the configured tunnel IP MTU.",
+          "passed": true,
+          "output": "\nR2#ping 192.0.2.1 source Loopback0 size 1401 df-bit repeat 3\nType escape sequence to abort.\nSending 3, 1401-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.2 \nPacket sent with the DF bit set\n...\nSuccess rate is 0 percent (0/3)\nR2#"
+        }
+      ],
+      "plan_sha256": "37428733799aebedf0946fced0667f2edd4df274eae4f27af3dec1c047efbe62",
+      "startup_states": {
+        "R1": "BOOTED",
+        "R2": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [
+        "R2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T19:54:02Z"
     }
   ]
 }

@@ -2208,23 +2208,22 @@
       "title": "CEF CAM TCAM RIB FIB",
       "track": "350-401",
       "topic": "architecture",
-      "nodes": 5,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe",
+        "ioll2-xe"
       ],
       "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 60,
+      "workbook": "docs/workbooks/350-401-006-cef-cam-tcam-rib-fib.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "8d061335fea75bbcc31d29eca2a49a8060d9a29ebaabfc2cb29c8e597b754789"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T19:52:51Z",
+      "sha256": "5411cbad60f350fc341baa4f34b115ffaea789a7914c12db804329c35c1b7f0a"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/assessment/049-encor-practical-checkpoint.yaml",
@@ -2460,21 +2459,21 @@
       "title": "OSPF Network Types",
       "track": "350-401",
       "topic": "infrastructure",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "iosv"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 45,
+      "workbook": "docs/workbooks/350-401-013-ospf-network-types.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "78f75151cb0a3c0689fca680e215609ae23baf86e40e1b7b49fcba509af9ddb1"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T19:45:13Z",
+      "sha256": "8a0a2cb9daf4a0b5fc7f6d63459208daae9cf985392ca06145c1b101d0556111"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/014-ospf-summarization-filtering.yaml",
@@ -2502,21 +2501,21 @@
       "title": "EIGRP Named Mode",
       "track": "350-401",
       "topic": "infrastructure",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "iosv"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 50,
+      "workbook": "docs/workbooks/350-401-015-eigrp-named-mode.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "d1eb8e1167500e3c5cbf0798a43d9beef589e01477a510e85fdf3ee0202c5192"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T19:41:55Z",
+      "sha256": "f597838bb4da123ffb243b6d29158927cfcb0f66887f20c058599392467debee"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/016-ospf-eigrp-redistribution.yaml",
@@ -3146,21 +3145,21 @@
       "title": "GRE Overlay Underlay",
       "track": "350-401",
       "topic": "virtualization",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "iosv"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 50,
+      "workbook": "docs/workbooks/350-401-008-gre-overlay-underlay.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "f2e0ea62ef8e75610f702f5440f421377599740f9ea8dcb1f4b5db7b067d318c"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T19:54:02Z",
+      "sha256": "f19393f807de2dc123e21e441c9bf613355f728ae548db385695ad53dca1ed1f"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml",
