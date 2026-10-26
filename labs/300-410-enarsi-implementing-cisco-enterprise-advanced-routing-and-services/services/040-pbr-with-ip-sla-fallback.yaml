@@ -1,266 +1,169 @@
 lab:
   title: PBR With IP SLA Fallback
-  description: 300-410 ENARSI - Implementing Cisco Enterprise Advanced Routing and Services scenario-based
-    CML lab.
-  notes: '300-410 ENARSI scenario lab: PBR With IP SLA Fallback
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# PBR With IP SLA Fallback
 
 
-    Lab type: scenario
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Scenario:
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/300-410-040-pbr-with-ip-sla-fallback.md
 
-    You are taking over a partially built network. Use the topology, startup configs, and this note as
-    the work order.
+
+    Requires three IOL-XE nodes. R1 tracks ICMP reachability of the policy next hop using its secondary
+    interface. The fault inserts a narrow receiver ACL entry that denies only those SLA echo requests;
+    client traffic remains permitted. This intentionally models failure of the monitoring signal, not
+    a powered-off peer or a physical cable failure. Fresh receiver counters prove the resulting policy
+    fallback and recovery while the static RIB remains unchanged. The named observer ACLs stay applied
+    throughout.
 
 
     Objectives:
 
-    - Policy-route selected traffic through a preferred path.
+    - Verify SLA-controlled PBR and the independently measured receiver ingress path.
 
-    - Use IP SLA-style tracking as the design requirement.
+    - Block only SLA echo probes without changing virtual Ethernet carrier or the ordinary RIB.
 
-    - Verify fallback behavior when the preferred path is unavailable.
+    - Observe actual fallback to the normal path, then restore tracked PBR and measure recovery.
 
-
-    Suggested verification:
-
-    - show ip interface brief
-
-    - show ip route
-
-    - show running-config
-
-
-    Stretch goals:
-
-    - Document the final design.
-
-    - Add one extra validation command for each requirement.
-
-    - Make one controlled change and prove that the network still works.'
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: HQ-R1
-  node_definition: iosv
+  label: R1
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.10.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.10.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.1.1\
-      \ 255.255.255.255\n"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.0.1 255.255.255.252\n no shutdown\n exit\ninterface Ethernet0/1\n\
+      \ ip address 198.18.1.1 255.255.255.252\n no shutdown\n exit\ninterface Ethernet0/2\n ip address\
+      \ 198.18.10.1 255.255.255.0\n no shutdown\n exit\nip route 192.0.2.2 255.255.255.255 198.18.0.2\n\
+      ip access-list extended SELECT-LAN\n permit icmp 198.18.10.0 0.0.0.255 host 192.0.2.2\n exit\nip\
+      \ sla 1\n icmp-echo 198.18.1.2 source-interface Ethernet0/1\n timeout 1000\n frequency 5\n exit\n\
+      ip sla schedule 1 life forever start-time now\ntrack 1 ip sla 1 reachability\n exit\nroute-map PBR\
+      \ permit 10\n match ip address SELECT-LAN\n set ip next-hop verify-availability 198.18.1.2 1 track\
+      \ 1\n exit\ninterface Ethernet0/2\n ip policy route-map PBR\n exit\nend\n"
+  cpu_limit: 50
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 0
-  y: 0
-  priority: 100
   tags: []
 - id: n1
-  label: ISP-R2
-  node_definition: iosv
+  label: R2
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.11.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.11.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.2.1\
-      \ 255.255.255.255\n"
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.2 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.0.2 255.255.255.252\n no shutdown\n exit\ninterface Ethernet0/1\n\
+      \ ip address 198.18.1.2 255.255.255.252\n no shutdown\n exit\nip route 198.18.10.0 255.255.255.0\
+      \ 198.18.0.1\nip access-list extended OBSERVE-PRIMARY\n 10 permit icmp 198.18.10.0 0.0.0.255 host\
+      \ 192.0.2.2\n 20 permit ip any any\n exit\ninterface Ethernet0/0\n ip access-group OBSERVE-PRIMARY\
+      \ in\n exit\nip access-list extended OBSERVE-POLICY\n 10 permit icmp 198.18.10.0 0.0.0.255 host\
+      \ 192.0.2.2\n 20 permit ip any any\n exit\ninterface Ethernet0/1\n ip access-group OBSERVE-POLICY\
+      \ in\n exit\nend\n"
+  cpu_limit: 50
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 240
-  y: 0
-  priority: 99
   tags: []
 - id: n2
-  label: BRANCH-R3
-  node_definition: iosv
+  label: CLIENT
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R3\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.12.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.12.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.3.1\
-      \ 255.255.255.255\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 480
-  y: 0
+    content: "hostname CLIENT\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Ethernet0/0\n ip address 198.18.10.10 255.255.255.0\n no shutdown\n exit\nip route\
+      \ 0.0.0.0 0.0.0.0 198.18.10.1\nend\n"
+  cpu_limit: 50
   priority: 98
-  tags: []
-- id: n3
-  label: EDGE-R4
-  node_definition: iosv
-  configuration:
-  - name: ios_config.txt
-    content: "hostname R4\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.13.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.13.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.4.1\
-      \ 255.255.255.255\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 720
+  x: 520
   y: 0
-  priority: 97
-  tags: []
-- id: n4
-  label: HQ-SW
-  node_definition: iosvl2
-  configuration:
-  - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nvlan 20\n name USERS_20\nvlan 30\n name SERVICES_30\n\
-      interface range GigabitEthernet0/0-3\n switchport mode access\n spanning-tree portfast\n"
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 0
-  y: 200
-  priority: 96
-  tags: []
-- id: n5
-  label: BRANCH-PC
-  node_definition: desktop
-  configuration:
-  - name: node.cfg
-    content: '# BRANCH-PC
-
-      # Use this node as a lightweight endpoint or API/mock server.
-
-      '
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  x: 240
-  y: 200
-  priority: 95
   tags: []
 links:
-- n1: n0
+- id: l0
+  n1: n0
   i1: i1
   n2: n1
   i2: i1
-  id: l0
-- n1: n1
+- id: l1
+  n1: n0
   i1: i2
-  n2: n2
-  i2: i1
-  id: l1
-- n1: n0
-  i1: i2
-  n2: n3
-  i2: i1
-  id: l2
-- n1: n3
-  i1: i2
-  n2: n2
+  n2: n1
   i2: i2
-  id: l3
-- n1: n0
-  i1: i3
-  n2: n4
-  i2: i1
-  id: l4
-- n1: n2
-  i1: i3
-  n2: n5
-  i2: i0
-  id: l5
+- id: l2
+  n1: n2
+  i1: i1
+  n2: n0
+  i2: i3
 annotations: []
 smart_annotations: []

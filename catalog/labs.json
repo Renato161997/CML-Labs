@@ -1712,42 +1712,42 @@
       "title": "OSPF Stub And NSSA",
       "track": "300-410",
       "topic": "layer-3",
-      "nodes": 4,
+      "nodes": 3,
       "node_types": [
-        "iosv"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 2048,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 75,
+      "workbook": "docs/workbooks/300-410-006-ospf-stub-nssa.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "0a01ec93131bd8fb695a6ee37905bdac24fcbd4e617704c03449db724f8d867b"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T18:38:16Z",
+      "sha256": "f634cebf99ab2c324c79aee1175fc5285b41126350bac291871a3056dc0d922f"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/007-ospf-authentication-filtering.yaml",
       "title": "OSPF Authentication Filtering",
       "track": "300-410",
       "topic": "layer-3",
-      "nodes": 4,
+      "nodes": 3,
       "node_types": [
-        "iosv"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 2048,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 65,
+      "workbook": "docs/workbooks/300-410-007-ospf-authentication-filtering.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "fe1b6848c74ae41b9b39d9c90979fa8470e2ec0eb563d34e23aa197aee647b4a"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T18:45:05Z",
+      "sha256": "ed7148be6510dec2ed993b878c2c29addcf20635271f8fb24dce2894fc89c880"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/008-ospf-troubleshooting.yaml",
@@ -1817,21 +1817,21 @@
       "title": "Policy Based Routing Local Policy",
       "track": "300-410",
       "topic": "layer-3",
-      "nodes": 4,
+      "nodes": 3,
       "node_types": [
-        "iosv"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 2048,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 65,
+      "workbook": "docs/workbooks/300-410-011-pbr-local-policy.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "2e1a2e9ad5eec173283e1e31f432b4856e15a92c5078c9c72833d35b34bdeba0"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T18:44:03Z",
+      "sha256": "415bc11677b7ffe0544b8dda883a3f7b1c594a5693a2efeb47091766c1bf55e2"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/012-vrf-lite-routing-protocols.yaml",
@@ -1882,23 +1882,21 @@
       "title": "PBR With IP SLA Fallback",
       "track": "300-410",
       "topic": "services",
-      "nodes": 6,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 65,
+      "workbook": "docs/workbooks/300-410-040-pbr-with-ip-sla-fallback.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "8456c4ca6220bbd0694c7f90476839271fcfaeb3ee7ec341b38e046c6f4bf0d4"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T18:46:57Z",
+      "sha256": "392de954ae2ee68cc89968d81988c74b9c9eb04b7a19df5f90a9eebc82f949e2"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/037-redistribution-nightmare.yaml",
