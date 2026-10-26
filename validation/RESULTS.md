@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **56**.
+Import/export passes: **233/233**. Functional passes: **58**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -55,9 +55,11 @@ Import/export passes: **233/233**. Functional passes: **56**.
 | [OSPF Stub And NSSA](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/006-ospf-stub-nssa.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 19 | 28 | 2026-10-26T18:38:16Z |
 | [OSPF Authentication Filtering](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/007-ospf-authentication-filtering.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 18 | 2026-10-26T18:45:05Z |
 | [OSPF Troubleshooting](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/008-ospf-troubleshooting.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 3 | 0 | 2026-10-25T12:44:26Z |
+| [Route Redistribution Tags](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/009-route-redistribution-tags.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 13 | 22 | 2026-10-26T19:02:47Z |
 | [Route Map Filtering](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/010-route-map-filtering.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 6 | 10 | 2026-10-25T17:04:38Z |
 | [Policy Based Routing Local Policy](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/011-pbr-local-policy.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 25 | 16 | 2026-10-26T18:44:03Z |
 | [VRF Lite Routing Protocols](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/012-vrf-lite-routing-protocols.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 5 | 0 | 2026-10-25T12:42:37Z |
+| [Static Edge To Dynamic Routing](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/migration/043-static-edge-to-dynamic-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 32 | 2026-10-26T19:00:30Z |
 | [PBR With IP SLA Fallback](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/services/040-pbr-with-ip-sla-fallback.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 14 | 2026-10-26T18:46:57Z |
 | [Summarization And Filtering Faults](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/041-summarization-and-filtering-faults.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 15 | 8 | 2026-10-26T18:56:20Z |
 | [Wrong Administrative Distance](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/042-wrong-administrative-distance.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 16 | 14 | 2026-10-26T18:52:47Z |

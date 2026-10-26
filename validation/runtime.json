@@ -6737,6 +6737,732 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-26T18:56:20Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/migration/043-static-edge-to-dynamic-routing.yaml",
+      "sha256": "05b5ed8f22342817fa535ef4c9ef0c27ea951e9cd353c6fc17222bcfc887acd2",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T18:59:40Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The actual static route selects 198.18.12.2.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.12.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R3",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The actual static route selects 198.18.23.1.",
+          "passed": true,
+          "output": "\n*Oct 26 18:59:56.462: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 26 18:59:56.463: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\nR3#\nR3#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.23.1\n      Route metric is 0, traffic share count is 1\nR3#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The sampled end-to-end traffic passes after this migration step.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/2/3 ms\nR1#"
+        },
+        {
+          "phase": "enable OSPF on R1",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "enable OSPF on R1",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR1(config)#router ospf 1\nR1(config-router)#"
+        },
+        {
+          "phase": "enable OSPF on R1",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "router-id 192.0.2.1",
+          "passed": true,
+          "output": "\nR1(config-router)#router-id 192.0.2.1\nR1(config-router)#"
+        },
+        {
+          "phase": "enable OSPF on R1",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "network 198.18.12.0 0.0.0.3 area 0",
+          "passed": true,
+          "output": "\nR1(config-router)#network 198.18.12.0 0.0.0.3 area 0\nR1(config-router)#"
+        },
+        {
+          "phase": "enable OSPF on R1",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "network 192.0.2.1 0.0.0.0 area 0",
+          "passed": true,
+          "output": "\nR1(config-router)#network 192.0.2.1 0.0.0.0 area 0\nR1(config-router)#"
+        },
+        {
+          "phase": "enable OSPF on R1",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-router)#exit\nR1(config)#"
+        },
+        {
+          "phase": "enable OSPF on R1",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "enable OSPF on R1",
+          "node": "R1",
+          "command": "show running-config | section router ospf",
+          "expectation": "The first router is prepared; this alone does not prove an adjacency.",
+          "passed": true,
+          "output": "\nR1#show running-config | section router ospf\nrouter ospf 1\n router-id 192.0.2.1\n network 192.0.2.1 0.0.0.0 area 0\n network 198.18.12.0 0.0.0.3 area 0\nR1#"
+        },
+        {
+          "phase": "enable OSPF on R2",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "enable OSPF on R2",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR2(config)#router ospf 1\nR2(config-router)#"
+        },
+        {
+          "phase": "enable OSPF on R2",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router-id 192.0.2.2",
+          "passed": true,
+          "output": "\nR2(config-router)#router-id 192.0.2.2\nR2(config-router)#"
+        },
+        {
+          "phase": "enable OSPF on R2",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "network 198.18.12.0 0.0.0.3 area 0",
+          "passed": true,
+          "output": "\nR2(config-router)#network 198.18.12.0 0.0.0.3 area 0\nR2(config-router)#"
+        },
+        {
+          "phase": "enable OSPF on R2",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "network 198.18.23.0 0.0.0.3 area 0",
+          "passed": true,
+          "output": "\nR2(config-router)#network 198.18.23.0 0.0.0.3 area 0\nR2(config-router)#"
+        },
+        {
+          "phase": "enable OSPF on R2",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "network 192.0.2.2 0.0.0.0 area 0",
+          "passed": true,
+          "output": "\n*Oct 26 19:00:08.107: %OSPF-6-DFT_OPT: Protocol timers for fast convergence are Enabled.\n*Oct 26 19:00:09.115: %OSPF-5-ADJCHG: Process 1, Nbr 192.0.2.1 on Ethernet0/0 from LOADING to FULL, Loading Done\n*Oct 26 19:00:09.554: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt.\n*Oct 26 19:00:09.657: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 26 19:00:09.658: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 26 19:00:09.763: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\nR2(config-router)#\nR2(config-router)#network 192.0.2.2 0.0.0.0 area 0\nR2(config-router)#"
+        },
+        {
+          "phase": "enable OSPF on R2",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(config-router)#exit\nR2(config)#"
+        },
+        {
+          "phase": "enable OSPF on R2",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\n*Oct 26 19:00:09.863: %PNP-6-PNP_TECH_SUMMARY_SAVED_OK: PnP tech summary (/pnp-tech/pnp-tech-discovery-summary) saved successfully (elapsed time: 0 seconds).\n*Oct 26 19:00:09.863: %PNP-6-PNP_DISCOVERY_STOPPED: PnP Discovery stopped (Config Wizard)\nR2(config)#\nR2(config)#end\nR2#"
+        },
+        {
+          "phase": "enable OSPF on R2",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The first point-to-point adjacency is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         0   FULL/  -        00:00:39    198.18.12.2     Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "enable OSPF on R3",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR3#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR3(config)#"
+        },
+        {
+          "phase": "enable OSPF on R3",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR3(config)#router ospf 1\nR3(config-router)#"
+        },
+        {
+          "phase": "enable OSPF on R3",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "router-id 192.0.2.3",
+          "passed": true,
+          "output": "\nR3(config-router)#router-id 192.0.2.3\nR3(config-router)#"
+        },
+        {
+          "phase": "enable OSPF on R3",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "network 198.18.23.0 0.0.0.3 area 0",
+          "passed": true,
+          "output": "\nR3(config-router)#network 198.18.23.0 0.0.0.3 area 0\nR3(config-router)#"
+        },
+        {
+          "phase": "enable OSPF on R3",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "network 192.0.2.3 0.0.0.0 area 0",
+          "passed": true,
+          "output": "\nR3(config-router)#network 192.0.2.3 0.0.0.0 area 0\nR3(config-router)#"
+        },
+        {
+          "phase": "enable OSPF on R3",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR3(config-router)#exit\nR3(config)#"
+        },
+        {
+          "phase": "enable OSPF on R3",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "end",
+          "passed": true,
+          "output": "\nR3(config)#end\nR3#"
+        },
+        {
+          "phase": "enable OSPF on R3",
+          "node": "R2",
+          "command": "show ip ospf neighbor",
+          "expectation": "The second point-to-point adjacency is FULL.",
+          "passed": true,
+          "output": "\nR2#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.3         0   FULL/  -        00:00:38    198.18.23.2     Ethernet0/1\n192.0.2.1         0   FULL/  -        00:00:35    198.18.12.1     Ethernet0/0\nR2#"
+        },
+        {
+          "phase": "enable OSPF on R3",
+          "node": "R1",
+          "command": "show ip ospf database router 192.0.2.3",
+          "expectation": "The complete topology is in the LSDB before static withdrawal.",
+          "passed": true,
+          "output": "\nR1#show ip ospf database router 192.0.2.3\n\n            OSPF Router with ID (192.0.2.1) (Process ID 1)\n\n\t\tRouter Link States (Area 0)\n\n  LS age: 3\n  Options: (No TOS-capability, DC)\n  LS Type: Router Links\n  Link State ID: 192.0.2.3\n  Advertising Router: 192.0.2.3\n  LS Seq Number: 80000003\n  Checksum: 0xAA5E\n  Length: 60\n  Number of Links: 3\n\n    Link connected to: a Stub Network\n     (Link ID) Network/subnet number: 192.0.2.3\n     (Link Data) Network Mask: 255.255.255.255\n      Number of MTID metrics: 0\n       TOS 0 Metrics: 1\n\n    Link connected to: another Router (point-to-point)\n     (Link ID) Neighboring Router ID: 192.0.2.2\n     (Link Data) Router Interface address: 198.18.23.2\n      Number of MTID metrics: 0\n       TOS 0 Metrics: 10\n\n    Link connected to: a Stub Network\n     (Link ID) Network/subnet number: 198.18.23.0\n     (Link Data) Network Mask: 255.255.255.252\n      Number of MTID metrics: 0\n       TOS 0 Metrics: 10\n\n\nR1#"
+        },
+        {
+          "phase": "enable OSPF on R3",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The actual static route selects 198.18.12.2.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.12.2\n      Route metric is 0, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "enable OSPF on R3",
+          "node": "R3",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The actual static route selects 198.18.23.1.",
+          "passed": true,
+          "output": "\nR3#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.23.1\n      Route metric is 0, traffic share count is 1\nR3#"
+        },
+        {
+          "phase": "enable OSPF on R3",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The sampled end-to-end traffic passes after this migration step.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "migrate the first endpoint",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "migrate the first endpoint",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no ip route 192.0.2.3 255.255.255.255 198.18.12.2",
+          "passed": true,
+          "output": "\nR1(config)#no ip route 192.0.2.3 255.255.255.255 198.18.12.2\nR1(config)#"
+        },
+        {
+          "phase": "migrate the first endpoint",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "migrate the first endpoint",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The actual ospf 1 route selects 198.18.12.2.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"ospf 1\", distance 110, metric 21, type intra area\n  Last update from 198.18.12.2 on Ethernet0/0, 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 192.0.2.3, 00:00:01 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "migrate the first endpoint",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The sampled end-to-end traffic passes after this migration step.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "migrate the return endpoint",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR3#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR3(config)#"
+        },
+        {
+          "phase": "migrate the return endpoint",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "no ip route 192.0.2.1 255.255.255.255 198.18.23.1",
+          "passed": true,
+          "output": "\nR3(config)#no ip route 192.0.2.1 255.255.255.255 198.18.23.1\nR3(config)#"
+        },
+        {
+          "phase": "migrate the return endpoint",
+          "kind": "configuration",
+          "node": "R3",
+          "command": "end",
+          "passed": true,
+          "output": "\nR3(config)#end\nR3#"
+        },
+        {
+          "phase": "migrate the return endpoint",
+          "node": "R3",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The actual ospf 1 route selects 198.18.23.1.",
+          "passed": true,
+          "output": "\nR3#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"ospf 1\", distance 110, metric 21, type intra area\n  Last update from 198.18.23.1 on Ethernet0/0, 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.23.1, from 192.0.2.1, 00:00:01 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nR3#"
+        },
+        {
+          "phase": "migrate the return endpoint",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The sampled end-to-end traffic passes after this migration step.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        },
+        {
+          "phase": "migrate the transit router",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "migrate the transit router",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no ip route 192.0.2.1 255.255.255.255 198.18.12.1",
+          "passed": true,
+          "output": "\nR2(config)#no ip route 192.0.2.1 255.255.255.255 198.18.12.1\nR2(config)#"
+        },
+        {
+          "phase": "migrate the transit router",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no ip route 192.0.2.3 255.255.255.255 198.18.23.2",
+          "passed": true,
+          "output": "\nR2(config)#no ip route 192.0.2.3 255.255.255.255 198.18.23.2\nR2(config)#"
+        },
+        {
+          "phase": "migrate the transit router",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config)#end\nR2#"
+        },
+        {
+          "phase": "migrate the transit router",
+          "node": "R2",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The actual ospf 1 route selects 198.18.12.1.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"ospf 1\", distance 110, metric 11, type intra area\n  Last update from 198.18.12.1 on Ethernet0/0, 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.1, from 192.0.2.1, 00:00:01 ago, via Ethernet0/0\n      Route metric is 11, traffic share count is 1\nR2#"
+        },
+        {
+          "phase": "migrate the transit router",
+          "node": "R2",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The actual ospf 1 route selects 198.18.23.2.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"ospf 1\", distance 110, metric 11, type intra area\n  Last update from 198.18.23.2 on Ethernet0/1, 00:00:02 ago\n  Routing Descriptor Blocks:\n  * 198.18.23.2, from 192.0.2.3, 00:00:02 ago, via Ethernet0/1\n      Route metric is 11, traffic share count is 1\nR2#"
+        },
+        {
+          "phase": "migrate the transit router",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The sampled end-to-end traffic passes after this migration step.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        }
+      ],
+      "startup_states": {
+        "R1": "STARTED",
+        "R2": "BOOTED",
+        "R3": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "f65b393ee6b9b13f827ee57bb50da2695aa4e73cd028d51e06ce762e83bcd88f",
+      "console_boot_fallback": [
+        "R1",
+        "R3"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T19:00:30Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/009-route-redistribution-tags.yaml",
+      "sha256": "5e5d8c9f3441720dfff56210b272bc3b4282c7c3d1a2d61900dd18b37a5203c6",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T19:01:49Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The OSPF adjacency is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         0   FULL/  -        00:00:37    198.18.12.2     Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip eigrp neighbors",
+          "expectation": "The EIGRP neighbor is actually present.",
+          "passed": true,
+          "output": "\nR2#show ip eigrp neighbors\nEIGRP-IPv4 Neighbors for AS(100)\nH   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq\n                                                   (sec)         (ms)       Cnt Num\n0   198.18.23.2             Et0/1                    10 00:00:11 1600  5000  0  3\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The EIGRP-origin route carries its OSPF export tag.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"ospf 1\", distance 110, metric 20\n  Tag 200, type extern 2, forward metric 10\n  Last update from 198.18.12.2 on Ethernet0/0, 00:00:10 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 192.0.2.2, 00:00:10 ago, via Ethernet0/0\n      Route metric is 20, traffic share count is 1\n      Route tag 200\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R3",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The OSPF-origin route carries its EIGRP export tag.",
+          "passed": true,
+          "output": "\nR3#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"eigrp 100\", distance 170, metric 307200\n  Tag 100, precedence routine (0), type external\n  Redistributing via eigrp 100\n  Last update from 198.18.23.1 on Ethernet0/0, 00:00:06 ago\n  Routing Descriptor Blocks:\n  * 198.18.23.1, from 198.18.23.1, 00:00:06 ago, via Ethernet0/0\n      Route metric is 307200, traffic share count is 1\n      Total delay is 2000 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\n      Route tag 100\nR3#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip route 203.0.113.9",
+          "expectation": "The control prefix reaches the boundary with the denied input tag.",
+          "passed": true,
+          "output": "\nR2#show ip route 203.0.113.9\nRouting entry for 203.0.113.9/32\n  Known via \"ospf 1\", distance 110, metric 20\n  Tag 999, type extern 2, forward metric 10\n  Redistributing via eigrp 100\n  Last update from 198.18.12.1 on Ethernet0/0, 00:00:11 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.1, from 192.0.2.1, 00:00:11 ago, via Ethernet0/0\n      Route metric is 20, traffic share count is 1\n      Route tag 999\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R3",
+          "command": "show ip route 203.0.113.9",
+          "expectation": "The tag-filtered control prefix is absent from EIGRP.",
+          "passed": true,
+          "output": "\nR3#show ip route 203.0.113.9\n% Network not in table\nR3#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The real endpoints forward traffic across the redistribution boundary.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        },
+        {
+          "phase": "permit the control prefix by changing its input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "permit the control prefix by changing its input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR1(config)#router ospf 1\nR1(config-router)#"
+        },
+        {
+          "phase": "permit the control prefix by changing its input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no redistribute static",
+          "passed": true,
+          "output": "\nR1(config-router)#no redistribute static\nR1(config-router)#"
+        },
+        {
+          "phase": "permit the control prefix by changing its input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-router)#exit\nR1(config)#"
+        },
+        {
+          "phase": "permit the control prefix by changing its input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "route-map STATIC-EXPORT permit 10",
+          "passed": true,
+          "output": "\nR1(config)#route-map STATIC-EXPORT permit 10\nR1(config-route-map)#"
+        },
+        {
+          "phase": "permit the control prefix by changing its input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no set tag",
+          "passed": true,
+          "output": "\nR1(config-route-map)#no set tag\nR1(config-route-map)#"
+        },
+        {
+          "phase": "permit the control prefix by changing its input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "set tag 998",
+          "passed": true,
+          "output": "\nR1(config-route-map)#set tag 998\nR1(config-route-map)#"
+        },
+        {
+          "phase": "permit the control prefix by changing its input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-route-map)#exit\nR1(config)#"
+        },
+        {
+          "phase": "permit the control prefix by changing its input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR1(config)#router ospf 1\nR1(config-router)#"
+        },
+        {
+          "phase": "permit the control prefix by changing its input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "redistribute static subnets route-map STATIC-EXPORT",
+          "passed": true,
+          "output": "\nR1(config-router)#redistribute static subnets route-map STATIC-EXPORT\nR1(config-router)#"
+        },
+        {
+          "phase": "permit the control prefix by changing its input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-router)#end\nR1#"
+        },
+        {
+          "phase": "permit the control prefix by changing its input tag",
+          "node": "R2",
+          "command": "show ip route 203.0.113.9",
+          "expectation": "The boundary observes the changed input tag.",
+          "passed": true,
+          "output": "\nR2#show ip route 203.0.113.9\nRouting entry for 203.0.113.9/32\n  Known via \"ospf 1\", distance 110, metric 20\n  Tag 998, type extern 2, forward metric 10\n  Redistributing via eigrp 100\n  Advertised by eigrp 100 match internal external 1 & 2 route-map O2E\n  Last update from 198.18.12.1 on Ethernet0/0, 00:00:02 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.1, from 192.0.2.1, 00:00:02 ago, via Ethernet0/0\n      Route metric is 20, traffic share count is 1\n      Route tag 998\nR2#"
+        },
+        {
+          "phase": "permit the control prefix by changing its input tag",
+          "node": "R3",
+          "command": "show ip route 203.0.113.9",
+          "expectation": "EIGRP receives the permitted prefix with the export-policy tag.",
+          "passed": true,
+          "output": "\nR3#show ip route 203.0.113.9\nRouting entry for 203.0.113.9/32\n  Known via \"eigrp 100\", distance 170, metric 307200\n  Tag 100, precedence routine (0), type external\n  Redistributing via eigrp 100\n  Last update from 198.18.23.1 on Ethernet0/0, 00:00:02 ago\n  Routing Descriptor Blocks:\n  * 198.18.23.1, from 198.18.23.1, 00:00:02 ago, via Ethernet0/0\n      Route metric is 307200, traffic share count is 1\n      Total delay is 2000 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\n      Route tag 100\nR3#"
+        },
+        {
+          "phase": "permit the control prefix by changing its input tag",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The real endpoints forward traffic across the redistribution boundary.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "restore the denied input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore the denied input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR1(config)#router ospf 1\nR1(config-router)#"
+        },
+        {
+          "phase": "restore the denied input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no redistribute static",
+          "passed": true,
+          "output": "\nR1(config-router)#no redistribute static\nR1(config-router)#"
+        },
+        {
+          "phase": "restore the denied input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-router)#exit\nR1(config)#"
+        },
+        {
+          "phase": "restore the denied input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "route-map STATIC-EXPORT permit 10",
+          "passed": true,
+          "output": "\nR1(config)#route-map STATIC-EXPORT permit 10\nR1(config-route-map)#"
+        },
+        {
+          "phase": "restore the denied input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no set tag",
+          "passed": true,
+          "output": "\nR1(config-route-map)#no set tag\nR1(config-route-map)#"
+        },
+        {
+          "phase": "restore the denied input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "set tag 999",
+          "passed": true,
+          "output": "\nR1(config-route-map)#set tag 999\nR1(config-route-map)#"
+        },
+        {
+          "phase": "restore the denied input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-route-map)#exit\nR1(config)#"
+        },
+        {
+          "phase": "restore the denied input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR1(config)#router ospf 1\nR1(config-router)#"
+        },
+        {
+          "phase": "restore the denied input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "redistribute static subnets route-map STATIC-EXPORT",
+          "passed": true,
+          "output": "\nR1(config-router)#redistribute static subnets route-map STATIC-EXPORT\nR1(config-router)#"
+        },
+        {
+          "phase": "restore the denied input tag",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-router)#end\nR1#"
+        },
+        {
+          "phase": "restore the denied input tag",
+          "node": "R2",
+          "command": "show ip route 203.0.113.9",
+          "expectation": "The denied input tag is restored.",
+          "passed": true,
+          "output": "\nR2#show ip route 203.0.113.9\nRouting entry for 203.0.113.9/32\n  Known via \"ospf 1\", distance 110, metric 20\n  Tag 999, type extern 2, forward metric 10\n  Redistributing via eigrp 100\n  Last update from 198.18.12.1 on Ethernet0/0, 00:00:07 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.1, from 192.0.2.1, 00:00:07 ago, via Ethernet0/0\n      Route metric is 20, traffic share count is 1\n      Route tag 999\nR2#"
+        },
+        {
+          "phase": "restore the denied input tag",
+          "node": "R3",
+          "command": "show ip route 203.0.113.9",
+          "expectation": "The tag-filtered control prefix is absent from EIGRP.",
+          "passed": true,
+          "output": "\nR3#show ip route 203.0.113.9\n% Network not in table\nR3#"
+        },
+        {
+          "phase": "restore the denied input tag",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The real endpoints forward traffic across the redistribution boundary.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        }
+      ],
+      "plan_sha256": "d4cac57dd24f3e2f845dfd21c19230f04f418fa8e298663bc0c24de3159e990b",
+      "startup_states": {
+        "R1": "STARTED",
+        "R2": "BOOTED",
+        "R3": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [
+        "R1",
+        "R3"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T19:02:47Z"
     }
   ]
 }

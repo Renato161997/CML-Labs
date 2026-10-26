@@ -336,5 +336,17 @@
     "duration_minutes": 60,
     "kind": "practice",
     "workbook": "docs/workbooks/300-410-041-summarization-and-filtering-faults.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/migration/043-static-edge-to-dynamic-routing.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 70,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-043-static-edge-to-dynamic-routing.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/009-route-redistribution-tags.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 70,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-009-route-redistribution-tags.md"
   }
 }

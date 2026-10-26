@@ -1775,21 +1775,21 @@
       "title": "Route Redistribution Tags",
       "track": "300-410",
       "topic": "layer-3",
-      "nodes": 4,
+      "nodes": 3,
       "node_types": [
-        "iosv"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 2048,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 70,
+      "workbook": "docs/workbooks/300-410-009-route-redistribution-tags.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "e6d0afead8e96be1f9c8b6e7b20fe555e61403082e901b79b2b8985214c4607b"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T19:02:47Z",
+      "sha256": "5e5d8c9f3441720dfff56210b272bc3b4282c7c3d1a2d61900dd18b37a5203c6"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/010-route-map-filtering.yaml",
@@ -1859,23 +1859,21 @@
       "title": "Static Edge To Dynamic Routing",
       "track": "300-410",
       "topic": "migration",
-      "nodes": 6,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 70,
+      "workbook": "docs/workbooks/300-410-043-static-edge-to-dynamic-routing.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "454b6eff07883a54f663047fa4459b62272fe293aeffd00d0a3fb67f1e8a966d"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T19:00:30Z",
+      "sha256": "05b5ed8f22342817fa535ef4c9ef0c27ea951e9cd353c6fc17222bcfc887acd2"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/services/040-pbr-with-ip-sla-fallback.yaml",
