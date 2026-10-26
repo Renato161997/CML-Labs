@@ -470,21 +470,21 @@
       "topic": "ip-services",
       "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe",
+        "net-tools",
+        "syslog"
       ],
-      "nominal_ram_mib": 1792,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 65,
+      "workbook": "docs/workbooks/200-301-027-syslog-snmp.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "09c1a2348ee33f3fe2f1620034d4e322f699312e5215a9a9c176ddd9f449cfb0"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T20:36:16Z",
+      "sha256": "14216f696fc821f6fe2cfdf65c7625bc1cb7b56a10931c921bd54d0147c4f898"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/028-qos-marking-classification.yaml",
@@ -4152,20 +4152,20 @@
       "topic": "visibility-enforcement",
       "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv"
+        "iol-xe",
+        "net-tools"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 65,
+      "workbook": "docs/workbooks/350-701-027-syslog-siem-correlation.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "30b687cdb516b2ad59e42338c7f905550fec9c1f29f23207afd459e34c04380e"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-26T20:42:59Z",
+      "sha256": "6d4d53a73ec0e82917ff24039708af880f8b768e17483d4a97e45ab7cddcf89b"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/028-packet-capture-span.yaml",

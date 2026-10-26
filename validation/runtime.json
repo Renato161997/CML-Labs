@@ -9671,6 +9671,524 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-26T19:54:02Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/027-syslog-snmp.yaml",
+      "sha256": "14216f696fc821f6fe2cfdf65c7625bc1cb7b56a10931c921bd54d0147c4f898",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T20:35:01Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.1.2 repeat 3",
+          "expectation": "The remote logging path is reachable and its neighbor resolution is complete.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.1.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.1.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "TOOLS",
+          "command": "python3 /lab/snmp_probe.py healthy",
+          "expectation": "Real authPriv uptime remains available; sysName follows the configured view and a wrong key is rejected.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/snmp_probe.py healthy\n{\"mode\": \"healthy\", \"observations\": [{\"check\": \"authenticated encrypted uptime\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.3.0 = Timeticks: (3023) 0:00:30.23\\nCreated directory: /var/lib/snmp/cert_indexes\", \"returncode\": 0}, {\"check\": \"visible sysName\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.5.0 = STRING: \\\"R1\\\"\", \"returncode\": 0}, {\"check\": \"wrong authentication key is rejected\", \"passed\": true, \"response\": \"snmpget: Authentication failure (incorrect password, community or key)\", \"returncode\": 1}, {\"check\": \"agent still answers valid credentials\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.3.0 = Timeticks: (3031) 0:00:30.31\", \"returncode\": 0}], \"status\": \"passed\", \"target\": \"198.18.0.1\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "emit baseline syslog",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "send log 6 CML-LAB-SYSLOG-BASELINE",
+          "passed": true,
+          "output": "\nR1#send log 6 CML-LAB-SYSLOG-BASELINE\nR1#"
+        },
+        {
+          "phase": "emit baseline syslog",
+          "node": "LOG",
+          "command": "grep -c CML-LAB-SYSLOG-BASELINE /var/log/cml-lab.log",
+          "expectation": "The receiver records the actual UDP message.",
+          "passed": true,
+          "output": "\nroot@LOG:~# grep -c CML-LAB-SYSLOG-BASELINE /var/log/cml-lab.log\n1\nroot@LOG:~# "
+        },
+        {
+          "phase": "hide only sysName",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "hide only sysName",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "snmp-server view LABVIEW 1.3.6.1.2.1.1.5 excluded",
+          "passed": true,
+          "output": "\nR1(config)#snmp-server view LABVIEW 1.3.6.1.2.1.1.5 excluded\nR1(config)#"
+        },
+        {
+          "phase": "hide only sysName",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "hide only sysName",
+          "node": "TOOLS",
+          "command": "python3 /lab/snmp_probe.py restricted",
+          "expectation": "Real authPriv uptime remains available; sysName follows the configured view and a wrong key is rejected.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/snmp_probe.py restricted\n{\"mode\": \"restricted\", \"observations\": [{\"check\": \"authenticated encrypted uptime\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.3.0 = Timeticks: (4165) 0:00:41.65\", \"returncode\": 0}, {\"check\": \"view excludes sysName\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.5.0 = No Such Object available on this agent at this OID\", \"returncode\": 0}, {\"check\": \"wrong authentication key is rejected\", \"passed\": true, \"response\": \"snmpget: Authentication failure (incorrect password, community or key)\", \"returncode\": 1}, {\"check\": \"agent still answers valid credentials\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.3.0 = Timeticks: (4170) 0:00:41.70\", \"returncode\": 0}], \"status\": \"passed\", \"target\": \"198.18.0.1\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restore sysName view",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore sysName view",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "snmp-server view LABVIEW 1.3.6.1.2.1.1.5 included",
+          "passed": true,
+          "output": "\nR1(config)#snmp-server view LABVIEW 1.3.6.1.2.1.1.5 included\nR1(config)#"
+        },
+        {
+          "phase": "restore sysName view",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "restore sysName view",
+          "node": "TOOLS",
+          "command": "python3 /lab/snmp_probe.py healthy",
+          "expectation": "Real authPriv uptime remains available; sysName follows the configured view and a wrong key is rejected.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/snmp_probe.py healthy\n{\"mode\": \"healthy\", \"observations\": [{\"check\": \"authenticated encrypted uptime\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.3.0 = Timeticks: (4367) 0:00:43.67\", \"returncode\": 0}, {\"check\": \"visible sysName\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.5.0 = STRING: \\\"R1\\\"\", \"returncode\": 0}, {\"check\": \"wrong authentication key is rejected\", \"passed\": true, \"response\": \"snmpget: Authentication failure (incorrect password, community or key)\", \"returncode\": 1}, {\"check\": \"agent still answers valid credentials\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.3.0 = Timeticks: (4370) 0:00:43.70\", \"returncode\": 0}], \"status\": \"passed\", \"target\": \"198.18.0.1\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "withdraw remote logging",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "withdraw remote logging",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no logging host 198.18.1.2 transport udp port 514",
+          "passed": true,
+          "output": "\nR1(config)#no logging host 198.18.1.2 transport udp port 514\nR1(config)#"
+        },
+        {
+          "phase": "withdraw remote logging",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "withdraw remote logging",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "send log 6 CML-LAB-SYSLOG-WITHDRAWN",
+          "passed": true,
+          "output": "\nR1#send log 6 CML-LAB-SYSLOG-WITHDRAWN\nR1#"
+        },
+        {
+          "phase": "withdraw remote logging",
+          "node": "R1",
+          "command": "show logging",
+          "expectation": "The withdrawn event was generated locally.",
+          "passed": true,
+          "output": "ring disabled, size (32768)\n*Oct 26 20:35:01.550: %SYS-4-LOGGINGHOST_STARTSTOP: Logging to host 198.18.1.2 port 514 protocol UDP CLI Request Triggered\n*Oct 26 20:35:01.550: %SYS-5-CONFIG_I: Configured from unix:config by console\n*Oct 26 20:35:01.595: %SYS-5-RESTART: System restarted --\nCisco IOS Software [IOSXE], Linux Software (X86_64BI_LINUX-ADVENTERPRISEK9-M), Version 17.18.2, RELEASE SOFTWARE (fc3)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2025 by Cisco Systems, Inc.\nCompiled Fri 19-Dec-25 03:28 by mcpre\n*Oct 26 20:35:01.595: %SNMP-5-COLDSTART: SNMP agent on host R1 is undergoing a cold start\n*Oct 26 20:35:01.595: %SYS-5-CONFIG_I: Configured from console by console\n*Oct 26 20:35:01.596: %CRYPTO-5-SELF_TEST_START: Crypto algorithms release (Rel5b), Entropy release (3.4.1)\n       begin Crypto Module self-tests\n*Oct 26 20:35:01.596: %CRYPTO-5-SELF_TEST_END: Crypto Algorithm self-test completed successfully\n       All tests passed.\n*Oct 26 20:35:01.625: %SYS-4-LOGGINGHOST_STARTSTOP: Logging to host 198.18.1.2 port 514 protocol UDP started - CLI initiated\n*Oct 26 20:35:02.702: %LINK-3-UPDOWN: Interface Ethernet0/0, changed state to up\n*Oct 26 20:35:02.713: %LINK-3-UPDOWN: Interface Ethernet0/1, changed state to up\n*Oct 26 20:35:02.726: %LINK-5-CHANGED: Interface Ethernet0/2, changed state to administratively down\n*Oct 26 20:35:02.737: %LINK-5-CHANGED: Interface Ethernet0/3, changed state to administratively down\n*Oct 26 20:35:03.701: %LINEPROTO-5-UPDOWN: Line protocol on Interface Ethernet0/0, changed state to up\n*Oct 26 20:35:03.713: %LINEPROTO-5-UPDOWN: Line protocol on Interface Ethernet0/1, changed state to up\n*Oct 26 20:35:03.725: %LINEPROTO-5-UPDOWN: Line protocol on Interface Ethernet0/2, changed state to down\n*Oct 26 20:35:03.737: %LINEPROTO-5-UPDOWN: Line protocol on Interface Ethernet0/3, changed state to down\n*Oct 26 20:35:21.273: %PKI-6-SUDI_INFO: PKI: platform doesn't support sudi certificate\n*Oct 26 20:35:21.273: %PKI-6-SUDI_INFO: PKI: no sudi certificate is installed\n*Oct 26 20:35:21.273: %PKI-2-NON_AUTHORITATIVE_CLOCK: PKI functions can not be initialized until an authoritative time source, like NTP, can be obtained.\n*Oct 26 20:35:21.339: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt.\n*Oct 26 20:35:21.443: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 26 20:35:21.444: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 26 20:35:21.550: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 26 20:35:21.650: %PNP-6-PNP_TECH_SUMMARY_SAVED_OK: PnP tech summary (/pnp-tech/pnp-tech-discovery-summary) saved successfully (elapsed time: 1 seconds).\n*Oct 26 20:35:21.650: %PNP-6-PNP_DISCOVERY_STOPPED: PnP Discovery stopped (Config Wizard)\n*Oct 26 20:35:31.229: %SYS-6-USERLOG_INFO: Message from tty0(user id: ): CML-LAB-SYSLOG-BASELINE\n*Oct 26 20:35:41.568: %SYS-5-CONFIG_I: Configured from console by console\n*Oct 26 20:35:43.578: %SYS-5-CONFIG_I: Configured from console by console\n*Oct 26 20:35:45.085: %SYS-4-LOGGINGHOST_STARTSTOP: Logging to host 198.18.1.2 port 514 protocol UDP stopped - CLI initiated\n*Oct 26 20:35:45.586: %SYS-5-CONFIG_I: Configured from console by console\n*Oct 26 20:35:46.089: %SYS-6-USERLOG_INFO: Message from tty0(user id: ): CML-LAB-SYSLOG-WITHDRAWN\nR1#"
+        },
+        {
+          "phase": "withdraw remote logging",
+          "node": "TOOLS",
+          "command": "python3 /lab/snmp_probe.py healthy",
+          "expectation": "Real authPriv uptime remains available; sysName follows the configured view and a wrong key is rejected.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/snmp_probe.py healthy\n{\"mode\": \"healthy\", \"observations\": [{\"check\": \"authenticated encrypted uptime\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.3.0 = Timeticks: (5620) 0:00:56.20\", \"returncode\": 0}, {\"check\": \"visible sysName\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.5.0 = STRING: \\\"R1\\\"\", \"returncode\": 0}, {\"check\": \"wrong authentication key is rejected\", \"passed\": true, \"response\": \"snmpget: Authentication failure (incorrect password, community or key)\", \"returncode\": 1}, {\"check\": \"agent still answers valid credentials\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.3.0 = Timeticks: (5622) 0:00:56.22\", \"returncode\": 0}], \"status\": \"passed\", \"target\": \"198.18.0.1\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "observe settled logging withdrawal",
+          "kind": "configuration",
+          "node": "LOG",
+          "command": "sleep 3",
+          "passed": true,
+          "output": "\nroot@LOG:~# sleep 3\nroot@LOG:~# "
+        },
+        {
+          "phase": "observe settled logging withdrawal",
+          "node": "LOG",
+          "command": "grep -c CML-LAB-SYSLOG-BASELINE /var/log/cml-lab.log",
+          "expectation": "The receiver records the actual UDP message.",
+          "passed": true,
+          "output": "\nroot@LOG:~# grep -c CML-LAB-SYSLOG-BASELINE /var/log/cml-lab.log\n1\nroot@LOG:~# "
+        },
+        {
+          "phase": "observe settled logging withdrawal",
+          "node": "LOG",
+          "command": "grep -c CML-LAB-SYSLOG-WITHDRAWN /var/log/cml-lab.log",
+          "expectation": "The receiver has no record of the withdrawn-forwarding test event.",
+          "passed": true,
+          "output": "\nroot@LOG:~# grep -c CML-LAB-SYSLOG-WITHDRAWN /var/log/cml-lab.log\n0\nroot@LOG:~# "
+        },
+        {
+          "phase": "restore remote logging",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore remote logging",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "logging host 198.18.1.2 transport udp port 514",
+          "passed": true,
+          "output": "\nR1(config)#logging host 198.18.1.2 transport udp port 514\nR1(config)#"
+        },
+        {
+          "phase": "restore remote logging",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "restore remote logging",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "send log 6 CML-LAB-SYSLOG-RESTORED",
+          "passed": true,
+          "output": "\nR1#send log 6 CML-LAB-SYSLOG-RESTORED\nR1#"
+        },
+        {
+          "phase": "restore remote logging",
+          "node": "LOG",
+          "command": "grep -c CML-LAB-SYSLOG-RESTORED /var/log/cml-lab.log",
+          "expectation": "The receiver records the actual UDP message.",
+          "passed": true,
+          "output": "\nroot@LOG:~# grep -c CML-LAB-SYSLOG-RESTORED /var/log/cml-lab.log\n1\nroot@LOG:~# "
+        },
+        {
+          "phase": "restore remote logging",
+          "node": "TOOLS",
+          "command": "python3 /lab/snmp_probe.py healthy",
+          "expectation": "Real authPriv uptime remains available; sysName follows the configured view and a wrong key is rejected.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/snmp_probe.py healthy\n{\"mode\": \"healthy\", \"observations\": [{\"check\": \"authenticated encrypted uptime\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.3.0 = Timeticks: (7194) 0:01:11.94\", \"returncode\": 0}, {\"check\": \"visible sysName\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.5.0 = STRING: \\\"R1\\\"\", \"returncode\": 0}, {\"check\": \"wrong authentication key is rejected\", \"passed\": true, \"response\": \"snmpget: Authentication failure (incorrect password, community or key)\", \"returncode\": 1}, {\"check\": \"agent still answers valid credentials\", \"passed\": true, \"response\": \".1.3.6.1.2.1.1.3.0 = Timeticks: (7201) 0:01:12.01\", \"returncode\": 0}], \"status\": \"passed\", \"target\": \"198.18.0.1\"}\nroot@TOOLS:~# "
+        }
+      ],
+      "plan_sha256": "181cce93af38bb9b4197921931fd758766ec7c96542e19614b6054aec4ed5792",
+      "startup_states": {
+        "R1": "BOOTED",
+        "TOOLS": "BOOTED",
+        "LOG": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "TOOLS": "net-tools-2-10-1-3",
+        "LOG": "syslog-4-8-1-5-deb13u1"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [
+        "LOG"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T20:36:16Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/027-syslog-siem-correlation.yaml",
+      "sha256": "6d4d53a73ec0e82917ff24039708af880f8b768e17483d4a97e45ab7cddcf89b",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T20:41:55Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.1.2 repeat 3",
+          "expectation": "The collector data path and neighbor resolution are ready before emitting security events.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.1.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.1.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "LOG",
+          "command": "python3 /lab/correlate.py baseline",
+          "expectation": "The receive-time correlator validates the baseline event-family condition.",
+          "passed": true,
+          "output": "\nroot@LOG:~# python3 /lab/correlate.py baseline\n{\"correlation_count\": 0, \"correlations\": [], \"event_counts\": {\"interface_disabled\": 0, \"packet_denied\": 0}, \"mode\": \"baseline\", \"source\": \"198.18.1.1\", \"status\": \"passed\", \"window_seconds\": 120}\nroot@LOG:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "TOOLS",
+          "command": "LC_ALL=C ping -c 3 -W 1 192.0.2.1",
+          "expectation": "All three packets reach the routed endpoint.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# LC_ALL=C ping -c 3 -W 1 192.0.2.1\nPING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\n64 bytes from 192.0.2.1: icmp_seq=1 ttl=255 time=1.35 ms\n64 bytes from 192.0.2.1: icmp_seq=2 ttl=255 time=1.12 ms\n64 bytes from 192.0.2.1: icmp_seq=3 ttl=255 time=1.10 ms\n\n--- 192.0.2.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 1.102/1.191/1.351/0.112 ms\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip interface brief",
+          "expectation": "The spare loopback is operational.",
+          "passed": true,
+          "output": "\nR1#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.0.1      YES TFTP   up                    up      \nEthernet0/1            198.18.1.1      YES TFTP   up                    up      \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nLoopback0              192.0.2.1       YES TFTP   up                    up      \nLoopback1              192.0.2.99      YES TFTP   up                    up      \nR1#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip access-list extended CML-DENY",
+          "passed": true,
+          "output": "\nR1(config)#ip access-list extended CML-DENY\nR1(config-ext-nacl)#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "deny icmp host 198.18.0.2 host 192.0.2.1 log",
+          "passed": true,
+          "output": "\nR1(config-ext-nacl)#deny icmp host 198.18.0.2 host 192.0.2.1 log\nR1(config-ext-nacl)#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "permit ip any any",
+          "passed": true,
+          "output": "\nR1(config-ext-nacl)#permit ip any any\nR1(config-ext-nacl)#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-ext-nacl)#exit\nR1(config)#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR1(config)#interface Ethernet0/0\nR1(config-if)#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip access-group CML-DENY in",
+          "passed": true,
+          "output": "\nR1(config-if)#ip access-group CML-DENY in\nR1(config-if)#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "node": "TOOLS",
+          "command": "LC_ALL=C ping -c 3 -W 1 192.0.2.1",
+          "expectation": "All three packets are blocked by the router ingress ACL.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# LC_ALL=C ping -c 3 -W 1 192.0.2.1\nPING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\nFrom 198.18.0.1 icmp_seq=1 Packet filtered\nFrom 198.18.0.1 icmp_seq=2 Packet filtered\nFrom 198.18.0.1 icmp_seq=3 Packet filtered\n\n--- 192.0.2.1 ping statistics ---\n3 packets transmitted, 0 received, +3 errors, 100% packet loss, time 2013ms\n\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "node": "R1",
+          "command": "show access-lists CML-DENY",
+          "expectation": "The deny counts actual client probes.",
+          "passed": true,
+          "output": "\nR1#show access-lists CML-DENY\nExtended IP access list CML-DENY\n    10 deny icmp host 198.18.0.2 host 192.0.2.1 log (3 matches)\n    20 permit ip any any\nR1#"
+        },
+        {
+          "phase": "apply a logging ingress filter",
+          "node": "LOG",
+          "command": "python3 /lab/correlate.py single",
+          "expectation": "The receive-time correlator validates the single event-family condition.",
+          "passed": true,
+          "output": "\nroot@LOG:~# python3 /lab/correlate.py single\n{\"correlation_count\": 0, \"correlations\": [], \"event_counts\": {\"interface_disabled\": 0, \"packet_denied\": 1}, \"mode\": \"single\", \"source\": \"198.18.1.1\", \"status\": \"passed\", \"window_seconds\": 120}\nroot@LOG:~# "
+        },
+        {
+          "phase": "disable only the spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "disable only the spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Loopback1",
+          "passed": true,
+          "output": "\nR1(config)#interface Loopback1\nR1(config-if)#"
+        },
+        {
+          "phase": "disable only the spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nR1(config-if)#shutdown\nR1(config-if)#"
+        },
+        {
+          "phase": "disable only the spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "disable only the spare interface",
+          "node": "R1",
+          "command": "show ip interface brief",
+          "expectation": "The spare loopback is administratively disabled.",
+          "passed": true,
+          "output": "\nR1#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.0.1      YES TFTP   up                    up      \nEthernet0/1            198.18.1.1      YES TFTP   up                    up      \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nLoopback0              192.0.2.1       YES TFTP   up                    up      \nLoopback1              192.0.2.99      YES TFTP   administratively down down    \nR1#"
+        },
+        {
+          "phase": "disable only the spare interface",
+          "node": "LOG",
+          "command": "python3 /lab/correlate.py incident",
+          "expectation": "The receive-time correlator validates the incident event-family condition.",
+          "passed": true,
+          "output": "\nroot@LOG:~# python3 /lab/correlate.py incident\n{\"correlation_count\": 1, \"correlations\": [{\"interface_disabled\": {\"message\": \"<189>49: *Oct 26 20:42:38.762: %LINK-5-CHANGED: Interface Loopback1, changed state to administratively down\", \"received_monotonic\": 374375.076783924, \"received_utc\": \"2026-10-26T20:42:39.762631+00:00\", \"source\": \"198.18.1.1\", \"truncated\": false}, \"packet_denied\": {\"message\": \"<190>46: *Oct 26 20:42:32.376: %SEC-6-IPACCESSLOGDP: list CML-DENY denied icmp 198.18.0.2 -> 192.0.2.1 (8/0), 1 packet\", \"received_monotonic\": 374368.692132196, \"received_utc\": \"2026-10-26T20:42:33.377986+00:00\", \"source\": \"198.18.1.1\", \"truncated\": false}}], \"event_counts\": {\"interface_disabled\": 1, \"packet_denied\": 1}, \"mode\": \"incident\", \"source\": \"198.18.1.1\", \"status\": \"passed\", \"window_seconds\": 120}\nroot@LOG:~# "
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR1(config)#interface Ethernet0/0\nR1(config-if)#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no ip access-group CML-DENY in",
+          "passed": true,
+          "output": "\nR1(config-if)#no ip access-group CML-DENY in\nR1(config-if)#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-if)#exit\nR1(config)#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Loopback1",
+          "passed": true,
+          "output": "\nR1(config)#interface Loopback1\nR1(config-if)#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nR1(config-if)#no shutdown\nR1(config-if)#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "node": "TOOLS",
+          "command": "LC_ALL=C ping -c 3 -W 1 192.0.2.1",
+          "expectation": "All three packets reach the routed endpoint.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# LC_ALL=C ping -c 3 -W 1 192.0.2.1\nPING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.\n64 bytes from 192.0.2.1: icmp_seq=1 ttl=255 time=0.755 ms\n64 bytes from 192.0.2.1: icmp_seq=2 ttl=255 time=1.26 ms\n64 bytes from 192.0.2.1: icmp_seq=3 ttl=255 time=1.58 ms\n\n--- 192.0.2.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2043ms\nrtt min/avg/max/mdev = 0.755/1.196/1.575/0.337 ms\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "node": "R1",
+          "command": "show ip interface brief",
+          "expectation": "The spare loopback is operational.",
+          "passed": true,
+          "output": "\nR1#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.0.1      YES TFTP   up                    up      \nEthernet0/1            198.18.1.1      YES TFTP   up                    up      \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nLoopback0              192.0.2.1       YES TFTP   up                    up      \nLoopback1              192.0.2.99      YES TFTP   up                    up      \nR1#"
+        },
+        {
+          "phase": "restore forwarding and spare interface",
+          "node": "LOG",
+          "command": "python3 /lab/correlate.py incident",
+          "expectation": "The receive-time correlator validates the incident event-family condition.",
+          "passed": true,
+          "output": "\nroot@LOG:~# python3 /lab/correlate.py incident\n{\"correlation_count\": 1, \"correlations\": [{\"interface_disabled\": {\"message\": \"<189>49: *Oct 26 20:42:38.762: %LINK-5-CHANGED: Interface Loopback1, changed state to administratively down\", \"received_monotonic\": 374375.076783924, \"received_utc\": \"2026-10-26T20:42:39.762631+00:00\", \"source\": \"198.18.1.1\", \"truncated\": false}, \"packet_denied\": {\"message\": \"<190>46: *Oct 26 20:42:32.376: %SEC-6-IPACCESSLOGDP: list CML-DENY denied icmp 198.18.0.2 -> 192.0.2.1 (8/0), 1 packet\", \"received_monotonic\": 374368.692132196, \"received_utc\": \"2026-10-26T20:42:33.377986+00:00\", \"source\": \"198.18.1.1\", \"truncated\": false}}], \"event_counts\": {\"interface_disabled\": 1, \"packet_denied\": 1}, \"mode\": \"incident\", \"source\": \"198.18.1.1\", \"status\": \"passed\", \"window_seconds\": 120}\nroot@LOG:~# "
+        }
+      ],
+      "plan_sha256": "681eac5b5ecfdbf21d957b149eb42d41b9891628a90fce2b692e55a33c35938f",
+      "startup_states": {
+        "R1": "BOOTED",
+        "TOOLS": "BOOTED",
+        "LOG": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "TOOLS": "net-tools-2-10-1-3",
+        "LOG": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [
+        "LOG"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T20:42:59Z"
     }
   ]
 }

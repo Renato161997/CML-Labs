@@ -7,6 +7,7 @@ neither a root-looking prompt nor an emulator STARTED state proves readiness.
 import re
 
 NATIVE_LINUX = frozenset({"net-tools", "radius", "syslog", "tacplus"})
+NATIVE_CONSOLE_PORT = {"net-tools": 0, "radius": 1, "syslog": 1, "tacplus": 1}
 ROOT_PROMPT = r"(?:root@[^:\n]+:[^\n#]*#|/[^\n#]*#|bash-[\d.]+#)"
 
 

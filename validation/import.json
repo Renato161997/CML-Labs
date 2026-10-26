@@ -848,16 +848,6 @@
       "completed_utc": "2026-10-24T18:50:19Z"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/027-syslog-siem-correlation.yaml",
-      "sha256": "30b687cdb516b2ad59e42338c7f905550fec9c1f29f23207afd459e34c04380e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:19Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:19Z"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/028-packet-capture-span.yaml",
       "sha256": "ecd54c341e818b305f97b81134bd06bb630e939018f2e83e4e6ccda9db701012",
       "cml_version": "2.10.1+build.21",
@@ -1412,16 +1402,6 @@
       "sha256": "ed4eec5b7b82bce02ef8835d5932317ba84a1600a242737c7052ae6fad87c842",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-25T15:55:57Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:58Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/027-syslog-snmp.yaml",
-      "sha256": "09c1a2348ee33f3fe2f1620034d4e322f699312e5215a9a9c176ddd9f449cfb0",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:58Z",
       "checks": [],
       "status": "import-export-pass",
       "test_lab_removed": true,
@@ -2336,6 +2316,26 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-26T19:52:58Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/027-syslog-snmp.yaml",
+      "sha256": "14216f696fc821f6fe2cfdf65c7625bc1cb7b56a10931c921bd54d0147c4f898",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T20:34:59Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T20:35:00Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/027-syslog-siem-correlation.yaml",
+      "sha256": "6d4d53a73ec0e82917ff24039708af880f8b768e17483d4a97e45ab7cddcf89b",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T20:41:53Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T20:41:54Z"
     }
   ]
 }
