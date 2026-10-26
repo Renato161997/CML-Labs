@@ -324,5 +324,17 @@
     "duration_minutes": 65,
     "kind": "practice",
     "workbook": "docs/workbooks/300-410-040-pbr-with-ip-sla-fallback.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/042-wrong-administrative-distance.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 55,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-042-wrong-administrative-distance.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/041-summarization-and-filtering-faults.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 60,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-041-summarization-and-filtering-faults.md"
   }
 }
