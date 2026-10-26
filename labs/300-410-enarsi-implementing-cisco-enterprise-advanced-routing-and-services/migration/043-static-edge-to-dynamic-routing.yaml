@@ -1,266 +1,155 @@
 lab:
   title: Static Edge To Dynamic Routing
-  description: 300-410 ENARSI - Implementing Cisco Enterprise Advanced Routing and Services scenario-based
-    CML lab.
-  notes: '300-410 ENARSI scenario lab: Static Edge To Dynamic Routing
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# Static Edge To Dynamic Routing
 
 
-    Lab type: migration
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Scenario:
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/300-410-043-static-edge-to-dynamic-routing.md
 
-    You are taking over a partially built network. Use the topology, startup configs, and this note as
-    the work order.
+
+    Requires three IOL-XE nodes. The initial reference uses four explicit static routes, including transit
+    return routes. OSPF point-to-point interface mode is prepared but the routing process is enabled only
+    during the documented migration. The final state intentionally uses OSPF for both endpoints and the
+    transit router. Reachability is sampled after each step; this is not a continuous-loss measurement
+    or a zero-downtime guarantee. Stop/wipe the disposable copy to recover the original static baseline.
 
 
     Objectives:
 
-    - Replace static branch routing with a dynamic protocol.
+    - Verify a genuinely static forward and return path before migration.
 
-    - Keep a floating static route as backup.
+    - Establish both OSPF adjacencies and the full LSDB while static routes still win.
 
-    - Verify convergence and fallback.
+    - Withdraw each explicit endpoint/transit static route only after the dynamic path is available.
 
-
-    Suggested verification:
-
-    - show ip interface brief
-
-    - show ip route
-
-    - show running-config
-
-
-    Stretch goals:
-
-    - Document the final design.
-
-    - Add one extra validation command for each requirement.
-
-    - Make one controlled change and prove that the network still works.'
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: HQ-R1
-  node_definition: iosv
+  label: R1
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.10.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.10.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.1.1\
-      \ 255.255.255.255\n"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.12.1 255.255.255.252\n no shutdown\n ip ospf network point-to-point\n\
+      \ exit\nip route 192.0.2.3 255.255.255.255 198.18.12.2\nend\n"
+  cpu_limit: 50
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 0
-  y: 0
-  priority: 100
   tags: []
 - id: n1
-  label: ISP-R2
-  node_definition: iosv
+  label: R2
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.11.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.11.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.2.1\
-      \ 255.255.255.255\n"
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.2 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.12.2 255.255.255.252\n no shutdown\n ip ospf network point-to-point\n\
+      \ exit\ninterface Ethernet0/1\n ip address 198.18.23.1 255.255.255.252\n no shutdown\n ip ospf network\
+      \ point-to-point\n exit\nip route 192.0.2.1 255.255.255.255 198.18.12.1\nip route 192.0.2.3 255.255.255.255\
+      \ 198.18.23.2\nend\n"
+  cpu_limit: 50
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 240
-  y: 0
-  priority: 99
   tags: []
 - id: n2
-  label: BRANCH-R3
-  node_definition: iosv
+  label: R3
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R3\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.12.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.12.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.3.1\
-      \ 255.255.255.255\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 480
-  y: 0
+    content: "hostname R3\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.3 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.23.2 255.255.255.252\n no shutdown\n ip ospf network point-to-point\n\
+      \ exit\nip route 192.0.2.1 255.255.255.255 198.18.23.1\nend\n"
+  cpu_limit: 50
   priority: 98
-  tags: []
-- id: n3
-  label: EDGE-R4
-  node_definition: iosv
-  configuration:
-  - name: ios_config.txt
-    content: "hostname R4\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.13.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.13.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.4.1\
-      \ 255.255.255.255\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 720
+  x: 520
   y: 0
-  priority: 97
-  tags: []
-- id: n4
-  label: HQ-SW
-  node_definition: iosvl2
-  configuration:
-  - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nvlan 20\n name USERS_20\nvlan 30\n name SERVICES_30\n\
-      interface range GigabitEthernet0/0-3\n switchport mode access\n spanning-tree portfast\n"
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 0
-  y: 200
-  priority: 96
-  tags: []
-- id: n5
-  label: BRANCH-PC
-  node_definition: desktop
-  configuration:
-  - name: node.cfg
-    content: '# BRANCH-PC
-
-      # Use this node as a lightweight endpoint or API/mock server.
-
-      '
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  x: 240
-  y: 200
-  priority: 95
   tags: []
 links:
-- n1: n0
+- id: l0
+  n1: n0
   i1: i1
   n2: n1
   i2: i1
-  id: l0
-- n1: n1
+- id: l1
+  n1: n1
   i1: i2
   n2: n2
   i2: i1
-  id: l1
-- n1: n0
-  i1: i2
-  n2: n3
-  i2: i1
-  id: l2
-- n1: n3
-  i1: i2
-  n2: n2
-  i2: i2
-  id: l3
-- n1: n0
-  i1: i3
-  n2: n4
-  i2: i1
-  id: l4
-- n1: n2
-  i1: i3
-  n2: n5
-  i2: i0
-  id: l5
 annotations: []
 smart_annotations: []

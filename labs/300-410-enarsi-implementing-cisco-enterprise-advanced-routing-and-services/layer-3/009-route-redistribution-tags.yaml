@@ -1,172 +1,151 @@
 lab:
   title: Route Redistribution Tags
-  description: 300-410 ENARSI - Implementing Cisco Enterprise Advanced Routing and Services importable
-    CML topology.
-  notes: '300-410 ENARSI blueprint lab: Route Redistribution Tags
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# Route Redistribution Tags
 
 
-    Topics:
-
-    - redistribution
-
-    - route maps
-
-    - route tags
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Tasks:
-
-    1. Redistribute OSPF/EIGRP
-
-    2. Tag external routes
-
-    3. Prevent feedback loops
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/300-410-009-route-redistribution-tags.md
 
 
-    Useful checks:
+    Requires three IOL-XE nodes with a single redistribution boundary. The control prefix 203.0.113.9/32
+    intentionally points to Null0 and is used only to test route policy; it is never presented as a reachable
+    service. Both internal and external OSPF routes are explicitly eligible for EIGRP export, so the denial
+    is not an accidental default exclusion. Route maps preserve origin policy using tags 100/200 and explicitly
+    deny control tag 999. The exercise measures tag filtering and retagging, not loop freedom under multiple
+    ASBRs. The real loopback endpoints remain reachable during the selective policy change.
 
-    - show ip interface brief
 
-    - show running-config
+    Objectives:
 
-    - show ip route
+    - Inspect actual route tags after OSPF/EIGRP redistribution and verify real endpoint forwarding.
 
-    - show ip protocols
+    - Change the control prefix tag to pass the explicit export gate and observe downstream retagging.
 
-    - ping and traceroute between endpoints'
+    - Restore the denied tag and verify selective withdrawal without breaking the real endpoints.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
-  node_definition: iosv
-  x: -450
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C ENARSI Route Redistribution Tags ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI Route Redistribution Tags\n ip address 10.0.12.1 255.255.255.252\n\
-      \ no shutdown\ninterface Loopback0\n description ENARSI Route Redistribution Tags\n ip address 10.1.1.1\
-      \ 255.255.255.255\n no shutdown\nend"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.12.1 255.255.255.252\n no shutdown\n ip ospf network point-to-point\n\
+      \ exit\nip route 203.0.113.9 255.255.255.255 Null0\nroute-map STATIC-EXPORT permit 10\n set tag\
+      \ 999\n exit\nrouter ospf 1\n router-id 192.0.2.1\n network 198.18.12.0 0.0.0.3 area 0\n network\
+      \ 192.0.2.1 0.0.0.0 area 0\n redistribute static subnets route-map STATIC-EXPORT\n exit\nend\n"
+  cpu_limit: 50
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
   label: R2
-  node_definition: iosv
-  x: -150
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nbanner motd ^C ENARSI Route Redistribution Tags ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI Route Redistribution Tags\n ip address 10.0.12.2 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description ENARSI Route Redistribution Tags\n ip\
-      \ address 10.0.23.1 255.255.255.252\n no shutdown\nend"
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.2 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.12.2 255.255.255.252\n no shutdown\n ip ospf network point-to-point\n\
+      \ exit\ninterface Ethernet0/1\n ip address 198.18.23.1 255.255.255.252\n no shutdown\n exit\nroute-map\
+      \ O2E deny 10\n match tag 999\n exit\nroute-map O2E deny 20\n match tag 200\n exit\nroute-map O2E\
+      \ permit 30\n set tag 100\n exit\nroute-map E2O deny 10\n match tag 100\n exit\nroute-map E2O permit\
+      \ 20\n set tag 200\n exit\nrouter ospf 1\n router-id 192.0.2.2\n network 198.18.12.0 0.0.0.3 area\
+      \ 0\n network 192.0.2.2 0.0.0.0 area 0\n redistribute eigrp 100 subnets route-map E2O\n exit\nrouter\
+      \ eigrp 100\n network 198.18.23.0 0.0.0.3\n no auto-summary\n default-metric 10000 100 255 1 1500\n\
+      \ redistribute ospf 1 match internal external 1 external 2 route-map O2E\n exit\nend\n"
+  cpu_limit: 50
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 99
   tags: []
 - id: n2
   label: R3
-  node_definition: iosv
-  x: 150
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R3\nno ip domain-lookup\nbanner motd ^C ENARSI Route Redistribution Tags ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI Route Redistribution Tags\n ip address 10.0.23.2 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description ENARSI Route Redistribution Tags\n ip\
-      \ address 10.0.34.1 255.255.255.252\n no shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
+    content: "hostname R3\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.3 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.23.2 255.255.255.252\n no shutdown\n exit\nrouter eigrp 100\n\
+      \ network 198.18.23.0 0.0.0.3\n network 192.0.2.3 0.0.0.0\n no auto-summary\n exit\nend\n"
+  cpu_limit: 50
   priority: 98
-  tags: []
-- id: n3
-  label: R4
-  node_definition: iosv
-  x: 450
+  x: 520
   y: 0
-  configuration:
-  - name: ios_config.txt
-    content: "hostname R4\nno ip domain-lookup\nbanner motd ^C ENARSI Route Redistribution Tags ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI Route Redistribution Tags\n ip address 10.0.34.2 255.255.255.252\n\
-      \ no shutdown\ninterface Loopback0\n description ENARSI Route Redistribution Tags\n ip address 10.4.4.4\
-      \ 255.255.255.255\n no shutdown\nend"
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 97
   tags: []
 links:
 - id: l0
@@ -178,11 +157,6 @@ links:
   n1: n1
   i1: i2
   n2: n2
-  i2: i1
-- id: l2
-  n1: n2
-  i1: i2
-  n2: n3
   i2: i1
 annotations: []
 smart_annotations: []

@@ -3748,5 +3748,334 @@
         ]
       }
     ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/migration/043-static-edge-to-dynamic-routing.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.3",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.12\\.2",
+        "expectation": "The actual static route selects 198.18.12.2.",
+        "attempts": 12
+      },
+      {
+        "node": "R3",
+        "command": "show ip route 192.0.2.1",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.23\\.1",
+        "expectation": "The actual static route selects 198.18.23.1.",
+        "attempts": 12
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The sampled end-to-end traffic passes after this migration step."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "enable OSPF on R1",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "router-id 192.0.2.1",
+          "network 198.18.12.0 0.0.0.3 area 0",
+          "network 192.0.2.1 0.0.0.0 area 0",
+          "exit",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show running-config | section router ospf",
+            "pattern": "router ospf 1",
+            "expectation": "The first router is prepared; this alone does not prove an adjacency."
+          }
+        ]
+      },
+      {
+        "name": "enable OSPF on R2",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "router-id 192.0.2.2",
+          "network 198.18.12.0 0.0.0.3 area 0",
+          "network 198.18.23.0 0.0.0.3 area 0",
+          "network 192.0.2.2 0.0.0.0 area 0",
+          "exit",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The first point-to-point adjacency is FULL.",
+            "attempts": 12
+          }
+        ]
+      },
+      {
+        "name": "enable OSPF on R3",
+        "node": "R3",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "router-id 192.0.2.3",
+          "network 198.18.23.0 0.0.0.3 area 0",
+          "network 192.0.2.3 0.0.0.0 area 0",
+          "exit",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.3\\s+\\d+\\s+FULL",
+            "expectation": "The second point-to-point adjacency is FULL.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "show ip ospf database router 192.0.2.3",
+            "pattern": "Advertising Router: 192\\.0\\.2\\.3",
+            "expectation": "The complete topology is in the LSDB before static withdrawal."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.12\\.2",
+            "expectation": "The actual static route selects 198.18.12.2.",
+            "attempts": 12
+          },
+          {
+            "node": "R3",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.23\\.1",
+            "expectation": "The actual static route selects 198.18.23.1.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The sampled end-to-end traffic passes after this migration step."
+          }
+        ]
+      },
+      {
+        "name": "migrate the first endpoint",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.3 255.255.255.255 198.18.12.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?s)Known via \"ospf 1\".*198\\.18\\.12\\.2",
+            "expectation": "The actual ospf 1 route selects 198.18.12.2.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The sampled end-to-end traffic passes after this migration step."
+          }
+        ]
+      },
+      {
+        "name": "migrate the return endpoint",
+        "node": "R3",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.1 255.255.255.255 198.18.23.1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R3",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)Known via \"ospf 1\".*198\\.18\\.23\\.1",
+            "expectation": "The actual ospf 1 route selects 198.18.23.1.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The sampled end-to-end traffic passes after this migration step."
+          }
+        ]
+      },
+      {
+        "name": "migrate the transit router",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.1 255.255.255.255 198.18.12.1",
+          "no ip route 192.0.2.3 255.255.255.255 198.18.23.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)Known via \"ospf 1\".*198\\.18\\.12\\.1",
+            "expectation": "The actual ospf 1 route selects 198.18.12.1.",
+            "attempts": 12
+          },
+          {
+            "node": "R2",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?s)Known via \"ospf 1\".*198\\.18\\.23\\.2",
+            "expectation": "The actual ospf 1 route selects 198.18.23.2.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The sampled end-to-end traffic passes after this migration step."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/009-route-redistribution-tags.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip ospf neighbor",
+        "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+        "expectation": "The OSPF adjacency is FULL.",
+        "attempts": 12
+      },
+      {
+        "node": "R2",
+        "command": "show ip eigrp neighbors",
+        "pattern": "198\\.18\\.23\\.2",
+        "expectation": "The EIGRP neighbor is actually present.",
+        "attempts": 12
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.3",
+        "pattern": "Route tag 200",
+        "expectation": "The EIGRP-origin route carries its OSPF export tag.",
+        "attempts": 12
+      },
+      {
+        "node": "R3",
+        "command": "show ip route 192.0.2.1",
+        "pattern": "Route tag 100",
+        "expectation": "The OSPF-origin route carries its EIGRP export tag.",
+        "attempts": 12
+      },
+      {
+        "node": "R2",
+        "command": "show ip route 203.0.113.9",
+        "pattern": "Route tag 999",
+        "expectation": "The control prefix reaches the boundary with the denied input tag."
+      },
+      {
+        "node": "R3",
+        "command": "show ip route 203.0.113.9",
+        "pattern": "(?:Network|Subnet) not in table",
+        "expectation": "The tag-filtered control prefix is absent from EIGRP.",
+        "attempts": 12
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The real endpoints forward traffic across the redistribution boundary."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "permit the control prefix by changing its input tag",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "no redistribute static",
+          "exit",
+          "route-map STATIC-EXPORT permit 10",
+          "no set tag",
+          "set tag 998",
+          "exit",
+          "router ospf 1",
+          "redistribute static subnets route-map STATIC-EXPORT",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip route 203.0.113.9",
+            "pattern": "Route tag 998",
+            "expectation": "The boundary observes the changed input tag.",
+            "attempts": 12
+          },
+          {
+            "node": "R3",
+            "command": "show ip route 203.0.113.9",
+            "pattern": "Route tag 100",
+            "expectation": "EIGRP receives the permitted prefix with the export-policy tag.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The real endpoints forward traffic across the redistribution boundary."
+          }
+        ]
+      },
+      {
+        "name": "restore the denied input tag",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "no redistribute static",
+          "exit",
+          "route-map STATIC-EXPORT permit 10",
+          "no set tag",
+          "set tag 999",
+          "exit",
+          "router ospf 1",
+          "redistribute static subnets route-map STATIC-EXPORT",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip route 203.0.113.9",
+            "pattern": "Route tag 999",
+            "expectation": "The denied input tag is restored.",
+            "attempts": 12
+          },
+          {
+            "node": "R3",
+            "command": "show ip route 203.0.113.9",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The tag-filtered control prefix is absent from EIGRP.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The real endpoints forward traffic across the redistribution boundary."
+          }
+        ]
+      }
+    ]
   }
 }
