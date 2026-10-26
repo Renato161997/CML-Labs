@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **66**.
+Import/export passes: **233/233**. Functional passes: **68**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -20,6 +20,7 @@ Import/export passes: **233/233**. Functional passes: **66**.
 | [NAT PAT Internet Edge](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/024-nat-pat-edge.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 0 | 2026-10-24T18:29:48Z |
 | [NTP Time Sync](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/025-ntp-time-sync.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 7 | 12 | 2026-10-25T17:03:03Z |
 | [DNS Client Resolution](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/026-dns-client-resolution.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 0 | 2026-10-25T11:55:01Z |
+| [Syslog And SNMP](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/027-syslog-snmp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3, syslog-4-8-1-5-deb13u1 | 11 | 16 | 2026-10-26T20:36:16Z |
 | [QoS Marking Classification](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/028-qos-marking-classification.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 8 | 10 | 2026-10-25T17:11:29Z |
 | [TFTP Config Backup](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/029-tftp-config-backup.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 1 | 2026-10-25T12:32:45Z |
 | [IP SLA Tracking Static Route](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/030-sla-tracking-static-route.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 8 | 8 | 2026-10-25T13:07:05Z |
@@ -72,6 +73,7 @@ Import/export passes: **233/233**. Functional passes: **66**.
 | [MST RPVST STP Tuning](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/020-mst-rpvst-stp-tuning.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 14 | 18 | 2026-10-26T19:20:19Z |
 | [LACP PAgP EtherChannel](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/021-lacp-pagp-etherchannel.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 8 | 60 | 2026-10-26T19:25:31Z |
 | [GRE Overlay Underlay](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 22 | 16 | 2026-10-26T19:54:02Z |
+| [Syslog SIEM Correlation](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/027-syslog-siem-correlation.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3 | 11 | 19 | 2026-10-26T20:24:43Z |
 | [Webhook Receiver](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:46:46Z |
 | [Webhook Receiver Config Validation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/webhooks/035-webhook-receiver-config-validation.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:37:45Z |
 

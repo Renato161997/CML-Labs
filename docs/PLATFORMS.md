@@ -41,6 +41,13 @@ an identifying shell prompt. This changes only the disposable console's PS1, not
 users or credentials. The SSH and WebSocket console paths have both been checked
 on the native net-tools reference image. Keep native shell acceptance commands
 short: interactive line editing can redraw and corrupt long command echoes.
+The native net-tools interactive console is port 0. The dedicated syslog, RADIUS
+and TACACS+ definitions expose their daemon output on port 0 and a separate shell
+on port 1; the harness selects that shell for acceptance commands.
+An IP-specific daemon listener can start before day-0 addresses are applied.
+The syslog exercise uses the supported `ip-freebind(yes)` option, keeping the
+listener on the lab data address while allowing that startup order.
+[CML native container definitions](https://github.com/CiscoLearning/cml-docker-containers).
 First boots can take several minutes. Results count observational assertions
 separately from transition/configuration commands; a successful command echo alone
 does not establish that a protocol converged or that traffic passed.

@@ -36,7 +36,7 @@ from labtools import (
     plan_digest,
     validate,
 )
-from linux_console import NATIVE_LINUX, establish_linux_shell
+from linux_console import NATIVE_CONSOLE_PORT, NATIVE_LINUX, establish_linux_shell
 from readiness import running_node_states, verify_unconfirmed_consoles
 from virl2_client import ClientLibrary
 from virl2_client.exceptions import APIError
@@ -53,7 +53,11 @@ class WebConsole:
                 pieces.netloc,
                 "/ws/dispatch/frontend/console",
                 urlencode(
-                    {"cml_client": "WebUI", "action": "lab_exec", "uuid": node.console_key(0)}
+                    {
+                        "cml_client": "WebUI",
+                        "action": "lab_exec",
+                        "uuid": node.console_key(NATIVE_CONSOLE_PORT.get(node.node_definition, 0)),
+                    }
                 ),
                 "",
             )
@@ -146,7 +150,9 @@ class SSHConsole:
             )
             self.channel = self.ssh.get_transport().open_session()
             self.channel.get_pty(width=180, height=60)
-            self.channel.exec_command(f"open /{lab.id}/{node.id}/0")
+            self.channel.exec_command(
+                f"open /{lab.id}/{node.id}/{NATIVE_CONSOLE_PORT.get(node.node_definition, 0)}"
+            )
             prompt = self.read(8)
             self.channel.send("\r")
             prompt += self.read(3)

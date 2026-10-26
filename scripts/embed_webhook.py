@@ -3,7 +3,9 @@
 import argparse
 import base64
 import json
+import re
 import sys
+import textwrap
 
 import yaml
 from labtools import ROOT, load
@@ -18,6 +20,53 @@ PROFILES = {
     },
 }
 
+NATIVE_PROFILES = {
+    "native-snmp": {
+        "TOOLS": {"/lab/snmp_probe.py": "examples/management/snmp_probe.py"},
+    },
+    "native-siem": {
+        "LOG": {
+            "/lab/syslog_receiver.py": "examples/visibility/syslog_receiver.py",
+            "/lab/correlate.py": "examples/visibility/correlate.py",
+        },
+    },
+}
+
+
+def native_sources(data, metadata):
+    """Validate registered source payloads without executing a shell or guest code."""
+    profile = NATIVE_PROFILES.get(metadata.get("example_profile"))
+    if not profile:
+        if any(
+            entry.get("name") == "boot.sh" and "CML_EMBED_" in entry.get("content", "")
+            for node in data["nodes"]
+            for entry in node.get("configuration", [])
+        ):
+            raise ValueError("Native embedded source needs a registered example profile")
+        return False
+    changed = False
+    nodes = {node["label"]: node for node in data["nodes"]}
+    for label, sources in profile.items():
+        if label not in nodes:
+            raise ValueError("Missing registered native example node: " + label)
+        boot = next(f for f in nodes[label]["configuration"] if f["name"] == "boot.sh")
+        for filename, source in sources.items():
+            marker = "CML_EMBED_" + re.sub(r"[^A-Z0-9]", "_", source.upper())
+            header = "base64 -d > " + filename + " <<'" + marker + "'\n"
+            pattern = re.escape(header) + r"([A-Za-z0-9+/=\n]+)\n" + re.escape(marker) + r"(?=\n|$)"
+            match = re.search(pattern, boot["content"])
+            if not match:
+                raise ValueError("Missing native source payload: " + label + ":" + filename)
+            decoded = base64.b64decode(match.group(1).replace("\n", ""), validate=True)
+            expected = (ROOT / source).read_bytes()
+            if decoded != expected:
+                payload = "\n".join(textwrap.wrap(base64.b64encode(expected).decode(), 76))
+                boot["content"] = (
+                    boot["content"][: match.start(1)] + payload + boot["content"][match.end(1) :]
+                )
+                changed = True
+    return changed
+
 
 def update(check=False):
     changed = []
@@ -26,7 +75,7 @@ def update(check=False):
     ).items():
         path = ROOT / relative
         data = load(path)
-        dirty = False
+        dirty = native_sources(data, metadata)
         for node in data["nodes"]:
             if node["node_definition"] != "ubuntu":
                 continue

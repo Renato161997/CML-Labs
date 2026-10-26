@@ -396,5 +396,19 @@
     "duration_minutes": 60,
     "kind": "practice",
     "workbook": "docs/workbooks/350-401-006-cef-cam-tcam-rib-fib.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/027-syslog-snmp.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-027-syslog-snmp.md",
+    "example_profile": "native-snmp"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/027-syslog-siem-correlation.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-027-syslog-siem-correlation.md",
+    "example_profile": "native-siem"
   }
 }
