@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **88**.
+Import/export passes: **233/233**. Functional passes: **90**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -44,6 +44,8 @@ Import/export passes: **233/233**. Functional passes: **88**.
 | [DHCP Snooping And DAI](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/033-dhcp-snooping-dai.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, iosvl2-2020 | 18 | 11 | 2026-10-25T18:56:55Z |
 | [Port Security Sticky MAC](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/034-port-security-sticky.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 5 | 8 | 2026-10-25T17:11:24Z |
 | [Passwords Banners Secure Management](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/036-passwords-banners-secure-management.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ubuntu-24-04-20260307 | 5 | 4 | 2026-10-25T17:55:21Z |
+| [NETCONF RESTCONF Routing](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/033-netconf-restconf-routing.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 13 | 31 | 2026-10-27T19:18:58Z |
+| [Python Routing Troubleshooter](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/034-python-routing-troubleshooter.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 13 | 31 | 2026-10-27T19:30:47Z |
 | [iBGP eBGP Neighbors](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/013-ibgp-ebgp-neighbors.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 0 | 2026-10-24T18:35:49Z |
 | [BGP Path Selection Local Pref MED](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/014-bgp-path-selection-local-pref-med.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 0 | 2026-10-24T18:36:09Z |
 | [BGP Route Reflector](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/015-bgp-route-reflector.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 11 | 14 | 2026-10-25T13:16:16Z |

@@ -1328,26 +1328,6 @@
       "completed_utc": "2026-10-25T15:56:06Z"
     },
     {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/033-netconf-restconf-routing.yaml",
-      "sha256": "e7d5cd43c830fed215bf6240540429d60bbe9b00795f2604d8c6136231c4d3cd",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:06Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:06Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/034-python-routing-troubleshooter.yaml",
-      "sha256": "43cf402283d41f1031fac5bdd200c9f9f306aff93f9a1ddd6dd2be06ea4dfaef",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:06Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:06Z"
-    },
-    {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/035-ansible-routing-baseline.yaml",
       "sha256": "0301213360cafd5270a1f8ef54e20524c44bc2b522051155c2306f160ee90c7d",
       "cml_version": "2.10.1+build.21",
@@ -2336,6 +2316,26 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-27T19:02:13Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/033-netconf-restconf-routing.yaml",
+      "sha256": "0e5e7a9b5d8c04d9aafac3271ff0471b04b3f79783d9ff05812f1f5e40ba3f2c",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T19:21:47Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T19:21:47Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/034-python-routing-troubleshooter.yaml",
+      "sha256": "9ecea969ace369a78bfa6b7f3e4180e3ffbc9bca4d3949616f7feb07bfc99221",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T19:21:49Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T19:21:50Z"
     }
   ]
 }

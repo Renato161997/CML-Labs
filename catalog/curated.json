@@ -544,5 +544,19 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-901-036-pyats-genie-style-validation.md",
     "example_profile": "native-iosxe-inventory"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/033-netconf-restconf-routing.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 75,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-033-netconf-restconf-routing.md",
+    "example_profile": "native-iosxe-routing"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/034-python-routing-troubleshooter.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 75,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-034-python-routing-troubleshooter.md",
+    "example_profile": "native-iosxe-routing"
   }
 }
