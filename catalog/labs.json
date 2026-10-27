@@ -1120,44 +1120,44 @@
       "title": "NETCONF RESTCONF Routing",
       "track": "300-410",
       "topic": "automation",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-toolbox",
+        "csr1000v"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 75,
+      "workbook": "docs/workbooks/300-410-033-netconf-restconf-routing.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "e7d5cd43c830fed215bf6240540429d60bbe9b00795f2604d8c6136231c4d3cd"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-27T19:18:58Z",
+      "sha256": "0e5e7a9b5d8c04d9aafac3271ff0471b04b3f79783d9ff05812f1f5e40ba3f2c"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/034-python-routing-troubleshooter.yaml",
       "title": "Python Routing Troubleshooter",
       "track": "300-410",
       "topic": "automation",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-toolbox",
+        "csr1000v"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 75,
+      "workbook": "docs/workbooks/300-410-034-python-routing-troubleshooter.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "43cf402283d41f1031fac5bdd200c9f9f306aff93f9a1ddd6dd2be06ea4dfaef"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-27T19:24:38Z",
+      "sha256": "9ecea969ace369a78bfa6b7f3e4180e3ffbc9bca4d3949616f7feb07bfc99221"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/035-ansible-routing-baseline.yaml",

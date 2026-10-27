@@ -64,3 +64,16 @@ this repository.
 
 References: [Cisco container build guidance](https://blogs.cisco.com/learning/building-custom-containers-for-cisco-modeling-labs-cml-a-practical-guide),
 [ncclient 0.6.17 IOS XE handler](https://github.com/ncclient/ncclient/blob/v0.6.17/ncclient/devices/iosxe.py).
+
+## Routing configuration and forwarding
+
+The ENARSI routing and Python troubleshooter exercises use an actual Linux
+loopback destination. A NETCONF list-entry change is not enough for a pass:
+independent IOS routing/ICMP checks must observe delivery, selective withdrawal
+and recovery, while the connected management path remains healthy. The broken
+case classifies its configured off-link next hop against the subnet read through
+RESTCONF before replacing it. Only one isolated /32 route is modified.
+
+For client-driven transitions, `command_pattern` requires an explicit successful
+structured result before later state checks. The evidence validator also checks
+that result in the recorded output; a green flag cannot replace it.

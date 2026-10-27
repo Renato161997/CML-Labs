@@ -47,6 +47,13 @@ def validate_plan(plan, labels):
             for c in commands
         ):
             errors.append("transition needs single-line console commands")
+        if "command_pattern" in step:
+            try:
+                if not isinstance(step["command_pattern"], str) or not step["command_pattern"]:
+                    raise ValueError("empty transition result pattern")
+                re.compile(step["command_pattern"])
+            except (re.error, TypeError, ValueError):
+                errors.append("invalid transition result pattern")
         groups.append(step.get("checks", []))
     for checks in groups:
         if not checks:
@@ -146,6 +153,8 @@ def execute_plan(plan, console, record, *, sleep=time.sleep):
         for command in step["commands"]:
             output = console(step["node"]).command(command, step.get("command_timeout", 5))
             passed = command in output and not CLI_ERROR.search(output)
+            if "command_pattern" in step:
+                passed = passed and bool(re.search(step["command_pattern"], output, re.MULTILINE))
             record(
                 {
                     "phase": phase,

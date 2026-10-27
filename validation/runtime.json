@@ -13752,6 +13752,758 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-27T19:12:10Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/033-netconf-restconf-routing.yaml",
+      "sha256": "0e5e7a9b5d8c04d9aafac3271ff0471b04b3f79783d9ff05812f1f5e40ba3f2c",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T19:15:53Z",
+      "checks": [
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto key mypubkey rsa",
+          "passed": true,
+          "output": "\nAPI#show crypto key mypubkey rsa\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "clock set 19:12:31 27 Oct 2026",
+          "passed": true,
+          "output": "\nAPI#clock set 19:12:31 27 Oct 2026\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "debug crypto pki transactions",
+          "passed": true,
+          "output": "\nAPI#debug crypto pki transactions\nCrypto PKI Trans debugging is on\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nAPI#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto key generate rsa general-keys label LABSSH modulus 3072",
+          "passed": true,
+          "output": "\nAPI(config)#crypto key generate rsa general-keys label LABSSH modulus 3072\nThe name for the keys will be: LABSSH\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\n*Oct 27 19:12:31.000: %SYS-6-CLOCKUPDATE: System clock has been updated from 19:17:27 UTC Tue Oct 27 2026 to 19:12:31 UTC Tue Oct 27 2026, configured from console by console.\n[OK] (elapsed time was 1 seconds)\n\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto key generate rsa general-keys label LABTLS modulus 3072",
+          "passed": true,
+          "output": " Attempting to insert the peer's public key into cache\nOct 27 19:12:34.889:  CRYPTO_PKI:Peer's public inserted successfully with key id 1\nOct 27 19:12:34.896: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:12:34.896: CRYPTO_PKI: Creating trustpoint Trustpool1\nOct 27 19:12:34.896: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:12:34.896:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:12:34.896:  CRYPTO_PKI:Peer's public inserted successfully with key id 2\nOct 27 19:12:34.896: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:12:34.896: CRYPTO_PKI: Creating trustpoint Trustpool2\nOct 27 19:12:34.897: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:12:34.897:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:12:34.897:  CRYPTO_PKI:Peer's public inserted successfully with key id 3\nOct 27 19:12:34.898: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:12:34.898: CRYPTO_PKI: Creating trustpoint Trustpool3\nOct 27 19:12:34.899: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:12:34.899:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:12:34.899:  CRYPTO_PKI:Peer's public inserted successfully with key id 4\nOct 27 19:12:34.899: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:12:34.899: CRYPTO_PKI: Creating trustpoint Trustpool4\nOct 27 19:12:34.900: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:12:34.900:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:12:34.900:  CRYPTO_PKI:Peer's public inserted successfully with key id 5\nOct 27 19:12:34.901: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:12:34.901: CRYPTO_PKI: Creating trustpoint Trustpool5\nOct 27 19:12:34.901: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:12:34.901:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:12:34.901:  CRYPTO_PKI:Peer's public inserted successfully with key id 6\nOct 27 19:12:34.901: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:12:34.901: CRYPTO_PKI: Creating trustpoint Trustpool6\nOct 27 19:12:34.902: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:12:34.902:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:12:34.902:  CRYPTO_PKI:Peer's public inserted successfully with key id 7\nOct 27 19:12:34.902: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:12:34.902: CRYPTO_PKI: Creating trustpoint Trustpool7\nOct 27 19:12:34.903: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:12:34.903:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:12:34.903:  CRYPTO_PKI:Peer's public inserted successfully with key id 8\nOct 27 19:12:34.904: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:12:34.904: CRYPTO_PKI: Creating trustpoint Trustpool8\nOct 27 19:12:34.904: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:12:34.904:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:12:34.904:  CRYPTO_PKI:Peer's public inserted successfully with key id 9\nOct 27 19:12:34.904: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:12:34.904: CRYPTO_PKI: Creating trustpoint Trustpool9\nOct 27 19:12:34.905: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:12:34.905:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:12:34.905:  CRYPTO_PKI:Peer's public inserted successfully with key id 10\nOct 27 19:12:34.905: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:12:34.905\n[OK] (elapsed time was 1 seconds)\n\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip ssh rsa keypair-name LABSSH",
+          "passed": true,
+          "output": "\nAPI(config)#ip ssh rsa keypair-name LABSSH\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto pki trustpoint LABTLS",
+          "passed": true,
+          "output": "\nAPI(config)#crypto pki trustpoint LABTLS\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "enrollment selfsigned",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#enrollment selfsigned\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "subject-name CN=api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#subject-name CN=api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "subject-alt-name api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#subject-alt-name api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "serial-number none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#serial-number none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "fqdn api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#fqdn api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip-address none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#ip-address none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "revocation-check none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#revocation-check none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "rsakeypair LABTLS",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#rsakeypair LABTLS\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "hash sha256",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#hash sha256\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "exit",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#exit\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-trustpoint LABTLS",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-trustpoint LABTLS\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-server",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-server\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "restconf",
+          "passed": true,
+          "output": "\nAPI(config)#restconf\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "netconf-yang",
+          "passed": true,
+          "output": "\nAPI(config)#netconf-yang\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "end",
+          "passed": true,
+          "output": "\nAPI(config)#end\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show platform software yang-management process",
+          "passed": true,
+          "output": "\nAPI#show platform software yang-management process\nconfd            : Not Running\nnesd             : Not Running\nsyncfd           : Not Running\nncsshd           : Not Running\ndmiauthd         : Not Running\nnginx            : Running    \nndbmand          : Not Running\npubd             : Running    \n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show platform software yang-management process",
+          "passed": true,
+          "output": "\nAPI#show platform software yang-management process\nconfd            : Running    \nnesd             : Running    \nsyncfd           : Running    \nncsshd           : Running    \ndmiauthd         : Running    \nnginx            : Running    \nndbmand          : Running    \npubd             : Running    \n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "undebug all",
+          "passed": true,
+          "output": "\nAPI#undebug all\nAll possible debugging has been turned off\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto pki certificates pem",
+          "passed": true,
+          "output": "coBQdqqvDS+n\nNvr0R4V3mKo/ayJl+b3SiAknUcO43HBNKIMT1qJzAdi/1o0x5n8WTsmPZ//rHjYO\nGAyGzNPZxgr452oJkOSEUCeETJUvCve6eY/xcnro1J6p6GvpGdUtWF5d1Bi+Z9JP\nPlUM6DOvfSsAWc5rHEBSDEKVQvtzinhVtWZM1L2cTYE+a8G4VG/JA/0gt4GDFScq\nOSk3iK8MN3m3hNmqh9pJf08OEwdVKPnxN1Cq+YVxNrGVVoc2zmGBGNyMzqbJ5HMQ\nGS+B7T5ZmQI8uslfcCRnkKuZrAf3dJuWhWh+IQ+GFQOdoYod+OzCox/RID98QaKR\nx1ACd12ApU01YbZm4hiEkoSK16zX+A8U4WYZGiYP13O9vBE8dU3VGGSlV4UocC18\n0+odvkjlBnIcqYaZPIwXMOxuLl8N1zRdlVBl2mReYWYKTtxRNSh+XUMT31sq039G\nztaFl9bsyevE88dQatQC4qBmUH7LgZeDqb6CFuJc0Ck9Dx5nHPc=\n-----END CERTIFICATE-----\n\n% General Purpose Certificate:\n-----BEGIN CERTIFICATE-----\nMIIEcjCCAtqgAwIBAgIBATANBgkqhkiG9w0BAQsFADBCMRwwGgYDVQQDExNhcGku\nY21sLWxhYi5leGFtcGxlMSIwIAYJKoZIhvcNAQkCFhNhcGkuY21sLWxhYi5leGFt\ncGxlMB4XDTI2MTAyNzE5MTI0MloXDTM2MTAyNjE5MTI0MlowQjEcMBoGA1UEAxMT\nYXBpLmNtbC1sYWIuZXhhbXBsZTEiMCAGCSqGSIb3DQEJAhYTYXBpLmNtbC1sYWIu\nZXhhbXBsZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAIymp483xmji\nljxbeAnnS1bcsjtelzfmSZkTqtVvG8EqgkmTa5Se6o33ZLvxqCIjA6S1okh2+RWO\nIKGnfwPT3jl4bwRerpJT4Bghaz/B1/063pP5AqqDz5TWwg8mfKpxVv1wB3MMQoIw\nEx/JskOrTTF5EpHaInUN6D0ABhmYeOoSOhyzNX3xvu601nCDF2Qm5DwvQ4Z1DgOw\nepy8OcouYuaKdW0KdVAkvzdpIT8FnFiFjWHMB9CE+4ZPyUnT7FhSeJDLlo/1KCql\nWAubHVIBwUOivfSx27ytH6w4eKxMo+Ipv+2a+/rZWRoF64wGv93LbW+lMpAVQ078\ny4d6B3ocx5VeYN2NNahE0Iz33oAUPK4c8L4ZxIv6V+BvTuNisjMDOPn53wS4Qbel\ne1lVqNqfB/KFICV9S4FgbhEnBtJK/IiKnNx+XLoh+nhbrMsD2elGcEMXY3ZcrXtp\nLY4GP623PnlJNVlh+hB5N4cCqY/k40FZ71zs9k1n6w47yu4FMb54AQIDAQABo3Mw\ncTAPBgNVHRMBAf8EBTADAQH/MB4GA1UdEQQXMBWCE2FwaS5jbWwtbGFiLmV4YW1w\nbGUwHwYDVR0jBBgwFoAUYzUrfDhz2NeZn1Tge8ZZZ6D+5zwwHQYDVR0OBBYEFGM1\nK3w4c9jXmZ9U4HvGWWeg/uc8MA0GCSqGSIb3DQEBCwUAA4IBgQA3coBQdqqvDS+n\nNvr0R4V3mKo/ayJl+b3SiAknUcO43HBNKIMT1qJzAdi/1o0x5n8WTsmPZ//rHjYO\nGAyGzNPZxgr452oJkOSEUCeETJUvCve6eY/xcnro1J6p6GvpGdUtWF5d1Bi+Z9JP\nPlUM6DOvfSsAWc5rHEBSDEKVQvtzinhVtWZM1L2cTYE+a8G4VG/JA/0gt4GDFScq\nOSk3iK8MN3m3hNmqh9pJf08OEwdVKPnxN1Cq+YVxNrGVVoc2zmGBGNyMzqbJ5HMQ\nGS+B7T5ZmQI8uslfcCRnkKuZrAf3dJuWhWh+IQ+GFQOdoYod+OzCox/RID98QaKR\nx1ACd12ApU01YbZm4hiEkoSK16zX+A8U4WYZGiYP13O9vBE8dU3VGGSlV4UocC18\n0+odvkjlBnIcqYaZPIwXMOxuLl8N1zRdlVBl2mReYWYKTtxRNSh+XUMT31sq039G\nztaFl9bsyevE88dQatQC4qBmUH7LgZeDqb6CFuJc0Ck9Dx5nHPc=\n-----END CERTIFICATE-----\n\n------Trustpoint: SLA-TrustPoint------\n% The specified trustpoint is not enrolled (SLA-TrustPoint).\n% Only export the CA certificate in PEM format.\n% CA certificate:\n-----BEGIN CERTIFICATE-----\nMIIDITCCAgmgAwIBAgIBATANBgkqhkiG9w0BAQsFADAyMQ4wDAYDVQQKEwVDaXNj\nbzEgMB4GA1UEAxMXQ2lzY28gTGljZW5zaW5nIFJvb3QgQ0EwHhcNMTMwNTMwMTk0\nODQ3WhcNMzgwNTMwMTk0ODQ3WjAyMQ4wDAYDVQQKEwVDaXNjbzEgMB4GA1UEAxMX\nQ2lzY28gTGljZW5zaW5nIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw\nggEKAoIBAQCmvL2WEx4F9xRepyws1obmFyIuofHv9k3LtMeYISqhR8ZV2NeUcTgN\nhxFEHhqvBxqcrmOIijjlIBw5TXhGLvI5xln3FbmMCllbu1y9DP6+o3AKi/fY8lbu\nSqToDdtv0clgsf0Y/8aclm+miVeiYX3nEE/cX+opVqxzkKPrK1Q2rchHosXatVPr\naamlNVjp8+PAvSPPWL1xiGjmlJEg8yDnlI5x1647zITxBoTHS8jgD1ObpCtCxou3\nx0eQlrTLLWLqL1Bdx7BipGgR2VvoJQ/EXV1fuI8n0ZHFXw12YfmkzT2ZIyeouwO9\nTm1waXy634vfX0NolRNeRN/Hxs8E3X/RAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIB\nBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBRJ3IVLPTHlGz5qF2Bq8zM9O0xz\n6DANBgkqhkiG9w0BAQsFAAOCAQEAUH8k05MqZoYCXZ/oOK5cbU32sEljHHgkDakF\nYE7c3v9P7St3/EYOzWNv291EaB46VnOrkJPTsWyePYvZiYe/5Ay9nhrsoMIhibtc\nj6hWhs2YtkZVdbFGjfxmqEZ6PfRNVlcAat8PDc+DUBU8BP98Ieh4rBG6nNJVqSMs\nfKe35sGvdPYVLpm3sfz5u+lz3n9b3euGxx47SRdlMItfsNoGuSr+f0lOip4HuFc3\n86WL4RpIoinDfB5pOfCGeIDdzRbWus7K7rx8+YQoeHs1ICzcYORharYjzb0jDjr7\nQYYWqUCT4ElNEKt1J+hvc5MuNbWIYv2uAnUVb3GbsvDWl99/KA==\n-----END CERTIFICATE-----\n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto key mypubkey rsa",
+          "passed": true,
+          "output": "\nAPI#show crypto key mypubkey rsa\n% Key pair was generated at: 19:12:33 UTC Oct 27 2026\nKey name: LABSSH\nKey type: RSA KEYS\n Storage Device: not specified\n Usage: General Purpose Key\n Key is not exportable. Redundancy enabled.\n Key Data:\n  308201A2 300D0609 2A864886 F70D0101 01050003 82018F00 3082018A 02820181 \n  00CEFB1D 46995DA7 37DEFB9F E0639034 F8695900 9AB8F5DB 38DA05C2 9CE9BA20 \n  6A340A47 5473917B 42ED3BC7 CE350448 50D32475 7FCF4028 A10E3848 1EF9404E \n  C98C9AED FFB7A004 96F0CAF0 E65E3DFC 0A572D56 3FD04633 B0F91EBA A8D3BAD8 \n  A4E1F48C 9D4CE8A5 CAA6D224 C18B8459 72459605 67A86229 E16AC121 EB05CECE \n  4C01611A 9E2C3C46 545AD980 DD026563 7DF7E37A 5ED8346D 09E411FE DB419EB4 \n  F978C7BD 7A7C88F7 023165A1 237A669B 935FDE62 B8B6FBF1 DDFEC415 44D12ECE \n  D2A5AAE7 041688CE 923248FF 8885B8A2 15BF67B4 3EB12AF3 84F46221 5E328284 \n  FD2930EB 76C97786 0631DD0B 57185B4D 87E20C32 FB005913 8CC7AFC6 70BD9712 \n  05F40EC1 9C6EEE3B 6D9860AB DB5A1822 CABDA7E5 F7736D10 F2A853D6 073D39A9 \n  10679704 1372BC0D B0153C42 C3283D49 55D96D81 D7D7F5EB 2113C597 34B97A08 \n  2E12DB87 D8B79160 F64A4E28 ED398A18 84C29001 5C60063C 2E699E43 950415EF \n  0571068B 24E9F44B D57826A7 9429604A 40AAA7C0 8C902303 06C1FDEE 77D51F1B \n  75020301 0001\n% Key pair was generated at: 19:12:35 UTC Oct 27 2026\nKey name: LABTLS\nKey type: RSA KEYS\n Storage Device: not specified\n Usage: General Purpose Key\n Key is not exportable. Redundancy enabled.\n Key Data:\n  308201A2 300D0609 2A864886 F70D0101 01050003 82018F00 3082018A 02820181 \n  008CA6A7 8F37C668 E2963C5B 7809E74B 56DCB23B 5E9737E6 499913AA D56F1BC1 \n  2A824993 6B949EEA 8DF764BB F1A82223 03A4B5A2 4876F915 8E20A1A7 7F03D3DE \n  39786F04 5EAE9253 E018216B 3FC1D7FD 3ADE93F9 02AA83CF 94D6C20F 267CAA71 \n  56FD7007 730C4282 30131FC9 B243AB4D 31791291 DA22750D E83D0006 199878EA \n  123A1CB3 357DF1BE EEB4D670 83176426 E43C2F43 86750E03 B07A9CBC 39CA2E62 \n  E68A756D 0A755024 BF376921 3F059C58 858D61CC 07D084FB 864FC949 D3EC5852 \n  7890CB96 8FF5282A A5580B9B 1D5201C1 43A2BDF4 B1DBBCAD 1FAC3878 AC4CA3E2 \n  29BFED9A FBFAD959 1A05EB8C 06BFDDCB 6D6FA532 9015434E FCCB877A 077A1CC7 \n  955E60DD 8D35A844 D08CF7DE 80143CAE 1CF0BE19 C48BFA57 E06F4EE3 62B23303 \n  38F9F9DF 04B841B7 A57B5955 A8DA9F07 F2852025 7D4B8160 6E112706 D24AFC88 \n  8A9CDC7E 5CBA21FA 785BACCB 03D9E946 70431763 765CAD7B 692D8E06 3FADB73E \n  79493559 61FA1079 378702A9 8FE4E341 59EF5CEC F64D67EB 0E3BCAEE 0531BE78 \n  01020301 0001\n% Key pair was generated at: 19:12:36 UTC Oct 27 2026\nKey name: LABSSH.server\nKey type: RSA KEYS\nTemporary key\n Usage: Encryption Key\n Key is not exportable.\n Key Data:\n  30820132 300D0609 2A864886 F70D0101 01050003 82011F00 3082011A 02820111 \n  00A20498 EE53E770 1A91E097 80A2A740 13AC34DE 16DF954B 8E9626FA 722E605D \n  BDEB91FE A5272471 0F9D1397 E6046C52 5DF4FA6F 6B0FE02D A5BE7910 056576ED \n  5C80CB88 0EF6D9DE A1AE1E76 846FA526 6E1DC68D B791A2C7 2EA92983 0ED727DF \n  48F230F0 B2A222D8 77399C65 7BDD0F2C E4A1EFDF 27BDC305 F8AB2C0F D19713C2 \n  5E9F9663 AB45E1E0 C450581E 66B5C361 BE913D74 248FE087 B5CBC507 534E9C6D \n  4B72BFA5 7629D912 FA2DDC81 1E5D4D12 D9F301EF B34EF3CF 49BB23BB A663B410 \n  EEC15C77 BBAFF657 404D85B8 D632C389 6B446BD2 B1E967BA 8C89639D FFA6A747 \n  3755BF9E E6CE32C3 A6B6B166 9120C2FB A25F95A2 554C9D3A 8C65B417 C12682DE \n  C0C63162 57F0EFBC DD4D6889 A4E1AF57 7D020301 0001\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "preparation",
+          "node": "API",
+          "command": "iosxe-api-v1",
+          "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29",
+          "passed": true
+        },
+        {
+          "phase": "baseline",
+          "node": "TOOLS",
+          "command": "python3 /lab/route_probe.py absent",
+          "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/route_probe.py absent\n{\"action\": \"absent\", \"actual_next_hops\": [], \"hostname_control\": \"API\", \"observed_management_network\": \"198.18.0.0/30\", \"off_link_next_hops\": [], \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "The real loopback endpoint is unreachable without a usable route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n\nOct 27 19:13:11.869: %DMI-5-AUTH_PASSED: R0/0: dmiauthd: User 'CML-LAB' authenticated successfully from 198.18.0.2:0 and was authorized for rest over http. External groups: PRIV15...\nSuccess rate is 0 percent (0/3)\nAPI#"
+        },
+        {
+          "phase": "baseline",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected API-client path remains healthy independently of the destination route.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/3/7 ms\nAPI#"
+        },
+        {
+          "phase": "install the host route through NETCONF",
+          "kind": "configuration",
+          "node": "TOOLS",
+          "command": "python3 /lab/route_probe.py install",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/route_probe.py install\n{\"action\": \"install\", \"actual_next_hops\": [\"198.18.0.2\"], \"hostname_control\": \"API\", \"observed_management_network\": \"198.18.0.0/30\", \"off_link_next_hops\": [], \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "install the host route through NETCONF",
+          "node": "TOOLS",
+          "command": "python3 /lab/route_probe.py present",
+          "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/route_probe.py present\n{\"action\": \"present\", \"actual_next_hops\": [\"198.18.0.2\"], \"hostname_control\": \"API\", \"observed_management_network\": \"198.18.0.0/30\", \"off_link_next_hops\": [], \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "install the host route through NETCONF",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "The real loopback endpoint replies to all three packets.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "install the host route through NETCONF",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected API-client path remains healthy independently of the destination route.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "withdraw only the target route",
+          "kind": "configuration",
+          "node": "TOOLS",
+          "command": "python3 /lab/route_probe.py remove",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/route_probe.py remove\n{\"action\": \"remove\", \"actual_next_hops\": [], \"hostname_control\": \"API\", \"observed_management_network\": \"198.18.0.0/30\", \"off_link_next_hops\": [], \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "withdraw only the target route",
+          "node": "TOOLS",
+          "command": "python3 /lab/route_probe.py absent",
+          "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/route_probe.py absent\n{\"action\": \"absent\", \"actual_next_hops\": [], \"hostname_control\": \"API\", \"observed_management_network\": \"198.18.0.0/30\", \"off_link_next_hops\": [], \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "withdraw only the target route",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "The real loopback endpoint is unreachable without a usable route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n\nOct 27 19:13:44.375: %DMI-5-AUTH_PASSED: R0/0: dmiauthd: User 'CML-LAB' authenticated successfully from 198.18.0.2:0 and was authorized for rest over http. External groups: PRIV15...\nSuccess rate is 0 percent (0/3)\nAPI#"
+        },
+        {
+          "phase": "withdraw only the target route",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected API-client path remains healthy independently of the destination route.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "restore the known-good route",
+          "kind": "configuration",
+          "node": "TOOLS",
+          "command": "python3 /lab/route_probe.py install",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/route_probe.py install\n{\"action\": \"install\", \"actual_next_hops\": [\"198.18.0.2\"], \"hostname_control\": \"API\", \"observed_management_network\": \"198.18.0.0/30\", \"off_link_next_hops\": [], \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restore the known-good route",
+          "node": "TOOLS",
+          "command": "python3 /lab/route_probe.py present",
+          "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/route_probe.py present\n{\"action\": \"present\", \"actual_next_hops\": [\"198.18.0.2\"], \"hostname_control\": \"API\", \"observed_management_network\": \"198.18.0.0/30\", \"off_link_next_hops\": [], \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restore the known-good route",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "The real loopback endpoint replies to all three packets.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "restore the known-good route",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected API-client path remains healthy independently of the destination route.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        }
+      ],
+      "startup_states": {
+        "API": "STARTED",
+        "TOOLS": "BOOTED"
+      },
+      "images": {
+        "API": "csr1000v-17-03-08a",
+        "TOOLS": "cml-labs-toolbox-9f43df961cbe"
+      },
+      "plan_sha256": "505025329cf5424aa8a097eccf48942dbbbc16798bff8016141615af6fd6644e",
+      "console_boot_fallback": [
+        "API"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T19:18:58Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/034-python-routing-troubleshooter.yaml",
+      "sha256": "9ecea969ace369a78bfa6b7f3e4180e3ffbc9bca4d3949616f7feb07bfc99221",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T19:21:52Z",
+      "checks": [
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto key mypubkey rsa",
+          "passed": true,
+          "output": "\nAPI#show crypto key mypubkey rsa\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "clock set 19:18:28 27 Oct 2026",
+          "passed": true,
+          "output": "\nAPI#clock set 19:18:28 27 Oct 2026\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "debug crypto pki transactions",
+          "passed": true,
+          "output": "\nAPI#debug crypto pki transactions\nCrypto PKI Trans debugging is on\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nAPI#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto key generate rsa general-keys label LABSSH modulus 3072",
+          "passed": true,
+          "output": "\nAPI(config)#crypto key generate rsa general-keys label LABSSH modulus 3072\nThe name for the keys will be: LABSSH\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\n*Oct 27 19:18:28.000: %SYS-6-CLOCKUPDATE: System clock has been updated from 19:23:24 UTC Tue Oct 27 2026 to 19:18:28 UTC Tue Oct 27 2026, configured from console by console.\n[OK] (elapsed time was 1 seconds)\n\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto key generate rsa general-keys label LABTLS modulus 3072",
+          "passed": true,
+          "output": "\nAPI(config)#crypto key generate rsa general-keys label LABTLS modulus 3072\nThe name for the keys will be: LABTLS\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\nOct 27 19:18:30.834: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH has been generated or imported by crypto-engine\nOct 27 19:18:30.850: %SSH-5-ENABLED: SSH 2.0 has been enabled\nOct 27 19:18:31.282: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH.server has been generated or imported by crypto-engine\n[OK] (elapsed time was 2 seconds)\n\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip ssh rsa keypair-name LABSSH",
+          "passed": true,
+          "output": "type as RSA\nOct 27 19:18:32.838:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:18:32.838:  CRYPTO_PKI:Peer's public inserted successfully with key id 2\nOct 27 19:18:32.839: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:18:32.839: CRYPTO_PKI: Creating trustpoint Trustpool2\nOct 27 19:18:32.839: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:18:32.840:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:18:32.840:  CRYPTO_PKI:Peer's public inserted successfully with key id 3\nOct 27 19:18:32.841: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:18:32.841: CRYPTO_PKI: Creating trustpoint Trustpool3\nOct 27 19:18:32.841: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:18:32.841:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:18:32.841:  CRYPTO_PKI:Peer's public inserted successfully with key id 4\nOct 27 19:18:32.842: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:18:32.842: CRYPTO_PKI: Creating trustpoint Trustpool4\nOct 27 19:18:32.842: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:18:32.842:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:18:32.842:  CRYPTO_PKI:Peer's public inserted successfully with key id 5\nOct 27 19:18:32.843: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:18:32.843: CRYPTO_PKI: Creating trustpoint Trustpool5\nOct 27 19:18:32.843: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:18:32.844:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:18:32.844:  CRYPTO_PKI:Peer's public inserted successfully with key id 6\nOct 27 19:18:32.844: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:18:32.844: CRYPTO_PKI: Creating trustpoint Trustpool6\nOct 27 19:18:32.844: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:18:32.844:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:18:32.844:  CRYPTO_PKI:Peer's public inserted successfully with key id 7\nOct 27 19:18:32.844: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:18:32.844: CRYPTO_PKI: Creating trustpoint Trustpool7\nOct 27 19:18:32.845: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:18:32.845:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:18:32.845:  CRYPTO_PKI:Peer's public inserted successfully with key id 8\nOct 27 19:18:32.846: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:18:32.846: CRYPTO_PKI: Creating trustpoint Trustpool8\nOct 27 19:18:32.846: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:18:32.846:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:18:32.846:  CRYPTO_PKI:Peer's public inserted successfully with key id 9\nOct 27 19:18:32.847: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:18:32.847: CRYPTO_PKI: Creating trustpoint Trustpool9\nOct 27 19:18:32.847: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:18:32.847:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:18:32.847:  CRYPTO_PKI:Peer's public inserted successfully with key id 10\nOct 27 19:18:32.848: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:18:32.848: CRYPTO_PKI: Creating trustpoint Trustpool10\nOct 27 19:18:32.848: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:18:32.848:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:18:32.848:  CRYPTO_PKI:Peer's public inserted successfully with key id 11\nOct 27 19:18:32.848: CRYPTO\nAPI(config)#ip ssh rsa keypair-name LABSSH\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto pki trustpoint LABTLS",
+          "passed": true,
+          "output": "\nAPI(config)#crypto pki trustpoint LABTLS\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "enrollment selfsigned",
+          "passed": true,
+          "output": "_PKI: Built-In certificate imported\nOct 27 19:18:32.848: CRYPTO_PKI: Creating trustpoint Trustpool11\nOct 27 19:18:32.849: CRYPTO_PKI: Setting the key_type as RSA\nOct 27 19:18:32.849:  CRYPTO_PKI: Attempting to insert the peer's public key into cache\nOct 27 19:18:32.849:  CRYPTO_PKI:Peer's public inserted successfully with key id 12\nOct 27 19:18:32.849: CRYPTO_PKI: Built-In certificate imported\nOct 27 19:18:32.849: CRYPTO_PKI: stopping the static download timer. list is empty\nOct 27 19:18:33.411: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABTLS has been generated or imported by crypto-engine\nOct 27 19:18:33.981: %CRYPTO_ENGINE-5-KEY_DELETED: A key named LABSSH.server has been removed from key storage\nOct 27 19:18:33.981: %SSH-5-DISABLED: SSH 2.0 has been disabled\nOct 27 19:18:33.983: %SSH-5-ENABLED: SSH 2.0 has been enabled\nOct 27 19:18:34.499: CRYPTO_PKI: Creating trustpoint LABTLS\nOct 27 19:18:34.499: %PKI-6-TRUSTPOINT_CREATE: Trustpoint: LABTLS created succesfully\nAPI(ca-trustpoint)#enrollment selfsigned\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "subject-name CN=api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#subject-name CN=api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "subject-alt-name api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#subject-alt-name api.cml-lab.example\nAPI(ca-trustpoint)#\nOct 27 19:18:34.967: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH.server has been generated or imported by crypto-engine\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "serial-number none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#serial-number none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "fqdn api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#fqdn api.cml-lab.example\nAPI(ca-trustpoint)#\nOct 27 19:18:35.504: CRYPTO_PKI: Adding api.cml-lab.example to subject-alt-name field\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip-address none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#ip-address none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "revocation-check none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#revocation-check none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "rsakeypair LABTLS",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#rsakeypair LABTLS\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "hash sha256",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#hash sha256\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "exit",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#exit\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-trustpoint LABTLS",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-trustpoint LABTLS\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-server",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-server\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "restconf",
+          "passed": true,
+          "output": "\nAPI(config)#restconf\n\nOct 27 19:18:40.527: CRYPTO_PKI: using private key LABTLS for enrollmentPublic key in cert and stored public key LABTLS match\n\nOct 27 19:18:40.554: CRYPTO_PKI: pubkey_name : LABTLS\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "netconf-yang",
+          "passed": true,
+          "output": "\nAPI(config)#netconf-yang\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "end",
+          "passed": true,
+          "output": "\nAPI(config)#end\nAPI#\nOct 27 19:18:42.549: CRYPTO_PKI: (A0001) Session started - identity selected (LABTLS)x\nOct 27 19:18:42.549: CRYPTO_PKI: Rcvd request to end PKI session A0001.\nOct 27 19:18:42.549: CRYPTO_PKI: PKI session A0001 has ended. Freeing all resources.\nOct 27 19:18:42.549: CRYPTO_PKI: unlocked trustpoint LABTLS, refcount is 0\nOct 27 19:18:42.549: CRYPTO_PKI: PKI session A0000 has ended. Freeing all resources completed\nOct 27 19:18:43.048: %SYS-5-CONFIG_I: Configured from console by console\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show platform software yang-management process",
+          "passed": true,
+          "output": "\nAPI#show platform software yang-management process\nconfd            : Not Running\nnesd             : Not Running\nsyncfd           : Not Running\nncsshd           : Not Running\ndmiauthd         : Not Running\nnginx            : Running    \nndbmand          : Not Running\npubd             : Running    \n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show platform software yang-management process",
+          "passed": true,
+          "output": "\nAPI#show platform software yang-management process\nconfd            : Running    \nnesd             : Running    \nsyncfd           : Running    \nncsshd           : Running    \ndmiauthd         : Running    \nnginx            : Running    \nndbmand          : Running    \npubd             : Running    \n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "undebug all",
+          "passed": true,
+          "output": "\nAPI#undebug all\nAll possible debugging has been turned off\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto pki certificates pem",
+          "passed": true,
+          "output": "7M6m08kIsDsJ\npZ+GWaJ6lJ6ZeRElUl7dsT/E+GyzlkXKf4yLVq5GNtrLZDggStjbd+rlrHXGHhLW\nt6agf467+SiOQXD02eYJAKckzKDllfny5PN2B2e39gHF2eunPlKByewm1SyzsQbs\nu7SIH0kxBviErqipfvJWMrqx6s7oOiHHc5fe/SJWRSChY96kTH8+hM8fDM++JdJR\naoJ2B+6ATV0XpwJyHa+cZNCyfu5Ra+tDgnTStAa9nGAInbR57dUjnKYoOtVKEOv6\neVyX1iWVWCDu5f7HoMIje+OR0IOTtKf2uuJv3jm7frHCH+r2WMnJUkG78Dme5tSy\ndy6CgK8LYBpMoOFWOEOwXRJklb7wXJEI7dOQnMMbCOMpltDb0yklCcGyNUcNKPbp\n9dnayPqWuiUduTWztV9y5h7WYb9GGrS+tGp3devDIbI0BvzK/s6eC0pUWixucfT5\n2u2YT2f+bqlOuQT6KqmsNBFKyetwevQJ9pPdYdnqNmUFfuA6HmU=\n-----END CERTIFICATE-----\n\n% General Purpose Certificate:\n-----BEGIN CERTIFICATE-----\nMIIEcjCCAtqgAwIBAgIBATANBgkqhkiG9w0BAQsFADBCMRwwGgYDVQQDExNhcGku\nY21sLWxhYi5leGFtcGxlMSIwIAYJKoZIhvcNAQkCFhNhcGkuY21sLWxhYi5leGFt\ncGxlMB4XDTI2MTAyNzE5MTg0MFoXDTM2MTAyNjE5MTg0MFowQjEcMBoGA1UEAxMT\nYXBpLmNtbC1sYWIuZXhhbXBsZTEiMCAGCSqGSIb3DQEJAhYTYXBpLmNtbC1sYWIu\nZXhhbXBsZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAKEMdFQIVP6u\nOFF4wLsi+3EqkEumquZbVQVgUqIiLUzVEN8NDihGcio/iCacVX7EWFUq4JC2HHEY\nextJtAP12PrUuI5LbkGb1pEIVMCDEVSjBfSnc3gGOXtgmYZVQI/hotJNwXHE9QPW\n+KwkSCqRwIML+PkNFyQqEyUj/nAF0cfIIK2gfW+SwHCcYMRyfFx1vj/90Iqf1eog\nSu4kiQOdfMqRPqbVyXN2TI1TOuc4RkbJdH+3SfsfN30Kit3AMGvyjabD2EFJSH9w\nkvOUNt6TjLt3W9HSdafMS5NA8mVNw2lkH6882svexmEviULZ8bv4yGUU8nPJtFU5\nVkjfWouJfUGbaM/w8IjaKF2eDcUl6JffiKFjmw7OGzVTK7tE/9cOJoGzLErQ2MHI\nPfnaPb00SDNVT6SbL4NTJVBxMpjMi7ofeOuoMfCslJJc7vJ//Zzk3JslRZFCRkzL\ndGiJOw88OyyfbD7TRDTDYJjVnttyecTW9djNCwqJEGmEHoi56NW5EwIDAQABo3Mw\ncTAPBgNVHRMBAf8EBTADAQH/MB4GA1UdEQQXMBWCE2FwaS5jbWwtbGFiLmV4YW1w\nbGUwHwYDVR0jBBgwFoAUaI1WJdGJJmbNdOTWrbVRqwGfnaYwHQYDVR0OBBYEFGiN\nViXRiSZmzXTk1q21UasBn52mMA0GCSqGSIb3DQEBCwUAA4IBgQAq7M6m08kIsDsJ\npZ+GWaJ6lJ6ZeRElUl7dsT/E+GyzlkXKf4yLVq5GNtrLZDggStjbd+rlrHXGHhLW\nt6agf467+SiOQXD02eYJAKckzKDllfny5PN2B2e39gHF2eunPlKByewm1SyzsQbs\nu7SIH0kxBviErqipfvJWMrqx6s7oOiHHc5fe/SJWRSChY96kTH8+hM8fDM++JdJR\naoJ2B+6ATV0XpwJyHa+cZNCyfu5Ra+tDgnTStAa9nGAInbR57dUjnKYoOtVKEOv6\neVyX1iWVWCDu5f7HoMIje+OR0IOTtKf2uuJv3jm7frHCH+r2WMnJUkG78Dme5tSy\ndy6CgK8LYBpMoOFWOEOwXRJklb7wXJEI7dOQnMMbCOMpltDb0yklCcGyNUcNKPbp\n9dnayPqWuiUduTWztV9y5h7WYb9GGrS+tGp3devDIbI0BvzK/s6eC0pUWixucfT5\n2u2YT2f+bqlOuQT6KqmsNBFKyetwevQJ9pPdYdnqNmUFfuA6HmU=\n-----END CERTIFICATE-----\n\n------Trustpoint: SLA-TrustPoint------\n% The specified trustpoint is not enrolled (SLA-TrustPoint).\n% Only export the CA certificate in PEM format.\n% CA certificate:\n-----BEGIN CERTIFICATE-----\nMIIDITCCAgmgAwIBAgIBATANBgkqhkiG9w0BAQsFADAyMQ4wDAYDVQQKEwVDaXNj\nbzEgMB4GA1UEAxMXQ2lzY28gTGljZW5zaW5nIFJvb3QgQ0EwHhcNMTMwNTMwMTk0\nODQ3WhcNMzgwNTMwMTk0ODQ3WjAyMQ4wDAYDVQQKEwVDaXNjbzEgMB4GA1UEAxMX\nQ2lzY28gTGljZW5zaW5nIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw\nggEKAoIBAQCmvL2WEx4F9xRepyws1obmFyIuofHv9k3LtMeYISqhR8ZV2NeUcTgN\nhxFEHhqvBxqcrmOIijjlIBw5TXhGLvI5xln3FbmMCllbu1y9DP6+o3AKi/fY8lbu\nSqToDdtv0clgsf0Y/8aclm+miVeiYX3nEE/cX+opVqxzkKPrK1Q2rchHosXatVPr\naamlNVjp8+PAvSPPWL1xiGjmlJEg8yDnlI5x1647zITxBoTHS8jgD1ObpCtCxou3\nx0eQlrTLLWLqL1Bdx7BipGgR2VvoJQ/EXV1fuI8n0ZHFXw12YfmkzT2ZIyeouwO9\nTm1waXy634vfX0NolRNeRN/Hxs8E3X/RAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIB\nBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBRJ3IVLPTHlGz5qF2Bq8zM9O0xz\n6DANBgkqhkiG9w0BAQsFAAOCAQEAUH8k05MqZoYCXZ/oOK5cbU32sEljHHgkDakF\nYE7c3v9P7St3/EYOzWNv291EaB46VnOrkJPTsWyePYvZiYe/5Ay9nhrsoMIhibtc\nj6hWhs2YtkZVdbFGjfxmqEZ6PfRNVlcAat8PDc+DUBU8BP98Ieh4rBG6nNJVqSMs\nfKe35sGvdPYVLpm3sfz5u+lz3n9b3euGxx47SRdlMItfsNoGuSr+f0lOip4HuFc3\n86WL4RpIoinDfB5pOfCGeIDdzRbWus7K7rx8+YQoeHs1ICzcYORharYjzb0jDjr7\nQYYWqUCT4ElNEKt1J+hvc5MuNbWIYv2uAnUVb3GbsvDWl99/KA==\n-----END CERTIFICATE-----\n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto key mypubkey rsa",
+          "passed": true,
+          "output": "\nAPI#show crypto key mypubkey rsa\n% Key pair was generated at: 19:18:30 UTC Oct 27 2026\nKey name: LABSSH\nKey type: RSA KEYS\n Storage Device: not specified\n Usage: General Purpose Key\n Key is not exportable. Redundancy enabled.\n Key Data:\n  308201A2 300D0609 2A864886 F70D0101 01050003 82018F00 3082018A 02820181 \n  00F9CDEE 897DE640 FAAACC3C 7A60DF60 98FB7C80 BF186790 75714920 88EA0EF4 \n  FAA045A1 0F06EBF4 EE17E361 6F730A6E D783DE9E A6D25C46 D3DF0C49 264BD2BB \n  1074CEA0 5474502E C6F9E023 4C157F98 26281263 8108C931 837923B5 85B829DE \n  294803B6 C1DA4670 69423960 BE69214F 48636106 5398FF6A 50E345B6 2CD81283 \n  6F2AB6BB 85EF00CA 128B292D F70F0605 DAA7A574 242EC66C EA64D0FA 9701C02D \n  9694D80C B48C81BE 58AEEB2A AFF2B894 53E52659 3F22393D FDAA540E 578B981C \n  FEF03AD2 158F82E4 A5601A65 B20B6C35 714636C8 18C09020 B27C1714 59FAB639 \n  E1546B04 1B7CFF66 756446EF 2D0400C6 AF8BD955 76519AD3 36C7ABFB CFC2DEF0 \n  31FF0E59 34DF2FA1 6A6859B5 C2D21E29 865FB63B AB898BB5 95D31615 BCA066A7 \n  BDD1BCBB E4645DFC 5CE89C7F 84C023CD 46D9C112 C52BE8DE E1E9A063 2636EBE2 \n  E9A95ED3 779B443F 2176018F 01480408 9D76E179 8ED1BB9F 8C336E85 1CDBC330 \n  AEA5B396 0E48879A 0F251B56 A2F85FD0 D1AF3BB3 EC1A8B39 7E674557 953B9604 \n  03020301 0001\n% Key pair was generated at: 19:18:33 UTC Oct 27 2026\nKey name: LABTLS\nKey type: RSA KEYS\n Storage Device: not specified\n Usage: General Purpose Key\n Key is not exportable. Redundancy enabled.\n Key Data:\n  308201A2 300D0609 2A864886 F70D0101 01050003 82018F00 3082018A 02820181 \n  00A10C74 540854FE AE385178 C0BB22FB 712A904B A6AAE65B 55056052 A2222D4C \n  D510DF0D 0E284672 2A3F8826 9C557EC4 58552AE0 90B61C71 187B1B49 B403F5D8 \n  FAD4B88E 4B6E419B D6910854 C0831154 A305F4A7 73780639 7B609986 55408FE1 \n  A2D24DC1 71C4F503 D6F8AC24 482A91C0 830BF8F9 0D17242A 132523FE 7005D1C7 \n  C820ADA0 7D6F92C0 709C60C4 727C5C75 BE3FFDD0 8A9FD5EA 204AEE24 89039D7C \n  CA913EA6 D5C97376 4C8D533A E7384646 C9747FB7 49FB1F37 7D0A8ADD C0306BF2 \n  8DA6C3D8 4149487F 7092F394 36DE938C BB775BD1 D275A7CC 4B9340F2 654DC369 \n  641FAF3C DACBDEC6 612F8942 D9F1BBF8 C86514F2 73C9B455 395648DF 5A8B897D \n  419B68CF F0F088DA 285D9E0D C525E897 DF88A163 9B0ECE1B 35532BBB 44FFD70E \n  2681B32C 4AD0D8C1 C83DF9DA 3DBD3448 33554FA4 9B2F8353 25507132 98CC8BBA \n  1F78EBA8 31F0AC94 925CEEF2 7FFD9CE4 DC9B2545 9142464C CB746889 3B0F3C3B \n  2C9F6C3E D34434C3 6098D59E DB7279C4 D6F5D8CD 0B0A8910 69841E88 B9E8D5B9 \n  13020301 0001\n% Key pair was generated at: 19:18:34 UTC Oct 27 2026\nKey name: LABSSH.server\nKey type: RSA KEYS\nTemporary key\n Usage: Encryption Key\n Key is not exportable.\n Key Data:\n  30820132 300D0609 2A864886 F70D0101 01050003 82011F00 3082011A 02820111 \n  00C82638 A08E166E 8788F548 133EF4A5 2DF28697 1C96731B 0470C6CE 4EE5F1E4 \n  964211C5 022D6B1B DBB71585 AC775689 134DA14D 79B65154 CA783AE2 1FD4D2B6 \n  45E8B090 F0596DC5 0D246319 B6495A80 AD2E1CB1 F72F83F5 E216EFD7 8BA45148 \n  F09B243B E1568AB7 0E8F19B0 4354F1B6 0CEB98C4 41598B70 C9066C32 5DA09909 \n  25EEAE6D 5AC7A460 E0F7EBBC 98E781A6 77571F9D F5643E89 14988F09 EC6D7CD1 \n  34539E66 C947674D 9C998B69 0DEEE47D DE0404BC DDDF9C5F EDE2B493 F2B4610F \n  687754C4 1462C30A FBC15B68 B9F11165 721DF071 8CD3531B 2D671176 3370EDD6 \n  C6946530 52043BA5 69467389 1989F858 4F83E109 FC2F047C 790C0C7E 8C6B463F \n  4F13C8C5 BAF29F51 27943C43 227DE3BC 29020301 0001\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "preparation",
+          "node": "API",
+          "command": "iosxe-api-v1",
+          "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29",
+          "passed": true
+        },
+        {
+          "phase": "baseline",
+          "node": "TOOLS",
+          "command": "python3 /lab/route_probe.py diagnose",
+          "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/route_probe.py diagnose\n{\"action\": \"diagnose\", \"actual_next_hops\": [\"198.18.0.99\"], \"hostname_control\": \"API\", \"observed_management_network\": \"198.18.0.0/30\", \"off_link_next_hops\": [\"198.18.0.99\"], \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "The real loopback endpoint is unreachable without a usable route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\n\nOct 27 19:19:10.021: %DMI-5-AUTH_PASSED: R0/0: dmiauthd: User 'CML-LAB' authenticated successfully from 198.18.0.2:0 and was authorized for rest over http. External groups: PRIV15\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n...\nSuccess rate is 0 percent (0/3)\nAPI#"
+        },
+        {
+          "phase": "baseline",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected API-client path remains healthy independently of the destination route.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/2/6 ms\nAPI#"
+        },
+        {
+          "phase": "repair the observed off-link next hop",
+          "kind": "configuration",
+          "node": "TOOLS",
+          "command": "python3 /lab/route_probe.py install",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/route_probe.py install\n{\"action\": \"install\", \"actual_next_hops\": [\"198.18.0.2\"], \"hostname_control\": \"API\", \"observed_management_network\": \"198.18.0.0/30\", \"off_link_next_hops\": [], \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "repair the observed off-link next hop",
+          "node": "TOOLS",
+          "command": "python3 /lab/route_probe.py present",
+          "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/route_probe.py present\n{\"action\": \"present\", \"actual_next_hops\": [\"198.18.0.2\"], \"hostname_control\": \"API\", \"observed_management_network\": \"198.18.0.0/30\", \"off_link_next_hops\": [], \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "repair the observed off-link next hop",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "The real loopback endpoint replies to all three packets.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "repair the observed off-link next hop",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected API-client path remains healthy independently of the destination route.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "withdraw only the target route",
+          "kind": "configuration",
+          "node": "TOOLS",
+          "command": "python3 /lab/route_probe.py remove",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/route_probe.py remove\n{\"action\": \"remove\", \"actual_next_hops\": [], \"hostname_control\": \"API\", \"observed_management_network\": \"198.18.0.0/30\", \"off_link_next_hops\": [], \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "withdraw only the target route",
+          "node": "TOOLS",
+          "command": "python3 /lab/route_probe.py absent",
+          "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/route_probe.py absent\n{\"action\": \"absent\", \"actual_next_hops\": [], \"hostname_control\": \"API\", \"observed_management_network\": \"198.18.0.0/30\", \"off_link_next_hops\": [], \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "withdraw only the target route",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "The real loopback endpoint is unreachable without a usable route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n\nOct 27 19:19:24.196: %DMI-5-AUTH_PASSED: R0/0: dmiauthd: User 'CML-LAB' authenticated successfully from 198.18.0.2:33784 and was authorized for netconf over ssh. External groups: PRIV15...\nSuccess rate is 0 percent (0/3)\nAPI#"
+        },
+        {
+          "phase": "withdraw only the target route",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected API-client path remains healthy independently of the destination route.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "restore the known-good route",
+          "kind": "configuration",
+          "node": "TOOLS",
+          "command": "python3 /lab/route_probe.py install",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/route_probe.py install\n{\"action\": \"install\", \"actual_next_hops\": [\"198.18.0.2\"], \"hostname_control\": \"API\", \"observed_management_network\": \"198.18.0.0/30\", \"off_link_next_hops\": [], \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restore the known-good route",
+          "node": "TOOLS",
+          "command": "python3 /lab/route_probe.py present",
+          "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/route_probe.py present\n{\"action\": \"present\", \"actual_next_hops\": [\"198.18.0.2\"], \"hostname_control\": \"API\", \"observed_management_network\": \"198.18.0.0/30\", \"off_link_next_hops\": [], \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restore the known-good route",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "The real loopback endpoint replies to all three packets.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "restore the known-good route",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected API-client path remains healthy independently of the destination route.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        }
+      ],
+      "plan_sha256": "ea861196a674a604fa123aae1f11c69733cccbf5383f6f99c32cbd2b2bc2d0fd",
+      "startup_states": {
+        "API": "STARTED",
+        "TOOLS": "BOOTED"
+      },
+      "images": {
+        "API": "csr1000v-17-03-08a",
+        "TOOLS": "cml-labs-toolbox-9f43df961cbe"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [
+        "API"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T19:24:38Z"
     }
   ]
 }

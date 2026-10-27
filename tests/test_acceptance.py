@@ -30,6 +30,77 @@ CHECK = {
 
 
 class AcceptanceTests(unittest.TestCase):
+    def test_transition_requires_its_structured_result_before_readback(self):
+        step = {
+            "name": "API change",
+            "node": "R1",
+            "commands": ["python3 change.py"],
+            "command_pattern": '"status": "passed"',
+            "checks": [CHECK],
+        }
+        plan = {"checks": [CHECK], "transitions": [step]}
+        self.assertEqual(validate_plan(plan, {"R1"}), [])
+        for result, succeeds in (
+            ('{"status": "passed"}', True),
+            ('{"status": "failed"}', False),
+            ("Traceback: remote change did not complete", False),
+        ):
+            connection = Console(
+                [
+                    "show ip route\nvia 198.18.0.2",
+                    "python3 change.py\n" + result,
+                    "show ip route\nvia 198.18.0.2",
+                ]
+            )
+            rows = []
+            if succeeds:
+                execute_plan(plan, lambda _, connection=connection: connection, rows.append)
+                self.assertTrue(rows[1]["passed"])
+            else:
+                with self.assertRaises(AssertionError):
+                    execute_plan(plan, lambda _, connection=connection: connection, rows.append)
+                self.assertFalse(rows[-1]["passed"])
+                self.assertEqual(len(connection.commands), 2)
+        for invalid in ("", "[", None, 42):
+            step["command_pattern"] = invalid
+            self.assertTrue(validate_plan(plan, {"R1"}))
+
+    def test_green_transition_flag_cannot_replace_observed_result(self):
+        step = {
+            "name": "API change",
+            "node": "R1",
+            "commands": ["python3 change.py"],
+            "command_pattern": '"status": "passed"',
+            "checks": [CHECK],
+        }
+        plan = {"checks": [CHECK], "transitions": [step]}
+        rows = [
+            {**CHECK, "phase": "baseline", "passed": True},
+            {**CHECK, "phase": step["name"], "passed": True},
+            {
+                "kind": "configuration",
+                "phase": step["name"],
+                "node": "R1",
+                "command": "python3 change.py",
+                "output": "Traceback",
+                "passed": True,
+            },
+        ]
+        proof = {
+            "sha256": "abc",
+            "status": "passed",
+            "test_lab_removed": True,
+            "cml_version": "test",
+            "plan_sha256": plan_digest(plan),
+            "checks": rows,
+        }
+        errors = check_evidence(proof, "lab", "abc", "runtime", plan_digest(plan), plan)
+        self.assertTrue(any("required result pattern" in error for error in errors))
+        rows[-1]["output"] = '{"status": "passed"}'
+        self.assertEqual(
+            check_evidence(proof, "lab", "abc", "runtime", plan_digest(plan), plan), []
+        )
+
     def test_slow_configuration_timeout_is_bounded_and_reaches_the_console(self):
         step = {
             "name": "initialize host key",
@@ -161,7 +232,7 @@ class AcceptanceTests(unittest.TestCase):
             ]
         )
         rows = []
-        execute_plan(plan, lambda _: connection, rows.append)
+        execute_plan(plan, lambda _, connection=connection: connection, rows.append)
         self.assertEqual(len(rows), 5)
         self.assertTrue(all(r["passed"] for r in rows))
         self.assertEqual(connection.commands.count("show ip route"), 3)

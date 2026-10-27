@@ -6777,5 +6777,267 @@
         "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
       }
     ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/033-netconf-restconf-routing.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/route_probe.py absent",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 3
+      },
+      {
+        "node": "API",
+        "command": "ping 192.0.2.42 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "The real loopback endpoint is unreachable without a usable route."
+      },
+      {
+        "node": "API",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The connected API-client path remains healthy independently of the destination route."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "install the host route through NETCONF",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/route_probe.py install"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/route_probe.py present",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The real loopback endpoint replies to all three packets."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected API-client path remains healthy independently of the destination route."
+          }
+        ]
+      },
+      {
+        "name": "withdraw only the target route",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/route_probe.py remove"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/route_probe.py absent",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The real loopback endpoint is unreachable without a usable route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected API-client path remains healthy independently of the destination route."
+          }
+        ]
+      },
+      {
+        "name": "restore the known-good route",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/route_probe.py install"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/route_probe.py present",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The real loopback endpoint replies to all three packets."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected API-client path remains healthy independently of the destination route."
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/034-python-routing-troubleshooter.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/route_probe.py diagnose",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 3
+      },
+      {
+        "node": "API",
+        "command": "ping 192.0.2.42 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "The real loopback endpoint is unreachable without a usable route."
+      },
+      {
+        "node": "API",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The connected API-client path remains healthy independently of the destination route."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "repair the observed off-link next hop",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/route_probe.py install"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/route_probe.py present",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The real loopback endpoint replies to all three packets."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected API-client path remains healthy independently of the destination route."
+          }
+        ]
+      },
+      {
+        "name": "withdraw only the target route",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/route_probe.py remove"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/route_probe.py absent",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The real loopback endpoint is unreachable without a usable route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected API-client path remains healthy independently of the destination route."
+          }
+        ]
+      },
+      {
+        "name": "restore the known-good route",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/route_probe.py install"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/route_probe.py present",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Read the actual configuration through pinned NETCONF; evaluate next-hop reachability using live RESTCONF interface facts.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The real loopback endpoint replies to all three packets."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected API-client path remains healthy independently of the destination route."
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
   }
 }

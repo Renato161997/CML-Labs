@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -217,6 +218,20 @@ def check_evidence(proof, path, expected_hash, phase, expected_plan_hash=None, e
                 required.update(
                     ("action", step["name"], step["node"], command) for command in step["commands"]
                 )
+                if "command_pattern" in step:
+                    for command in step["commands"]:
+                        if not any(
+                            row.get("kind") in ("action", "configuration")
+                            and row.get("phase") == step["name"]
+                            and row.get("node") == step["node"]
+                            and row.get("command") == command
+                            and row.get("passed") is True
+                            and re.search(
+                                step["command_pattern"], row.get("output", ""), re.MULTILINE
+                            )
+                            for row in checks
+                        ):
+                            errors.append("transition evidence lacks its required result pattern")
             observed = Counter(
                 (
                     "prepare"
