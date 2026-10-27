@@ -558,5 +558,33 @@
     "kind": "practice",
     "workbook": "docs/workbooks/300-410-034-python-routing-troubleshooter.md",
     "example_profile": "native-iosxe-routing"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/038-json-yaml-data-models.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-038-json-yaml-data-models.md",
+    "example_profile": "native-iosxe-models"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/040-json-yaml-jinja2.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-040-json-yaml-jinja2.md",
+    "example_profile": "native-iosxe-models"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/046-netconf-restconf-baseline-change.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-046-netconf-restconf-baseline-change.md",
+    "example_profile": "native-iosxe-interface"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/027-yang-model-interface-change.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-027-yang-model-interface-change.md",
+    "example_profile": "native-iosxe-interface"
   }
 }

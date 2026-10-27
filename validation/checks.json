@@ -7039,5 +7039,89 @@
         "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
       }
     ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/038-json-yaml-data-models.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/models_probe.py models",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The model comes from actual device facts; serialization is lossless and invalid inputs are rejected.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 3
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/040-json-yaml-jinja2.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/models_probe.py template",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "JSON/YAML agree, Jinja renders observed values, undefined inputs fail and live facts remain unchanged.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 3
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/046-netconf-restconf-baseline-change.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/interface_probe.py change",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Real interface creation, idempotent reapply, model rejection and deletion agree across both protocols.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 3
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/027-yang-model-interface-change.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/interface_probe.py schema",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The live interface submodule defines Loopback; real creation and rejection follow that device model and cleanup removes the interface.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 3
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
   }
 }

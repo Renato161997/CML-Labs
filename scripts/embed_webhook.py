@@ -21,6 +21,19 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-iosxe-models": {
+        "TOOLS": {
+            "/lab/api_probe.py": "examples/automation/api_probe.py",
+            "/lab/inventory_probe.py": "examples/automation/inventory_probe.py",
+            "/lab/models_probe.py": "examples/automation/models_probe.py",
+        },
+    },
+    "native-iosxe-interface": {
+        "TOOLS": {
+            "/lab/api_probe.py": "examples/automation/api_probe.py",
+            "/lab/interface_probe.py": "examples/automation/interface_probe.py",
+        },
+    },
     "native-iosxe-routing": {
         "TOOLS": {
             "/lab/api_probe.py": "examples/automation/api_probe.py",

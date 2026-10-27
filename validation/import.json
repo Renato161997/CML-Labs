@@ -78,16 +78,6 @@
       "completed_utc": "2026-10-24T18:49:59Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/040-json-yaml-jinja2.yaml",
-      "sha256": "5ca2741425fc95180bdb086d1342dfdafa3572c03150bbc311b14352c8e77c11",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:49:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:49:59Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/041-event-driven-automation.yaml",
       "sha256": "bbb3d03760a774cf2e2d469e6114a23afda725dcc9f39697581f0f009d8a90e3",
       "cml_version": "2.10.1+build.21",
@@ -96,16 +86,6 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-24T18:49:59Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/046-netconf-restconf-baseline-change.yaml",
-      "sha256": "8cac57a2d3bb11ca70af7fc633085242a0e41e128b34ed66780fbdcefc8b1159",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:49:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:00Z"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/capstone/050-encor-capstone-enterprise-edge.yaml",
@@ -1028,16 +1008,6 @@
       "completed_utc": "2026-10-24T18:50:24Z"
     },
     {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/027-yang-model-interface-change.yaml",
-      "sha256": "55ac11d886ea4fc5dc18c61de1905d6e9de323a1a96c050db3dad0f705f2c16a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:24Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:25Z"
-    },
-    {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/028-event-driven-remediation.yaml",
       "sha256": "22bf74f2677116b4092270e60c3c6fd23d45309960b8897b5b7519eb4593ee22",
       "cml_version": "2.10.1+build.21",
@@ -1136,16 +1106,6 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T15:55:54Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/038-json-yaml-data-models.yaml",
-      "sha256": "e0698a5d84e3d1af1d1ebe6f1c1227c264cfadeffbac5c5d3ddf90ee6c635666",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:54Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:55Z"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/039-controller-based-networking.yaml",
@@ -2336,6 +2296,46 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-27T19:21:50Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/038-json-yaml-data-models.yaml",
+      "sha256": "0aa7647a181cee7bd6cc3198fa9f5e093cb290c8cb9355fe0452b3921dc553b2",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T19:42:55Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T19:42:55Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/040-json-yaml-jinja2.yaml",
+      "sha256": "5c02a87964f57b28edc6a0b8bc28e30b46b5ac8fb49624c0f2f49b522785e7c8",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T19:42:57Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T19:42:57Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/046-netconf-restconf-baseline-change.yaml",
+      "sha256": "148729483922441c24c522af8379f59405938ee671d5a8ec801c16d70e2adf5e",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T19:42:59Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T19:42:59Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/027-yang-model-interface-change.yaml",
+      "sha256": "d75496e189ca12cd73b1a5a58bc39e5508183dc9dd20ee2995148ee6752ca373",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T19:43:01Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T19:43:02Z"
     }
   ]
 }
