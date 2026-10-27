@@ -1098,36 +1098,6 @@
       "completed_utc": "2026-10-24T18:50:25Z"
     },
     {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/001-distributed-app-front-back-loadbalancer.yaml",
-      "sha256": "a00b9b4a16d13af56752b35c7f0ae1935bf3fd4d9d7288d5df5b125dde226fb2",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:25Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:26Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/002-scalability-modularity.yaml",
-      "sha256": "2c71c1ebf3feff2f28705571baa168490f2fa4257b84d41a663709775e3ec4e5",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:26Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:26Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/003-ha-resiliency-hybrid-cloud.yaml",
-      "sha256": "602cde3a1600ba332a000b2bc55389165968ebf88a69a3532795811db68eb38a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:26Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:26Z"
-    },
-    {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/010-oauth2-three-legged-flow.yaml",
       "sha256": "29f69f3b3dd63cdbd7bfd5b6195b03a884552c8daf70f260c473b7bdfa38aef3",
       "cml_version": "2.10.1+build.21",
@@ -2336,6 +2306,36 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-27T17:44:36Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/001-distributed-app-front-back-loadbalancer.yaml",
+      "sha256": "d5c75aec4326fb83275400b5c6afe5a7a196dea03d0b635e117560456d01939c",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T18:17:28Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T18:17:29Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/002-scalability-modularity.yaml",
+      "sha256": "8c556d284dc61b9409aecbd6eb08f981d72d7c6bc6bd4aa19850d6b2fe139420",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T18:17:30Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T18:17:31Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/003-ha-resiliency-hybrid-cloud.yaml",
+      "sha256": "66d5d201b9b0453f884736c40c2a3bdd637bf8ed4cb5d8328c1d25e2727d2238",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T18:17:32Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T18:17:33Z"
     }
   ]
 }
