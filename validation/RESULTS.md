@@ -2,12 +2,14 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **83**.
+Import/export passes: **233/233**. Functional passes: **88**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
 | Exercise | Functional status | CML | Explicit image selections | Checks passed | Transition commands | Completed UTC |
 | --- | --- | --- | --- | ---: | ---: | --- |
+| [RESTCONF NETCONF Management](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/037-restconf-netconf-management.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 5 | 34 | 2026-10-27T18:52:22Z |
+| [Python API Inventory](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/040-python-api-inventory.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-27T18:57:28Z |
 | [Static And Default Routes](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/015-static-default-routes.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 4 | 6 | 2026-10-25T11:36:06Z |
 | [Floating Static Routes](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/016-floating-static-routes.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 9 | 16 | 2026-10-25T12:02:44Z |
 | [Single Area OSPFv2](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/017-single-area-ospfv2.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 0 | 2026-10-24T18:23:04Z |
@@ -67,6 +69,8 @@ Import/export passes: **233/233**. Functional passes: **83**.
 | [Wrong Administrative Distance](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/042-wrong-administrative-distance.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 16 | 14 | 2026-10-26T18:52:47Z |
 | [GRE Tunnel Routing](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/020-gre-tunnel-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 6 | 12 | 2026-10-25T12:42:29Z |
 | [CEF CAM TCAM RIB FIB](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 21 | 18 | 2026-10-26T19:52:51Z |
+| [RESTCONF NETCONF YANG](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/037-restconf-netconf-yang.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 5 | 34 | 2026-10-27T19:04:45Z |
+| [Python Requests Network Change](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/038-python-requests-network-change.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-27T19:12:10Z |
 | [Dual Stack Campus](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/012-dual-stack-campus.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 7 | 6 | 2026-10-26T19:19:51Z |
 | [OSPF Network Types](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/013-ospf-network-types.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 11 | 16 | 2026-10-26T19:45:13Z |
 | [OSPF Summarization Filtering](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/014-ospf-summarization-filtering.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 15 | 10 | 2026-10-26T21:11:15Z |
@@ -90,6 +94,7 @@ Import/export passes: **233/233**. Functional passes: **83**.
 | [API Pagination](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/008-api-pagination.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 3 | 2 | 2026-10-27T17:43:03Z |
 | [HTTP Cache Controls](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/009-http-cache-controls.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 3 | 2 | 2026-10-27T17:45:38Z |
 | [Webhook Receiver](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:46:46Z |
+| [pyATS Genie Style Validation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/validation/036-pyats-genie-style-validation.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 4 | 30 | 2026-10-27T18:57:24Z |
 | [Webhook Receiver Config Validation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/webhooks/035-webhook-receiver-config-validation.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:37:45Z |
 
 All other exercises have no functional-validation claim. Read the workbooks and image requirements before starting them.

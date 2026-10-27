@@ -21,6 +21,21 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-iosxe-inventory": {
+        "TOOLS": {
+            "/lab/api_probe.py": "examples/automation/api_probe.py",
+            "/lab/inventory_probe.py": "examples/automation/inventory_probe.py",
+        },
+    },
+    "native-iosxe-rest-change": {
+        "TOOLS": {
+            "/lab/api_probe.py": "examples/automation/api_probe.py",
+            "/lab/rest_change.py": "examples/automation/rest_change.py",
+        },
+    },
+    "native-iosxe-api": {
+        "TOOLS": {"/lab/api_probe.py": "examples/automation/api_probe.py"},
+    },
     "native-api-distribution": {
         "APP1": {
             "/lab/service.py": "examples/api-core/service.py",

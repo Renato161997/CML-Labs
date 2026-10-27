@@ -37,13 +37,16 @@ from labtools import (
     validate,
 )
 from linux_console import NATIVE_CONSOLE_PORT, NATIVE_LINUX, establish_linux_shell
-from readiness import running_node_states, verify_unconfirmed_consoles
+from readiness import establish_ios_prompt, running_node_states, verify_unconfirmed_consoles
 from virl2_client import ClientLibrary
 from virl2_client.exceptions import APIError
 from websockets.sync.client import connect
 
 
 class WebConsole:
+    def send_raw(self, text):
+        self.socket.send(text)
+
     def __init__(self, client, url, node):
         self.label = node.label
         pieces = urlsplit(url)
@@ -76,7 +79,8 @@ class WebConsole:
             self.socket.send("\x03\r")
             prompt += self.read(3)
             if node.node_definition in ("iosv", "iosvl2", "iol-xe", "ioll2-xe", "csr1000v"):
-                prompt = self.command("enable", 3)
+                prompt = establish_ios_prompt(self.label, prompt, self.socket.send, self.read)
+                prompt += self.command("enable", 6)
                 if not re.search(re.escape(node.label) + r"#", prompt):
                     raise RuntimeError("Privileged console prompt was not established")
                 self.command("terminal length 0", 3)
@@ -134,6 +138,9 @@ class WebConsole:
 
 
 class SSHConsole:
+    def send_raw(self, text):
+        self.channel.sendall(text)
+
     def __init__(self, client, host, node, lab, known_hosts):
         self.label = node.label
         self.ssh = paramiko.SSHClient()
@@ -157,13 +164,7 @@ class SSHConsole:
             self.channel.send("\r")
             prompt += self.read(3)
             if node.node_definition in ("iosv", "iosvl2", "iol-xe", "ioll2-xe", "csr1000v"):
-                deadline = time.monotonic() + 240
-                while (
-                    not re.search(re.escape(node.label) + r"[>#]", prompt)
-                    and time.monotonic() < deadline
-                ):
-                    self.channel.send("\r")
-                    prompt += self.read(8)
+                prompt = establish_ios_prompt(self.label, prompt, self.channel.send, self.read)
                 prompt += self.command("enable", 6)
                 if not re.search(re.escape(node.label) + r"#", prompt):
                     raise RuntimeError("Privileged SSH console prompt was not established")

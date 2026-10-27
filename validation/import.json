@@ -68,26 +68,6 @@
       "completed_utc": "2026-10-24T18:49:58Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/037-restconf-netconf-yang.yaml",
-      "sha256": "ee4354d8b80c821078e7614c248d8d47fe7e84cafced0502f9f8961dc8bc898f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:49:58Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:49:59Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/038-python-requests-network-change.yaml",
-      "sha256": "0c3d5cbf5479cca1e68579578f46610d37638c87532e16ad2d2b83f87dabdc7c",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:49:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:49:59Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/039-ansible-network-baseline.yaml",
       "sha256": "d619cce414b21fef974244ecd5f961a498247f94cef68f907b8aaa76ca59d642",
       "cml_version": "2.10.1+build.21",
@@ -1128,16 +1108,6 @@
       "completed_utc": "2026-10-24T18:50:28Z"
     },
     {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/validation/036-pyats-genie-style-validation.yaml",
-      "sha256": "c85e6ed6f5270b8288038fe49c5625d448001de78ca805d70da3d93eca875bc0",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:28Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:28Z"
-    },
-    {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/webhooks/035-webhook-receiver-config-validation.yaml",
       "sha256": "1d5a9a5406f3954dfb5c1284327564efb4d676d8c3cf01d4dafa07344e479402",
       "cml_version": "2.10.1+build.21",
@@ -1168,16 +1138,6 @@
       "completed_utc": "2026-10-25T15:55:54Z"
     },
     {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/037-restconf-netconf-management.yaml",
-      "sha256": "1e65627f080aa0bd768c55ede3b7d4b160a477d0c05384ea5eebf18c58468b2a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:54Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:54Z"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/038-json-yaml-data-models.yaml",
       "sha256": "e0698a5d84e3d1af1d1ebe6f1c1227c264cfadeffbac5c5d3ddf90ee6c635666",
       "cml_version": "2.10.1+build.21",
@@ -1190,16 +1150,6 @@
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/039-controller-based-networking.yaml",
       "sha256": "a45e8add4b55805c2c88c354c7bda44a6e92cbea586d98e8e567a5468c98fa4f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:55Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:55Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/040-python-api-inventory.yaml",
-      "sha256": "f202483a1128a21103518b3efedc74cdef5984b5e59b805f3e276e8b778d60ca",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-25T15:55:55Z",
       "checks": [],
@@ -2336,6 +2286,56 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-27T18:26:21Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/037-restconf-netconf-management.yaml",
+      "sha256": "6b199bed56708c92eb3bc51153b224676a8eb7a05b6bec3cfce42219fb547fe0",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T19:02:05Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T19:02:05Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/037-restconf-netconf-yang.yaml",
+      "sha256": "1388deaa4340ab8e07dd83ac95a4c03749e6383a062a903d224f93a6eb879efd",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T19:02:07Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T19:02:07Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/038-python-requests-network-change.yaml",
+      "sha256": "e877d6a7455d0b2fae9e3dff0ee0e1875e335b3543e806d44dd575fca9a588b2",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T19:02:09Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T19:02:09Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/040-python-api-inventory.yaml",
+      "sha256": "0899a03a4b0008eb9f367257c244920154204e0fb115f6d3379b59d57ebf132a",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T19:02:11Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T19:02:11Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/validation/036-pyats-genie-style-validation.yaml",
+      "sha256": "6d5261e8b95e4fa30253da8b1d0c4012add51c134a0c8141f836620e474285cb",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T19:02:13Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T19:02:13Z"
     }
   ]
 }

@@ -6538,5 +6538,244 @@
         ]
       }
     ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/037-restconf-netconf-management.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/api_probe.py manage baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The real API client validates the baseline protocol and trust conditions.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw only the HTTPS listener",
+        "node": "API",
+        "commands": [
+          "configure terminal",
+          "no ip http secure-server",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "API",
+            "command": "show ip http server status",
+            "pattern": "HTTP secure server status:\\s*Disabled",
+            "expectation": "The HTTPS listener is explicitly disabled."
+          },
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/api_probe.py manage https-off",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real API client validates the https-off protocol and trust conditions.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore HTTPS and recheck trust",
+        "node": "API",
+        "commands": [
+          "configure terminal",
+          "ip http secure-server",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/api_probe.py manage recovered",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real API client validates the recovered protocol and trust conditions.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/037-restconf-netconf-yang.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/api_probe.py yang baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The real API client validates the baseline protocol and trust conditions.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw only the HTTPS listener",
+        "node": "API",
+        "commands": [
+          "configure terminal",
+          "no ip http secure-server",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "API",
+            "command": "show ip http server status",
+            "pattern": "HTTP secure server status:\\s*Disabled",
+            "expectation": "The HTTPS listener is explicitly disabled."
+          },
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/api_probe.py yang https-off",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real API client validates the https-off protocol and trust conditions.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore HTTPS and recheck trust",
+        "node": "API",
+        "commands": [
+          "configure terminal",
+          "ip http secure-server",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/api_probe.py yang recovered",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real API client validates the recovered protocol and trust conditions.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/038-python-requests-network-change.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/rest_change.py",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Actual RESTCONF writes, rejected malformed input, independent NETCONF readback and restoration all pass.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 3
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/040-python-api-inventory.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/inventory_probe.py inventory baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The inventory contains the actual router hostname, observed interface count and configured management addressing; JSON and YAML agree.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 3
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/validation/036-pyats-genie-style-validation.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/inventory_probe.py validation baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Live facts match the explicit intended hostname and management address.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "introduce a wrong intended address",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/inventory_probe.py --set-intent wrong"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/inventory_probe.py validation drift",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Exactly the intended IPv4 value differs; the real device hostname is unchanged.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore correct intended state",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/inventory_probe.py --set-intent correct"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/inventory_probe.py validation recovered",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The restored intent produces no structured differences.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
   }
 }

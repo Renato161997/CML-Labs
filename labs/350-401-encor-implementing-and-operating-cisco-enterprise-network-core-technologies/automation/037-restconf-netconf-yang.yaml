@@ -1,127 +1,360 @@
 lab:
   title: RESTCONF NETCONF YANG
-  description: CCNP-ENCOR CML lab generated from blueprint coverage.
-  notes: 'CCNP-ENCOR blueprint lab: RESTCONF NETCONF YANG
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# RESTCONF NETCONF YANG
 
 
-    Topics:
-
-    - RESTCONF
-
-    - NETCONF
-
-    - YANG
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Suggested tasks:
-
-    1. Enable API reachability
-
-    2. Map YANG path
-
-    3. Retrieve interface state
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-401-037-restconf-netconf-yang.md
 
 
-    Suggested verification:
+    A real CSR1000v 17.3.8a and the open-source CML-Labs toolbox exchange NETCONF and RESTCONF over an
+    isolated benchmark network. Nominal RAM is 3072+1024 MiB, with two router vCPUs. The registered iosxe-api-v1
+    preparation is implementation-digest-bound: it creates fresh RSA3072 keys and an explicit DNS-SAN
+    certificate, sets only the disposable guest clock, waits for YANG daemons, exports public trust material
+    over authenticated CML serial, matches ssh-keyscan against those serial-derived public keys, and checksum-verifies
+    transfer to the client. No private key or CML administrator credential enters the guest client. TLS
+    verification remains enabled, and NETCONF uses an explicit key pin plus a strict IOSXE ncclient handler:
+    the stock ncclient0.6.17 IOSXE callback accepts unknown keys and is deliberately overridden. Wrong-password,
+    wrong-hostname and wrong-key negative controls precede a fresh valid connection. All credentials in
+    this file are public isolated training fixtures. This tested legacy CSR reference platform is an interoperability
+    exercise, not a production cryptographic recommendation. No Internet, external connector or existing
+    lab is used; stop/wipe only your imported copy to reset. The harness performs preparation automatically;
+    its source scripts/iosxe_prepare.py also documents the serial steps and the known certificate-enrollment
+    dialogue. Do not bypass verification if a certificate or key differs.
 
-    - show ip interface brief
 
-    - show interfaces status
+    Objectives:
 
-    - show ip route
+    - Discover the actual server NETCONF capabilities and retrieve its Cisco-IOS-XE-native YANG schema.
 
-    - show running-config | section router
+    - Relate the native hostname leaf to a structured NETCONF subtree and the actual RESTCONF JSON representation.
 
-    - ping between the lab endpoints'
+    - Verify authentication and transport identity negative controls; distinguish an unavailable HTTPS
+    listener from a working NETCONF endpoint.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: R1
-  node_definition: iosv
-  x: -200
-  y: 0
+  label: API
+  node_definition: csr1000v
   configuration:
-  - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR RESTCONF NETCONF YANG ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNP-ENCOR RESTCONF NETCONF YANG\n ip address 10.10.10.1 255.255.255.0\n\
-      \ no shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
+  - name: iosxe_config.txt
+    content: "hostname API\nno ip domain-lookup\nip domain name cml-lab.example\nusername CML-LAB privilege\
+      \ 15 secret Cml-lab-only-984\naaa new-model\naaa authentication login default local\naaa authorization\
+      \ exec default local\naaa authentication login CONSOLE none\nline console 0\n login authentication\
+      \ CONSOLE\n privilege level 15\n exec-timeout 0 0\n logging synchronous\n exit\ninterface GigabitEthernet1\n\
+      \ ip address 198.18.0.1 255.255.255.252\n no shutdown\n exit\nno ip http server\nno ip http secure-server\n\
+      ip http authentication local\nip ssh version 2\nline vty 0 4\n login authentication default\n transport\
+      \ input ssh\n exit\nend\n"
+  cpu_limit: 100
   priority: 100
-  tags: []
-- id: n1
-  label: SW1
-  node_definition: iosvl2
   x: 0
   y: 0
-  configuration:
-  - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR RESTCONF NETCONF YANG ^C\n\
-      vlan 10\n name USERS\nvlan 20\n name SERVICES\nvlan 99\n name MGMT\ninterface range GigabitEthernet0/1-3\n\
-      \ switchport mode access\n spanning-tree portfast\nend"
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: GigabitEthernet1
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: GigabitEthernet2
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: GigabitEthernet3
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: GigabitEthernet4
     type: physical
     slot: 3
-  priority: 99
   tags: []
-- id: n2
-  label: DEVBOX
-  node_definition: desktop
-  x: 200
-  y: 0
+  ram: 3072
+  cpus: 2
+- id: n1
+  label: TOOLS
+  node_definition: cml-labs-toolbox
+  configuration:
+  - name: boot.sh
+    content: '#!/bin/bash
+
+      set -eu
+
+      ip address add 198.18.0.2/30 dev eth1
+
+      ip link set eth1 up
+
+      mkdir -p /lab
+
+      echo "198.18.0.1 api.cml-lab.example wrong.cml-lab.example" >> /etc/hosts
+
+      base64 -d > /lab/api_probe.py <<''CML_EMBED_EXAMPLES_AUTOMATION_API_PROBE_PY''
+
+      IiIiVmVyaWZpZWQgUkVTVENPTkYgYW5kIE5FVENPTkYgY2hlY2tzIGFnYWluc3QgdGhlIGlzb2xh
+
+      dGVkIElPUyBYRSBBUEkgZ3Vlc3QuIiIiCgppbXBvcnQgYXJncGFyc2UKaW1wb3J0IGpzb24KaW1w
+
+      b3J0IHRpbWUKZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCmZyb20geG1sLmV0cmVlIGltcG9ydCBF
+
+      bGVtZW50VHJlZQoKaW1wb3J0IHBhcmFtaWtvCmltcG9ydCByZXF1ZXN0cwpmcm9tIG5jY2xpZW50
+
+      IGltcG9ydCBtYW5hZ2VyCmZyb20gbmNjbGllbnQuZGV2aWNlcy5pb3N4ZSBpbXBvcnQgSW9zeGVE
+
+      ZXZpY2VIYW5kbGVyCmZyb20gbmNjbGllbnQudHJhbnNwb3J0LmVycm9ycyBpbXBvcnQgQXV0aGVu
+
+      dGljYXRpb25FcnJvciwgU2Vzc2lvbkNsb3NlRXJyb3IsIFNTSFVua25vd25Ib3N0RXJyb3IKCkhP
+
+      U1QgPSAiMTk4LjE4LjAuMSIKTkFNRVNQQUNFID0gImh0dHA6Ly9jaXNjby5jb20vbnMveWFuZy9D
+
+      aXNjby1JT1MtWEUtbmF0aXZlIgpVUkwgPSAiaHR0cHM6Ly9hcGkuY21sLWxhYi5leGFtcGxlL3Jl
+
+      c3Rjb25mL2RhdGEvQ2lzY28tSU9TLVhFLW5hdGl2ZTpuYXRpdmUvaG9zdG5hbWUiCkFVVEggPSAo
+
+      IkNNTC1MQUIiLCAiQ21sLWxhYi1vbmx5LTk4NCIpICAjIFB1YmxpYyBpc29sYXRlZC1sYWIgZml4
+
+      dHVyZS4KCgpjbGFzcyBTdHJpY3RJT1NYRShJb3N4ZURldmljZUhhbmRsZXIpOgogICAgZGVmIGFk
+
+      ZF9hZGRpdGlvbmFsX3NzaF9jb25uZWN0X3BhcmFtcyhzZWxmLCBrd2FyZ3MpOgogICAgICAgICMg
+
+      bmNjbGllbnQgMC42LjE3J3Mgc3RvY2sgSU9TIFhFIGhvb2sgb3RoZXJ3aXNlIGFjY2VwdHMgdW5r
+
+      bm93biBrZXlzLgogICAgICAgIGt3YXJnc1sidW5rbm93bl9ob3N0X2NiIl0gPSBsYW1iZGEgKl86
+
+      IEZhbHNlCgoKZGVmIGNvbm5lY3Rpb25fb3B0aW9ucygpOgogICAgcGVlciA9IGpzb24ubG9hZHMo
+
+      UGF0aCgiL2xhYi9wZWVyLXNzaC5qc29uIikucmVhZF90ZXh0KCkpCiAgICBpZiBwZWVyWyJob3N0
+
+      Il0gIT0gSE9TVCBvciBwZWVyWyJwb3J0Il0gIT0gODMwOgogICAgICAgIHJhaXNlIFZhbHVlRXJy
+
+      b3IoIlRoaXMgZml4dHVyZSBvbmx5IGNvbm5lY3RzIHRvIGl0cyBvd24gYmVuY2htYXJrLWFkZHJl
+
+      c3MgcGVlciIpCiAgICByZXR1cm4gewogICAgICAgICJob3N0IjogSE9TVCwKICAgICAgICAicG9y
+
+      dCI6IDgzMCwKICAgICAgICAidXNlcm5hbWUiOiBBVVRIWzBdLAogICAgICAgICJwYXNzd29yZCI6
+
+      IEFVVEhbMV0sCiAgICAgICAgImhvc3RrZXlfdmVyaWZ5IjogVHJ1ZSwKICAgICAgICAiaG9zdGtl
+
+      eV9iNjQiOiBwZWVyWyJob3N0a2V5X2I2NCJdLAogICAgICAgICJsb29rX2Zvcl9rZXlzIjogRmFs
+
+      c2UsCiAgICAgICAgImFsbG93X2FnZW50IjogRmFsc2UsCiAgICAgICAgImRldmljZV9wYXJhbXMi
+
+      OiB7ImhhbmRsZXIiOiBTdHJpY3RJT1NYRX0sCiAgICAgICAgInRpbWVvdXQiOiAyMCwKICAgIH0K
+
+      CgpkZWYgaG9zdG5hbWUoc2Vzc2lvbik6CiAgICBzdWJ0cmVlID0gJzxuYXRpdmUgeG1sbnM9Iicg
+
+      KyBOQU1FU1BBQ0UgKyAnIj48aG9zdG5hbWUvPjwvbmF0aXZlPicKICAgIGRhdGEgPSBzZXNzaW9u
+
+      LmdldF9jb25maWcoc291cmNlPSJydW5uaW5nIiwgZmlsdGVyPSgic3VidHJlZSIsIHN1YnRyZWUp
+
+      KS5kYXRhX3htbAogICAgcmV0dXJuIEVsZW1lbnRUcmVlLmZyb21zdHJpbmcoZGF0YSkuZmluZCgi
+
+      Li8veyIgKyBOQU1FU1BBQ0UgKyAifWhvc3RuYW1lIikudGV4dAoKCmRlZiBjb25uZWN0X3Zlcmlm
+
+      aWVkKG9wdGlvbnMpOgogICAgZGVhZGxpbmUgPSB0aW1lLm1vbm90b25pYygpICsgNDUKICAgIHdo
+
+      aWxlIFRydWU6CiAgICAgICAgdHJ5OgogICAgICAgICAgICByZXR1cm4gbWFuYWdlci5jb25uZWN0
+
+      KCoqb3B0aW9ucykKICAgICAgICBleGNlcHQgU2Vzc2lvbkNsb3NlRXJyb3I6CiAgICAgICAgICAg
+
+      IGlmIHRpbWUubW9ub3RvbmljKCkgPj0gZGVhZGxpbmU6CiAgICAgICAgICAgICAgICByYWlzZQog
+
+      ICAgICAgICAgICB0aW1lLnNsZWVwKDIpCgoKZGVmIGhvc3RuYW1lX2NvbmZpZyh2YWx1ZSk6CiAg
+
+      ICBpZiB2YWx1ZSBub3QgaW4gKCJBUEkiLCAiQVBJLUNIQU5HRUQiKToKICAgICAgICByYWlzZSBW
+
+      YWx1ZUVycm9yKCJVbmV4cGVjdGVkIHRyYWluaW5nIGhvc3RuYW1lIikKICAgIHJldHVybiAoCiAg
+
+      ICAgICAgJzxjb25maWc+PG5hdGl2ZSB4bWxucz0iJwogICAgICAgICsgTkFNRVNQQUNFCiAgICAg
+
+      ICAgKyAnIj48aG9zdG5hbWU+JwogICAgICAgICsgdmFsdWUKICAgICAgICArICI8L2hvc3RuYW1l
+
+      PjwvbmF0aXZlPjwvY29uZmlnPiIKICAgICkKCgpkZWYgcmVzdChzZXNzaW9uLCBhdXRoPUFVVEgp
+
+      OgogICAgZGVhZGxpbmUgPSB0aW1lLm1vbm90b25pYygpICsgNDUKICAgIHdoaWxlIFRydWU6CiAg
+
+      ICAgICAgcmVzcG9uc2UgPSBzZXNzaW9uLmdldCgKICAgICAgICAgICAgVVJMLAogICAgICAgICAg
+
+      ICBhdXRoPWF1dGgsCiAgICAgICAgICAgIHZlcmlmeT0iL2xhYi9wZWVyLWNhLnBlbSIsCiAgICAg
+
+      ICAgICAgIGhlYWRlcnM9eyJBY2NlcHQiOiAiYXBwbGljYXRpb24veWFuZy1kYXRhK2pzb24ifSwK
+
+      ICAgICAgICAgICAgdGltZW91dD01LAogICAgICAgICAgICBhbGxvd19yZWRpcmVjdHM9RmFsc2Us
+
+      CiAgICAgICAgKQogICAgICAgIGlmIHJlc3BvbnNlLnN0YXR1c19jb2RlIG5vdCBpbiAoNDA0LCA1
+
+      MDIsIDUwMywgNTA0KSBvciB0aW1lLm1vbm90b25pYygpID49IGRlYWRsaW5lOgogICAgICAgICAg
+
+      ICByZXR1cm4gcmVzcG9uc2UKICAgICAgICB0aW1lLnNsZWVwKDIpCgoKZGVmIHRydXN0X25lZ2F0
+
+      aXZlcyhodHRwLCBvcHRpb25zKToKICAgIGFzc2VydCByZXN0KGh0dHAsIChBVVRIWzBdLCAid3Jv
+
+      bmctcHVibGljLXRyYWluaW5nLWZpeHR1cmUiKSkuc3RhdHVzX2NvZGUgaW4gKDQwMSwgNDAzKQog
+
+      ICAgdHJ5OgogICAgICAgIGh0dHAuZ2V0KAogICAgICAgICAgICBVUkwucmVwbGFjZSgiYXBpLmNt
+
+      bC1sYWIuZXhhbXBsZSIsICJ3cm9uZy5jbWwtbGFiLmV4YW1wbGUiKSwKICAgICAgICAgICAgYXV0
+
+      aD1BVVRILAogICAgICAgICAgICB2ZXJpZnk9Ii9sYWIvcGVlci1jYS5wZW0iLAogICAgICAgICAg
+
+      ICB0aW1lb3V0PTUsCiAgICAgICAgKQogICAgZXhjZXB0IHJlcXVlc3RzLmV4Y2VwdGlvbnMuU1NM
+
+      RXJyb3I6CiAgICAgICAgcGFzcwogICAgZWxzZToKICAgICAgICByYWlzZSBBc3NlcnRpb25FcnJv
+
+      cigiVExTIGhvc3RuYW1lIG1pc21hdGNoIHdhcyBhY2NlcHRlZCIpCiAgICB0cnk6CiAgICAgICAg
+
+      d2l0aCBtYW5hZ2VyLmNvbm5lY3QoKipkaWN0KG9wdGlvbnMsIHBhc3N3b3JkPSJ3cm9uZy1wdWJs
+
+      aWMtdHJhaW5pbmctZml4dHVyZSIpKToKICAgICAgICAgICAgcmFpc2UgQXNzZXJ0aW9uRXJyb3Io
+
+      Ik5FVENPTkYgYWNjZXB0ZWQgaW5jb3JyZWN0IGNyZWRlbnRpYWxzIikKICAgIGV4Y2VwdCBBdXRo
+
+      ZW50aWNhdGlvbkVycm9yOgogICAgICAgIHBhc3MKICAgIGZhbHNlX2tleSA9IHBhcmFtaWtvLlJT
+
+      QUtleS5nZW5lcmF0ZSgyMDQ4KS5nZXRfYmFzZTY0KCkKICAgIHRyeToKICAgICAgICB3aXRoIG1h
+
+      bmFnZXIuY29ubmVjdCgqKmRpY3Qob3B0aW9ucywgaG9zdGtleV9iNjQ9ZmFsc2Vfa2V5KSk6CiAg
+
+      ICAgICAgICAgIHJhaXNlIEFzc2VydGlvbkVycm9yKCJORVRDT05GIGFjY2VwdGVkIGEgbWlzbWF0
+
+      Y2hpbmcgcGlubmVkIGhvc3Qga2V5IikKICAgIGV4Y2VwdCBTU0hVbmtub3duSG9zdEVycm9yOgog
+
+      ICAgICAgIHBhc3MKCgpkZWYgcnVuKG1vZGUsIHBoYXNlKToKICAgIG9wdGlvbnMgPSBjb25uZWN0
+
+      aW9uX29wdGlvbnMoKQogICAgd2l0aCByZXF1ZXN0cy5TZXNzaW9uKCkgYXMgaHR0cDoKICAgICAg
+
+      ICBodHRwLnRydXN0X2VudiA9IEZhbHNlCiAgICAgICAgaWYgcGhhc2UgIT0gImh0dHBzLW9mZiI6
+
+      CiAgICAgICAgICAgIHJlc3BvbnNlID0gcmVzdChodHRwKQogICAgICAgICAgICBhc3NlcnQgcmVz
+
+      cG9uc2Uuc3RhdHVzX2NvZGUgPT0gMjAwIGFuZCByZXNwb25zZS5qc29uKCkgPT0gewogICAgICAg
+
+      ICAgICAgICAgIkNpc2NvLUlPUy1YRS1uYXRpdmU6aG9zdG5hbWUiOiAiQVBJIgogICAgICAgICAg
+
+      ICB9CiAgICAgICAgd2l0aCBjb25uZWN0X3ZlcmlmaWVkKG9wdGlvbnMpIGFzIHNlc3Npb246CiAg
+
+      ICAgICAgICAgIGFzc2VydCBob3N0bmFtZShzZXNzaW9uKSA9PSAiQVBJIgogICAgICAgICAgICBp
+
+      ZiBwaGFzZSA9PSAiaHR0cHMtb2ZmIjoKICAgICAgICAgICAgICAgIHRyeToKICAgICAgICAgICAg
+
+      ICAgICAgICBodHRwLmdldChVUkwsIGF1dGg9QVVUSCwgdmVyaWZ5PSIvbGFiL3BlZXItY2EucGVt
+
+      IiwgdGltZW91dD01KQogICAgICAgICAgICAgICAgZXhjZXB0IHJlcXVlc3RzLmV4Y2VwdGlvbnMu
+
+      U1NMRXJyb3I6CiAgICAgICAgICAgICAgICAgICAgcmFpc2UKICAgICAgICAgICAgICAgIGV4Y2Vw
+
+      dCByZXF1ZXN0cy5leGNlcHRpb25zLkNvbm5lY3Rpb25FcnJvcjoKICAgICAgICAgICAgICAgICAg
+
+      ICBwYXNzCiAgICAgICAgICAgICAgICBlbHNlOgogICAgICAgICAgICAgICAgICAgIHJhaXNlIEFz
+
+      c2VydGlvbkVycm9yKCJIVFRQUyB1bmV4cGVjdGVkbHkgcmVtYWluZWQgcmVhY2hhYmxlIikKICAg
+
+      ICAgICAgICAgICAgIHJldHVybiB7CiAgICAgICAgICAgICAgICAgICAgInN0YXR1cyI6ICJwYXNz
+
+      ZWQiLAogICAgICAgICAgICAgICAgICAgICJtb2RlIjogbW9kZSwKICAgICAgICAgICAgICAgICAg
+
+      ICAicGhhc2UiOiBwaGFzZSwKICAgICAgICAgICAgICAgICAgICAibmV0Y29uZl9zdGlsbF91c2Fi
+
+      bGUiOiBUcnVlLAogICAgICAgICAgICAgICAgfQogICAgICAgICAgICBpZiBtb2RlID09ICJtYW5h
+
+      Z2UiOgogICAgICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgICAgIGFzc2VydCBzZXNz
+
+      aW9uLmVkaXRfY29uZmlnKAogICAgICAgICAgICAgICAgICAgICAgICB0YXJnZXQ9InJ1bm5pbmci
+
+      LCBjb25maWc9aG9zdG5hbWVfY29uZmlnKCJBUEktQ0hBTkdFRCIpCiAgICAgICAgICAgICAgICAg
+
+      ICAgKS5vawogICAgICAgICAgICAgICAgICAgIGFzc2VydCBob3N0bmFtZShzZXNzaW9uKSA9PSAi
+
+      QVBJLUNIQU5HRUQiCiAgICAgICAgICAgICAgICBmaW5hbGx5OgogICAgICAgICAgICAgICAgICAg
+
+      IGFzc2VydCBzZXNzaW9uLmVkaXRfY29uZmlnKHRhcmdldD0icnVubmluZyIsIGNvbmZpZz1ob3N0
+
+      bmFtZV9jb25maWcoIkFQSSIpKS5vawogICAgICAgICAgICAgICAgYXNzZXJ0IGhvc3RuYW1lKHNl
+
+      c3Npb24pID09ICJBUEkiCiAgICAgICAgICAgIGVsaWYgbW9kZSA9PSAieWFuZyI6CiAgICAgICAg
+
+      ICAgICAgICBhc3NlcnQgYW55KAogICAgICAgICAgICAgICAgICAgICJDaXNjby1JT1MtWEUtbmF0
+
+      aXZlIiBpbiBjYXBhYmlsaXR5CiAgICAgICAgICAgICAgICAgICAgZm9yIGNhcGFiaWxpdHkgaW4g
+
+      c2Vzc2lvbi5zZXJ2ZXJfY2FwYWJpbGl0aWVzCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAg
+
+      ICAgICBzY2hlbWEgPSBzZXNzaW9uLmdldF9zY2hlbWEoIkNpc2NvLUlPUy1YRS1uYXRpdmUiKS5k
+
+      YXRhCiAgICAgICAgICAgICAgICBhc3NlcnQgIm1vZHVsZSBDaXNjby1JT1MtWEUtbmF0aXZlIiBp
+
+      biBzY2hlbWEgYW5kIE5BTUVTUEFDRSBpbiBzY2hlbWEKICAgICAgICB0cnVzdF9uZWdhdGl2ZXMo
+
+      aHR0cCwgb3B0aW9ucykKICAgICAgICB3aXRoIG1hbmFnZXIuY29ubmVjdCgqKm9wdGlvbnMpIGFz
+
+      IHNlc3Npb246CiAgICAgICAgICAgIGFzc2VydCBob3N0bmFtZShzZXNzaW9uKSA9PSAiQVBJIgog
+
+      ICAgcmV0dXJuIHsKICAgICAgICAic3RhdHVzIjogInBhc3NlZCIsCiAgICAgICAgIm1vZGUiOiBt
+
+      b2RlLAogICAgICAgICJwaGFzZSI6IHBoYXNlLAogICAgICAgICJ0bHNfaG9zdG5hbWVfdmVyaWZp
+
+      ZWQiOiBUcnVlLAogICAgICAgICJzc2hfa2V5X3Bpbm5lZF9mcm9tX3NlcmlhbCI6IFRydWUsCiAg
+
+      ICAgICAgIndyb25nX2NyZWRlbnRpYWxzX2FuZF9rZXlzX3JlamVjdGVkIjogVHJ1ZSwKICAgIH0K
+
+      CgppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOgogICAgcGFyc2VyID0gYXJncGFyc2UuQXJndW1l
+
+      bnRQYXJzZXIoZGVzY3JpcHRpb249X19kb2NfXykKICAgIHBhcnNlci5hZGRfYXJndW1lbnQoIm1v
+
+      ZGUiLCBjaG9pY2VzPSgibWFuYWdlIiwgInlhbmciKSkKICAgIHBhcnNlci5hZGRfYXJndW1lbnQo
+
+      InBoYXNlIiwgY2hvaWNlcz0oImJhc2VsaW5lIiwgImh0dHBzLW9mZiIsICJyZWNvdmVyZWQiKSkK
+
+      ICAgIGFyZ3MgPSBwYXJzZXIucGFyc2VfYXJncygpCiAgICBwcmludChqc29uLmR1bXBzKHJ1bihh
+
+      cmdzLm1vZGUsIGFyZ3MucGhhc2UpLCBzb3J0X2tleXM9VHJ1ZSkpCg==
+
+      CML_EMBED_EXAMPLES_AUTOMATION_API_PROBE_PY
+
+      echo READY >/dev/console
+
+      exit 0
+
+      '
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
-  - id: i0
+  - id: i1
     label: eth0
     type: physical
     slot: 0
-  configuration: []
-  priority: 98
+  - id: i2
+    label: eth1
+    type: physical
+    slot: 1
+  - id: i3
+    label: eth2
+    type: physical
+    slot: 2
+  - id: i4
+    label: eth3
+    type: physical
+    slot: 3
   tags: []
+  ram: 1024
+  cpus: 1
 links:
 - id: l0
   n1: n0
   i1: i1
   n2: n1
-  i2: i1
-- id: l1
-  n1: n1
-  i1: i2
-  n2: n2
-  i2: i0
+  i2: i2
 annotations: []
 smart_annotations: []
