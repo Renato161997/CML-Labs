@@ -6376,5 +6376,167 @@
         ]
       }
     ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/001-distributed-app-front-back-loadbalancer.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/distribution_probe.py baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Actual frontend responses match the baseline backend set, status and bounded-attempt contract."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "stop first backend",
+        "node": "APP1",
+        "commands": [
+          "kill \"$(cat /lab/service.pid)\""
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/distribution_probe.py first-down",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual frontend responses match the first-down backend set, status and bounded-attempt contract."
+          }
+        ]
+      },
+      {
+        "name": "restore first backend",
+        "node": "APP1",
+        "commands": [
+          "bash /lab/start_backend.sh 198.18.1.2"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/distribution_probe.py recovered",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual frontend responses match the recovered backend set, status and bounded-attempt contract."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/002-scalability-modularity.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/distribution_probe.py baseline --parallel",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Actual frontend responses match the baseline backend set, status and bounded-attempt contract."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "planned pool scale-in",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/distribution_probe.py --pool one"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/distribution_probe.py scale-in --parallel",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual frontend responses match the scale-in backend set, status and bounded-attempt contract."
+          },
+          {
+            "node": "FRONT",
+            "command": "curl -fsS http://198.18.1.3:8080/health; echo",
+            "pattern": "\"status\": \"ok\"",
+            "expectation": "The removed replica is still alive; pool selection changed independently."
+          }
+        ]
+      },
+      {
+        "name": "restore two replicas",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/distribution_probe.py --pool two"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/distribution_probe.py recovered --parallel",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual frontend responses match the recovered backend set, status and bounded-attempt contract."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/003-ha-resiliency-hybrid-cloud.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/distribution_probe.py baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Actual frontend responses match the baseline backend set, status and bounded-attempt contract."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "first backend failure",
+        "node": "APP1",
+        "commands": [
+          "kill \"$(cat /lab/service.pid)\""
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/distribution_probe.py first-down",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual frontend responses match the first-down backend set, status and bounded-attempt contract."
+          }
+        ]
+      },
+      {
+        "name": "all backends unavailable",
+        "node": "APP2",
+        "commands": [
+          "kill \"$(cat /lab/service.pid)\""
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/distribution_probe.py all-down",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual frontend responses match the all-down backend set, status and bounded-attempt contract."
+          }
+        ]
+      },
+      {
+        "name": "restore one backend",
+        "node": "APP1",
+        "commands": [
+          "bash /lab/start_backend.sh 198.18.1.2"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/distribution_probe.py first-only",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual frontend responses match the first-only backend set, status and bounded-attempt contract."
+          }
+        ]
+      },
+      {
+        "name": "restore both backends",
+        "node": "APP2",
+        "commands": [
+          "bash /lab/start_backend.sh 198.18.1.3"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/distribution_probe.py recovered",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual frontend responses match the recovered backend set, status and bounded-attempt contract."
+          }
+        ]
+      }
+    ]
   }
 }

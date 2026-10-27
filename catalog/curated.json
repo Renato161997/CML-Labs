@@ -488,5 +488,26 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-901-009-http-cache-controls.md",
     "example_profile": "native-api-core"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/001-distributed-app-front-back-loadbalancer.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 60,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-001-distributed-app-front-back-loadbalancer.md",
+    "example_profile": "native-api-distribution"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/002-scalability-modularity.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 60,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-002-scalability-modularity.md",
+    "example_profile": "native-api-distribution"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/003-ha-resiliency-hybrid-cloud.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-003-ha-resiliency-hybrid-cloud.md",
+    "example_profile": "native-api-distribution"
   }
 }

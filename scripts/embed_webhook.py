@@ -21,6 +21,18 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-api-distribution": {
+        "APP1": {
+            "/lab/service.py": "examples/api-core/service.py",
+            "/lab/start_backend.sh": "examples/api-core/start_backend.sh",
+        },
+        "APP2": {
+            "/lab/service.py": "examples/api-core/service.py",
+            "/lab/start_backend.sh": "examples/api-core/start_backend.sh",
+        },
+        "FRONT": {"/lab/frontend.py": "examples/api-core/frontend.py"},
+        "CLIENT": {"/lab/distribution_probe.py": "examples/api-core/distribution_probe.py"},
+    },
     "native-api-core": {
         "SERVER": {"/lab/service.py": "examples/api-core/service.py"},
         "CLIENT": {"/lab/client.py": "examples/api-core/client.py"},

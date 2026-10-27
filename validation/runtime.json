@@ -12009,6 +12009,253 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-27T17:45:38Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/001-distributed-app-front-back-loadbalancer.yaml",
+      "sha256": "81ddb34701a4f0026f571c36550d570a73a98c3a722cfbf8048017be94b3e796",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T18:24:54Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/distribution_probe.py baseline",
+          "expectation": "Actual frontend responses match the baseline backend set, status and bounded-attempt contract.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/distribution_probe.py baseline\n{\"backends\": [\"http://198.18.1.2:8080\", \"http://198.18.1.3:8080\"], \"concurrent_workers\": 1, \"phase\": \"baseline\", \"responses\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "stop first backend",
+          "kind": "configuration",
+          "node": "APP1",
+          "command": "kill \"$(cat /lab/service.pid)\"",
+          "passed": true,
+          "output": "\nroot@APP1:~# kill \"$(cat /lab/service.pid)\"\nroot@APP1:~# "
+        },
+        {
+          "phase": "stop first backend",
+          "node": "CLIENT",
+          "command": "python3 /lab/distribution_probe.py first-down",
+          "expectation": "Actual frontend responses match the first-down backend set, status and bounded-attempt contract.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/distribution_probe.py first-down\n{\"backends\": [\"http://198.18.1.3:8080\"], \"concurrent_workers\": 1, \"phase\": \"first-down\", \"responses\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore first backend",
+          "kind": "configuration",
+          "node": "APP1",
+          "command": "bash /lab/start_backend.sh 198.18.1.2",
+          "passed": true,
+          "output": "\nroot@APP1:~# bash /lab/start_backend.sh 198.18.1.2\nroot@APP1:~# "
+        },
+        {
+          "phase": "restore first backend",
+          "node": "CLIENT",
+          "command": "python3 /lab/distribution_probe.py recovered",
+          "expectation": "Actual frontend responses match the recovered backend set, status and bounded-attempt contract.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/distribution_probe.py recovered\n{\"backends\": [\"http://198.18.1.2:8080\", \"http://198.18.1.3:8080\"], \"concurrent_workers\": 1, \"phase\": \"recovered\", \"responses\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        }
+      ],
+      "startup_states": {
+        "CLIENT": "BOOTED",
+        "FRONT": "BOOTED",
+        "APP1": "BOOTED",
+        "APP2": "STARTED",
+        "SW": "BOOTED"
+      },
+      "images": {
+        "CLIENT": "net-tools-2-10-1-3",
+        "FRONT": "net-tools-2-10-1-3",
+        "APP1": "net-tools-2-10-1-3",
+        "APP2": "net-tools-2-10-1-3",
+        "SW": "ioll2-xe-17-18-02"
+      },
+      "plan_sha256": "a84287fa78162b5bab4429544d692b16195f9c790948b6de4d5a36abf69dd126",
+      "console_boot_fallback": [
+        "APP2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T18:25:47Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/002-scalability-modularity.yaml",
+      "sha256": "5694630a41426255235d921d2c5bde3d11c102b37310b32d2ec4394dbc90e78f",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T18:26:23Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/distribution_probe.py baseline --parallel",
+          "expectation": "Actual frontend responses match the baseline backend set, status and bounded-attempt contract.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/distribution_probe.py baseline --parallel\n{\"backends\": [\"http://198.18.1.2:8080\", \"http://198.18.1.3:8080\"], \"concurrent_workers\": 4, \"phase\": \"baseline\", \"responses\": 16, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "planned pool scale-in",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/distribution_probe.py --pool one",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/distribution_probe.py --pool one\n{\"status\": \"configured\", \"pool_size\": 1}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "planned pool scale-in",
+          "node": "CLIENT",
+          "command": "python3 /lab/distribution_probe.py scale-in --parallel",
+          "expectation": "Actual frontend responses match the scale-in backend set, status and bounded-attempt contract.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/distribution_probe.py scale-in --parallel\n{\"backends\": [\"http://198.18.1.2:8080\"], \"concurrent_workers\": 4, \"phase\": \"scale-in\", \"responses\": 16, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "planned pool scale-in",
+          "node": "FRONT",
+          "command": "curl -fsS http://198.18.1.3:8080/health; echo",
+          "expectation": "The removed replica is still alive; pool selection changed independently.",
+          "passed": true,
+          "output": "\nroot@FRONT:~# curl -fsS http://198.18.1.3:8080/health; echo\n{\"status\": \"ok\"}\nroot@FRONT:~# "
+        },
+        {
+          "phase": "restore two replicas",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/distribution_probe.py --pool two",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/distribution_probe.py --pool two\n{\"status\": \"configured\", \"pool_size\": 2}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore two replicas",
+          "node": "CLIENT",
+          "command": "python3 /lab/distribution_probe.py recovered --parallel",
+          "expectation": "Actual frontend responses match the recovered backend set, status and bounded-attempt contract.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/distribution_probe.py recovered --parallel\n{\"backends\": [\"http://198.18.1.2:8080\", \"http://198.18.1.3:8080\"], \"concurrent_workers\": 4, \"phase\": \"recovered\", \"responses\": 16, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "893851912b68151bc976512995a10128f5252bf04c25505ec071b70457aed1f9",
+      "startup_states": {
+        "CLIENT": "BOOTED",
+        "FRONT": "BOOTED",
+        "APP1": "BOOTED",
+        "APP2": "BOOTED",
+        "SW": "BOOTED"
+      },
+      "images": {
+        "CLIENT": "net-tools-2-10-1-3",
+        "FRONT": "net-tools-2-10-1-3",
+        "APP1": "net-tools-2-10-1-3",
+        "APP2": "net-tools-2-10-1-3",
+        "SW": "ioll2-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T18:26:57Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/003-ha-resiliency-hybrid-cloud.yaml",
+      "sha256": "2966e28718d4448d532d5735076f477caee0d5e77bf737f7479a106e31ecae8e",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T18:26:58Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/distribution_probe.py baseline",
+          "expectation": "Actual frontend responses match the baseline backend set, status and bounded-attempt contract.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/distribution_probe.py baseline\n{\"backends\": [\"http://198.18.1.2:8080\", \"http://198.18.1.3:8080\"], \"concurrent_workers\": 1, \"phase\": \"baseline\", \"responses\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "first backend failure",
+          "kind": "configuration",
+          "node": "APP1",
+          "command": "kill \"$(cat /lab/service.pid)\"",
+          "passed": true,
+          "output": "\nroot@APP1:~# kill \"$(cat /lab/service.pid)\"\nroot@APP1:~# "
+        },
+        {
+          "phase": "first backend failure",
+          "node": "CLIENT",
+          "command": "python3 /lab/distribution_probe.py first-down",
+          "expectation": "Actual frontend responses match the first-down backend set, status and bounded-attempt contract.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/distribution_probe.py first-down\n{\"backends\": [\"http://198.18.1.3:8080\"], \"concurrent_workers\": 1, \"phase\": \"first-down\", \"responses\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "all backends unavailable",
+          "kind": "configuration",
+          "node": "APP2",
+          "command": "kill \"$(cat /lab/service.pid)\"",
+          "passed": true,
+          "output": "\nroot@APP2:~# kill \"$(cat /lab/service.pid)\"\nroot@APP2:~# "
+        },
+        {
+          "phase": "all backends unavailable",
+          "node": "CLIENT",
+          "command": "python3 /lab/distribution_probe.py all-down",
+          "expectation": "Actual frontend responses match the all-down backend set, status and bounded-attempt contract.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/distribution_probe.py all-down\n{\"backends\": [], \"concurrent_workers\": 1, \"phase\": \"all-down\", \"responses\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore one backend",
+          "kind": "configuration",
+          "node": "APP1",
+          "command": "bash /lab/start_backend.sh 198.18.1.2",
+          "passed": true,
+          "output": "\nroot@APP1:~# bash /lab/start_backend.sh 198.18.1.2\nroot@APP1:~# "
+        },
+        {
+          "phase": "restore one backend",
+          "node": "CLIENT",
+          "command": "python3 /lab/distribution_probe.py first-only",
+          "expectation": "Actual frontend responses match the first-only backend set, status and bounded-attempt contract.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/distribution_probe.py first-only\n{\"backends\": [\"http://198.18.1.2:8080\"], \"concurrent_workers\": 1, \"phase\": \"first-only\", \"responses\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore both backends",
+          "kind": "configuration",
+          "node": "APP2",
+          "command": "bash /lab/start_backend.sh 198.18.1.3",
+          "passed": true,
+          "output": "\nroot@APP2:~# bash /lab/start_backend.sh 198.18.1.3\nroot@APP2:~# "
+        },
+        {
+          "phase": "restore both backends",
+          "node": "CLIENT",
+          "command": "python3 /lab/distribution_probe.py recovered",
+          "expectation": "Actual frontend responses match the recovered backend set, status and bounded-attempt contract.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/distribution_probe.py recovered\n{\"backends\": [\"http://198.18.1.2:8080\", \"http://198.18.1.3:8080\"], \"concurrent_workers\": 1, \"phase\": \"recovered\", \"responses\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "49545c66018390531d3768ba65bbc321a40cac8802db11fcf52eebe5f3aa3bbb",
+      "startup_states": {
+        "CLIENT": "BOOTED",
+        "FRONT": "BOOTED",
+        "APP1": "BOOTED",
+        "APP2": "BOOTED",
+        "SW": "BOOTED"
+      },
+      "images": {
+        "CLIENT": "net-tools-2-10-1-3",
+        "FRONT": "net-tools-2-10-1-3",
+        "APP1": "net-tools-2-10-1-3",
+        "APP2": "net-tools-2-10-1-3",
+        "SW": "ioll2-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T18:27:36Z"
     }
   ]
 }
