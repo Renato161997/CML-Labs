@@ -33,6 +33,11 @@ class DistributionIntegrationTests(unittest.TestCase):
             states = [service.State(Path(directory) / (str(i) + ".sqlite")) for i in range(2)]
             try:
                 apps = [start(service.handler_for(state)) for state in states]
+                pairs = sorted(
+                    zip(apps, states), key=lambda pair: pair[0].server_port, reverse=True
+                )
+                apps = [pair[0] for pair in pairs]
+                states = [pair[1] for pair in pairs]
                 ports = [app.server_port for app in apps]
                 upstreams = tuple("http://127.0.0.1:" + str(port) for port in ports)
                 gateway = start(frontend.handler_for(upstreams))

@@ -49,7 +49,7 @@ def run(phase, parallel=False):
             if phase in ("first-only", "scale-in")
             else list(UPSTREAMS)
         )
-        assert observed == expected, (observed, expected)
+        assert observed == sorted(expected), (observed, expected)
         assert all(1 <= body["attempts"] <= 2 for _, body in replies)
     return {
         "status": "passed",

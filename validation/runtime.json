@@ -12012,9 +12012,9 @@
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/001-distributed-app-front-back-loadbalancer.yaml",
-      "sha256": "d5c75aec4326fb83275400b5c6afe5a7a196dea03d0b635e117560456d01939c",
+      "sha256": "81ddb34701a4f0026f571c36550d570a73a98c3a722cfbf8048017be94b3e796",
       "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T18:10:39Z",
+      "started_utc": "2026-10-27T18:24:54Z",
       "checks": [
         {
           "phase": "baseline",
@@ -12061,7 +12061,7 @@
         "CLIENT": "BOOTED",
         "FRONT": "BOOTED",
         "APP1": "BOOTED",
-        "APP2": "BOOTED",
+        "APP2": "STARTED",
         "SW": "BOOTED"
       },
       "images": {
@@ -12072,16 +12072,18 @@
         "SW": "ioll2-xe-17-18-02"
       },
       "plan_sha256": "a84287fa78162b5bab4429544d692b16195f9c790948b6de4d5a36abf69dd126",
-      "console_boot_fallback": [],
+      "console_boot_fallback": [
+        "APP2"
+      ],
       "status": "passed",
       "test_lab_removed": true,
-      "completed_utc": "2026-10-27T18:11:28Z"
+      "completed_utc": "2026-10-27T18:25:47Z"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/002-scalability-modularity.yaml",
-      "sha256": "8c556d284dc61b9409aecbd6eb08f981d72d7c6bc6bd4aa19850d6b2fe139420",
+      "sha256": "5694630a41426255235d921d2c5bde3d11c102b37310b32d2ec4394dbc90e78f",
       "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T18:17:34Z",
+      "started_utc": "2026-10-27T18:26:23Z",
       "checks": [
         {
           "phase": "baseline",
@@ -12152,13 +12154,13 @@
       "console_boot_fallback": [],
       "status": "passed",
       "test_lab_removed": true,
-      "completed_utc": "2026-10-27T18:18:08Z"
+      "completed_utc": "2026-10-27T18:26:57Z"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/003-ha-resiliency-hybrid-cloud.yaml",
-      "sha256": "66d5d201b9b0453f884736c40c2a3bdd637bf8ed4cb5d8328c1d25e2727d2238",
+      "sha256": "2966e28718d4448d532d5735076f477caee0d5e77bf737f7479a106e31ecae8e",
       "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T18:18:09Z",
+      "started_utc": "2026-10-27T18:26:58Z",
       "checks": [
         {
           "phase": "baseline",
@@ -12253,7 +12255,7 @@
       "console_boot_fallback": [],
       "status": "passed",
       "test_lab_removed": true,
-      "completed_utc": "2026-10-27T18:18:48Z"
+      "completed_utc": "2026-10-27T18:27:36Z"
     }
   ]
 }
