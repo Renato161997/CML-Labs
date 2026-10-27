@@ -16,6 +16,11 @@ the base is pinned but package updates mean rebuilding is not bit-reproducible.
 Published releases are immutable; the workflow refuses to overwrite a tag.
 Package copyright information remains inside the image under `/usr/share/doc`.
 
+The CML image definition's `sha256` is the **Docker image config digest**, not
+the compressed archive checksum. The generator verifies the manifest tag,
+config content digest and linux/amd64 platform. `SHA256SUMS` separately verifies
+the downloaded archive. These are different identities and must not be swapped.
+
 The **Automation toolbox** workflow builds/tests pull requests with read-only
 repository permissions. On `main`, it repeats the build/tests and publishes
 release assets using a dedicated job with release-writing permissions. No
@@ -26,7 +31,7 @@ homelab runner, secret, CML account or remote network is used by that job.
 1. Download all assets from the same `toolbox-*` release.
 2. Run `sha256sum -c SHA256SUMS`; inspect the source revision and package list.
 3. In CML, import `node-definition.yaml` as a new node definition.
-4. Upload `cml-labs-toolbox.tar.gz` and import `image-definition.yaml`.
+4. Upload the versioned `cml-labs-toolbox-*.tar.gz` and import `image-definition.yaml`.
 5. Confirm the image is associated only with `cml-labs-toolbox`.
 
 Do not overwrite an existing definition with conflicting content. Day-zero
@@ -42,3 +47,4 @@ is labelled functional. No existing lab status is promoted by adding this image.
 
 References: [CML node-definition schema](https://github.com/CiscoDevNet/cml-community/blob/master/validation_schemas/node_definition.json),
 [Debian ncclient package](https://packages.debian.org/stable/python/python3-ncclient).
+The native image digest convention follows [Cisco's container build templates](https://github.com/CiscoLearning/cml-docker-containers/blob/main/templates/definitions.mk).
