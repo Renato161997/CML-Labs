@@ -509,5 +509,40 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-901-003-ha-resiliency-hybrid-cloud.md",
     "example_profile": "native-api-distribution"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/037-restconf-netconf-management.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 75,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-037-restconf-netconf-management.md",
+    "example_profile": "native-iosxe-api"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/037-restconf-netconf-yang.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 75,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-037-restconf-netconf-yang.md",
+    "example_profile": "native-iosxe-api"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/038-python-requests-network-change.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-038-python-requests-network-change.md",
+    "example_profile": "native-iosxe-rest-change"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/040-python-api-inventory.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-040-python-api-inventory.md",
+    "example_profile": "native-iosxe-inventory"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/validation/036-pyats-genie-style-validation.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-036-pyats-genie-style-validation.md",
+    "example_profile": "native-iosxe-inventory"
   }
 }

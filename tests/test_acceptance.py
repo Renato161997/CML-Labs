@@ -188,6 +188,18 @@ class AcceptanceTests(unittest.TestCase):
         self.assertEqual(len(rows), 2)
         self.assertFalse(rows[-1]["passed"])
 
+    def test_api_client_timeout_is_bounded_and_forwarded(self):
+        check = dict(CHECK, command_timeout=60)
+        plan = {"checks": [check]}
+        self.assertEqual(validate_plan(plan, {"R1"}), [])
+        connection = Console(["show ip route\nvia 198.18.0.2"])
+        execute_plan(plan, lambda _: connection, lambda _: None)
+        self.assertEqual(connection.timeouts, [60])
+        for invalid in (True, 0, 91, "60"):
+            self.assertTrue(
+                validate_plan({"checks": [dict(check, command_timeout=invalid)]}, {"R1"})
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

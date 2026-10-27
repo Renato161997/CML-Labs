@@ -197,6 +197,19 @@ def check_evidence(proof, path, expected_hash, phase, expected_plan_hash=None, e
                 ("check", "baseline", c["node"], c["command"])
                 for c in expected_plan.get("checks", [])
             )
+            for step in expected_plan.get("prepare", []):
+                required.update([("prepare", "prepare", step["router"], step["operation"])])
+                if not any(
+                    row.get("kind") == "preparation"
+                    and row.get("passed") is True
+                    and row.get("node") == step["router"]
+                    and row.get("command") == step["operation"]
+                    and row.get("implementation_sha256") == step["implementation_sha256"]
+                    for row in checks
+                ):
+                    errors.append(
+                        "functional evidence omits registered preparation or its implementation digest"
+                    )
             for step in expected_plan.get("transitions", []):
                 required.update(
                     ("check", step["name"], c["node"], c["command"]) for c in step["checks"]
@@ -206,7 +219,11 @@ def check_evidence(proof, path, expected_hash, phase, expected_plan_hash=None, e
                 )
             observed = Counter(
                 (
-                    "action" if c.get("kind") in ("action", "configuration") else "check",
+                    "prepare"
+                    if c.get("kind") == "preparation"
+                    else "action"
+                    if c.get("kind") in ("action", "configuration")
+                    else "check",
                     c.get("phase", "baseline"),
                     c.get("node"),
                     c.get("command"),

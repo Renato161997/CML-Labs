@@ -1,0 +1,217 @@
+# RESTCONF NETCONF Management
+
+## Scope and prerequisites
+
+A real CSR1000v 17.3.8a and the open-source CML-Labs toolbox exchange NETCONF and RESTCONF over an isolated benchmark network. Nominal RAM is 3072+1024 MiB, with two router vCPUs. The registered iosxe-api-v1 preparation is implementation-digest-bound: it creates fresh RSA3072 keys and an explicit DNS-SAN certificate, sets only the disposable guest clock, waits for YANG daemons, exports public trust material over authenticated CML serial, matches ssh-keyscan against those serial-derived public keys, and checksum-verifies transfer to the client. No private key or CML administrator credential enters the guest client. TLS verification remains enabled, and NETCONF uses an explicit key pin plus a strict IOSXE ncclient handler: the stock ncclient0.6.17 IOSXE callback accepts unknown keys and is deliberately overridden. Wrong-password, wrong-hostname and wrong-key negative controls precede a fresh valid connection. All credentials in this file are public isolated training fixtures. This tested legacy CSR reference platform is an interoperability exercise, not a production cryptographic recommendation. No Internet, external connector or existing lab is used; stop/wipe only your imported copy to reset. The harness performs preparation automatically; its source scripts/iosxe_prepare.py also documents the serial steps and the known certificate-enrollment dialogue. Do not bypass verification if a certificate or key differs.
+
+Use licensed reference images for cml-labs-toolbox, csr1000v in CML 2.10.1. All addresses are educational. No Internet, external connector or production credentials are required. Starting state: Working isolated reference baseline. Functional status and exact tested images: [results](../../validation/RESULTS.md).
+
+## Topology and addressing
+
+- API GigabitEthernet1 <-> TOOLS eth1
+
+| Node | Interface | Address |
+| --- | --- | --- |
+| API | GigabitEthernet1 | `ip address 198.18.0.1 255.255.255.252` |
+| TOOLS | eth1 | `198.18.0.2/30` |
+
+## Tasks
+
+1. Read the actual router hostname through certificate-verified RESTCONF and key-pinned NETCONF.
+2. Change the hostname over NETCONF, read it back, and restore it in a finally-protected operation.
+3. Reject incorrect credentials, an incorrect TLS hostname and an incorrect SSH key; withdraw HTTPS while NETCONF remains available.
+
+## Baseline acceptance
+
+| Node | Command | Observable result |
+| --- | --- | --- |
+| TOOLS | `python3 /lab/api_probe.py manage baseline` | The real API client validates the baseline protocol and trust conditions. |
+
+## Transition: withdraw only the HTTPS listener
+
+On **API**:
+
+```ios
+configure terminal
+no ip http secure-server
+end
+```
+
+- API: `show ip http server status` -- The HTTPS listener is explicitly disabled.
+- TOOLS: `python3 /lab/api_probe.py manage https-off` -- The real API client validates the https-off protocol and trust conditions.
+
+## Transition: restore HTTPS and recheck trust
+
+On **API**:
+
+```ios
+configure terminal
+ip http secure-server
+end
+```
+
+- TOOLS: `python3 /lab/api_probe.py manage recovered` -- The real API client validates the recovered protocol and trust conditions.
+
+## Reference configuration and recovery
+
+The checked-in topology carries the reference configurations below. To reset a disposable exercise, stop and wipe only your imported copy, then restart or import the YAML again. Never apply the fault actions to a production device. Fault transitions restore the routing baseline; file-copy exercises may leave their documented output until wipe. Repeat the applicable acceptance checks before ending the exercise.
+
+### API
+
+```ios
+hostname API
+no ip domain-lookup
+ip domain name cml-lab.example
+username CML-LAB privilege 15 secret Cml-lab-only-984
+aaa new-model
+aaa authentication login default local
+aaa authorization exec default local
+aaa authentication login CONSOLE none
+line console 0
+ login authentication CONSOLE
+ privilege level 15
+ exec-timeout 0 0
+ logging synchronous
+ exit
+interface GigabitEthernet1
+ ip address 198.18.0.1 255.255.255.252
+ no shutdown
+ exit
+no ip http server
+no ip http secure-server
+ip http authentication local
+ip ssh version 2
+line vty 0 4
+ login authentication default
+ transport input ssh
+ exit
+end
+```
+
+### TOOLS: boot.sh
+
+```bash
+#!/bin/bash
+set -eu
+ip address add 198.18.0.2/30 dev eth1
+ip link set eth1 up
+mkdir -p /lab
+echo "198.18.0.1 api.cml-lab.example wrong.cml-lab.example" >> /etc/hosts
+base64 -d > /lab/api_probe.py <<'CML_EMBED_EXAMPLES_AUTOMATION_API_PROBE_PY'
+IiIiVmVyaWZpZWQgUkVTVENPTkYgYW5kIE5FVENPTkYgY2hlY2tzIGFnYWluc3QgdGhlIGlzb2xh
+dGVkIElPUyBYRSBBUEkgZ3Vlc3QuIiIiCgppbXBvcnQgYXJncGFyc2UKaW1wb3J0IGpzb24KaW1w
+b3J0IHRpbWUKZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCmZyb20geG1sLmV0cmVlIGltcG9ydCBF
+bGVtZW50VHJlZQoKaW1wb3J0IHBhcmFtaWtvCmltcG9ydCByZXF1ZXN0cwpmcm9tIG5jY2xpZW50
+IGltcG9ydCBtYW5hZ2VyCmZyb20gbmNjbGllbnQuZGV2aWNlcy5pb3N4ZSBpbXBvcnQgSW9zeGVE
+ZXZpY2VIYW5kbGVyCmZyb20gbmNjbGllbnQudHJhbnNwb3J0LmVycm9ycyBpbXBvcnQgQXV0aGVu
+dGljYXRpb25FcnJvciwgU2Vzc2lvbkNsb3NlRXJyb3IsIFNTSFVua25vd25Ib3N0RXJyb3IKCkhP
+U1QgPSAiMTk4LjE4LjAuMSIKTkFNRVNQQUNFID0gImh0dHA6Ly9jaXNjby5jb20vbnMveWFuZy9D
+aXNjby1JT1MtWEUtbmF0aXZlIgpVUkwgPSAiaHR0cHM6Ly9hcGkuY21sLWxhYi5leGFtcGxlL3Jl
+c3Rjb25mL2RhdGEvQ2lzY28tSU9TLVhFLW5hdGl2ZTpuYXRpdmUvaG9zdG5hbWUiCkFVVEggPSAo
+IkNNTC1MQUIiLCAiQ21sLWxhYi1vbmx5LTk4NCIpICAjIFB1YmxpYyBpc29sYXRlZC1sYWIgZml4
+dHVyZS4KCgpjbGFzcyBTdHJpY3RJT1NYRShJb3N4ZURldmljZUhhbmRsZXIpOgogICAgZGVmIGFk
+ZF9hZGRpdGlvbmFsX3NzaF9jb25uZWN0X3BhcmFtcyhzZWxmLCBrd2FyZ3MpOgogICAgICAgICMg
+bmNjbGllbnQgMC42LjE3J3Mgc3RvY2sgSU9TIFhFIGhvb2sgb3RoZXJ3aXNlIGFjY2VwdHMgdW5r
+bm93biBrZXlzLgogICAgICAgIGt3YXJnc1sidW5rbm93bl9ob3N0X2NiIl0gPSBsYW1iZGEgKl86
+IEZhbHNlCgoKZGVmIGNvbm5lY3Rpb25fb3B0aW9ucygpOgogICAgcGVlciA9IGpzb24ubG9hZHMo
+UGF0aCgiL2xhYi9wZWVyLXNzaC5qc29uIikucmVhZF90ZXh0KCkpCiAgICBpZiBwZWVyWyJob3N0
+Il0gIT0gSE9TVCBvciBwZWVyWyJwb3J0Il0gIT0gODMwOgogICAgICAgIHJhaXNlIFZhbHVlRXJy
+b3IoIlRoaXMgZml4dHVyZSBvbmx5IGNvbm5lY3RzIHRvIGl0cyBvd24gYmVuY2htYXJrLWFkZHJl
+c3MgcGVlciIpCiAgICByZXR1cm4gewogICAgICAgICJob3N0IjogSE9TVCwKICAgICAgICAicG9y
+dCI6IDgzMCwKICAgICAgICAidXNlcm5hbWUiOiBBVVRIWzBdLAogICAgICAgICJwYXNzd29yZCI6
+IEFVVEhbMV0sCiAgICAgICAgImhvc3RrZXlfdmVyaWZ5IjogVHJ1ZSwKICAgICAgICAiaG9zdGtl
+eV9iNjQiOiBwZWVyWyJob3N0a2V5X2I2NCJdLAogICAgICAgICJsb29rX2Zvcl9rZXlzIjogRmFs
+c2UsCiAgICAgICAgImFsbG93X2FnZW50IjogRmFsc2UsCiAgICAgICAgImRldmljZV9wYXJhbXMi
+OiB7ImhhbmRsZXIiOiBTdHJpY3RJT1NYRX0sCiAgICAgICAgInRpbWVvdXQiOiAyMCwKICAgIH0K
+CgpkZWYgaG9zdG5hbWUoc2Vzc2lvbik6CiAgICBzdWJ0cmVlID0gJzxuYXRpdmUgeG1sbnM9Iicg
+KyBOQU1FU1BBQ0UgKyAnIj48aG9zdG5hbWUvPjwvbmF0aXZlPicKICAgIGRhdGEgPSBzZXNzaW9u
+LmdldF9jb25maWcoc291cmNlPSJydW5uaW5nIiwgZmlsdGVyPSgic3VidHJlZSIsIHN1YnRyZWUp
+KS5kYXRhX3htbAogICAgcmV0dXJuIEVsZW1lbnRUcmVlLmZyb21zdHJpbmcoZGF0YSkuZmluZCgi
+Li8veyIgKyBOQU1FU1BBQ0UgKyAifWhvc3RuYW1lIikudGV4dAoKCmRlZiBjb25uZWN0X3Zlcmlm
+aWVkKG9wdGlvbnMpOgogICAgZGVhZGxpbmUgPSB0aW1lLm1vbm90b25pYygpICsgNDUKICAgIHdo
+aWxlIFRydWU6CiAgICAgICAgdHJ5OgogICAgICAgICAgICByZXR1cm4gbWFuYWdlci5jb25uZWN0
+KCoqb3B0aW9ucykKICAgICAgICBleGNlcHQgU2Vzc2lvbkNsb3NlRXJyb3I6CiAgICAgICAgICAg
+IGlmIHRpbWUubW9ub3RvbmljKCkgPj0gZGVhZGxpbmU6CiAgICAgICAgICAgICAgICByYWlzZQog
+ICAgICAgICAgICB0aW1lLnNsZWVwKDIpCgoKZGVmIGhvc3RuYW1lX2NvbmZpZyh2YWx1ZSk6CiAg
+ICBpZiB2YWx1ZSBub3QgaW4gKCJBUEkiLCAiQVBJLUNIQU5HRUQiKToKICAgICAgICByYWlzZSBW
+YWx1ZUVycm9yKCJVbmV4cGVjdGVkIHRyYWluaW5nIGhvc3RuYW1lIikKICAgIHJldHVybiAoCiAg
+ICAgICAgJzxjb25maWc+PG5hdGl2ZSB4bWxucz0iJwogICAgICAgICsgTkFNRVNQQUNFCiAgICAg
+ICAgKyAnIj48aG9zdG5hbWU+JwogICAgICAgICsgdmFsdWUKICAgICAgICArICI8L2hvc3RuYW1l
+PjwvbmF0aXZlPjwvY29uZmlnPiIKICAgICkKCgpkZWYgcmVzdChzZXNzaW9uLCBhdXRoPUFVVEgp
+OgogICAgZGVhZGxpbmUgPSB0aW1lLm1vbm90b25pYygpICsgNDUKICAgIHdoaWxlIFRydWU6CiAg
+ICAgICAgcmVzcG9uc2UgPSBzZXNzaW9uLmdldCgKICAgICAgICAgICAgVVJMLAogICAgICAgICAg
+ICBhdXRoPWF1dGgsCiAgICAgICAgICAgIHZlcmlmeT0iL2xhYi9wZWVyLWNhLnBlbSIsCiAgICAg
+ICAgICAgIGhlYWRlcnM9eyJBY2NlcHQiOiAiYXBwbGljYXRpb24veWFuZy1kYXRhK2pzb24ifSwK
+ICAgICAgICAgICAgdGltZW91dD01LAogICAgICAgICAgICBhbGxvd19yZWRpcmVjdHM9RmFsc2Us
+CiAgICAgICAgKQogICAgICAgIGlmIHJlc3BvbnNlLnN0YXR1c19jb2RlIG5vdCBpbiAoNDA0LCA1
+MDIsIDUwMywgNTA0KSBvciB0aW1lLm1vbm90b25pYygpID49IGRlYWRsaW5lOgogICAgICAgICAg
+ICByZXR1cm4gcmVzcG9uc2UKICAgICAgICB0aW1lLnNsZWVwKDIpCgoKZGVmIHRydXN0X25lZ2F0
+aXZlcyhodHRwLCBvcHRpb25zKToKICAgIGFzc2VydCByZXN0KGh0dHAsIChBVVRIWzBdLCAid3Jv
+bmctcHVibGljLXRyYWluaW5nLWZpeHR1cmUiKSkuc3RhdHVzX2NvZGUgaW4gKDQwMSwgNDAzKQog
+ICAgdHJ5OgogICAgICAgIGh0dHAuZ2V0KAogICAgICAgICAgICBVUkwucmVwbGFjZSgiYXBpLmNt
+bC1sYWIuZXhhbXBsZSIsICJ3cm9uZy5jbWwtbGFiLmV4YW1wbGUiKSwKICAgICAgICAgICAgYXV0
+aD1BVVRILAogICAgICAgICAgICB2ZXJpZnk9Ii9sYWIvcGVlci1jYS5wZW0iLAogICAgICAgICAg
+ICB0aW1lb3V0PTUsCiAgICAgICAgKQogICAgZXhjZXB0IHJlcXVlc3RzLmV4Y2VwdGlvbnMuU1NM
+RXJyb3I6CiAgICAgICAgcGFzcwogICAgZWxzZToKICAgICAgICByYWlzZSBBc3NlcnRpb25FcnJv
+cigiVExTIGhvc3RuYW1lIG1pc21hdGNoIHdhcyBhY2NlcHRlZCIpCiAgICB0cnk6CiAgICAgICAg
+d2l0aCBtYW5hZ2VyLmNvbm5lY3QoKipkaWN0KG9wdGlvbnMsIHBhc3N3b3JkPSJ3cm9uZy1wdWJs
+aWMtdHJhaW5pbmctZml4dHVyZSIpKToKICAgICAgICAgICAgcmFpc2UgQXNzZXJ0aW9uRXJyb3Io
+Ik5FVENPTkYgYWNjZXB0ZWQgaW5jb3JyZWN0IGNyZWRlbnRpYWxzIikKICAgIGV4Y2VwdCBBdXRo
+ZW50aWNhdGlvbkVycm9yOgogICAgICAgIHBhc3MKICAgIGZhbHNlX2tleSA9IHBhcmFtaWtvLlJT
+QUtleS5nZW5lcmF0ZSgyMDQ4KS5nZXRfYmFzZTY0KCkKICAgIHRyeToKICAgICAgICB3aXRoIG1h
+bmFnZXIuY29ubmVjdCgqKmRpY3Qob3B0aW9ucywgaG9zdGtleV9iNjQ9ZmFsc2Vfa2V5KSk6CiAg
+ICAgICAgICAgIHJhaXNlIEFzc2VydGlvbkVycm9yKCJORVRDT05GIGFjY2VwdGVkIGEgbWlzbWF0
+Y2hpbmcgcGlubmVkIGhvc3Qga2V5IikKICAgIGV4Y2VwdCBTU0hVbmtub3duSG9zdEVycm9yOgog
+ICAgICAgIHBhc3MKCgpkZWYgcnVuKG1vZGUsIHBoYXNlKToKICAgIG9wdGlvbnMgPSBjb25uZWN0
+aW9uX29wdGlvbnMoKQogICAgd2l0aCByZXF1ZXN0cy5TZXNzaW9uKCkgYXMgaHR0cDoKICAgICAg
+ICBodHRwLnRydXN0X2VudiA9IEZhbHNlCiAgICAgICAgaWYgcGhhc2UgIT0gImh0dHBzLW9mZiI6
+CiAgICAgICAgICAgIHJlc3BvbnNlID0gcmVzdChodHRwKQogICAgICAgICAgICBhc3NlcnQgcmVz
+cG9uc2Uuc3RhdHVzX2NvZGUgPT0gMjAwIGFuZCByZXNwb25zZS5qc29uKCkgPT0gewogICAgICAg
+ICAgICAgICAgIkNpc2NvLUlPUy1YRS1uYXRpdmU6aG9zdG5hbWUiOiAiQVBJIgogICAgICAgICAg
+ICB9CiAgICAgICAgd2l0aCBjb25uZWN0X3ZlcmlmaWVkKG9wdGlvbnMpIGFzIHNlc3Npb246CiAg
+ICAgICAgICAgIGFzc2VydCBob3N0bmFtZShzZXNzaW9uKSA9PSAiQVBJIgogICAgICAgICAgICBp
+ZiBwaGFzZSA9PSAiaHR0cHMtb2ZmIjoKICAgICAgICAgICAgICAgIHRyeToKICAgICAgICAgICAg
+ICAgICAgICBodHRwLmdldChVUkwsIGF1dGg9QVVUSCwgdmVyaWZ5PSIvbGFiL3BlZXItY2EucGVt
+IiwgdGltZW91dD01KQogICAgICAgICAgICAgICAgZXhjZXB0IHJlcXVlc3RzLmV4Y2VwdGlvbnMu
+U1NMRXJyb3I6CiAgICAgICAgICAgICAgICAgICAgcmFpc2UKICAgICAgICAgICAgICAgIGV4Y2Vw
+dCByZXF1ZXN0cy5leGNlcHRpb25zLkNvbm5lY3Rpb25FcnJvcjoKICAgICAgICAgICAgICAgICAg
+ICBwYXNzCiAgICAgICAgICAgICAgICBlbHNlOgogICAgICAgICAgICAgICAgICAgIHJhaXNlIEFz
+c2VydGlvbkVycm9yKCJIVFRQUyB1bmV4cGVjdGVkbHkgcmVtYWluZWQgcmVhY2hhYmxlIikKICAg
+ICAgICAgICAgICAgIHJldHVybiB7CiAgICAgICAgICAgICAgICAgICAgInN0YXR1cyI6ICJwYXNz
+ZWQiLAogICAgICAgICAgICAgICAgICAgICJtb2RlIjogbW9kZSwKICAgICAgICAgICAgICAgICAg
+ICAicGhhc2UiOiBwaGFzZSwKICAgICAgICAgICAgICAgICAgICAibmV0Y29uZl9zdGlsbF91c2Fi
+bGUiOiBUcnVlLAogICAgICAgICAgICAgICAgfQogICAgICAgICAgICBpZiBtb2RlID09ICJtYW5h
+Z2UiOgogICAgICAgICAgICAgICAgdHJ5OgogICAgICAgICAgICAgICAgICAgIGFzc2VydCBzZXNz
+aW9uLmVkaXRfY29uZmlnKAogICAgICAgICAgICAgICAgICAgICAgICB0YXJnZXQ9InJ1bm5pbmci
+LCBjb25maWc9aG9zdG5hbWVfY29uZmlnKCJBUEktQ0hBTkdFRCIpCiAgICAgICAgICAgICAgICAg
+ICAgKS5vawogICAgICAgICAgICAgICAgICAgIGFzc2VydCBob3N0bmFtZShzZXNzaW9uKSA9PSAi
+QVBJLUNIQU5HRUQiCiAgICAgICAgICAgICAgICBmaW5hbGx5OgogICAgICAgICAgICAgICAgICAg
+IGFzc2VydCBzZXNzaW9uLmVkaXRfY29uZmlnKHRhcmdldD0icnVubmluZyIsIGNvbmZpZz1ob3N0
+bmFtZV9jb25maWcoIkFQSSIpKS5vawogICAgICAgICAgICAgICAgYXNzZXJ0IGhvc3RuYW1lKHNl
+c3Npb24pID09ICJBUEkiCiAgICAgICAgICAgIGVsaWYgbW9kZSA9PSAieWFuZyI6CiAgICAgICAg
+ICAgICAgICBhc3NlcnQgYW55KAogICAgICAgICAgICAgICAgICAgICJDaXNjby1JT1MtWEUtbmF0
+aXZlIiBpbiBjYXBhYmlsaXR5CiAgICAgICAgICAgICAgICAgICAgZm9yIGNhcGFiaWxpdHkgaW4g
+c2Vzc2lvbi5zZXJ2ZXJfY2FwYWJpbGl0aWVzCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAg
+ICAgICBzY2hlbWEgPSBzZXNzaW9uLmdldF9zY2hlbWEoIkNpc2NvLUlPUy1YRS1uYXRpdmUiKS5k
+YXRhCiAgICAgICAgICAgICAgICBhc3NlcnQgIm1vZHVsZSBDaXNjby1JT1MtWEUtbmF0aXZlIiBp
+biBzY2hlbWEgYW5kIE5BTUVTUEFDRSBpbiBzY2hlbWEKICAgICAgICB0cnVzdF9uZWdhdGl2ZXMo
+aHR0cCwgb3B0aW9ucykKICAgICAgICB3aXRoIG1hbmFnZXIuY29ubmVjdCgqKm9wdGlvbnMpIGFz
+IHNlc3Npb246CiAgICAgICAgICAgIGFzc2VydCBob3N0bmFtZShzZXNzaW9uKSA9PSAiQVBJIgog
+ICAgcmV0dXJuIHsKICAgICAgICAic3RhdHVzIjogInBhc3NlZCIsCiAgICAgICAgIm1vZGUiOiBt
+b2RlLAogICAgICAgICJwaGFzZSI6IHBoYXNlLAogICAgICAgICJ0bHNfaG9zdG5hbWVfdmVyaWZp
+ZWQiOiBUcnVlLAogICAgICAgICJzc2hfa2V5X3Bpbm5lZF9mcm9tX3NlcmlhbCI6IFRydWUsCiAg
+ICAgICAgIndyb25nX2NyZWRlbnRpYWxzX2FuZF9rZXlzX3JlamVjdGVkIjogVHJ1ZSwKICAgIH0K
+CgppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOgogICAgcGFyc2VyID0gYXJncGFyc2UuQXJndW1l
+bnRQYXJzZXIoZGVzY3JpcHRpb249X19kb2NfXykKICAgIHBhcnNlci5hZGRfYXJndW1lbnQoIm1v
+ZGUiLCBjaG9pY2VzPSgibWFuYWdlIiwgInlhbmciKSkKICAgIHBhcnNlci5hZGRfYXJndW1lbnQo
+InBoYXNlIiwgY2hvaWNlcz0oImJhc2VsaW5lIiwgImh0dHBzLW9mZiIsICJyZWNvdmVyZWQiKSkK
+ICAgIGFyZ3MgPSBwYXJzZXIucGFyc2VfYXJncygpCiAgICBwcmludChqc29uLmR1bXBzKHJ1bihh
+cmdzLm1vZGUsIGFyZ3MucGhhc2UpLCBzb3J0X2tleXM9VHJ1ZSkpCg==
+CML_EMBED_EXAMPLES_AUTOMATION_API_PROBE_PY
+echo READY >/dev/console
+exit 0
+```
+
+## Platform scope
+
+Use the [reference-platform guide](../PLATFORMS.md) for the node models named by this workbook. Exact tested CML and image versions are recorded in the [results](../../validation/RESULTS.md). The checks verify the listed protocol and forwarding behavior, not hardware throughput, physical failure timing or complete certification coverage.
