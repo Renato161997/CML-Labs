@@ -1,138 +1,150 @@
 lab:
   title: OSPF EIGRP Redistribution
-  description: CCNP-ENCOR CML lab generated from blueprint coverage.
-  notes: 'CCNP-ENCOR blueprint lab: OSPF EIGRP Redistribution
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# OSPF EIGRP Redistribution
 
 
-    Topics:
-
-    - redistribution
-
-    - route maps
-
-    - tags
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Suggested tasks:
-
-    1. Redistribute both ways
-
-    2. Set tags
-
-    3. Verify external routes
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-401-016-ospf-eigrp-redistribution.md
 
 
-    Suggested verification:
+    One IOL-XE boundary connects an OSPF domain and EIGRP100. Exact endpoint prefix-lists constrain both
+    export directions; unrelated routes cannot feed back across the boundary. The EIGRP default seed metric
+    is required for the imported OSPF route, while the reverse EIGRP-to-OSPF E1 export remains observable.
+    This is a one-boundary metric exercise, not evidence of multi-ASBR loop freedom.
 
-    - show ip interface brief
 
-    - show interfaces status
+    Objectives:
 
-    - show ip route
+    - Redistribute only the two explicitly allowed endpoint prefixes across one ASBR.
 
-    - show running-config | section router
+    - Remove the EIGRP seed metric and refresh its OSPF redistribution.
 
-    - ping between the lab endpoints'
+    - Verify one-way route withdrawal with healthy internal controls, then restore the metric.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
-  node_definition: iosv
-  x: -300
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR OSPF EIGRP Redistribution ^C\n\
-      interface GigabitEthernet0/0\n description CCNP-ENCOR OSPF EIGRP Redistribution\n ip address 10.0.12.1\
-      \ 255.255.255.252\n no shutdown\ninterface Loopback0\n description CCNP-ENCOR OSPF EIGRP Redistribution\n\
-      \ ip address 10.1.1.1 255.255.255.255\n no shutdown\nend"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.12.1 255.255.255.252\n no shutdown\n exit\nrouter ospf 1\n router-id\
+      \ 203.0.113.1\n passive-interface Loopback0\n network 198.18.12.0 0.0.0.3 area 0\n network 192.0.2.1\
+      \ 0.0.0.0 area 0\n exit\nend\n"
+  cpu_limit: 50
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
   label: R2
-  node_definition: iosv
-  x: 0
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR OSPF EIGRP Redistribution ^C\n\
-      interface GigabitEthernet0/0\n description CCNP-ENCOR OSPF EIGRP Redistribution\n ip address 10.0.12.2\
-      \ 255.255.255.252\n no shutdown\ninterface GigabitEthernet0/1\n description CCNP-ENCOR OSPF EIGRP\
-      \ Redistribution\n ip address 10.0.23.1 255.255.255.252\n no shutdown\nend"
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.2 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.12.2 255.255.255.252\n no shutdown\n exit\ninterface Ethernet0/1\n\
+      \ ip address 198.18.23.1 255.255.255.252\n no shutdown\n exit\nip prefix-list LEFT-ONLY seq 5 permit\
+      \ 192.0.2.1/32\nip prefix-list RIGHT-ONLY seq 5 permit 192.0.2.3/32\nroute-map LEFT-ONLY permit\
+      \ 10\n match ip address prefix-list LEFT-ONLY\n exit\nroute-map RIGHT-ONLY permit 10\n match ip\
+      \ address prefix-list RIGHT-ONLY\n exit\nrouter ospf 1\n router-id 203.0.113.2\n passive-interface\
+      \ Loopback0\n network 198.18.12.0 0.0.0.3 area 0\n network 192.0.2.2 0.0.0.0 area 0\n redistribute\
+      \ eigrp 100 metric 20 metric-type 1 subnets route-map RIGHT-ONLY\n exit\nrouter eigrp 100\n no auto-summary\n\
+      \ network 198.18.23.0 0.0.0.3\n network 192.0.2.2 0.0.0.0\n passive-interface Loopback0\n default-metric\
+      \ 100000 100 255 1 1500\n redistribute ospf 1 route-map LEFT-ONLY\n exit\nend\n"
+  cpu_limit: 50
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 99
   tags: []
 - id: n2
   label: R3
-  node_definition: iosv
-  x: 300
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R3\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR OSPF EIGRP Redistribution ^C\n\
-      interface GigabitEthernet0/0\n description CCNP-ENCOR OSPF EIGRP Redistribution\n ip address 10.0.23.2\
-      \ 255.255.255.252\n no shutdown\ninterface Loopback0\n description CCNP-ENCOR OSPF EIGRP Redistribution\n\
-      \ ip address 10.3.3.3 255.255.255.255\n no shutdown\nend"
+    content: "hostname R3\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.3 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.23.2 255.255.255.252\n no shutdown\n exit\nrouter eigrp 100\n\
+      \ no auto-summary\n network 198.18.23.0 0.0.0.3\n network 192.0.2.3 0.0.0.0\n passive-interface\
+      \ Loopback0\n exit\nend\n"
+  cpu_limit: 50
+  priority: 98
+  x: 520
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 98
   tags: []
 links:
 - id: l0

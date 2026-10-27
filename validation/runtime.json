@@ -10189,6 +10189,1454 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-26T20:42:59Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/030-aaa-radius-tacacs.yaml",
+      "sha256": "aeacec3473e8c130724cd2636eb402a667f1ebf12956c17da29a5bdc40743f11",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T21:09:35Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The RADIUS data interface and return path are reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.1.2 repeat 3",
+          "expectation": "The TACACS+ data interface and return path are reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.1.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.1.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show running-config | section aaa group server radius",
+          "expectation": "The RADIUS group actively requests and validates Message-Authenticator.",
+          "passed": true,
+          "output": "\nR1#show running-config | section aaa group server radius\naaa group server radius RAD-GROUP\n server name LAB-RADIUS\n validate-ma\n send-ma\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+          "expectation": "The RAD-GROUP server accepts the actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code\nUser successfully authenticated\n\nUSER ATTRIBUTES\n\nMessage-Authenticato 0   <hidden>\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+          "expectation": "The TAC-GROUP server accepts the actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy\nAttempting authentication test to server-group TAC-GROUP using tacacs+\nUser was successfully authenticated.\n\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "test aaa group RAD-GROUP labuser Wrong-user-only-999 new-code",
+          "expectation": "The RAD-GROUP server does not accept this authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group RAD-GROUP labuser Wrong-user-only-999 new-code\nUser rejected\n\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "test aaa group TAC-GROUP labuser Wrong-user-only-999 legacy",
+          "expectation": "The TAC-GROUP server does not accept this authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group TAC-GROUP labuser Wrong-user-only-999 legacy\nAttempting authentication test to server-group TAC-GROUP using tacacs+\nUser authentication request was rejected by server.\n\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+          "expectation": "The RAD-GROUP server accepts the actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code\nUser successfully authenticated\n\nUSER ATTRIBUTES\n\nMessage-Authenticato 0   <hidden>\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+          "expectation": "The TAC-GROUP server accepts the actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy\nAttempting authentication test to server-group TAC-GROUP using tacacs+\nUser was successfully authenticated.\n\nR1#"
+        },
+        {
+          "phase": "use an unlisted RADIUS NAS source",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "use an unlisted RADIUS NAS source",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip radius source-interface Loopback0",
+          "passed": true,
+          "output": "\nR1(config)#ip radius source-interface Loopback0\nR1(config)#"
+        },
+        {
+          "phase": "use an unlisted RADIUS NAS source",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "use an unlisted RADIUS NAS source",
+          "node": "R1",
+          "command": "ping 198.18.0.2 source Loopback0 repeat 3",
+          "expectation": "The unlisted source retains a real bidirectional IP path.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "use an unlisted RADIUS NAS source",
+          "node": "R1",
+          "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+          "expectation": "The RAD-GROUP server does not accept this authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code\n\n*Oct 26 21:10:40.663: %SYS-5-CONFIG_I: Configured from console by consoleUser rejected\n\nR1#"
+        },
+        {
+          "phase": "use an unlisted RADIUS NAS source",
+          "node": "R1",
+          "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+          "expectation": "The TAC-GROUP server accepts the actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy\nAttempting authentication test to server-group TAC-GROUP using tacacs+\nUser was successfully authenticated.\n\nR1#"
+        },
+        {
+          "phase": "restore the allowlisted NAS source",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore the allowlisted NAS source",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip radius source-interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR1(config)#ip radius source-interface Ethernet0/0\nR1(config)#"
+        },
+        {
+          "phase": "restore the allowlisted NAS source",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "restore the allowlisted NAS source",
+          "node": "R1",
+          "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+          "expectation": "The RAD-GROUP server accepts the actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code\nUser successfully authenticated\n\nUSER ATTRIBUTES\n\nMessage-Authenticato 0   <hidden>\nR1#"
+        },
+        {
+          "phase": "restore the allowlisted NAS source",
+          "node": "R1",
+          "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+          "expectation": "The TAC-GROUP server accepts the actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy\nAttempting authentication test to server-group TAC-GROUP using tacacs+\n\n*Oct 26 21:10:46.081: %SYS-5-CONFIG_I: Configured from console by consoleUser was successfully authenticated.\n\nR1#"
+        }
+      ],
+      "startup_states": {
+        "R1": "BOOTED",
+        "RADIUS": "BOOTED",
+        "TACACS": "BOOTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "RADIUS": "radius-3-2-7-dfsg-1-deb13u2",
+        "TACACS": "tacplus-f4-0-4-28"
+      },
+      "plan_sha256": "9378fa3ce2778b179284c59960c1a671f35ebb55c88e62db78f409de4fa01869",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T21:10:50Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/014-ospf-summarization-filtering.yaml",
+      "sha256": "cd3cf5d21d29e5465e1df691480ca7ce8efba0960270a496795e4b93782e0217",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T21:09:35Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip ospf neighbor",
+          "expectation": "The area0 adjacency is FULL.",
+          "passed": true,
+          "output": "\nR2#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n203.0.113.1       1   FULL/BDR        00:00:39    198.18.12.1     Ethernet0/0\n203.0.113.3       1   EXSTART/DR      00:00:39    198.18.23.2     Ethernet0/1\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip ospf neighbor",
+          "expectation": "The area10 adjacency is FULL.",
+          "passed": true,
+          "output": "\nR2#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n203.0.113.1       1   FULL/BDR        00:00:38    198.18.12.1     Ethernet0/0\n203.0.113.3       1   FULL/DR         00:00:39    198.18.23.2     Ethernet0/1\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The ABR exports one aggregate for the endpoint prefixes.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.1\nRouting entry for 192.0.2.0/24\n  Known via \"ospf 1\", distance 110, metric 21, type inter area\n  Last update from 198.18.12.2 on Ethernet0/0, 00:00:13 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 203.0.113.2, 00:00:13 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "The sampled data path works.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The sampled data path works.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "filter endpoint Type3 export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "filter endpoint Type3 export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip prefix-list AREA10-OUT seq 5 deny 192.0.2.0/24 le 32",
+          "passed": true,
+          "output": "\nR2(config)#ip prefix-list AREA10-OUT seq 5 deny 192.0.2.0/24 le 32\nR2(config)#"
+        },
+        {
+          "phase": "filter endpoint Type3 export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip prefix-list AREA10-OUT seq 10 permit 0.0.0.0/0 le 32",
+          "passed": true,
+          "output": "\nR2(config)#ip prefix-list AREA10-OUT seq 10 permit 0.0.0.0/0 le 32\nR2(config)#"
+        },
+        {
+          "phase": "filter endpoint Type3 export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR2(config)#router ospf 1\nR2(config-router)#"
+        },
+        {
+          "phase": "filter endpoint Type3 export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "area 10 filter-list prefix AREA10-OUT out",
+          "passed": true,
+          "output": "\nR2(config-router)#area 10 filter-list prefix AREA10-OUT out\nR2(config-router)#"
+        },
+        {
+          "phase": "filter endpoint Type3 export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router)#end\nR2#"
+        },
+        {
+          "phase": "filter endpoint Type3 export",
+          "node": "R1",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The filtered endpoint aggregate is absent.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.1\n% Network not in table\nR1#"
+        },
+        {
+          "phase": "filter endpoint Type3 export",
+          "node": "R1",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "The sampled data path is withdrawn.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "filter endpoint Type3 export",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The sampled data path is withdrawn.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "filter endpoint Type3 export",
+          "node": "R1",
+          "command": "ping 198.18.23.2 source Loopback0 repeat 3",
+          "expectation": "The sampled data path works.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.23.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.23.2, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        },
+        {
+          "phase": "filter endpoint Type3 export",
+          "node": "R2",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "The ABR still forwards to the intra-area endpoint.",
+          "passed": true,
+          "output": "\nR2#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR2#"
+        },
+        {
+          "phase": "restore endpoint Type3 export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore endpoint Type3 export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router ospf 1",
+          "passed": true,
+          "output": "\nR2(config)#router ospf 1\nR2(config-router)#"
+        },
+        {
+          "phase": "restore endpoint Type3 export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no area 10 filter-list prefix AREA10-OUT out",
+          "passed": true,
+          "output": "\nR2(config-router)#no area 10 filter-list prefix AREA10-OUT out\nR2(config-router)#"
+        },
+        {
+          "phase": "restore endpoint Type3 export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router)#end\nR2#"
+        },
+        {
+          "phase": "restore endpoint Type3 export",
+          "node": "R2",
+          "command": "show ip ospf neighbor",
+          "expectation": "The area0 adjacency is FULL.",
+          "passed": true,
+          "output": "\nR2#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n203.0.113.1       1   FULL/BDR        00:00:37    198.18.12.1     Ethernet0/0\n203.0.113.3       1   FULL/DR         00:00:32    198.18.23.2     Ethernet0/1\nR2#"
+        },
+        {
+          "phase": "restore endpoint Type3 export",
+          "node": "R2",
+          "command": "show ip ospf neighbor",
+          "expectation": "The area10 adjacency is FULL.",
+          "passed": true,
+          "output": "\nR2#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n203.0.113.1       1   FULL/BDR        00:00:37    198.18.12.1     Ethernet0/0\n203.0.113.3       1   FULL/DR         00:00:32    198.18.23.2     Ethernet0/1\nR2#"
+        },
+        {
+          "phase": "restore endpoint Type3 export",
+          "node": "R1",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The ABR exports one aggregate for the endpoint prefixes.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.1\nRouting entry for 192.0.2.0/24\n  Known via \"ospf 1\", distance 110, metric 21, type inter area\n  Last update from 198.18.12.2 on Ethernet0/0, 00:00:02 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 203.0.113.2, 00:00:02 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nR1#"
+        },
+        {
+          "phase": "restore endpoint Type3 export",
+          "node": "R1",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "The sampled data path works.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "restore endpoint Type3 export",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The sampled data path works.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        }
+      ],
+      "startup_states": {
+        "R1": "BOOTED",
+        "R2": "BOOTED",
+        "R3": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "155b2c7cbb5020043a56a9825927191fbe727efada357ee737024283f15ffbd8",
+      "console_boot_fallback": [
+        "R3"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T21:11:15Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/016-ospf-eigrp-redistribution.yaml",
+      "sha256": "5657bac1cb259fc05be563498521ceb19a8992e22e7bd8c52e8a5cf3583bc9da",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T21:10:30Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R3",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The foreign endpoint is installed as an external EIGRP route.",
+          "passed": true,
+          "output": "\nR3#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"eigrp 100\", distance 170, metric 307200, precedence routine (0), type external\n  Redistributing via eigrp 100\n  Last update from 198.18.23.1 on Ethernet0/0, 00:00:04 ago\n  Routing Descriptor Blocks:\n  * 198.18.23.1, from 198.18.23.1, 00:00:04 ago, via Ethernet0/0\n      Route metric is 307200, traffic share count is 1\n      Total delay is 2000 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\nR3#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route ospf",
+          "expectation": "OSPF installs the selectively redistributed EIGRP endpoint as E1.",
+          "passed": true,
+          "output": "\nR1#show ip route ospf\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP\n       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\n       H - NHRP, G - NHRP registered, g - NHRP registration summary\n       o - ODR, P - periodic downloaded static route, l - LISP\n       a - application route\n       + - replicated route, % - next hop override, p - overrides from PfR\n       & - replicated local route overrides by connected\n\nGateway of last resort is not set\n\n      192.0.2.0/32 is subnetted, 3 subnets\nO        192.0.2.2 [110/11] via 198.18.12.2, 00:00:05, Ethernet0/0\nO E1     192.0.2.3 [110/30] via 198.18.12.2, 00:00:05, Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R3",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "The endpoint flow crosses both routing domains.",
+          "passed": true,
+          "output": "\nR3#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.3 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR3#"
+        },
+        {
+          "phase": "withdraw the EIGRP seed metric",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "withdraw the EIGRP seed metric",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router eigrp 100",
+          "passed": true,
+          "output": "\nR2(config)#router eigrp 100\nR2(config-router)#"
+        },
+        {
+          "phase": "withdraw the EIGRP seed metric",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no default-metric",
+          "passed": true,
+          "output": "\nR2(config-router)#no default-metric\nR2(config-router)#"
+        },
+        {
+          "phase": "withdraw the EIGRP seed metric",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no redistribute ospf 1",
+          "passed": true,
+          "output": "\nR2(config-router)#no redistribute ospf 1\nR2(config-router)#"
+        },
+        {
+          "phase": "withdraw the EIGRP seed metric",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "redistribute ospf 1 route-map LEFT-ONLY",
+          "passed": true,
+          "output": "\nR2(config-router)#redistribute ospf 1 route-map LEFT-ONLY\nR2(config-router)#"
+        },
+        {
+          "phase": "withdraw the EIGRP seed metric",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\n*Oct 26 21:11:30.389: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt.\n*Oct 26 21:11:30.492: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 26 21:11:30.493: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 26 21:11:30.599: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\nR2(config-router)#\nR2(config-router)#end\nR2#"
+        },
+        {
+          "phase": "withdraw the EIGRP seed metric",
+          "node": "R3",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The external endpoint is no longer eligible.",
+          "passed": true,
+          "output": "\nR3#show ip route 192.0.2.1\n% Subnet not in table\nR3#"
+        },
+        {
+          "phase": "withdraw the EIGRP seed metric",
+          "node": "R1",
+          "command": "show ip route ospf",
+          "expectation": "OSPF installs the selectively redistributed EIGRP endpoint as E1.",
+          "passed": true,
+          "output": "\nR1#show ip route ospf\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP\n       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\n       H - NHRP, G - NHRP registered, g - NHRP registration summary\n       o - ODR, P - periodic downloaded static route, l - LISP\n       a - application route\n       + - replicated route, % - next hop override, p - overrides from PfR\n       & - replicated local route overrides by connected\n\nGateway of last resort is not set\n\n      192.0.2.0/32 is subnetted, 3 subnets\nO        192.0.2.2 [110/11] via 198.18.12.2, 00:00:14, Ethernet0/0\nO E1     192.0.2.3 [110/30] via 198.18.12.2, 00:00:14, Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "withdraw the EIGRP seed metric",
+          "node": "R3",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "The endpoint flow fails without the foreign endpoint route.",
+          "passed": true,
+          "output": "\nR3#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.3 \n...\nSuccess rate is 0 percent (0/3)\nR3#"
+        },
+        {
+          "phase": "withdraw the EIGRP seed metric",
+          "node": "R3",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The native EIGRP domain and its return path still work.",
+          "passed": true,
+          "output": "\nR3#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.3 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR3#"
+        },
+        {
+          "phase": "restore the seed metric and export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore the seed metric and export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router eigrp 100",
+          "passed": true,
+          "output": "\nR2(config)#router eigrp 100\nR2(config-router)#"
+        },
+        {
+          "phase": "restore the seed metric and export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "default-metric 100000 100 255 1 1500",
+          "passed": true,
+          "output": "\nR2(config-router)#default-metric 100000 100 255 1 1500\nR2(config-router)#"
+        },
+        {
+          "phase": "restore the seed metric and export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no redistribute ospf 1",
+          "passed": true,
+          "output": "\nR2(config-router)#no redistribute ospf 1\nR2(config-router)#"
+        },
+        {
+          "phase": "restore the seed metric and export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "redistribute ospf 1 route-map LEFT-ONLY",
+          "passed": true,
+          "output": "\nR2(config-router)#redistribute ospf 1 route-map LEFT-ONLY\nR2(config-router)#"
+        },
+        {
+          "phase": "restore the seed metric and export",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router)#end\nR2#"
+        },
+        {
+          "phase": "restore the seed metric and export",
+          "node": "R3",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The foreign endpoint is installed as an external EIGRP route.",
+          "passed": true,
+          "output": "\nR3#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"eigrp 100\", distance 170, metric 307200, precedence routine (0), type external\n  Redistributing via eigrp 100\n  Last update from 198.18.23.1 on Ethernet0/0, 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.23.1, from 198.18.23.1, 00:00:01 ago, via Ethernet0/0\n      Route metric is 307200, traffic share count is 1\n      Total delay is 2000 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\nR3#"
+        },
+        {
+          "phase": "restore the seed metric and export",
+          "node": "R1",
+          "command": "show ip route ospf",
+          "expectation": "OSPF installs the selectively redistributed EIGRP endpoint as E1.",
+          "passed": true,
+          "output": "\nR1#show ip route ospf\nCodes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP\n       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area \n       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2\n       E1 - OSPF external type 1, E2 - OSPF external type 2, m - OMP\n       n - NAT, Ni - NAT inside, No - NAT outside, Nd - NAT DIA\n       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2\n       ia - IS-IS inter area, * - candidate default, U - per-user static route\n       H - NHRP, G - NHRP registered, g - NHRP registration summary\n       o - ODR, P - periodic downloaded static route, l - LISP\n       a - application route\n       + - replicated route, % - next hop override, p - overrides from PfR\n       & - replicated local route overrides by connected\n\nGateway of last resort is not set\n\n      192.0.2.0/32 is subnetted, 3 subnets\nO        192.0.2.2 [110/11] via 198.18.12.2, 00:00:25, Ethernet0/0\nO E1     192.0.2.3 [110/30] via 198.18.12.2, 00:00:25, Ethernet0/0\nR1#"
+        },
+        {
+          "phase": "restore the seed metric and export",
+          "node": "R3",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "The endpoint flow crosses both routing domains.",
+          "passed": true,
+          "output": "\nR3#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.3 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR3#"
+        }
+      ],
+      "startup_states": {
+        "R1": "STARTED",
+        "R2": "BOOTED",
+        "R3": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "41957043a366dd6f28fae269d288395f3222b8f17c57b6bad928712348cd43a8",
+      "console_boot_fallback": [
+        "R1",
+        "R3"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T21:11:46Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/017-ebgp-ibgp-basics.yaml",
+      "sha256": "22f475970a7bca157c7d73d95cd759206f5b6acc6aa38be421a49f84d7a172ab",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T21:10:50Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The iBGP route has a usable internal next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"bgp 65001\", distance 200, metric 0\n  Tag 65002, type internal\n  Last update from 198.18.12.2 00:00:04 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 198.18.12.2, 00:00:04 ago\n      opaque_ptr 0x7C630CB55EC8 \n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65002\n      MPLS label: none\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R3",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The opposite endpoint is installed through eBGP.",
+          "passed": true,
+          "output": "\nR3#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"bgp 65002\", distance 20, metric 0\n  Tag 65001, type external\n  Last update from 198.18.23.1 00:00:04 ago\n  Routing Descriptor Blocks:\n  * 198.18.23.1, from 198.18.23.1, 00:00:04 ago\n      opaque_ptr 0x7CBC4441DE78 \n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65001\n      MPLS label: none\nR3#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The endpoint flow crosses iBGP and eBGP.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        },
+        {
+          "phase": "preserve the unreachable external next hop",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "preserve the unreachable external next hop",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router bgp 65001",
+          "passed": true,
+          "output": "\nR2(config)#router bgp 65001\nR2(config-router)#"
+        },
+        {
+          "phase": "preserve the unreachable external next hop",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no neighbor 198.18.12.1 next-hop-self",
+          "passed": true,
+          "output": "\nR2(config-router)#no neighbor 198.18.12.1 next-hop-self\nR2(config-router)#"
+        },
+        {
+          "phase": "preserve the unreachable external next hop",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router)#end\nR2#"
+        },
+        {
+          "phase": "preserve the unreachable external next hop",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear ip bgp 198.18.12.1 soft out",
+          "passed": true,
+          "output": "\nR2#clear ip bgp 198.18.12.1 soft out\nR2#"
+        },
+        {
+          "phase": "preserve the unreachable external next hop",
+          "node": "R2",
+          "command": "show ip bgp summary | include 198.18.23.2",
+          "expectation": "The external peer remains established with one received endpoint.",
+          "passed": true,
+          "output": "\nR2#show ip bgp summary | include 198.18.23.2\n198.18.23.2     4        65002       5       5        3    0    0 00:01:05        1\nR2#"
+        },
+        {
+          "phase": "preserve the unreachable external next hop",
+          "node": "R1",
+          "command": "show ip bgp 192.0.2.3",
+          "expectation": "The received path identifies the inaccessible external next hop.",
+          "passed": true,
+          "output": "\nR1#show ip bgp 192.0.2.3\nBGP routing table entry for 192.0.2.3/32, version 4\nPaths: (1 available, no best path)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65002\n    198.18.23.2 (inaccessible) from 198.18.12.2 (192.0.2.2)\n      Origin IGP, metric 0, localpref 100, valid, internal\n      rx pathid: 0, tx pathid: 0\n      Updated on Oct 26 2026 21:12:06 UTC\nR1#"
+        },
+        {
+          "phase": "preserve the unreachable external next hop",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The unusable BGP path is not installed.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.3\n% Subnet not in table\nR1#"
+        },
+        {
+          "phase": "preserve the unreachable external next hop",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The endpoint flow fails despite a received BGP path.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "restore an internally reachable next hop",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore an internally reachable next hop",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router bgp 65001",
+          "passed": true,
+          "output": "\nR2(config)#router bgp 65001\nR2(config-router)#"
+        },
+        {
+          "phase": "restore an internally reachable next hop",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "neighbor 198.18.12.1 next-hop-self",
+          "passed": true,
+          "output": "\nR2(config-router)#neighbor 198.18.12.1 next-hop-self\nR2(config-router)#"
+        },
+        {
+          "phase": "restore an internally reachable next hop",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router)#end\nR2#"
+        },
+        {
+          "phase": "restore an internally reachable next hop",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear ip bgp 198.18.12.1 soft out",
+          "passed": true,
+          "output": "\nR2#clear ip bgp 198.18.12.1 soft out\nR2#"
+        },
+        {
+          "phase": "restore an internally reachable next hop",
+          "node": "R1",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The iBGP route has a usable internal next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"bgp 65001\", distance 200, metric 0\n  Tag 65002, type internal\n  Last update from 198.18.12.2 00:00:00 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 198.18.12.2, 00:00:00 ago\n      opaque_ptr 0x7C630CB55EC8 \n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65002\n      MPLS label: none\nR1#"
+        },
+        {
+          "phase": "restore an internally reachable next hop",
+          "node": "R3",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The opposite endpoint is installed through eBGP.",
+          "passed": true,
+          "output": "\nR3#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"bgp 65002\", distance 20, metric 0\n  Tag 65001, type external\n  Last update from 198.18.23.1 00:00:23 ago\n  Routing Descriptor Blocks:\n  * 198.18.23.1, from 198.18.23.1, 00:00:23 ago\n      opaque_ptr 0x7CBC4441DE78 \n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65001\n      MPLS label: none\nR3#"
+        },
+        {
+          "phase": "restore an internally reachable next hop",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The endpoint flow crosses iBGP and eBGP.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        }
+      ],
+      "startup_states": {
+        "R1": "STARTED",
+        "R2": "BOOTED",
+        "R3": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "385236cc60eb0b26d863afdfa79b1a35629c063ca30601f8d39a2f9a651271c8",
+      "console_boot_fallback": [
+        "R1",
+        "R3"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T21:12:22Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml",
+      "sha256": "4af983a172a6c493e396efa25858164603208abe24b1c65a0e47d40bb5d4b318",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T21:19:03Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The RADIUS data interface and return path are reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.1.2 repeat 3",
+          "expectation": "The TACACS+ data interface and return path are reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.1.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.1.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show running-config | section aaa group server radius",
+          "expectation": "The RADIUS group actively requests and validates Message-Authenticator.",
+          "passed": true,
+          "output": "\nR1#show running-config | section aaa group server radius\naaa group server radius RAD-GROUP\n server name LAB-RADIUS\n validate-ma\n send-ma\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+          "expectation": "The RAD-GROUP server accepts the actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code\nUser successfully authenticated\n\nUSER ATTRIBUTES\n\nMessage-Authenticato 0   <hidden>\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+          "expectation": "The TAC-GROUP server accepts the actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy\nAttempting authentication test to server-group TAC-GROUP using tacacs+\nUser was successfully authenticated.\n\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "test aaa group RAD-GROUP labuser Wrong-user-only-999 new-code",
+          "expectation": "The RAD-GROUP server does not accept this authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group RAD-GROUP labuser Wrong-user-only-999 new-code\nUser rejected\n\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "test aaa group TAC-GROUP labuser Wrong-user-only-999 legacy",
+          "expectation": "The TAC-GROUP server does not accept this authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group TAC-GROUP labuser Wrong-user-only-999 legacy\nAttempting authentication test to server-group TAC-GROUP using tacacs+\nUser authentication request was rejected by server.\n\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+          "expectation": "The RAD-GROUP server accepts the actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code\nUser successfully authenticated\n\nUSER ATTRIBUTES\n\nMessage-Authenticato 0   <hidden>\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+          "expectation": "The TAC-GROUP server accepts the actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy\nAttempting authentication test to server-group TAC-GROUP using tacacs+\nUser was successfully authenticated.\n\nR1#"
+        },
+        {
+          "phase": "mismatch only the RADIUS shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "mismatch only the RADIUS shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "radius server LAB-RADIUS",
+          "passed": true,
+          "output": "\nR1(config)#radius server LAB-RADIUS\nR1(config-radius-server)#"
+        },
+        {
+          "phase": "mismatch only the RADIUS shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "key 0 Wrong-radius-only-999",
+          "passed": true,
+          "output": "\nR1(config-radius-server)#key 0 Wrong-radius-only-999\nR1(config-radius-server)#"
+        },
+        {
+          "phase": "mismatch only the RADIUS shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-radius-server)#end\n SECURITY WARNING - Module: AAA, Command: radius server LAB-RADIUS, Reason: TLS is not configured, exposing traffic to potential eavesdropping, Description: Radius without TLS, Remediation: Configure secure options under server to enhance security\nR1#\n*Oct 26 21:19:46.237: %AAAA-4-CLI_DEPRECATED: WARNING: Command has been added to the configuration using a type 0 password. However, recommended to migrate to strong type-6 encryption\n"
+        },
+        {
+          "phase": "mismatch only the RADIUS shared key",
+          "node": "R1",
+          "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+          "expectation": "The RAD-GROUP server does not accept this authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code\n\n*Oct 26 21:19:46.741: %SYS-5-CONFIG_I: Configured from console by consoleUser rejected\n\nR1#"
+        },
+        {
+          "phase": "mismatch only the RADIUS shared key",
+          "node": "R1",
+          "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+          "expectation": "The TAC-GROUP server accepts the actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy\nAttempting authentication test to server-group TAC-GROUP using tacacs+\nUser was successfully authenticated.\n\nR1#"
+        },
+        {
+          "phase": "restore the RADIUS shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore the RADIUS shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "radius server LAB-RADIUS",
+          "passed": true,
+          "output": "\nR1(config)#radius server LAB-RADIUS\nR1(config-radius-server)#"
+        },
+        {
+          "phase": "restore the RADIUS shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "key 0 Cml-Radius-Lab-Only-983",
+          "passed": true,
+          "output": "\nR1(config-radius-server)#key 0 Cml-Radius-Lab-Only-983\nR1(config-radius-server)#"
+        },
+        {
+          "phase": "restore the RADIUS shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-radius-server)#end\n SECURITY WARNING - Module: AAA, Command: radius server LAB-RADIUS, Reason: TLS is not configured, exposing traffic to potential eavesdropping, Description: Radius without TLS, Remediation: Configure secure options under server to enhance security\nR1#"
+        },
+        {
+          "phase": "restore the RADIUS shared key",
+          "node": "R1",
+          "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+          "expectation": "The RAD-GROUP server accepts the actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code\nUser successfully authenticated\n\nUSER ATTRIBUTES\n\nMessage-Authenticato 0   <hidden>\nR1#"
+        },
+        {
+          "phase": "restore the RADIUS shared key",
+          "node": "R1",
+          "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+          "expectation": "The TAC-GROUP server accepts the actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy\nAttempting authentication test to server-group TAC-GROUP using tacacs+\nUser was successfully authenticated.\n\nR1#"
+        }
+      ],
+      "plan_sha256": "d696972a9aeeb3f8a4f78732e9c9bbd4aaea0bd50fc00bb88e854cdfaf1344f9",
+      "startup_states": {
+        "R1": "BOOTED",
+        "RADIUS": "BOOTED",
+        "TACACS": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "RADIUS": "radius-3-2-7-dfsg-1-deb13u2",
+        "TACACS": "tacplus-f4-0-4-28"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [
+        "TACACS"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T21:19:56Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/018-bgp-path-selection.yaml",
+      "sha256": "757c815de51ce2e68462ba5cf653fb7be927f417e778abbe1c0c8d30e7bb4ea4",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-26T21:19:58Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The RIB selects WAN B.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"bgp 65001\", distance 20, metric 0\n  Tag 65002, type external\n  Last update from 198.18.1.2 00:00:04 ago\n  Routing Descriptor Blocks:\n  * 198.18.1.2, from 198.18.1.2, 00:00:04 ago\n      opaque_ptr 0x768CBFB29F18 \n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65002\n      MPLS label: none\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Three replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "measure initial B request path",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters AD-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters AD-PRIMARY\nR2#"
+        },
+        {
+          "phase": "measure initial B request path",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters AD-SECONDARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters AD-SECONDARY\nR2#"
+        },
+        {
+          "phase": "measure initial B request path",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The destination still responds, despite the changed request path.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "measure initial B request path",
+          "node": "R2",
+          "command": "show access-lists AD-PRIMARY",
+          "expectation": "Fresh request counters identify AD-PRIMARY as unused.",
+          "passed": true,
+          "output": "\nR2#show access-lists AD-PRIMARY\nExtended IP access list AD-PRIMARY\n    10 permit icmp host 192.0.2.1 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "measure initial B request path",
+          "node": "R2",
+          "command": "show access-lists AD-SECONDARY",
+          "expectation": "Fresh request counters identify AD-SECONDARY as used.",
+          "passed": true,
+          "output": "\nR2#show access-lists AD-SECONDARY\nExtended IP access list AD-SECONDARY\n    10 permit icmp host 192.0.2.1 host 192.0.2.2 (6 matches)\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "lengthen B while keeping higher preference",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "lengthen B while keeping higher preference",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip prefix-list R2-LOOP seq 5 permit 192.0.2.2/32",
+          "passed": true,
+          "output": "\nR2(config)#ip prefix-list R2-LOOP seq 5 permit 192.0.2.2/32\nR2(config)#"
+        },
+        {
+          "phase": "lengthen B while keeping higher preference",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "route-map PREPEND-B permit 10",
+          "passed": true,
+          "output": "\nR2(config)#route-map PREPEND-B permit 10\nR2(config-route-map)#"
+        },
+        {
+          "phase": "lengthen B while keeping higher preference",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "match ip address prefix-list R2-LOOP",
+          "passed": true,
+          "output": "\nR2(config-route-map)#match ip address prefix-list R2-LOOP\nR2(config-route-map)#"
+        },
+        {
+          "phase": "lengthen B while keeping higher preference",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "set as-path prepend 65002 65002",
+          "passed": true,
+          "output": "\nR2(config-route-map)#set as-path prepend 65002 65002\nR2(config-route-map)#"
+        },
+        {
+          "phase": "lengthen B while keeping higher preference",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(config-route-map)#exit\nR2(config)#"
+        },
+        {
+          "phase": "lengthen B while keeping higher preference",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "route-map PREPEND-B permit 20",
+          "passed": true,
+          "output": "\nR2(config)#route-map PREPEND-B permit 20\nR2(config-route-map)#"
+        },
+        {
+          "phase": "lengthen B while keeping higher preference",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(config-route-map)#exit\nR2(config)#"
+        },
+        {
+          "phase": "lengthen B while keeping higher preference",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router bgp 65002",
+          "passed": true,
+          "output": "\nR2(config)#router bgp 65002\nR2(config-router)#"
+        },
+        {
+          "phase": "lengthen B while keeping higher preference",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "neighbor 198.18.1.1 route-map PREPEND-B out",
+          "passed": true,
+          "output": "\nR2(config-router)#neighbor 198.18.1.1 route-map PREPEND-B out\nR2(config-router)#"
+        },
+        {
+          "phase": "lengthen B while keeping higher preference",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router)#end\nR2#"
+        },
+        {
+          "phase": "lengthen B while keeping higher preference",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear ip bgp 198.18.1.1 soft out",
+          "passed": true,
+          "output": "\nR2#clear ip bgp 198.18.1.1 soft out\nR2#"
+        },
+        {
+          "phase": "lengthen B while keeping higher preference",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The RIB selects WAN B.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"bgp 65001\", distance 20, metric 0\n  Tag 65002, type external\n  Last update from 198.18.1.2 00:00:00 ago\n  Routing Descriptor Blocks:\n  * 198.18.1.2, from 198.18.1.2, 00:00:00 ago\n      opaque_ptr 0x768CBFB29C88 \n      Route metric is 0, traffic share count is 1\n      AS Hops 3\n      Route tag 65002\n      MPLS label: none\nR1#"
+        },
+        {
+          "phase": "lengthen B while keeping higher preference",
+          "node": "R1",
+          "command": "show ip bgp 192.0.2.2",
+          "expectation": "The longer path on B remains best because of its higher local preference.",
+          "passed": true,
+          "output": "\nR1#show ip bgp 192.0.2.2\nBGP routing table entry for 192.0.2.2/32, version 4\nPaths: (2 available, best #2, table default)\n  Flag: 0x8100\n  Advertised to update-groups: (Pending Update Generation)\n     1         \n  Refresh Epoch 1\n  65002\n    198.18.0.2 from 198.18.0.2 (192.0.2.2)\n      Origin IGP, metric 0, localpref 100, valid, external\n      rx pathid: 0, tx pathid: 0\n      Updated on Oct 26 2026 21:21:01 UTC\n  Refresh Epoch 1\n  65002 65002 65002\n    198.18.1.2 from 198.18.1.2 (192.0.2.2)\n      Origin IGP, metric 0, localpref 200, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Oct 26 2026 21:21:14 UTC\nR1#"
+        },
+        {
+          "phase": "measure B despite its longer AS path",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters AD-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters AD-PRIMARY\nR2#"
+        },
+        {
+          "phase": "measure B despite its longer AS path",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters AD-SECONDARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters AD-SECONDARY\nR2#"
+        },
+        {
+          "phase": "measure B despite its longer AS path",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The destination still responds, despite the changed request path.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "measure B despite its longer AS path",
+          "node": "R2",
+          "command": "show access-lists AD-PRIMARY",
+          "expectation": "Fresh request counters identify AD-PRIMARY as unused.",
+          "passed": true,
+          "output": "\nR2#show access-lists AD-PRIMARY\nExtended IP access list AD-PRIMARY\n    10 permit icmp host 192.0.2.1 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "measure B despite its longer AS path",
+          "node": "R2",
+          "command": "show access-lists AD-SECONDARY",
+          "expectation": "Fresh request counters identify AD-SECONDARY as used.",
+          "passed": true,
+          "output": "\nR2#show access-lists AD-SECONDARY\nExtended IP access list AD-SECONDARY\n    10 permit icmp host 192.0.2.1 host 192.0.2.2 (6 matches)\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "equalize local preference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "equalize local preference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "route-map PREFER-B permit 10",
+          "passed": true,
+          "output": "\nR1(config)#route-map PREFER-B permit 10\nR1(config-route-map)#"
+        },
+        {
+          "phase": "equalize local preference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "set local-preference 100",
+          "passed": true,
+          "output": "\nR1(config-route-map)#set local-preference 100\nR1(config-route-map)#"
+        },
+        {
+          "phase": "equalize local preference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-route-map)#end\nR1#"
+        },
+        {
+          "phase": "equalize local preference",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "clear ip bgp 198.18.1.2 soft in",
+          "passed": true,
+          "output": "\nR1#clear ip bgp 198.18.1.2 soft in\nR1#"
+        },
+        {
+          "phase": "equalize local preference",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The RIB selects WAN A.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"bgp 65001\", distance 20, metric 0\n  Tag 65002, type external\n  Last update from 198.18.0.2 00:00:04 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 198.18.0.2, 00:00:04 ago\n      opaque_ptr 0x768CBFB2A060 \n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65002\n      MPLS label: none\nR1#"
+        },
+        {
+          "phase": "measure the shorter A path",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters AD-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters AD-PRIMARY\nR2#"
+        },
+        {
+          "phase": "measure the shorter A path",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters AD-SECONDARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters AD-SECONDARY\nR2#"
+        },
+        {
+          "phase": "measure the shorter A path",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The destination still responds, despite the changed request path.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "measure the shorter A path",
+          "node": "R2",
+          "command": "show access-lists AD-PRIMARY",
+          "expectation": "Fresh request counters identify AD-PRIMARY as used.",
+          "passed": true,
+          "output": "\nR2#show access-lists AD-PRIMARY\nExtended IP access list AD-PRIMARY\n    10 permit icmp host 192.0.2.1 host 192.0.2.2 (6 matches)\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "measure the shorter A path",
+          "node": "R2",
+          "command": "show access-lists AD-SECONDARY",
+          "expectation": "Fresh request counters identify AD-SECONDARY as unused.",
+          "passed": true,
+          "output": "\nR2#show access-lists AD-SECONDARY\nExtended IP access list AD-SECONDARY\n    10 permit icmp host 192.0.2.1 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "restore higher local preference on B",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore higher local preference on B",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "route-map PREFER-B permit 10",
+          "passed": true,
+          "output": "\nR1(config)#route-map PREFER-B permit 10\nR1(config-route-map)#"
+        },
+        {
+          "phase": "restore higher local preference on B",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "set local-preference 200",
+          "passed": true,
+          "output": "\nR1(config-route-map)#set local-preference 200\nR1(config-route-map)#"
+        },
+        {
+          "phase": "restore higher local preference on B",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-route-map)#end\nR1#"
+        },
+        {
+          "phase": "restore higher local preference on B",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "clear ip bgp 198.18.1.2 soft in",
+          "passed": true,
+          "output": "\nR1#clear ip bgp 198.18.1.2 soft in\nR1#"
+        },
+        {
+          "phase": "restore higher local preference on B",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The RIB selects WAN B.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"bgp 65001\", distance 20, metric 0\n  Tag 65002, type external\n  Last update from 198.18.1.2 00:00:06 ago\n  Routing Descriptor Blocks:\n  * 198.18.1.2, from 198.18.1.2, 00:00:06 ago\n      opaque_ptr 0x768CBFB29C88 \n      Route metric is 0, traffic share count is 1\n      AS Hops 3\n      Route tag 65002\n      MPLS label: none\nR1#"
+        },
+        {
+          "phase": "remove the test prepends",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "remove the test prepends",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router bgp 65002",
+          "passed": true,
+          "output": "\nR2(config)#router bgp 65002\nR2(config-router)#"
+        },
+        {
+          "phase": "remove the test prepends",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no neighbor 198.18.1.1 route-map PREPEND-B out",
+          "passed": true,
+          "output": "\nR2(config-router)#no neighbor 198.18.1.1 route-map PREPEND-B out\nR2(config-router)#"
+        },
+        {
+          "phase": "remove the test prepends",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-router)#end\nR2#"
+        },
+        {
+          "phase": "remove the test prepends",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear ip bgp 198.18.1.1 soft out",
+          "passed": true,
+          "output": "\nR2#clear ip bgp 198.18.1.1 soft out\nR2#"
+        },
+        {
+          "phase": "remove the test prepends",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The RIB selects WAN B.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"bgp 65001\", distance 20, metric 0\n  Tag 65002, type external\n  Last update from 198.18.1.2 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.1.2, from 198.18.1.2, 00:00:01 ago\n      opaque_ptr 0x768CBFB29F18 \n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65002\n      MPLS label: none\nR1#"
+        },
+        {
+          "phase": "measure restored B request path",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters AD-PRIMARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters AD-PRIMARY\nR2#"
+        },
+        {
+          "phase": "measure restored B request path",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "clear access-list counters AD-SECONDARY",
+          "passed": true,
+          "output": "\nR2#clear access-list counters AD-SECONDARY\nR2#"
+        },
+        {
+          "phase": "measure restored B request path",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The destination still responds, despite the changed request path.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "measure restored B request path",
+          "node": "R2",
+          "command": "show access-lists AD-PRIMARY",
+          "expectation": "Fresh request counters identify AD-PRIMARY as unused.",
+          "passed": true,
+          "output": "\nR2#show access-lists AD-PRIMARY\nExtended IP access list AD-PRIMARY\n    10 permit icmp host 192.0.2.1 host 192.0.2.2\n    20 permit ip any any\nR2#"
+        },
+        {
+          "phase": "measure restored B request path",
+          "node": "R2",
+          "command": "show access-lists AD-SECONDARY",
+          "expectation": "Fresh request counters identify AD-SECONDARY as used.",
+          "passed": true,
+          "output": "\nR2#show access-lists AD-SECONDARY\nExtended IP access list AD-SECONDARY\n    10 permit icmp host 192.0.2.1 host 192.0.2.2 (6 matches)\n    20 permit ip any any\nR2#"
+        }
+      ],
+      "plan_sha256": "3e7048d870040ba9d70a65d80465fc1e5185e0118bf3a3365b9dff618ef924cf",
+      "startup_states": {
+        "R1": "BOOTED",
+        "R2": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [
+        "R2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-26T21:22:43Z"
     }
   ]
 }

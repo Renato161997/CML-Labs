@@ -5352,5 +5352,777 @@
         ]
       }
     ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The RADIUS data interface and return path are reachable."
+      },
+      {
+        "node": "R1",
+        "command": "ping 198.18.1.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The TACACS+ data interface and return path are reachable."
+      },
+      {
+        "node": "R1",
+        "command": "show running-config | section aaa group server radius",
+        "pattern": "(?ms)RAD-GROUP(?=.*^\\s+send-ma\\s*$)(?=.*^\\s+validate-ma\\s*$)",
+        "expectation": "The RADIUS group actively requests and validates Message-Authenticator."
+      },
+      {
+        "node": "R1",
+        "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+        "pattern": "User (?:was )?successfully authenticated",
+        "expectation": "The RAD-GROUP server accepts the actual authentication request."
+      },
+      {
+        "node": "R1",
+        "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+        "pattern": "User (?:was )?successfully authenticated",
+        "expectation": "The TAC-GROUP server accepts the actual authentication request."
+      },
+      {
+        "node": "R1",
+        "command": "test aaa group RAD-GROUP labuser Wrong-user-only-999 new-code",
+        "pattern": "User (?:was )?rejected|User authentication request was rejected|No (?:authoritative )?(?:response|reply)|Server not responding",
+        "expectation": "The RAD-GROUP server does not accept this authentication request.",
+        "absent_pattern": "User (?:was )?successfully authenticated"
+      },
+      {
+        "node": "R1",
+        "command": "test aaa group TAC-GROUP labuser Wrong-user-only-999 legacy",
+        "pattern": "User (?:was )?rejected|User authentication request was rejected|No (?:authoritative )?(?:response|reply)|Server not responding",
+        "expectation": "The TAC-GROUP server does not accept this authentication request.",
+        "absent_pattern": "User (?:was )?successfully authenticated"
+      },
+      {
+        "node": "R1",
+        "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+        "pattern": "User (?:was )?successfully authenticated",
+        "expectation": "The RAD-GROUP server accepts the actual authentication request."
+      },
+      {
+        "node": "R1",
+        "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+        "pattern": "User (?:was )?successfully authenticated",
+        "expectation": "The TAC-GROUP server accepts the actual authentication request."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "mismatch only the RADIUS shared key",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "radius server LAB-RADIUS",
+          "key 0 Wrong-radius-only-999",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+            "pattern": "User (?:was )?rejected|User authentication request was rejected|No (?:authoritative )?(?:response|reply)|Server not responding",
+            "expectation": "The RAD-GROUP server does not accept this authentication request.",
+            "absent_pattern": "User (?:was )?successfully authenticated"
+          },
+          {
+            "node": "R1",
+            "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+            "pattern": "User (?:was )?successfully authenticated",
+            "expectation": "The TAC-GROUP server accepts the actual authentication request."
+          }
+        ]
+      },
+      {
+        "name": "restore the RADIUS shared key",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "radius server LAB-RADIUS",
+          "key 0 Cml-Radius-Lab-Only-983",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+            "pattern": "User (?:was )?successfully authenticated",
+            "expectation": "The RAD-GROUP server accepts the actual authentication request."
+          },
+          {
+            "node": "R1",
+            "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+            "pattern": "User (?:was )?successfully authenticated",
+            "expectation": "The TAC-GROUP server accepts the actual authentication request."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/030-aaa-radius-tacacs.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The RADIUS data interface and return path are reachable."
+      },
+      {
+        "node": "R1",
+        "command": "ping 198.18.1.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The TACACS+ data interface and return path are reachable."
+      },
+      {
+        "node": "R1",
+        "command": "show running-config | section aaa group server radius",
+        "pattern": "(?ms)RAD-GROUP(?=.*^\\s+send-ma\\s*$)(?=.*^\\s+validate-ma\\s*$)",
+        "expectation": "The RADIUS group actively requests and validates Message-Authenticator."
+      },
+      {
+        "node": "R1",
+        "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+        "pattern": "User (?:was )?successfully authenticated",
+        "expectation": "The RAD-GROUP server accepts the actual authentication request."
+      },
+      {
+        "node": "R1",
+        "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+        "pattern": "User (?:was )?successfully authenticated",
+        "expectation": "The TAC-GROUP server accepts the actual authentication request."
+      },
+      {
+        "node": "R1",
+        "command": "test aaa group RAD-GROUP labuser Wrong-user-only-999 new-code",
+        "pattern": "User (?:was )?rejected|User authentication request was rejected|No (?:authoritative )?(?:response|reply)|Server not responding",
+        "expectation": "The RAD-GROUP server does not accept this authentication request.",
+        "absent_pattern": "User (?:was )?successfully authenticated"
+      },
+      {
+        "node": "R1",
+        "command": "test aaa group TAC-GROUP labuser Wrong-user-only-999 legacy",
+        "pattern": "User (?:was )?rejected|User authentication request was rejected|No (?:authoritative )?(?:response|reply)|Server not responding",
+        "expectation": "The TAC-GROUP server does not accept this authentication request.",
+        "absent_pattern": "User (?:was )?successfully authenticated"
+      },
+      {
+        "node": "R1",
+        "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+        "pattern": "User (?:was )?successfully authenticated",
+        "expectation": "The RAD-GROUP server accepts the actual authentication request."
+      },
+      {
+        "node": "R1",
+        "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+        "pattern": "User (?:was )?successfully authenticated",
+        "expectation": "The TAC-GROUP server accepts the actual authentication request."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "use an unlisted RADIUS NAS source",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip radius source-interface Loopback0",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The unlisted source retains a real bidirectional IP path."
+          },
+          {
+            "node": "R1",
+            "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+            "pattern": "User (?:was )?rejected|User authentication request was rejected|No (?:authoritative )?(?:response|reply)|Server not responding",
+            "expectation": "The RAD-GROUP server does not accept this authentication request.",
+            "absent_pattern": "User (?:was )?successfully authenticated"
+          },
+          {
+            "node": "R1",
+            "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+            "pattern": "User (?:was )?successfully authenticated",
+            "expectation": "The TAC-GROUP server accepts the actual authentication request."
+          }
+        ]
+      },
+      {
+        "name": "restore the allowlisted NAS source",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip radius source-interface Ethernet0/0",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "test aaa group RAD-GROUP labuser Cml-User-Only-983 new-code",
+            "pattern": "User (?:was )?successfully authenticated",
+            "expectation": "The RAD-GROUP server accepts the actual authentication request."
+          },
+          {
+            "node": "R1",
+            "command": "test aaa group TAC-GROUP labuser Cml-User-Only-983 legacy",
+            "pattern": "User (?:was )?successfully authenticated",
+            "expectation": "The TAC-GROUP server accepts the actual authentication request."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/014-ospf-summarization-filtering.yaml": {
+    "checks": [
+      {
+        "node": "R2",
+        "command": "show ip ospf neighbor",
+        "pattern": "203\\.0\\.113\\.1\\s+\\d+\\s+FULL",
+        "expectation": "The area0 adjacency is FULL.",
+        "attempts": 12
+      },
+      {
+        "node": "R2",
+        "command": "show ip ospf neighbor",
+        "pattern": "203\\.0\\.113\\.3\\s+\\d+\\s+FULL",
+        "expectation": "The area10 adjacency is FULL.",
+        "attempts": 12
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.1",
+        "pattern": "Routing entry for 192\\.0\\.2\\.0/24",
+        "expectation": "The ABR exports one aggregate for the endpoint prefixes."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The sampled data path works."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The sampled data path works."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "filter endpoint Type3 export",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip prefix-list AREA10-OUT seq 5 deny 192.0.2.0/24 le 32",
+          "ip prefix-list AREA10-OUT seq 10 permit 0.0.0.0/0 le 32",
+          "router ospf 1",
+          "area 10 filter-list prefix AREA10-OUT out",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The filtered endpoint aggregate is absent."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The sampled data path is withdrawn."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The sampled data path is withdrawn."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.23.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The sampled data path works."
+          },
+          {
+            "node": "R2",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The ABR still forwards to the intra-area endpoint."
+          }
+        ]
+      },
+      {
+        "name": "restore endpoint Type3 export",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "no area 10 filter-list prefix AREA10-OUT out",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip ospf neighbor",
+            "pattern": "203\\.0\\.113\\.1\\s+\\d+\\s+FULL",
+            "expectation": "The area0 adjacency is FULL.",
+            "attempts": 12
+          },
+          {
+            "node": "R2",
+            "command": "show ip ospf neighbor",
+            "pattern": "203\\.0\\.113\\.3\\s+\\d+\\s+FULL",
+            "expectation": "The area10 adjacency is FULL.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "Routing entry for 192\\.0\\.2\\.0/24",
+            "expectation": "The ABR exports one aggregate for the endpoint prefixes."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The sampled data path works."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The sampled data path works."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/016-ospf-eigrp-redistribution.yaml": {
+    "checks": [
+      {
+        "node": "R3",
+        "command": "show ip route 192.0.2.1",
+        "pattern": "(?s)Known via \"eigrp 100\".*distance 170",
+        "expectation": "The foreign endpoint is installed as an external EIGRP route.",
+        "attempts": 12
+      },
+      {
+        "node": "R1",
+        "command": "show ip route ospf",
+        "pattern": "O\\s+E1\\s+192\\.0\\.2\\.3",
+        "expectation": "OSPF installs the selectively redistributed EIGRP endpoint as E1."
+      },
+      {
+        "node": "R3",
+        "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The endpoint flow crosses both routing domains."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw the EIGRP seed metric",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router eigrp 100",
+          "no default-metric",
+          "no redistribute ospf 1",
+          "redistribute ospf 1 route-map LEFT-ONLY",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R3",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The external endpoint is no longer eligible."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route ospf",
+            "pattern": "O\\s+E1\\s+192\\.0\\.2\\.3",
+            "expectation": "OSPF installs the selectively redistributed EIGRP endpoint as E1."
+          },
+          {
+            "node": "R3",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The endpoint flow fails without the foreign endpoint route."
+          },
+          {
+            "node": "R3",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The native EIGRP domain and its return path still work."
+          }
+        ]
+      },
+      {
+        "name": "restore the seed metric and export",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router eigrp 100",
+          "default-metric 100000 100 255 1 1500",
+          "no redistribute ospf 1",
+          "redistribute ospf 1 route-map LEFT-ONLY",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R3",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)Known via \"eigrp 100\".*distance 170",
+            "expectation": "The foreign endpoint is installed as an external EIGRP route.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "show ip route ospf",
+            "pattern": "O\\s+E1\\s+192\\.0\\.2\\.3",
+            "expectation": "OSPF installs the selectively redistributed EIGRP endpoint as E1."
+          },
+          {
+            "node": "R3",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The endpoint flow crosses both routing domains."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/017-ebgp-ibgp-basics.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.3",
+        "pattern": "(?s)Known via \"bgp 65001\".*distance 200.*198\\.18\\.12\\.2",
+        "expectation": "The iBGP route has a usable internal next hop.",
+        "attempts": 12
+      },
+      {
+        "node": "R3",
+        "command": "show ip route 192.0.2.1",
+        "pattern": "(?s)Known via \"bgp 65002\".*distance 20",
+        "expectation": "The opposite endpoint is installed through eBGP.",
+        "attempts": 12
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The endpoint flow crosses iBGP and eBGP."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "preserve the unreachable external next hop",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router bgp 65001",
+          "no neighbor 198.18.12.1 next-hop-self",
+          "end",
+          "clear ip bgp 198.18.12.1 soft out"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip bgp summary | include 198.18.23.2",
+            "pattern": "198\\.18\\.23\\.2\\s+4\\s+65002\\s+.*\\s+1\\s*$",
+            "expectation": "The external peer remains established with one received endpoint."
+          },
+          {
+            "node": "R1",
+            "command": "show ip bgp 192.0.2.3",
+            "pattern": "198\\.18\\.23\\.2.*inaccessible",
+            "expectation": "The received path identifies the inaccessible external next hop."
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The unusable BGP path is not installed."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The endpoint flow fails despite a received BGP path."
+          }
+        ]
+      },
+      {
+        "name": "restore an internally reachable next hop",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router bgp 65001",
+          "neighbor 198.18.12.1 next-hop-self",
+          "end",
+          "clear ip bgp 198.18.12.1 soft out"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?s)Known via \"bgp 65001\".*distance 200.*198\\.18\\.12\\.2",
+            "expectation": "The iBGP route has a usable internal next hop.",
+            "attempts": 12
+          },
+          {
+            "node": "R3",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)Known via \"bgp 65002\".*distance 20",
+            "expectation": "The opposite endpoint is installed through eBGP.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The endpoint flow crosses iBGP and eBGP."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/018-bgp-path-selection.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.2",
+        "pattern": "(?s)Known via \"bgp 65001\".*198\\.18\\.1\\.2",
+        "expectation": "The RIB selects WAN B.",
+        "attempts": 12
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three replies."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "measure initial B request path",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters AD-PRIMARY",
+          "clear access-list counters AD-SECONDARY"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The destination still responds, despite the changed request path."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists AD-PRIMARY",
+            "pattern": "permit icmp",
+            "expectation": "Fresh request counters identify AD-PRIMARY as unused.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists AD-SECONDARY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh request counters identify AD-SECONDARY as used."
+          }
+        ]
+      },
+      {
+        "name": "lengthen B while keeping higher preference",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip prefix-list R2-LOOP seq 5 permit 192.0.2.2/32",
+          "route-map PREPEND-B permit 10",
+          "match ip address prefix-list R2-LOOP",
+          "set as-path prepend 65002 65002",
+          "exit",
+          "route-map PREPEND-B permit 20",
+          "exit",
+          "router bgp 65002",
+          "neighbor 198.18.1.1 route-map PREPEND-B out",
+          "end",
+          "clear ip bgp 198.18.1.1 soft out"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)Known via \"bgp 65001\".*198\\.18\\.1\\.2",
+            "expectation": "The RIB selects WAN B.",
+            "attempts": 12
+          },
+          {
+            "node": "R1",
+            "command": "show ip bgp 192.0.2.2",
+            "pattern": "(?m)^\\s*65002 65002 65002[^\\n]*\\n\\s*198\\.18\\.1\\.2[^\\n]*\\n\\s*Origin IGP,[^\\n]*localpref 200[^\\n]*best",
+            "expectation": "The longer path on B remains best because of its higher local preference."
+          }
+        ]
+      },
+      {
+        "name": "measure B despite its longer AS path",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters AD-PRIMARY",
+          "clear access-list counters AD-SECONDARY"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The destination still responds, despite the changed request path."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists AD-PRIMARY",
+            "pattern": "permit icmp",
+            "expectation": "Fresh request counters identify AD-PRIMARY as unused.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists AD-SECONDARY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh request counters identify AD-SECONDARY as used."
+          }
+        ]
+      },
+      {
+        "name": "equalize local preference",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "route-map PREFER-B permit 10",
+          "set local-preference 100",
+          "end",
+          "clear ip bgp 198.18.1.2 soft in"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)Known via \"bgp 65001\".*198\\.18\\.0\\.2",
+            "expectation": "The RIB selects WAN A.",
+            "attempts": 12
+          }
+        ]
+      },
+      {
+        "name": "measure the shorter A path",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters AD-PRIMARY",
+          "clear access-list counters AD-SECONDARY"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The destination still responds, despite the changed request path."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists AD-PRIMARY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh request counters identify AD-PRIMARY as used."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists AD-SECONDARY",
+            "pattern": "permit icmp",
+            "expectation": "Fresh request counters identify AD-SECONDARY as unused.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          }
+        ]
+      },
+      {
+        "name": "restore higher local preference on B",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "route-map PREFER-B permit 10",
+          "set local-preference 200",
+          "end",
+          "clear ip bgp 198.18.1.2 soft in"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)Known via \"bgp 65001\".*198\\.18\\.1\\.2",
+            "expectation": "The RIB selects WAN B.",
+            "attempts": 12
+          }
+        ]
+      },
+      {
+        "name": "remove the test prepends",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router bgp 65002",
+          "no neighbor 198.18.1.1 route-map PREPEND-B out",
+          "end",
+          "clear ip bgp 198.18.1.1 soft out"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)Known via \"bgp 65001\".*198\\.18\\.1\\.2",
+            "expectation": "The RIB selects WAN B.",
+            "attempts": 12
+          }
+        ]
+      },
+      {
+        "name": "measure restored B request path",
+        "node": "R2",
+        "commands": [
+          "clear access-list counters AD-PRIMARY",
+          "clear access-list counters AD-SECONDARY"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The destination still responds, despite the changed request path."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists AD-PRIMARY",
+            "pattern": "permit icmp",
+            "expectation": "Fresh request counters identify AD-PRIMARY as unused.",
+            "absent_pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match"
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists AD-SECONDARY",
+            "pattern": "permit icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Fresh request counters identify AD-SECONDARY as used."
+          }
+        ]
+      }
+    ]
   }
 }
