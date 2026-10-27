@@ -18,6 +18,7 @@ import re
 import ssl
 import time
 import uuid
+from importlib.metadata import version
 from pathlib import Path
 from urllib.parse import urlencode, urlsplit, urlunsplit
 
@@ -357,6 +358,10 @@ def main():
                     else "controller defaults; null means the API did not expose the effective image"
                 )
                 row["console_transport"] = args.console
+                row["client_versions"] = {
+                    package: version(package)
+                    for package in ("cryptography", "paramiko", "virl2-client", "websockets")
+                }
 
                 def console(label, connections=connections, lab=lab):
                     if label not in connections:
