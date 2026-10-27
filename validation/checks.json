@@ -6124,5 +6124,257 @@
         ]
       }
     ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/004-rate-limits-backoff.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py rate baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The rate client validates actual remote HTTP responses and the documented baseline invariants."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "inject the specific protocol fault",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode always-throttle"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py rate fault",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The rate client validates actual remote HTTP responses and the documented fault invariants."
+          }
+        ]
+      },
+      {
+        "name": "restore and verify the protocol contract",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode healthy"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py rate recovered",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The rate client validates actual remote HTTP responses and the documented recovered invariants."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/005-observability-logs-metrics-traces.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py telemetry baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The telemetry client validates actual remote HTTP responses and the documented baseline invariants."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "inject the specific protocol fault",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode no-trace"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py telemetry fault",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The telemetry client validates actual remote HTTP responses and the documented fault invariants."
+          }
+        ]
+      },
+      {
+        "name": "restore and verify the protocol contract",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode healthy"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py telemetry recovered",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The telemetry client validates actual remote HTTP responses and the documented recovered invariants."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/006-database-choice-for-network-apps.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py database baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The database client validates actual remote HTTP responses and the documented baseline invariants."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "inject the specific protocol fault",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode read-only"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py database fault",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The database client validates actual remote HTTP responses and the documented fault invariants."
+          }
+        ]
+      },
+      {
+        "name": "restore and verify the protocol contract",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode healthy"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py database recovered",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The database client validates actual remote HTTP responses and the documented recovered invariants."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/007-rest-error-handling.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py errors baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The errors client validates actual remote HTTP responses and the documented baseline invariants."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "inject the specific protocol fault",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode unavailable"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py errors fault",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The errors client validates actual remote HTTP responses and the documented fault invariants."
+          }
+        ]
+      },
+      {
+        "name": "restore and verify the protocol contract",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode healthy"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py errors recovered",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The errors client validates actual remote HTTP responses and the documented recovered invariants."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/008-api-pagination.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py pagination baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The pagination client validates actual remote HTTP responses and the documented baseline invariants."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "inject the specific protocol fault",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode cursor-loop"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py pagination fault",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The pagination client validates actual remote HTTP responses and the documented fault invariants."
+          }
+        ]
+      },
+      {
+        "name": "restore and verify the protocol contract",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode healthy"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py pagination recovered",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The pagination client validates actual remote HTTP responses and the documented recovered invariants."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/009-http-cache-controls.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py cache baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The cache client validates actual remote HTTP responses and the documented baseline invariants."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "inject the specific protocol fault",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode stale-etag"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py cache fault",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The cache client validates actual remote HTTP responses and the documented fault invariants."
+          }
+        ]
+      },
+      {
+        "name": "restore and verify the protocol contract",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode healthy"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py cache recovered",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The cache client validates actual remote HTTP responses and the documented recovered invariants."
+          }
+        ]
+      }
+    ]
   }
 }

@@ -21,6 +21,10 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-api-core": {
+        "SERVER": {"/lab/service.py": "examples/api-core/service.py"},
+        "CLIENT": {"/lab/client.py": "examples/api-core/client.py"},
+    },
     "native-snmp": {
         "TOOLS": {"/lab/snmp_probe.py": "examples/management/snmp_probe.py"},
     },

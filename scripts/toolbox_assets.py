@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import json
 import re
+import tarfile
 from pathlib import Path
 
 import yaml
@@ -11,11 +12,43 @@ import yaml
 KIND = "cml-labs-toolbox"
 
 
+def docker_image_digest(archive, image):
+    """CML needs Docker's config digest, distinct from the archive checksum."""
+    with tarfile.open(archive, "r:gz") as package:
+        member = package.getmember("manifest.json")
+        if not member.isfile() or member.size > 131072:
+            raise ValueError("Invalid Docker manifest")
+        manifest = json.load(package.extractfile(member))
+        if (
+            not isinstance(manifest, list)
+            or len(manifest) != 1
+            or manifest[0].get("RepoTags") != [image]
+        ):
+            raise ValueError("Archive must contain exactly the expected image tag")
+        config = manifest[0].get("Config", "")
+        if not re.fullmatch(r"(?:blobs/sha256/)?[0-9a-f]{64}(?:\.json)?", config):
+            raise ValueError("Invalid Docker config path")
+        member = package.getmember(config)
+        if not member.isfile() or member.size > 1048576:
+            raise ValueError("Invalid Docker config")
+        raw = package.extractfile(member).read()
+        digest = hashlib.sha256(raw).hexdigest()
+        if config.split("/")[-1].removesuffix(".json") != digest:
+            raise ValueError("Docker config content does not match its digest")
+        metadata = json.loads(raw)
+        if metadata.get("architecture") != "amd64" or metadata.get("os") != "linux":
+            raise ValueError("Expected a linux/amd64 image")
+        return digest
+
+
 def definitions(image, archive, digest):
     """Only accept the project's versioned archive; never modify stock kinds."""
     if not re.fullmatch(r"cml-labs-toolbox:[0-9a-f]{12}", image):
         raise ValueError("Expected an immutable source-revision image tag")
-    if archive != "cml-labs-toolbox.tar.gz" or not re.fullmatch(r"[0-9a-f]{64}", digest):
+    expected = "cml-labs-toolbox-" + image.split(":")[1] + ".tar.gz"
+    if archive not in ("cml-labs-toolbox.tar.gz", expected) or not re.fullmatch(
+        r"[0-9a-f]{64}", digest
+    ):
         raise ValueError("Invalid archive name or SHA-256")
     docker = {
         "mounts": ["type=bind,source=cfg/boot.sh,target=/boot.sh"],
@@ -133,8 +166,7 @@ def main():
     parser.add_argument("--archive", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    with args.archive.open("rb") as stream:
-        digest = hashlib.file_digest(stream, "sha256").hexdigest()
+    digest = docker_image_digest(args.archive, args.image)
     node, image = definitions(args.image, args.archive.name, digest)
     args.output.mkdir(parents=True, exist_ok=True)
     for filename, data in (("node-definition.yaml", node), ("image-definition.yaml", image)):

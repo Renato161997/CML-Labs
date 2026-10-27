@@ -10,6 +10,7 @@ docker run --rm "$image" ansible-playbook --version
 docker run --rm "$image" sh -c 'git --version; ssh -V; snmpget --version; test "$(id -u)" = 0'
 docker run --rm "$image" dpkg-query -W '-f=${Package}\t${Version}\n' > dist/toolbox/packages.tsv
 printf '%s\n' "$revision" > dist/toolbox/source-commit.txt
-docker save "$image" | gzip -n > dist/toolbox/cml-labs-toolbox.tar.gz
-python3 scripts/toolbox_assets.py --image "$image" --archive dist/toolbox/cml-labs-toolbox.tar.gz --output dist/toolbox
-(cd dist/toolbox && sha256sum cml-labs-toolbox.tar.gz node-definition.yaml image-definition.yaml packages.tsv source-commit.txt > SHA256SUMS)
+archive="cml-labs-toolbox-${revision:0:12}.tar.gz"
+docker save "$image" | gzip -n > "dist/toolbox/$archive"
+python3 scripts/toolbox_assets.py --image "$image" --archive "dist/toolbox/$archive" --output dist/toolbox
+(cd dist/toolbox && sha256sum "$archive" node-definition.yaml image-definition.yaml packages.tsv source-commit.txt > SHA256SUMS)

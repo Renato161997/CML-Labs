@@ -446,5 +446,47 @@
     "duration_minutes": 70,
     "kind": "practice",
     "workbook": "docs/workbooks/350-401-018-bgp-path-selection.md"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/004-rate-limits-backoff.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-004-rate-limits-backoff.md",
+    "example_profile": "native-api-core"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/005-observability-logs-metrics-traces.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-005-observability-logs-metrics-traces.md",
+    "example_profile": "native-api-core"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/006-database-choice-for-network-apps.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-006-database-choice-for-network-apps.md",
+    "example_profile": "native-api-core"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/007-rest-error-handling.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-007-rest-error-handling.md",
+    "example_profile": "native-api-core"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/008-api-pagination.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-008-api-pagination.md",
+    "example_profile": "native-api-core"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/009-http-cache-controls.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 50,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-009-http-cache-controls.md",
+    "example_profile": "native-api-core"
   }
 }

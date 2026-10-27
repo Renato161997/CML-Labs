@@ -11637,6 +11637,378 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-26T21:22:43Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/005-observability-logs-metrics-traces.yaml",
+      "sha256": "be44ffbe4b83324add62351c8a25ee1e840aba31c444e6ef0ab3d6c68a4a32bb",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T17:42:21Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py telemetry baseline",
+          "expectation": "The telemetry client validates actual remote HTTP responses and the documented baseline invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py telemetry baseline\n{\"checks\": [\"separate health endpoint reachable\", \"trace correlation matches the real request, response and recorded status\"], \"phase\": \"baseline\", \"scenario\": \"telemetry\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "inject the specific protocol fault",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py --set-mode no-trace",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py --set-mode no-trace\n{\"mode\": \"no-trace\", \"status\": \"configured\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "inject the specific protocol fault",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py telemetry fault",
+          "expectation": "The telemetry client validates actual remote HTTP responses and the documented fault invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py telemetry fault\n{\"checks\": [\"separate health endpoint reachable\", \"trace correlation loss detected despite healthy HTTP and counters\"], \"phase\": \"fault\", \"scenario\": \"telemetry\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore and verify the protocol contract",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py --set-mode healthy",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py --set-mode healthy\n{\"mode\": \"healthy\", \"status\": \"configured\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore and verify the protocol contract",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py telemetry recovered",
+          "expectation": "The telemetry client validates actual remote HTTP responses and the documented recovered invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py telemetry recovered\n{\"checks\": [\"separate health endpoint reachable\", \"trace correlation matches the real request, response and recorded status\"], \"phase\": \"recovered\", \"scenario\": \"telemetry\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        }
+      ],
+      "startup_states": {
+        "SERVER": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "SERVER": "net-tools-2-10-1-3",
+        "CLIENT": "net-tools-2-10-1-3"
+      },
+      "plan_sha256": "8e937b7f439df08adb1202b7094ce5923a5c036800646fa9366064026bb35372",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T17:42:39Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/007-rest-error-handling.yaml",
+      "sha256": "25d853ce3363bb792827e82002c5bf75c61a83e9252dfbe8e37e2261cd0d46dc",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T17:42:39Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py errors baseline",
+          "expectation": "The errors client validates actual remote HTTP responses and the documented baseline invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py errors baseline\n{\"checks\": [\"separate health endpoint reachable\", \"transient failures bounded to three attempts; permanent errors not retried\"], \"phase\": \"baseline\", \"scenario\": \"errors\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "inject the specific protocol fault",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py --set-mode unavailable",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py --set-mode unavailable\n{\"mode\": \"unavailable\", \"status\": \"configured\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "inject the specific protocol fault",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py errors fault",
+          "expectation": "The errors client validates actual remote HTTP responses and the documented fault invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py errors fault\n{\"checks\": [\"separate health endpoint reachable\", \"transient failures bounded to three attempts; permanent errors not retried\"], \"phase\": \"fault\", \"scenario\": \"errors\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore and verify the protocol contract",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py --set-mode healthy",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py --set-mode healthy\n{\"mode\": \"healthy\", \"status\": \"configured\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore and verify the protocol contract",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py errors recovered",
+          "expectation": "The errors client validates actual remote HTTP responses and the documented recovered invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py errors recovered\n{\"checks\": [\"separate health endpoint reachable\", \"transient failures bounded to three attempts; permanent errors not retried\"], \"phase\": \"recovered\", \"scenario\": \"errors\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        }
+      ],
+      "startup_states": {
+        "SERVER": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "SERVER": "net-tools-2-10-1-3",
+        "CLIENT": "net-tools-2-10-1-3"
+      },
+      "plan_sha256": "5a9c3b5a0b66832d0b849ad475a834b92ab7f424ef048b77f98e5d7a57c2df41",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T17:42:56Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/008-api-pagination.yaml",
+      "sha256": "6cc6f52c7de5b9cfd57bec9a604a7871884d6265561edd946c045ab5f310a733",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T17:42:46Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py pagination baseline",
+          "expectation": "The pagination client validates actual remote HTTP responses and the documented baseline invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py pagination baseline\n{\"checks\": [\"separate health endpoint reachable\", \"three pages contain seven unique IDs\", \"invalid page limit rejected\"], \"phase\": \"baseline\", \"scenario\": \"pagination\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "inject the specific protocol fault",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py --set-mode cursor-loop",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py --set-mode cursor-loop\n{\"mode\": \"cursor-loop\", \"status\": \"configured\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "inject the specific protocol fault",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py pagination fault",
+          "expectation": "The pagination client validates actual remote HTTP responses and the documented fault invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py pagination fault\n{\"checks\": [\"separate health endpoint reachable\", \"cyclic cursor detected within bounded request budget\"], \"phase\": \"fault\", \"scenario\": \"pagination\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore and verify the protocol contract",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py --set-mode healthy",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py --set-mode healthy\n{\"mode\": \"healthy\", \"status\": \"configured\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore and verify the protocol contract",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py pagination recovered",
+          "expectation": "The pagination client validates actual remote HTTP responses and the documented recovered invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py pagination recovered\n{\"checks\": [\"separate health endpoint reachable\", \"three pages contain seven unique IDs\", \"invalid page limit rejected\"], \"phase\": \"recovered\", \"scenario\": \"pagination\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        }
+      ],
+      "startup_states": {
+        "SERVER": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "SERVER": "net-tools-2-10-1-3",
+        "CLIENT": "net-tools-2-10-1-3"
+      },
+      "plan_sha256": "773a79170927f220a193ddcd944a039b7b6465c39cdaa7e777321d035855984c",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T17:43:03Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/004-rate-limits-backoff.yaml",
+      "sha256": "697da1b7d11b3dd21f3078edf3d86c34b191050d9bad59c4c2c51b21084fc3a7",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T17:44:37Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py rate baseline",
+          "expectation": "The rate client validates actual remote HTTP responses and the documented baseline invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py rate baseline\n{\"checks\": [\"separate health endpoint reachable\", \"Retry-After honored for two waits\", \"three-attempt retry budget enforced\"], \"phase\": \"baseline\", \"scenario\": \"rate\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "inject the specific protocol fault",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py --set-mode always-throttle",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py --set-mode always-throttle\n{\"mode\": \"always-throttle\", \"status\": \"configured\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "inject the specific protocol fault",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py rate fault",
+          "expectation": "The rate client validates actual remote HTTP responses and the documented fault invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py rate fault\n{\"checks\": [\"separate health endpoint reachable\", \"Retry-After honored for two waits\", \"three-attempt retry budget enforced\"], \"phase\": \"fault\", \"scenario\": \"rate\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore and verify the protocol contract",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py --set-mode healthy",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py --set-mode healthy\n{\"mode\": \"healthy\", \"status\": \"configured\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore and verify the protocol contract",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py rate recovered",
+          "expectation": "The rate client validates actual remote HTTP responses and the documented recovered invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py rate recovered\n{\"checks\": [\"separate health endpoint reachable\", \"Retry-After honored for two waits\", \"three-attempt retry budget enforced\"], \"phase\": \"recovered\", \"scenario\": \"rate\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "7da7e2ccd65caae6c78714a26769eb3245eef38ea3e0b7043cec1da35fe128ec",
+      "startup_states": {
+        "SERVER": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "SERVER": "net-tools-2-10-1-3",
+        "CLIENT": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T17:45:01Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/006-database-choice-for-network-apps.yaml",
+      "sha256": "96062b107c5cc7b6ed0f8899406d952a5a9bf925fa58862b60d8b974335851d9",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T17:45:02Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py database baseline",
+          "expectation": "The database client validates actual remote HTTP responses and the documented baseline invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py database baseline\n{\"checks\": [\"separate health endpoint reachable\", \"eight simultaneous submissions create exactly one record\", \"conflicting replay rejected; original payload preserved\"], \"phase\": \"baseline\", \"scenario\": \"database\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "inject the specific protocol fault",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py --set-mode read-only",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py --set-mode read-only\n{\"mode\": \"read-only\", \"status\": \"configured\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "inject the specific protocol fault",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py database fault",
+          "expectation": "The database client validates actual remote HTTP responses and the documented fault invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py database fault\n{\"checks\": [\"separate health endpoint reachable\", \"SQLite query-only rejects writes without creating a partial record\"], \"phase\": \"fault\", \"scenario\": \"database\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore and verify the protocol contract",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py --set-mode healthy",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py --set-mode healthy\n{\"mode\": \"healthy\", \"status\": \"configured\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore and verify the protocol contract",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py database recovered",
+          "expectation": "The database client validates actual remote HTTP responses and the documented recovered invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py database recovered\n{\"checks\": [\"separate health endpoint reachable\", \"eight simultaneous submissions create exactly one record\", \"conflicting replay rejected; original payload preserved\"], \"phase\": \"recovered\", \"scenario\": \"database\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "0aef4ce84979b2151c088121283984ac35e3623b1f72495da73de476ffeefc78",
+      "startup_states": {
+        "SERVER": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "SERVER": "net-tools-2-10-1-3",
+        "CLIENT": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T17:45:19Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/009-http-cache-controls.yaml",
+      "sha256": "5d9166d0496c376b10f1390d506182e0624fd19dcbc138304b69966acbd1fd8e",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-27T17:45:21Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py cache baseline",
+          "expectation": "The cache client validates actual remote HTTP responses and the documented baseline invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py cache baseline\n{\"checks\": [\"separate health endpoint reachable\", \"unchanged resource returns bodyless 304\", \"changed resource invalidates old ETag\"], \"phase\": \"baseline\", \"scenario\": \"cache\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "inject the specific protocol fault",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py --set-mode stale-etag",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py --set-mode stale-etag\n{\"mode\": \"stale-etag\", \"status\": \"configured\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "inject the specific protocol fault",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py cache fault",
+          "expectation": "The cache client validates actual remote HTTP responses and the documented fault invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py cache fault\n{\"checks\": [\"separate health endpoint reachable\", \"fresh unconditional read exposes a changed representation under an unchanged ETag\"], \"phase\": \"fault\", \"scenario\": \"cache\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore and verify the protocol contract",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py --set-mode healthy",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py --set-mode healthy\n{\"mode\": \"healthy\", \"status\": \"configured\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore and verify the protocol contract",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py cache recovered",
+          "expectation": "The cache client validates actual remote HTTP responses and the documented recovered invariants.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py cache recovered\n{\"checks\": [\"separate health endpoint reachable\", \"unchanged resource returns bodyless 304\", \"changed resource invalidates old ETag\"], \"phase\": \"recovered\", \"scenario\": \"cache\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "4cd914825265e489f6429d437a6731bb42a5f0b9e702cfc796fde66544aafeef",
+      "startup_states": {
+        "SERVER": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "SERVER": "net-tools-2-10-1-3",
+        "CLIENT": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "ssh",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-27T17:45:38Z"
     }
   ]
 }
