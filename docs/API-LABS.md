@@ -77,3 +77,18 @@ RESTCONF before replacing it. Only one isolated /32 route is modified.
 For client-driven transitions, `command_pattern` requires an explicit successful
 structured result before later state checks. The evidence validator also checks
 that result in the recorded output; a green flag cannot replace it.
+
+## Data models, rendering and interface changes
+
+The JSON/YAML and Jinja2 exercises transform facts collected from the actual
+router. Duplicate keys, unsafe YAML tags, invalid addressing and injected
+newlines must fail. Rendering uses StrictUndefined and is explicitly generation
+only; it does not deploy the rendered configuration.
+
+The interface exercises create only Loopback88, repeat the same NETCONF change,
+compare actual name/description/address/mask with independent RESTCONF readback,
+reject a malformed IPv4 leaf on the device and remove the loopback in finally.
+A selected RESTCONF list entry may be represented as a single object; that is
+validated strictly rather than mistaken for an empty inventory. The YANG case
+also retrieves the actual included interface submodule and finds its Loopback
+list. Retrieved schemas remain in guest memory and are not bundled here.

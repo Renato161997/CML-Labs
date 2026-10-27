@@ -75,23 +75,22 @@
       "title": "JSON YAML Data Models",
       "track": "200-301",
       "topic": "automation",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "cml-labs-toolbox",
+        "csr1000v"
       ],
-      "nominal_ram_mib": 1792,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 65,
+      "workbook": "docs/workbooks/200-301-038-json-yaml-data-models.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "e0698a5d84e3d1af1d1ebe6f1c1227c264cfadeffbac5c5d3ddf90ee6c635666"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-27T19:36:54Z",
+      "sha256": "0aa7647a181cee7bd6cc3198fa9f5e093cb290c8cb9355fe0452b3921dc553b2"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/039-controller-based-networking.yaml",
@@ -2319,23 +2318,22 @@
       "title": "JSON YAML Jinja2",
       "track": "350-401",
       "topic": "automation",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "cml-labs-toolbox",
+        "csr1000v"
       ],
-      "nominal_ram_mib": 1792,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 65,
+      "workbook": "docs/workbooks/350-401-040-json-yaml-jinja2.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "5ca2741425fc95180bdb086d1342dfdafa3572c03150bbc311b14352c8e77c11"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-27T19:48:05Z",
+      "sha256": "5c02a87964f57b28edc6a0b8bc28e30b46b5ac8fb49624c0f2f49b522785e7c8"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/041-event-driven-automation.yaml",
@@ -2365,23 +2363,22 @@
       "title": "NETCONF RESTCONF Baseline Change",
       "track": "350-401",
       "topic": "automation",
-      "nodes": 5,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "cml-labs-toolbox",
+        "csr1000v"
       ],
-      "nominal_ram_mib": 2816,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 65,
+      "workbook": "docs/workbooks/350-401-046-netconf-restconf-baseline-change.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "8cac57a2d3bb11ca70af7fc633085242a0e41e128b34ed66780fbdcefc8b1159"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-27T19:42:41Z",
+      "sha256": "148729483922441c24c522af8379f59405938ee671d5a8ec801c16d70e2adf5e"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/capstone/050-encor-capstone-enterprise-edge.yaml",
@@ -4729,22 +4726,22 @@
       "title": "YANG Model Interface Change",
       "track": "350-901",
       "topic": "infrastructure-automation",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-toolbox",
+        "csr1000v"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 65,
+      "workbook": "docs/workbooks/350-901-027-yang-model-interface-change.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "55ac11d886ea4fc5dc18c61de1905d6e9de323a1a96c050db3dad0f705f2c16a"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-27T19:45:41Z",
+      "sha256": "d75496e189ca12cd73b1a5a58bc39e5508183dc9dd20ee2995148ee6752ca373"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/028-event-driven-remediation.yaml",
