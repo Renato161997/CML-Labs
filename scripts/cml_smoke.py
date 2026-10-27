@@ -18,7 +18,7 @@ import re
 import ssl
 import time
 import uuid
-from importlib.metadata import version
+from importlib.metadata import version as package_version
 from pathlib import Path
 from urllib.parse import urlencode, urlsplit, urlunsplit
 
@@ -359,7 +359,7 @@ def main():
                 )
                 row["console_transport"] = args.console
                 row["client_versions"] = {
-                    package: version(package)
+                    package: package_version(package)
                     for package in ("cryptography", "paramiko", "virl2-client", "websockets")
                 }
 
