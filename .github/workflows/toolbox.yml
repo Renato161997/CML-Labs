@@ -1,0 +1,45 @@
+name: Automation toolbox
+on:
+  pull_request:
+    paths: ['toolbox/**', 'scripts/toolbox_assets.py', '.github/workflows/toolbox.yml']
+  push:
+    branches: [main]
+    paths: ['toolbox/**', 'scripts/toolbox_assets.py', '.github/workflows/toolbox.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: python3 -m pip install PyYAML
+      - run: bash toolbox/build.sh
+  publish:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: python3 -m pip install PyYAML
+      - run: bash toolbox/build.sh
+      - name: Publish immutable archive and definitions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="toolbox-${GITHUB_SHA:0:12}"
+          # Refuse overwrites: every asset is bound to its source revision.
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'Release already exists; refusing to replace published assets.' >&2
+            exit 1
+          fi
+          gh release create "$tag" dist/toolbox/* --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" --title "Automation toolbox ${GITHUB_SHA:0:12}" \
+            --notes 'Open-source training client for isolated CML labs. Verify SHA256SUMS before import. Includes package inventory, source revision and separate node/image definitions. No Cisco images, credentials or vendor binaries.'
