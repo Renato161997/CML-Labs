@@ -32,6 +32,20 @@ Additional guided workbooks cover static/floating and IPv6 routing, VLAN trunks,
 
 Some exercises use the native **IOL-XE/IOL-L2 XE** models. Check the [platform requirements and limitations](docs/PLATFORMS.md) before importing them; these models are not interchangeable with IOSv for every feature.
 
+### Network automation path
+
+Install the separate open-source [automation toolbox](docs/TOOLBOX.md) before importing exercises that use `cml-labs-toolbox`. It does not replace Cisco's stock node definitions or supply licensed router images. The [API guide](docs/API-LABS.md) explains preparation, transport trust and the boundaries of each exercise.
+
+| Workbook | Actual operation |
+| --- | --- |
+| [RESTCONF and NETCONF](docs/workbooks/200-301-037-restconf-netconf-management.md) | Device reads/writes, strict identity checks and controlled HTTPS withdrawal |
+| [YANG interface change](docs/workbooks/350-901-027-yang-model-interface-change.md) | Live schema retrieval, Loopback creation, independent readback and removal |
+| [JSON/YAML and Jinja2](docs/workbooks/350-401-040-json-yaml-jinja2.md) | Transform live facts and render configuration; no deployment is claimed |
+| [Ansible inventory](docs/workbooks/350-901-025-ansible-inventory-network.md) | Real inventory/playbook processes, remote facts and a wrong-key negative control |
+| [Ansible routing baseline](docs/workbooks/300-410-035-ansible-routing-baseline.md) | Apply/repeat a route, test real forwarding, withdraw and recover |
+
+Use the dated [functional results](validation/RESULTS.md) for exact source hashes and tested images. CI alone does not run these device integrations.
+
 ## Import and run
 
 1. Download or clone this repository.

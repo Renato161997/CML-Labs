@@ -21,6 +21,21 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-iosxe-ansible-routing": {
+        "TOOLS": {
+            "/lab/api_probe.py": "examples/automation/api_probe.py",
+            "/lab/inventory_probe.py": "examples/automation/inventory_probe.py",
+            "/lab/route_probe.py": "examples/automation/route_probe.py",
+            "/lab/ansible_probe.py": "examples/automation/ansible_probe.py",
+            "/lab/ansible_route.py": "examples/automation/ansible_route.py",
+        },
+    },
+    "native-iosxe-ansible": {
+        "TOOLS": {
+            "/lab/api_probe.py": "examples/automation/api_probe.py",
+            "/lab/ansible_probe.py": "examples/automation/ansible_probe.py",
+        },
+    },
     "native-iosxe-models": {
         "TOOLS": {
             "/lab/api_probe.py": "examples/automation/api_probe.py",

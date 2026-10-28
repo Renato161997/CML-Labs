@@ -92,3 +92,21 @@ A selected RESTCONF list entry may be represented as a single object; that is
 validated strictly rather than mistaken for an empty inventory. The YANG case
 also retrieves the actual included interface submodule and finds its Loopback
 list. Retrieved schemas remain in guest memory and are not bundled here.
+
+## Real Ansible operations
+
+The inventory, network-baseline and routing-baseline exercises invoke actual
+`ansible-inventory` and `ansible-playbook` processes with netconf_get and
+netconf_config. The generic default device handler preserves strict key checks;
+the payload explicitly qualifies the NETCONF `config` root instead of relying
+on the stock IOS XE handler. A fresh persistent-control directory forces the
+wrong-key test to open a new connection. Only the authenticated-serial public
+key enters the disposable guest trust store, which is restored afterward.
+
+Hostname changes have playbook and independent finally restoration. The routing
+exercise retains its desired /32 between phases so separate IOS ICMP and NETCONF
+checks can test delivery, repeated desired state, withdrawal and recovery.
+State idempotence is observed directly; an Ansible changed=false flag is not
+assumed. Playbook output goes to a bounded guest log file rather than an inherited
+stdout pipe, preventing a persistent connection daemon from keeping a completed
+command open. Logs and generated inventory remain only until the clone is wiped.

@@ -13,6 +13,7 @@ exact image IDs used in the observed run. Vendor images are never distributed he
 | Ubuntu | ens2 | 2048 MiB | Existing offline application exercises |
 | CSR 1000v | GigabitEthernet1 | 3072 MiB | Full IOS XE console/API prerequisites; check each workbook's live result |
 | net-tools | eth0 management, eth1 first lab data interface | 512 MiB | Native Python, requests, curl and Net-SNMP client tools |
+| CML-Labs toolbox | eth0 management, eth1 first lab data interface | 1024 MiB | Separate open-source client image for Ansible, ncclient, Git and Jinja2; see the [installation guide](TOOLBOX.md) |
 | RADIUS / TACACS+ / syslog | eth0 management, eth1 first lab data interface | 512 MiB | Dedicated native server definitions; service-specific configurations |
 
 RAM figures are planning defaults, not measured peak consumption. IOL uses a
