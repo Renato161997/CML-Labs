@@ -4658,23 +4658,22 @@
       "title": "GitOps Network Change Pipeline",
       "track": "350-901",
       "topic": "gitops",
-      "nodes": 5,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "cml-labs-toolbox",
+        "csr1000v"
       ],
-      "nominal_ram_mib": 2816,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 80,
+      "workbook": "docs/workbooks/350-901-031-gitops-network-change-pipeline.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "47b724c80dda73918aeb7f5f6dc3a7a778d7809bc63ce4e17804d241dec715c6"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-28T16:29:07Z",
+      "sha256": "64d8709dd3ced3608b7302dee9778ba9e8dce51fdcb5d750d2995615d21f8910"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/025-ansible-inventory-network.yaml",
@@ -4791,22 +4790,22 @@
       "title": "GitOps Network Change",
       "track": "350-901",
       "topic": "infrastructure-automation",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-toolbox",
+        "csr1000v"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 80,
+      "workbook": "docs/workbooks/350-901-030-gitops-network-change.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "660520f2a57244f60e0b3ff26e4f26dfc4060735e050acc6f1e2ccc83185b95d"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-28T16:24:11Z",
+      "sha256": "cff06cccaf9313d81183795fb0852af35036509869bb6a3f6fbc860fdbb11f4b"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/security/037-secure-api-client-threat-model.yaml",

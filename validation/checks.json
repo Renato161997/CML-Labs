@@ -7328,5 +7328,226 @@
         "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
       }
     ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/030-gitops-network-change.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/gitops_probe.py baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The actual Git commit, out-of-band fixture gate and live route comparison meet the selected phase.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "API",
+        "command": "ping 192.0.2.42 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual forwarding reaches the Linux loopback."
+      },
+      {
+        "node": "API",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Management remains available during destination-route drift."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "introduce actual device drift outside Git",
+        "node": "API",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.42 255.255.255.255 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/gitops_probe.py drift",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The actual Git commit, out-of-band fixture gate and live route comparison meet the selected phase.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual forwarding fails while the approved Git intent remains unchanged."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Management remains available during destination-route drift."
+          }
+        ]
+      },
+      {
+        "name": "reconcile the immutable approved intent",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/gitops_probe.py reconcile"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/route_probe.py present",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Independent NETCONF confirms the approved next hop.",
+            "command_timeout": 90
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual forwarding reaches the Linux loopback."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Management remains available during destination-route drift."
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/gitops/031-gitops-network-change-pipeline.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/gitops_probe.py baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The actual Git commit, out-of-band fixture gate and live route comparison meet the selected phase.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "API",
+        "command": "ping 192.0.2.42 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual forwarding reaches the Linux loopback."
+      },
+      {
+        "node": "API",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Management remains available during destination-route drift."
+      },
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/gitops_probe.py guards",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The actual Git commit, out-of-band fixture gate and live route comparison meet the selected phase.",
+        "command_timeout": 90,
+        "attempts": 1
+      }
+    ],
+    "transitions": [
+      {
+        "name": "introduce actual device drift outside Git",
+        "node": "API",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.42 255.255.255.255 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/gitops_probe.py drift",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The actual Git commit, out-of-band fixture gate and live route comparison meet the selected phase.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual forwarding fails while the approved Git intent remains unchanged."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Management remains available during destination-route drift."
+          }
+        ]
+      },
+      {
+        "name": "reconcile the immutable approved intent",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/gitops_probe.py reconcile"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/route_probe.py present",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Independent NETCONF confirms the approved next hop.",
+            "command_timeout": 90
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual forwarding reaches the Linux loopback."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Management remains available during destination-route drift."
+          }
+        ]
+      },
+      {
+        "name": "reject new unreviewed and forbidden proposals",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/gitops_probe.py guards"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual forwarding reaches the Linux loopback."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Management remains available during destination-route drift."
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
   }
 }

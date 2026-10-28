@@ -968,16 +968,6 @@
       "completed_utc": "2026-10-24T18:50:24Z"
     },
     {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/gitops/031-gitops-network-change-pipeline.yaml",
-      "sha256": "47b724c80dda73918aeb7f5f6dc3a7a778d7809bc63ce4e17804d241dec715c6",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:24Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:24Z"
-    },
-    {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/026-terraform-network-iac.yaml",
       "sha256": "0579261d8a5f40e3c39cfa428924e79649e9d55eae241aa106e370cad7d54001",
       "cml_version": "2.10.1+build.21",
@@ -1000,16 +990,6 @@
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/029-ai-assisted-automation-guardrails.yaml",
       "sha256": "66ea994e5ebc633e1948066a7e274afd5c2519bf6b74dd86bca23b6eb212c54e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:25Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:25Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/030-gitops-network-change.yaml",
-      "sha256": "660520f2a57244f60e0b3ff26e4f26dfc4060735e050acc6f1e2ccc83185b95d",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-24T18:50:25Z",
       "checks": [],
@@ -2336,6 +2316,26 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-28T16:11:53Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/030-gitops-network-change.yaml",
+      "sha256": "cff06cccaf9313d81183795fb0852af35036509869bb6a3f6fbc860fdbb11f4b",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T16:26:04Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T16:26:04Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/gitops/031-gitops-network-change-pipeline.yaml",
+      "sha256": "64d8709dd3ced3608b7302dee9778ba9e8dce51fdcb5d750d2995615d21f8910",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T16:26:06Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T16:26:06Z"
     }
   ]
 }
