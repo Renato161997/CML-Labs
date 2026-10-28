@@ -586,5 +586,26 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-901-027-yang-model-interface-change.md",
     "example_profile": "native-iosxe-interface"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/039-ansible-network-baseline.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-039-ansible-network-baseline.md",
+    "example_profile": "native-iosxe-ansible"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/025-ansible-inventory-network.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-025-ansible-inventory-network.md",
+    "example_profile": "native-iosxe-ansible"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/035-ansible-routing-baseline.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 80,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-035-ansible-routing-baseline.md",
+    "example_profile": "native-iosxe-ansible-routing"
   }
 }

@@ -1163,22 +1163,22 @@
       "title": "Ansible Routing Baseline",
       "track": "300-410",
       "topic": "automation",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-toolbox",
+        "csr1000v"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 80,
+      "workbook": "docs/workbooks/300-410-035-ansible-routing-baseline.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "0301213360cafd5270a1f8ef54e20524c44bc2b522051155c2306f160ee90c7d"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-28T16:14:57Z",
+      "sha256": "ce7f2a9e72b5608685b3824b73ed62778cfa96206fb2757c9c0c13464f7b7d7a"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/036-dna-center-assurance-routing.yaml",
@@ -2295,23 +2295,22 @@
       "title": "Ansible Network Baseline",
       "track": "350-401",
       "topic": "automation",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "cml-labs-toolbox",
+        "csr1000v"
       ],
-      "nominal_ram_mib": 1792,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 65,
+      "workbook": "docs/workbooks/350-401-039-ansible-network-baseline.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "d619cce414b21fef974244ecd5f961a498247f94cef68f907b8aaa76ca59d642"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-28T16:17:43Z",
+      "sha256": "ccd8407f512fbe522b1ee57a36f75f061391d0834343691a1404f58f8dcc2c69"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/040-json-yaml-jinja2.yaml",
@@ -4682,22 +4681,22 @@
       "title": "Ansible Inventory Network",
       "track": "350-901",
       "topic": "infrastructure-automation",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-toolbox",
+        "csr1000v"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 65,
+      "workbook": "docs/workbooks/350-901-025-ansible-inventory-network.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "79eedcc78a5ea99a109de9b76538419035e4a9558758e1c2447ff68ec8f3e737"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-28T16:08:45Z",
+      "sha256": "2545c46d1d998648a0c1b3b4f594708f6ed3bde613a5eaa7636b174ca54116ea"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/026-terraform-network-iac.yaml",

@@ -7123,5 +7123,210 @@
         "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
       }
     ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/039-ansible-network-baseline.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/ansible_probe.py change",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The actual ansible-playbook process changes and restores the hostname; independent XML facts and a wrong-key negative control are verified.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 3
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/025-ansible-inventory-network.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/ansible_probe.py inventory",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The real Ansible inventory and remote collection succeed; an incorrect key fails with a fresh socket and the hostname remains unchanged.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 3
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/035-ansible-routing-baseline.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/route_probe.py absent",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Independent pinned NETCONF reads the actual configured target route.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 3
+      },
+      {
+        "node": "API",
+        "command": "ping 192.0.2.42 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "The real Linux destination cannot be reached after target-route withdrawal."
+      },
+      {
+        "node": "API",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The connected management path remains healthy."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "apply routing baseline with Ansible",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/ansible_route.py install"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/route_probe.py present",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Independent pinned NETCONF reads the actual configured target route.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The real Linux destination responds to all probes."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "repeat the same desired route",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/ansible_route.py install"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/route_probe.py present",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Independent pinned NETCONF reads the actual configured target route.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The real Linux destination responds to all probes."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "withdraw the target route with Ansible",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/ansible_route.py remove"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/route_probe.py absent",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Independent pinned NETCONF reads the actual configured target route.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The real Linux destination cannot be reached after target-route withdrawal."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "restore the routing baseline with Ansible",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/ansible_route.py install"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/route_probe.py present",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Independent pinned NETCONF reads the actual configured target route.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 3
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The real Linux destination responds to all probes."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected management path remains healthy."
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
   }
 }

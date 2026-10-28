@@ -68,16 +68,6 @@
       "completed_utc": "2026-10-24T18:49:58Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/039-ansible-network-baseline.yaml",
-      "sha256": "d619cce414b21fef974244ecd5f961a498247f94cef68f907b8aaa76ca59d642",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:49:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:49:59Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/041-event-driven-automation.yaml",
       "sha256": "bbb3d03760a774cf2e2d469e6114a23afda725dcc9f39697581f0f009d8a90e3",
       "cml_version": "2.10.1+build.21",
@@ -988,16 +978,6 @@
       "completed_utc": "2026-10-24T18:50:24Z"
     },
     {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/025-ansible-inventory-network.yaml",
-      "sha256": "79eedcc78a5ea99a109de9b76538419035e4a9558758e1c2447ff68ec8f3e737",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:24Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:24Z"
-    },
-    {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/026-terraform-network-iac.yaml",
       "sha256": "0579261d8a5f40e3c39cfa428924e79649e9d55eae241aa106e370cad7d54001",
       "cml_version": "2.10.1+build.21",
@@ -1280,16 +1260,6 @@
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/assessment/044-enarsi-practical-checkpoint.yaml",
       "sha256": "b0bbbbbeb75fdee98a734ba87382e2f55c088ef81d97d7ae2a46c3249fa7d4b6",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:06Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:06Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/035-ansible-routing-baseline.yaml",
-      "sha256": "0301213360cafd5270a1f8ef54e20524c44bc2b522051155c2306f160ee90c7d",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-25T15:56:06Z",
       "checks": [],
@@ -2336,6 +2306,36 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-27T19:43:02Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/025-ansible-inventory-network.yaml",
+      "sha256": "2545c46d1d998648a0c1b3b4f594708f6ed3bde613a5eaa7636b174ca54116ea",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T16:11:48Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T16:11:49Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/039-ansible-network-baseline.yaml",
+      "sha256": "ccd8407f512fbe522b1ee57a36f75f061391d0834343691a1404f58f8dcc2c69",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T16:11:50Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T16:11:51Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/035-ansible-routing-baseline.yaml",
+      "sha256": "ce7f2a9e72b5608685b3824b73ed62778cfa96206fb2757c9c0c13464f7b7d7a",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T16:11:52Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T16:11:53Z"
     }
   ]
 }
