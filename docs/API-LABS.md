@@ -110,3 +110,19 @@ State idempotence is observed directly; an Ansible changed=false flag is not
 assumed. Playbook output goes to a bounded guest log file rather than an inherited
 stdout pipe, preventing a persistent connection daemon from keeping a completed
 command open. Logs and generated inventory remain only until the clone is wiped.
+
+## Local Git reconciliation and approval boundaries
+
+The GitOps exercises create real commits in a local repository and read desired
+state from an immutable commit object, never an arbitrary working tree. An
+explicit simulated review decision is stored outside that repository. This is
+an isolated teaching fixture, not real human approval, signed authorization,
+a protected GitHub branch or an external CI integration. Only one allowlisted
+/32 route can be deployed.
+
+Tests observe actual NETCONF changes, state-idempotent reconciliation and
+independent IOS-to-Linux forwarding. A manual route withdrawal creates genuine
+device drift while the approved revision remains unchanged. The pipeline test
+also rejects an unreviewed revision and an out-of-scope default route, verifies
+that live forwarding remains unchanged, and returns to the approved branch.
+Generated repository data and rejected proposal branches remain until wipe.

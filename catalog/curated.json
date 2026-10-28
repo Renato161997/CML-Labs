@@ -607,5 +607,19 @@
     "kind": "practice",
     "workbook": "docs/workbooks/300-410-035-ansible-routing-baseline.md",
     "example_profile": "native-iosxe-ansible-routing"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/030-gitops-network-change.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 80,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-030-gitops-network-change.md",
+    "example_profile": "native-iosxe-gitops"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/gitops/031-gitops-network-change-pipeline.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 80,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-031-gitops-network-change-pipeline.md",
+    "example_profile": "native-iosxe-gitops"
   }
 }

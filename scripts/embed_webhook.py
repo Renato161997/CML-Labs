@@ -21,6 +21,14 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-iosxe-gitops": {
+        "TOOLS": {
+            "/lab/api_probe.py": "examples/automation/api_probe.py",
+            "/lab/inventory_probe.py": "examples/automation/inventory_probe.py",
+            "/lab/route_probe.py": "examples/automation/route_probe.py",
+            "/lab/gitops_probe.py": "examples/automation/gitops_probe.py",
+        },
+    },
     "native-iosxe-ansible-routing": {
         "TOOLS": {
             "/lab/api_probe.py": "examples/automation/api_probe.py",
