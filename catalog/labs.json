@@ -2169,20 +2169,20 @@
       "topic": "architecture",
       "nodes": 4,
       "node_types": [
-        "desktop",
-        "iosv"
+        "iosv",
+        "net-tools"
       ],
       "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
+      "difficulty": "Intermediate",
+      "duration_minutes": 90,
+      "workbook": "docs/workbooks/350-401-005-qos-policy-interpretation.md",
+      "kind": "practice",
       "runtime_status": "not-run",
-      "import_status": "import-export-pass",
+      "import_status": "not-run",
       "cml_version": null,
       "validated_utc": null,
-      "sha256": "7e5796b3ae76ffd3ecf0b38a204724ad7ef6ab222ae6e536b9471444786d9cb2"
+      "sha256": "60918d44d0dad2156d21b469b03e5d9bb6bc99613266e8cc4d61420cc492c0aa"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml",
@@ -3837,23 +3837,22 @@
       "title": "Intrusion Policy Concepts",
       "track": "350-701",
       "topic": "network-security",
-      "nodes": 5,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "net-tools",
+        "snort"
       ],
-      "nominal_ram_mib": 3072,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
+      "difficulty": "Intermediate",
+      "duration_minutes": 100,
+      "workbook": "docs/workbooks/350-701-015-intrusion-policy-concepts.md",
+      "kind": "practice",
       "runtime_status": "not-run",
-      "import_status": "import-export-pass",
+      "import_status": "not-run",
       "cml_version": null,
       "validated_utc": null,
-      "sha256": "1acb7ddb99aff36cd1e9be1d50246e502207f6cb327931f7e22b8267533023b2"
+      "sha256": "d826fd20adf5c9152403807f05d0e84e19b41107ac107f9a1d73f8237be61a82"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/scenario/037-zero-trust-branch-segmentation.yaml",

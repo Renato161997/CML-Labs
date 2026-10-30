@@ -13,6 +13,7 @@ exact image IDs used in the observed run. Vendor images are never distributed he
 | Ubuntu | ens2 | 2048 MiB | Existing offline application exercises |
 | CSR 1000v | GigabitEthernet1 | 3072 MiB | Full IOS XE console/API prerequisites; check each workbook's live result |
 | net-tools | eth0 management, eth1 first lab data interface | 512 MiB | Native Python, requests, curl and Net-SNMP client tools |
+| Snort3 | eth0 management, eth1/eth2 inline pair | 1024 MiB | Official native reference container; bounded signature/action exercise, with actual live status recorded in the results |
 | CML-Labs toolbox | eth0 management, eth1 first lab data interface | 1024 MiB | Separate open-source client image for Ansible, ncclient, Git and Jinja2; see the [installation guide](TOOLBOX.md) |
 | RADIUS / TACACS+ / syslog | eth0 management, eth1 first lab data interface | 512 MiB | Dedicated native server definitions; service-specific configurations |
 
@@ -31,7 +32,7 @@ IOSvL2 does not implement SPAN or private VLANs. IOSv does not implement BFD.
 These are feature constraints, not errors to hide with a successful YAML import.
 Exercises needing those features require another verified platform or remain
 unverified.
-[IOSvL2 documentation](https://developer.cisco.com/docs/modeling-labs/iosvl2/) ·
+[IOSvL2 documentation](https://developer.cisco.com/docs/modeling-labs/iosvl2/) Â·
 [IOSv documentation](https://developer.cisco.com/docs/modeling-labs/iosv/).
 
 The harness requires a running node process and checks a privileged, responsive

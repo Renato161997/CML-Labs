@@ -6,13 +6,14 @@ neither a root-looking prompt nor an emulator STARTED state proves readiness.
 
 import re
 
-NATIVE_LINUX = frozenset({"net-tools", "radius", "syslog", "tacplus", "cml-labs-toolbox"})
+NATIVE_LINUX = frozenset({"net-tools", "radius", "syslog", "tacplus", "cml-labs-toolbox", "snort"})
 NATIVE_CONSOLE_PORT = {
     "net-tools": 0,
     "radius": 1,
     "syslog": 1,
     "tacplus": 1,
     "cml-labs-toolbox": 0,
+    "snort": 0,
 }
 ROOT_PROMPT = r"(?:root@[^:\n]+:[^\n#]*#|/[^\n#]*#|bash-[\d.]+#)"
 

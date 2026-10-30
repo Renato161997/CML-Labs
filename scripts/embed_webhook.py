@@ -29,6 +29,18 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-qos-flow": {
+        "INSIDE": {
+            "/lab/t.py": "examples/security/traffic_fixture.py",
+            "/lab/f.py": "examples/security/netflow_fixture.py",
+        },
+        "OUTSIDE": {
+            "/lab/t.py": "examples/security/traffic_fixture.py",
+            "/lab/f.py": "examples/security/netflow_fixture.py",
+            "/lab/q.py": "examples/security/qos_observer.py",
+            "/lab/netflow_fixture.py": "examples/security/netflow_fixture.py",
+        },
+    },
     "native-netflow": {
         "INSIDE": {
             "/lab/t.py": "examples/security/traffic_fixture.py",
