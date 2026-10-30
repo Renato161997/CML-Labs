@@ -30627,6 +30627,474 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T18:59:03Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/005-qos-policy-interpretation.yaml",
+      "sha256": "60918d44d0dad2156d21b469b03e5d9bb6bc99613266e8cc4d61420cc492c0aa",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T19:20:31Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/q.py 8080 0",
+          "expectation": "Actual downstream-ingress binary NetFlow records for this fresh port contain only DSCP 0; ECN bits are considered separately.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/q.py 8080 0\n{\"expected_dscp\": 0, \"matching_records\": 1, \"observed\": true, \"port\": 8080, \"received_dscp\": [0]}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "attach application marking",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "attach application marking",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nGW(config)#interface GigabitEthernet0/0\nGW(config-if)#"
+        },
+        {
+          "phase": "attach application marking",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "service-policy input MARK-APP",
+          "passed": true,
+          "output": "\nGW(config-if)#service-policy input MARK-APP\nGW(config-if)#"
+        },
+        {
+          "phase": "attach application marking",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-if)#end\nGW#"
+        },
+        {
+          "phase": "attach application marking",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 8081",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 8081\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "attach application marking",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/q.py 8081 26",
+          "expectation": "Actual downstream-ingress binary NetFlow records for this fresh port contain only DSCP 26; ECN bits are considered separately.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/q.py 8081 26\n{\"expected_dscp\": 26, \"matching_records\": 1, \"observed\": true, \"port\": 8081, \"received_dscp\": [26]}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the unmarked reference",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "restore the unmarked reference",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nGW(config)#interface GigabitEthernet0/0\nGW(config-if)#"
+        },
+        {
+          "phase": "restore the unmarked reference",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "no service-policy input MARK-APP",
+          "passed": true,
+          "output": "\nGW(config-if)#no service-policy input MARK-APP\nGW(config-if)#"
+        },
+        {
+          "phase": "restore the unmarked reference",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-if)#end\nGW#"
+        },
+        {
+          "phase": "restore the unmarked reference",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 8082",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 8082\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the unmarked reference",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/q.py 8082 0",
+          "expectation": "Actual downstream-ingress binary NetFlow records for this fresh port contain only DSCP 0; ECN bits are considered separately.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/q.py 8082 0\n{\"expected_dscp\": 0, \"matching_records\": 1, \"observed\": true, \"port\": 8082, \"received_dscp\": [0]}\nroot@OUTSIDE:~# "
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "GW": "STARTED",
+        "FILTER": "STARTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "STARTED"
+      },
+      "images": {
+        "GW": "iosv-159-3-m12",
+        "FILTER": "iosv-159-3-m12",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "plan_sha256": "05e4e76dee08f2d09c04eb544cf6c71e3934b489440e92c449927ace16010334",
+      "console_boot_fallback": [
+        "GW",
+        "FILTER",
+        "OUTSIDE"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T19:26:06Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/015-intrusion-policy-concepts.yaml",
+      "sha256": "4ff9aa363861dbff1c5e3be481a01b2639c5d2a7c61327fe04c98e1e2f297cf4",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T20:09:06Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "SENSOR",
+          "command": "cat /lab/start.status",
+          "expectation": "The actual Snort engine starts successfully before traffic checks.",
+          "passed": true,
+          "output": "\nroot@SENSOR:~# cat /lab/start.status\nSNORT_READY\nroot@SENSOR:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "SENSOR",
+          "command": "snort-cml -V",
+          "expectation": "The actual isolated inspection image supplies Snort3, not a mocked IDS API.",
+          "passed": true,
+          "output": "\nroot@SENSOR:~# snort-cml -V\n\n   ,,_     -*> Snort++ <*-\n  o\"  )~   Version 3.10.0.0\n   ''''    By Martin Roesch & The Snort Team\n           http://snort.org/contact#team\n           Copyright (C) 2014-2025 Cisco and/or its affiliates. All rights reserved.\n           Copyright (C) 1998-2013 Sourcefire, Inc., et al.\n           Using DAQ version 3.0.23\n           Using Hyperscan version 5.4.2 2024-12-30\n           Using LibML version 2.0.0\n           Using libpcap version 1.10.5 (with TPACKET_V3)\n           Using LuaJIT version 2.1.1737090214\n           Using LZMA version 5.8.1\n           Using OpenSSL 3.5.4 30 Sep 2025\n           Using PCRE2 version 10.46 2025-08-27\n           Using ZLIB version 1.3.1\n\nroot@SENSOR:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.0.20\n{\"peer\": \"198.18.0.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.21 --port 8081",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.0.21 --port 8081\n{\"peer\": \"198.18.0.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.0.20\n{\"peer\": \"198.18.0.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.20 --port 8081",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.0.20 --port 8081\n{\"peer\": \"198.18.0.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.21 --port 8081",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.0.21 --port 8081\n{\"peer\": \"198.18.0.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "SENSOR",
+          "command": "grep -c '1000001' /lab/alert_fast.txt",
+          "expectation": "The real Snort alert file contains the selected signature from the current freshly reset phase.",
+          "passed": true,
+          "output": "\nroot@SENSOR:~# grep -c '1000001' /lab/alert_fast.txt\n2\nroot@SENSOR:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 198.18.0.20",
+          "expectation": "Unrelated ICMP traverses the live inline sensor.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 198.18.0.20\nPING 198.18.0.20 (198.18.0.20) 56(84) bytes of data.\n64 bytes from 198.18.0.20: icmp_seq=1 ttl=64 time=0.413 ms\n64 bytes from 198.18.0.20: icmp_seq=2 ttl=64 time=0.633 ms\n64 bytes from 198.18.0.20: icmp_seq=3 ttl=64 time=0.511 ms\n\n--- 198.18.0.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2049ms\nrtt min/avg/max/mdev = 0.413/0.519/0.633/0.089 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "apply the overbroad inline flow block",
+          "kind": "configuration",
+          "node": "SENSOR",
+          "command": "/lab/mode broad",
+          "passed": true,
+          "output": "\nroot@SENSOR:~# /lab/mode broad\nSNORT_READY\nroot@SENSOR:~# "
+        },
+        {
+          "phase": "apply the overbroad inline flow block",
+          "node": "SENSOR",
+          "command": "kill -0 $(cat /lab/snort.pid) && echo ENGINE_ALIVE",
+          "expectation": "The current Snort process remains alive.",
+          "passed": true,
+          "output": "\nroot@SENSOR:~# kill -0 $(cat /lab/snort.pid) && echo ENGINE_ALIVE\nENGINE_ALIVE\nroot@SENSOR:~# "
+        },
+        {
+          "phase": "apply the overbroad inline flow block",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.0.20\n{\"reachable\": false, \"reason\": \"timeout\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "apply the overbroad inline flow block",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.20 --port 8081",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.0.20 --port 8081\n{\"reachable\": false, \"reason\": \"timeout\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "apply the overbroad inline flow block",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.21 --port 8081",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.0.21 --port 8081\n{\"reachable\": false, \"reason\": \"timeout\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "apply the overbroad inline flow block",
+          "node": "SENSOR",
+          "command": "grep -c '1000001' /lab/alert_fast.txt",
+          "expectation": "The real Snort alert file contains the selected signature from the current freshly reset phase.",
+          "passed": true,
+          "output": "\nroot@SENSOR:~# grep -c '1000001' /lab/alert_fast.txt\n3\nroot@SENSOR:~# "
+        },
+        {
+          "phase": "apply the overbroad inline flow block",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 198.18.0.20",
+          "expectation": "Unrelated ICMP traverses the live inline sensor.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 198.18.0.20\nPING 198.18.0.20 (198.18.0.20) 56(84) bytes of data.\n64 bytes from 198.18.0.20: icmp_seq=1 ttl=64 time=0.345 ms\n64 bytes from 198.18.0.20: icmp_seq=2 ttl=64 time=0.720 ms\n64 bytes from 198.18.0.20: icmp_seq=3 ttl=64 time=0.640 ms\n\n--- 198.18.0.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2082ms\nrtt min/avg/max/mdev = 0.345/0.568/0.720/0.161 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "apply the overbroad inline flow block",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.0.20\n{\"peer\": \"198.18.0.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "apply the overbroad inline flow block",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.21 --port 8081",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.0.21 --port 8081\n{\"peer\": \"198.18.0.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "repair the rule scope without disabling enforcement",
+          "kind": "configuration",
+          "node": "SENSOR",
+          "command": "/lab/mode tuned",
+          "passed": true,
+          "output": "\nroot@SENSOR:~# /lab/mode tuned\nSNORT_READY\nroot@SENSOR:~# "
+        },
+        {
+          "phase": "repair the rule scope without disabling enforcement",
+          "node": "SENSOR",
+          "command": "kill -0 $(cat /lab/snort.pid) && echo ENGINE_ALIVE",
+          "expectation": "The current Snort process remains alive.",
+          "passed": true,
+          "output": "\nroot@SENSOR:~# kill -0 $(cat /lab/snort.pid) && echo ENGINE_ALIVE\nENGINE_ALIVE\nroot@SENSOR:~# "
+        },
+        {
+          "phase": "repair the rule scope without disabling enforcement",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.21 --port 8081",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.0.21 --port 8081\n{\"peer\": \"198.18.0.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "repair the rule scope without disabling enforcement",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.0.20\n{\"reachable\": false, \"reason\": \"timeout\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "repair the rule scope without disabling enforcement",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.20 --port 8081",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.0.20 --port 8081\n{\"reachable\": false, \"reason\": \"timeout\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "repair the rule scope without disabling enforcement",
+          "node": "SENSOR",
+          "command": "grep -c '1000001' /lab/alert_fast.txt",
+          "expectation": "The real Snort alert file contains the selected signature from the current freshly reset phase.",
+          "passed": true,
+          "output": "\nroot@SENSOR:~# grep -c '1000001' /lab/alert_fast.txt\n2\nroot@SENSOR:~# "
+        },
+        {
+          "phase": "repair the rule scope without disabling enforcement",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 198.18.0.20",
+          "expectation": "Unrelated ICMP traverses the live inline sensor.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 198.18.0.20\nPING 198.18.0.20 (198.18.0.20) 56(84) bytes of data.\n64 bytes from 198.18.0.20: icmp_seq=1 ttl=64 time=0.421 ms\n64 bytes from 198.18.0.20: icmp_seq=2 ttl=64 time=0.681 ms\n64 bytes from 198.18.0.20: icmp_seq=3 ttl=64 time=0.579 ms\n\n--- 198.18.0.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2052ms\nrtt min/avg/max/mdev = 0.421/0.560/0.681/0.106 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "repair the rule scope without disabling enforcement",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.0.20\n{\"peer\": \"198.18.0.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "repair the rule scope without disabling enforcement",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.21 --port 8081",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.0.21 --port 8081\n{\"peer\": \"198.18.0.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore alert-only inspection",
+          "kind": "configuration",
+          "node": "SENSOR",
+          "command": "/lab/mode ids",
+          "passed": true,
+          "output": "\nroot@SENSOR:~# /lab/mode ids\nSNORT_READY\nroot@SENSOR:~# "
+        },
+        {
+          "phase": "restore alert-only inspection",
+          "node": "SENSOR",
+          "command": "kill -0 $(cat /lab/snort.pid) && echo ENGINE_ALIVE",
+          "expectation": "The current Snort process remains alive.",
+          "passed": true,
+          "output": "\nroot@SENSOR:~# kill -0 $(cat /lab/snort.pid) && echo ENGINE_ALIVE\nENGINE_ALIVE\nroot@SENSOR:~# "
+        },
+        {
+          "phase": "restore alert-only inspection",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.0.20\n{\"peer\": \"198.18.0.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore alert-only inspection",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.20 --port 8081",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.0.20 --port 8081\n{\"peer\": \"198.18.0.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore alert-only inspection",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.21 --port 8081",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.0.21 --port 8081\n{\"peer\": \"198.18.0.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore alert-only inspection",
+          "node": "SENSOR",
+          "command": "grep -c '1000001' /lab/alert_fast.txt",
+          "expectation": "The real Snort alert file contains the selected signature from the current freshly reset phase.",
+          "passed": true,
+          "output": "\nroot@SENSOR:~# grep -c '1000001' /lab/alert_fast.txt\n2\nroot@SENSOR:~# "
+        },
+        {
+          "phase": "restore alert-only inspection",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 198.18.0.20",
+          "expectation": "Unrelated ICMP traverses the live inline sensor.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 198.18.0.20\nPING 198.18.0.20 (198.18.0.20) 56(84) bytes of data.\n64 bytes from 198.18.0.20: icmp_seq=1 ttl=64 time=0.450 ms\n64 bytes from 198.18.0.20: icmp_seq=2 ttl=64 time=0.709 ms\n64 bytes from 198.18.0.20: icmp_seq=3 ttl=64 time=0.617 ms\n\n--- 198.18.0.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2044ms\nrtt min/avg/max/mdev = 0.450/0.592/0.709/0.107 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore alert-only inspection",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.0.20\n{\"peer\": \"198.18.0.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore alert-only inspection",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.0.21 --port 8081",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.0.21 --port 8081\n{\"peer\": \"198.18.0.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        }
+      ],
+      "plan_sha256": "385a3414660dca03c920ba05cf373687a046c9736030b80b212952a3b7191560",
+      "startup_states": {
+        "SENSOR": "BOOTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "STARTED"
+      },
+      "images": {
+        "SENSOR": "cml-labs-inspection-cdecd8f68cdd",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "OUTSIDE"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T20:10:39Z"
     }
   ]
 }

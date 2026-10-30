@@ -2,7 +2,8 @@
 
 Node definitions, installed images and tested features are separate prerequisites.
 The workbook identifies the required node types; the dated results identify the
-exact image IDs used in the observed run. Vendor images are never distributed here.
+exact image IDs used in the observed run. Proprietary network-appliance images are not distributed here. Optional open-source
+project images have separate build and import guides.
 
 | Platform | Interface naming | Nominal RAM per node | Scope in this collection |
 | --- | --- | ---: | --- |
@@ -13,6 +14,7 @@ exact image IDs used in the observed run. Vendor images are never distributed he
 | Ubuntu | ens2 | 2048 MiB | Existing offline application exercises |
 | CSR 1000v | GigabitEthernet1 | 3072 MiB | Full IOS XE console/API prerequisites; check each workbook's live result |
 | net-tools | eth0 management, eth1 first lab data interface | 512 MiB | Native Python, requests, curl and Net-SNMP client tools |
+| CML-Labs Inspection | eth0 management, eth1/eth2 inline pair | 1024 MiB | Separate digest-pinned Snort3 derivative with a root guest shell; see the [image guide](INSPECTION.md) and actual live results |
 | CML-Labs toolbox | eth0 management, eth1 first lab data interface | 1024 MiB | Separate open-source client image for Ansible, ncclient, Git and Jinja2; see the [installation guide](TOOLBOX.md) |
 | RADIUS / TACACS+ / syslog | eth0 management, eth1 first lab data interface | 512 MiB | Dedicated native server definitions; service-specific configurations |
 
@@ -31,7 +33,7 @@ IOSvL2 does not implement SPAN or private VLANs. IOSv does not implement BFD.
 These are feature constraints, not errors to hide with a successful YAML import.
 Exercises needing those features require another verified platform or remain
 unverified.
-[IOSvL2 documentation](https://developer.cisco.com/docs/modeling-labs/iosvl2/) ·
+[IOSvL2 documentation](https://developer.cisco.com/docs/modeling-labs/iosvl2/) Ãƒâ€šÃ‚Â·
 [IOSv documentation](https://developer.cisco.com/docs/modeling-labs/iosv/).
 
 The harness requires a running node process and checks a privileged, responsive

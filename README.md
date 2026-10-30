@@ -7,7 +7,7 @@
 Practice enterprise routing, switching, security concepts and network automation.
 Topology files and original teaching examples only: no vendor images, entitlement files or exam dumps.
 
-**[Browse all labs](docs/CATALOG.md)** · **[Validation evidence](validation/README.md)** · **[Certification/image scope](docs/CERTIFICATIONS.md)** · **[Report a problem](https://github.com/Renato161997/CML-Labs/issues/new/choose)**
+**[Browse all labs](docs/CATALOG.md)** Â· **[Validation evidence](validation/README.md)** Â· **[Certification/image scope](docs/CERTIFICATIONS.md)** Â· **[Report a problem](https://github.com/Renato161997/CML-Labs/issues/new/choose)**
 
 ## Start here
 
@@ -35,6 +35,8 @@ Some exercises use the native **IOL-XE/IOL-L2 XE** models. Check the [platform r
 ### Network automation path
 
 Install the separate open-source [automation toolbox](docs/TOOLBOX.md) before importing exercises that use `cml-labs-toolbox`. It does not replace Cisco's stock node definitions or supply licensed router images. The [API guide](docs/API-LABS.md) explains preparation, transport trust and the boundaries of each exercise.
+
+The inline-inspection exercise additionally uses the separate [CML-Labs Inspection image](docs/INSPECTION.md), derived from a pinned Cisco Talos Snort3 base. Its root console and network capabilities apply only inside the isolated teaching guest; stock Snort definitions are preserved.
 
 | Workbook | Actual operation |
 | --- | --- |

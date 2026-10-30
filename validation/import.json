@@ -28,16 +28,6 @@
       "completed_utc": "2026-10-24T18:49:58Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/005-qos-policy-interpretation.yaml",
-      "sha256": "7e5796b3ae76ffd3ecf0b38a204724ad7ef6ab222ae6e536b9471444786d9cb2",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:49:58Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:49:58Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/assessment/049-encor-practical-checkpoint.yaml",
       "sha256": "72ffceb58e3e614f6d0f1a554bd1449573742475a733fc8a68f2abf704bfdd43",
       "cml_version": "2.10.1+build.21",
@@ -386,16 +376,6 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-24T18:50:15Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/015-intrusion-policy-concepts.yaml",
-      "sha256": "1acb7ddb99aff36cd1e9be1d50246e502207f6cb327931f7e22b8267533023b2",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:15Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:16Z"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/scenario/037-zero-trust-branch-segmentation.yaml",
@@ -2336,6 +2316,26 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T18:53:09Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/005-qos-policy-interpretation.yaml",
+      "sha256": "60918d44d0dad2156d21b469b03e5d9bb6bc99613266e8cc4d61420cc492c0aa",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T19:27:10Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T19:27:10Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/015-intrusion-policy-concepts.yaml",
+      "sha256": "4ff9aa363861dbff1c5e3be481a01b2639c5d2a7c61327fe04c98e1e2f297cf4",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T20:09:04Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T20:09:04Z"
     }
   ]
 }

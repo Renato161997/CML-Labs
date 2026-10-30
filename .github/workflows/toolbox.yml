@@ -1,25 +1,41 @@
 name: Automation toolbox
 on:
   pull_request:
-    paths: ['toolbox/**', 'scripts/toolbox_assets.py', '.github/workflows/toolbox.yml']
+    paths: ['toolbox/**', 'scripts/toolbox_assets.py', '.github/workflows/toolbox.yml', 'inspection/**', 'scripts/inspection_assets.py']
   push:
     branches: [main]
-    paths: ['toolbox/**', 'scripts/toolbox_assets.py', '.github/workflows/toolbox.yml']
+    paths: ['toolbox/**', 'scripts/toolbox_assets.py', '.github/workflows/toolbox.yml', 'inspection/**', 'scripts/inspection_assets.py']
   workflow_dispatch:
+    inputs:
+      image:
+        type: choice
+        options: [toolbox, inspection]
+        default: toolbox
+        description: Training image to build and verify
 permissions:
   contents: read
 jobs:
   verify:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
       - run: python3 -m pip install PyYAML
-      - run: bash toolbox/build.sh
+      - if: inputs.image != 'inspection'
+        run: bash toolbox/build.sh
+      - if: github.event_name == 'pull_request' || inputs.image == 'inspection'
+        run: bash inspection/build.sh
+      - if: inputs.image == 'inspection'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: inspection-${{ github.sha }}
+          path: dist/inspection/*
+          compression-level: 0
+          retention-days: 30
   publish:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && inputs.image != 'inspection'
     runs-on: ubuntu-latest
     permissions:
       contents: write
