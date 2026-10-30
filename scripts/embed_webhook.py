@@ -29,6 +29,11 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-security-workbench": {
+        "WORKBENCH": {
+            "/lab/workbench.py": "examples/security/security_workbench.py",
+        },
+    },
     "secure-management": {
         "TOOLS": {
             "/lab/snmp_probe.py": "examples/management/snmp_probe.py",

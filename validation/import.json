@@ -188,16 +188,6 @@
       "completed_utc": "2026-10-24T18:50:07Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml",
-      "sha256": "2c5a3a9a46975873371387b2effeca6024711876287418f606f348fa7d668559",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:08Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:08Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/010-lisp-vxlan-concepts.yaml",
       "sha256": "3826ae0bd3256569545c245b4fe1bdba4b399381af5865e99b478aaa53851b9e",
       "cml_version": "2.10.1+build.21",
@@ -220,16 +210,6 @@
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/assessment/044-scor-practical-checkpoint.yaml",
       "sha256": "34a685e55411ba5ca4d7597e205a1f048bbe04ead642480bec2aa8ca656bea10",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:09Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:09Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/031-security-api-python.yaml",
-      "sha256": "2fd38143a9c84887040c9298122bb14cf04da6d42878d3637b78394f461eb871",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-24T18:50:09Z",
       "checks": [],
@@ -538,30 +518,10 @@
       "completed_utc": "2026-10-24T18:50:17Z"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/002-cryptography-pki-ipsec.yaml",
-      "sha256": "c0a4643f6dcba85384624c5880de4cfb6859373b809aa47b7b4d3b41e047e826",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:17Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:17Z"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/003-site-to-site-vpn-types.yaml",
       "sha256": "8c9805bd0609ef8e52b1d3ff5729aea61f0572f06b0c7f3765f0f231680152bc",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-24T18:50:17Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:18Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/004-security-intelligence-sharing.yaml",
-      "sha256": "bf5b06ea4a7d1fc73d2ec4c5c2053d0d3622f650037c5b33165695388772f256",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:18Z",
       "checks": [],
       "status": "import-export-pass",
       "test_lab_removed": true,
@@ -622,16 +582,6 @@
       "sha256": "0c8cd1d5d4b5545d22eec6f97efc81abd9cd5aa80172b32a2459ae40ffb1d2ae",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-24T18:50:19Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:20Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/vpn/039-site-to-site-vpn-security-baseline.yaml",
-      "sha256": "e0f20d8c25aa7b0737f46d20662170285b71f23865024179e82ee0684c5d8782",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:20Z",
       "checks": [],
       "status": "import-export-pass",
       "test_lab_removed": true,
@@ -1126,16 +1076,6 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T15:56:14Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/023-ipsec-vti.yaml",
-      "sha256": "bcda5581cc1a92ca676e3fb95934f65d17e17f32df9bcb2861055db97b40dc50",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:15Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:15Z"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/015-static-default-routes.yaml",
@@ -2336,6 +2276,66 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T14:44:17Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/023-ipsec-vti.yaml",
+      "sha256": "d6568e2a519d0cc49b1c41c2a6a311c2e881ea5f90cec48a7f0e1d385194c90e",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:21:15Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:21:15Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml",
+      "sha256": "2e2f819d261be77df9bcf89d0dd574569fec3a0cd0baaf06ae4b8765fe0dca99",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:21:17Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:21:17Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/vpn/039-site-to-site-vpn-security-baseline.yaml",
+      "sha256": "d49273d1e1407c93b4b950f2a3c797fcfa3310cf11fc103af286db9168899a9f",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:21:19Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:21:19Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/002-cryptography-pki-ipsec.yaml",
+      "sha256": "a1e210914099d72aa3f33e1e41400a25e9bba7c836012c38006b5f2b58f9fd00",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:21:21Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:21:21Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/004-security-intelligence-sharing.yaml",
+      "sha256": "43423df8c67eeed9bffed3e13ca3be1c28522eb57d82f0337a34ca47e351060b",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:21:22Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:21:23Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/031-security-api-python.yaml",
+      "sha256": "e92002ad0d0f5b56b9b44e2f88f0b7e2af9b829c5d89e62a05d511854d4f5977",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:21:24Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:21:24Z"
     }
   ]
 }

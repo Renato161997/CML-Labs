@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **130**.
+Import/export passes: **233/233**. Functional passes: **136**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -86,6 +86,7 @@ Import/export passes: **233/233**. Functional passes: **130**.
 | [GRE Tunnel Routing](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/020-gre-tunnel-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 6 | 12 | 2026-10-25T12:42:29Z |
 | [DMVPN Phase 2](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/021-dmvpn-phase2.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, iosvl2-2020 | 13 | 8 | 2026-10-30T13:48:55Z |
 | [DMVPN Phase 3](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/022-dmvpn-phase3.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, iosvl2-2020 | 15 | 8 | 2026-10-28T18:54:21Z |
+| [IPsec VTI](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/023-ipsec-vti.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 19 | 18 | 2026-10-30T15:27:10Z |
 | [MPLS L3VPN Concepts](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/024-mpls-l3vpn-concepts.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 16 | 8 | 2026-10-28T17:39:52Z |
 | [DMVPN Hub Spoke Break Fix](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/038-dmvpn-hub-spoke-break-fix.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, iosvl2-2020 | 9 | 0 | 2026-10-28T18:34:07Z |
 | [Campus Two Tier Three Tier HA](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/001-campus-two-three-tier-ha.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 11 | 16 | 2026-10-30T14:25:51Z |
@@ -118,10 +119,15 @@ Import/export passes: **233/233**. Functional passes: **130**.
 | [Campus Routing Blackhole](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/troubleshooting/047-campus-routing-blackhole.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 18 | 18 | 2026-10-30T14:25:45Z |
 | [VRF Lite Route Leaking](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/007-vrf-lite-route-leaking.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 16 | 2026-10-28T18:46:40Z |
 | [GRE Overlay Underlay](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 22 | 16 | 2026-10-26T19:54:02Z |
+| [IPsec GRE Design](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 23 | 20 | 2026-10-30T15:00:07Z |
+| [Security API Python](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/031-security-api-python.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 16 | 5 | 2026-10-30T15:16:18Z |
 | [Secure Admin Plane](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/management/040-secure-admin-plane.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ubuntu-24-04-20260307 | 7 | 10 | 2026-10-28T18:41:28Z |
 | [Site To Site IPsec IOS](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/009-site-to-site-ipsec-ios.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 14 | 12 | 2026-10-28T17:12:27Z |
 | [Segmentation VRF ACL](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/013-segmentation-vrf-acl.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 18 | 8 | 2026-10-28T18:38:49Z |
+| [Cryptography PKI and VPN Trust Boundaries](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/002-cryptography-pki-ipsec.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 9 | 8 | 2026-10-30T15:27:44Z |
+| [Security Intelligence Sharing](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/004-security-intelligence-sharing.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 10 | 4 | 2026-10-30T15:15:54Z |
 | [Syslog SIEM Correlation](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/027-syslog-siem-correlation.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3 | 12 | 19 | 2026-10-26T20:42:59Z |
+| [Site To Site VPN Security Baseline](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/vpn/039-site-to-site-vpn-security-baseline.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 16 | 21 | 2026-10-30T15:21:13Z |
 | [GitOps Network Change Pipeline](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/gitops/031-gitops-network-change-pipeline.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 13 | 33 | 2026-10-28T16:29:07Z |
 | [Ansible Inventory Network](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/025-ansible-inventory-network.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-28T16:08:45Z |
 | [YANG Model Interface Change](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/027-yang-model-interface-change.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-27T19:45:41Z |

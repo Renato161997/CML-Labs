@@ -25633,6 +25633,1527 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T14:49:49Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml",
+      "sha256": "2e2f819d261be77df9bcf89d0dd574569fec3a0cd0baaf06ae4b8765fe0dca99",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:54:04Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The unprotected peer transport remains reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 203/205/210 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The actual protected service loopback replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 215/216/218 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show crypto isakmp sa",
+          "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+          "passed": true,
+          "output": "\nR1#show crypto isakmp sa\nIPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n198.18.0.1      198.18.0.2      QM_IDLE           1002 ACTIVE\n198.18.0.2      198.18.0.1      QM_IDLE           1001 ACTIVE\n\nIPv6 Crypto ISAKMP SA\n\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 3, #pkts encrypt: 3, #pkts digest: 3\n    #pkts decaps: 3, #pkts decrypt: 3, #pkts verify: 3\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 3, #pkts encrypt: 3, #pkts digest: 3\n    #pkts decaps: 3, #pkts decrypt: 3, #pkts verify: 3\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show interfaces Tunnel0",
+          "expectation": "The live overlay is point-to-point GRE.",
+          "passed": true,
+          "output": "\nR1#show interfaces Tunnel0\nTunnel0 is up, line protocol is up \n  Hardware is Tunnel\n  Internet address is 172.16.0.1/30\n  MTU 17874 bytes, BW 100 Kbit/sec, DLY 50000 usec, \n     reliability 255/255, txload 1/255, rxload 1/255\n  Encapsulation TUNNEL, loopback not set\n  Keepalive not set\n  Tunnel linestate evaluation up\n  Tunnel source 198.18.0.1 (GigabitEthernet0/0), destination 198.18.0.2\n   Tunnel Subblocks:\n      src-track:\n         Tunnel0 source tracking subblock associated with GigabitEthernet0/0\n          Set of tunnels with source GigabitEthernet0/0, 1 member (includes iterators), on interface <OK>\n  Tunnel protocol/transport GRE/IP\n    Key disabled, sequencing disabled\n    Checksumming of packets disabled\n  Tunnel TTL 255, Fast tunneling enabled\n  Tunnel transport MTU 1434 bytes\n  Tunnel transmit bandwidth 8000 (kbps)\n  Tunnel receive bandwidth 8000 (kbps)\n  Tunnel protection via IPSec (profile \"DESIGN-PROFILE\")\n  Last input 00:00:17, output never, output hang never\n  Last clearing of \"show interface\" counters 00:04:12\n  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 0\n  Queueing strategy: fifo\n  Output queue: 0/0 (size/max)\n  5 minute input rate 0 bits/sec, 0 packets/sec\n  5 minute output rate 0 bits/sec, 0 packets/sec\n     3 packets input, 372 bytes, 0 no buffer\n     Received 0 broadcasts (0 IP multicasts)\n     0 runts, 0 giants, 0 throttles \n     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort\n     3 packets output, 372 bytes, 0 underruns\n     0 output errors, 0 collisions, 0 interface resets\n     0 unknown protocol drops\n     0 output buffer failures, 0 output buffers swapped out\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show crypto ipsec sa",
+          "expectation": "The negotiated IPsec SA actually uses transport mode.",
+          "passed": true,
+          "output": "\nR1#show crypto ipsec sa\n\ninterface: Tunnel0\n    Crypto map tag: Tunnel0-head-0, local addr 198.18.0.1\n\n   protected vrf: (none)\n   local  ident (addr/mask/prot/port): (198.18.0.1/255.255.255.255/47/0)\n   remote ident (addr/mask/prot/port): (198.18.0.2/255.255.255.255/47/0)\n   current_peer 198.18.0.2 port 500\n     PERMIT, flags={origin_is_acl,}\n    #pkts encaps: 3, #pkts encrypt: 3, #pkts digest: 3\n    #pkts decaps: 3, #pkts decrypt: 3, #pkts verify: 3\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n    #send errors 0, #recv errors 0\n\n     local crypto endpt.: 198.18.0.1, remote crypto endpt.: 198.18.0.2\n     plaintext mtu 1458, path mtu 1500, ip mtu 1500, ip mtu idb GigabitEthernet0/0\n     current outbound spi: 0xCD2DB78F(3442325391)\n     PFS (Y/N): Y, DH group: group14\n\n     inbound esp sas:\n      spi: 0xB84278CA(3091364042)\n        transform: esp-256-aes esp-sha256-hmac ,\n        in use settings ={Transport, }\n        conn id: 1, flow_id: SW:1, sibling_flags 80004000, crypto map: Tunnel0-head-0\n        sa timing: remaining key lifetime (k/sec): (4608000/3554)\n        IV size: 16 bytes\n        replay detection support: Y\n        Status: ACTIVE(ACTIVE)\n      spi: 0xE1E5A234(3789922868)\n        transform: esp-256-aes esp-sha256-hmac ,\n        in use settings ={Transport, }\n        conn id: 3, flow_id: SW:3, sibling_flags 80000000, crypto map: Tunnel0-head-0\n        sa timing: remaining key lifetime (k/sec): (4174703/3560)\n        IV size: 16 bytes\n        replay detection support: Y\n        Status: ACTIVE(ACTIVE)\n\n     inbound ah sas:\n\n     inbound pcp sas:\n\n     outbound esp sas:\n      spi: 0x55BE4371(1438532465)\n        transform: esp-256-aes esp-sha256-hmac ,\n        in use settings ={Transport, }\n        conn id: 2, flow_id: SW:2, sibling_flags 80004000, crypto map: Tunnel0-head-0\n        sa timing: remaining key lifetime (k/sec): (4608000/3554)\n        IV size: 16 bytes\n        replay detection support: Y\n        Status: ACTIVE(ACTIVE)\n      spi: 0xCD2DB78F(3442325391)\n        transform: esp-256-aes esp-sha256-hmac ,\n        in use settings ={Transport, }\n        conn id: 4, flow_id: SW:4, sibling_flags 80000000, crypto map: Tunnel0-head-0\n        sa timing: remaining key lifetime (k/sec): (4174703/3560)\n        IV size: 16 bytes\n        replay detection support: Y\n        Status: ACTIVE(ACTIVE)\n\n     outbound ah sas:\n\n     outbound pcp sas:\nR1#"
+        },
+        {
+          "phase": "filter clear GRE on the receiving underlay",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "filter clear GRE on the receiving underlay",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-list extended GRE-OUTER",
+          "passed": true,
+          "output": "\nR2(config)#ip access-list extended GRE-OUTER\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "filter clear GRE on the receiving underlay",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "10 deny gre any any",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#10 deny gre any any\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "filter clear GRE on the receiving underlay",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "20 permit ip any any",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#20 permit ip any any\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "filter clear GRE on the receiving underlay",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#exit\nR2(config)#"
+        },
+        {
+          "phase": "filter clear GRE on the receiving underlay",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nR2(config)#interface GigabitEthernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "filter clear GRE on the receiving underlay",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-group GRE-OUTER in",
+          "passed": true,
+          "output": "\nR2(config-if)#ip access-group GRE-OUTER in\nR2(config-if)#"
+        },
+        {
+          "phase": "filter clear GRE on the receiving underlay",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "filter clear GRE on the receiving underlay",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The actual protected service loopback replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 12/13/14 ms\nR1#"
+        },
+        {
+          "phase": "filter clear GRE on the receiving underlay",
+          "node": "R1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 6, #pkts encrypt: 6, #pkts digest: 6\n    #pkts decaps: 6, #pkts decrypt: 6, #pkts verify: 6\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR1#"
+        },
+        {
+          "phase": "filter clear GRE on the receiving underlay",
+          "node": "R2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 6, #pkts encrypt: 6, #pkts digest: 6\n    #pkts decaps: 6, #pkts decrypt: 6, #pkts verify: 6\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR2#"
+        },
+        {
+          "phase": "filter clear GRE on the receiving underlay",
+          "node": "R2",
+          "command": "show access-lists GRE-OUTER",
+          "expectation": "The clear-GRE filter exists but sees no encrypted payload.",
+          "passed": true,
+          "output": "\nR2#show access-lists GRE-OUTER\nExtended IP access list GRE-OUTER\n    10 deny gre any any\n    20 permit ip any any (3 matches)\nR2#"
+        },
+        {
+          "phase": "also filter the actual outer ESP protocol",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "also filter the actual outer ESP protocol",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-list extended GRE-OUTER",
+          "passed": true,
+          "output": "\nR2(config)#ip access-list extended GRE-OUTER\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "also filter the actual outer ESP protocol",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "5 deny esp any any",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#5 deny esp any any\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "also filter the actual outer ESP protocol",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#end\nR2#"
+        },
+        {
+          "phase": "also filter the actual outer ESP protocol",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The controlled fault blocks the protected service.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "also filter the actual outer ESP protocol",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The unprotected peer transport remains reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/7 ms\nR1#"
+        },
+        {
+          "phase": "also filter the actual outer ESP protocol",
+          "node": "R1",
+          "command": "show crypto isakmp sa",
+          "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+          "passed": true,
+          "output": "\nR1#show crypto isakmp sa\nIPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n198.18.0.1      198.18.0.2      QM_IDLE           1002 ACTIVE\n198.18.0.2      198.18.0.1      QM_IDLE           1001 ACTIVE\n\nIPv6 Crypto ISAKMP SA\n\nR1#"
+        },
+        {
+          "phase": "also filter the actual outer ESP protocol",
+          "node": "R2",
+          "command": "show access-lists GRE-OUTER",
+          "expectation": "The actual outer ESP packets hit the new deny.",
+          "passed": true,
+          "output": "\nR2#show access-lists GRE-OUTER\nExtended IP access list GRE-OUTER\n    5 deny esp any any (3 matches)\n    10 deny gre any any\n    20 permit ip any any (7 matches)\nR2#"
+        },
+        {
+          "phase": "remove only the ESP deny",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "remove only the ESP deny",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-list extended GRE-OUTER",
+          "passed": true,
+          "output": "\nR2(config)#ip access-list extended GRE-OUTER\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "remove only the ESP deny",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no 5",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#no 5\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "remove only the ESP deny",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#end\nR2#"
+        },
+        {
+          "phase": "remove only the ESP deny",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The actual protected service loopback replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 13/13/13 ms\nR1#"
+        },
+        {
+          "phase": "remove only the ESP deny",
+          "node": "R1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 12, #pkts encrypt: 12, #pkts digest: 12\n    #pkts decaps: 9, #pkts decrypt: 9, #pkts verify: 9\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR1#"
+        },
+        {
+          "phase": "remove only the ESP deny",
+          "node": "R2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 9, #pkts encrypt: 9, #pkts digest: 9\n    #pkts decaps: 9, #pkts decrypt: 9, #pkts verify: 9\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR2#"
+        },
+        {
+          "phase": "remove only the ESP deny",
+          "node": "R2",
+          "command": "show access-lists GRE-OUTER",
+          "expectation": "The GRE-only deny remains while protected traffic recovers.",
+          "passed": true,
+          "output": "\nR2#show access-lists GRE-OUTER\nExtended IP access list GRE-OUTER\n    10 deny gre any any\n    20 permit ip any any (10 matches)\nR2#"
+        },
+        {
+          "phase": "remove the exercise underlay filter",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "remove the exercise underlay filter",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nR2(config)#interface GigabitEthernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "remove the exercise underlay filter",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no ip access-group GRE-OUTER in",
+          "passed": true,
+          "output": "\nR2(config-if)#no ip access-group GRE-OUTER in\nR2(config-if)#"
+        },
+        {
+          "phase": "remove the exercise underlay filter",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "remove the exercise underlay filter",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The actual protected service loopback replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 11/13/18 ms\nR1#"
+        },
+        {
+          "phase": "remove the exercise underlay filter",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The unprotected peer transport remains reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/5 ms\nR1#"
+        },
+        {
+          "phase": "remove the exercise underlay filter",
+          "node": "R1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 15, #pkts encrypt: 15, #pkts digest: 15\n    #pkts decaps: 12, #pkts decrypt: 12, #pkts verify: 12\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR1#"
+        },
+        {
+          "phase": "remove the exercise underlay filter",
+          "node": "R2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 12, #pkts encrypt: 12, #pkts digest: 12\n    #pkts decaps: 12, #pkts decrypt: 12, #pkts verify: 12\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR2#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "R1": "STARTED",
+        "R2": "STARTED"
+      },
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "plan_sha256": "fc85c293253b11a0f2be669126026e8808142b4596cbd1c9e54bf906384d723e",
+      "console_boot_fallback": [
+        "R1",
+        "R2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:00:07Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/004-security-intelligence-sharing.yaml",
+      "sha256": "43423df8c67eeed9bffed3e13ca3be1c28522eb57d82f0337a34ca47e351060b",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:15:33Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m tls",
+          "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m tls\n{\"revision\": 1, \"service\": \"isolated-security-workbench\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m intel",
+          "expectation": "The trusted, current, correctly signed fixture indicator is actually accepted.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m intel\n{\"accepted\": true, \"id\": \"fixture-1\", \"status\": 200, \"tls\": \"TLSv1.3\", \"value\": \"192.0.2.99\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m intel",
+          "expectation": "The indicator is rejected specifically for replay.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m intel\n{\"accepted\": false, \"reason\": \"replay\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "tamper with the signed indicator value",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --feed tampered",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --feed tampered\n{\"configured\": true, \"revision\": 2}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "tamper with the signed indicator value",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m intel",
+          "expectation": "The indicator is rejected specifically for invalid_signature.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m intel\n{\"accepted\": false, \"reason\": \"invalid_signature\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "tamper with the signed indicator value",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m tls",
+          "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m tls\n{\"revision\": 2, \"service\": \"isolated-security-workbench\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore a valid signed revision",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --feed valid",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --feed valid\n{\"configured\": true, \"revision\": 3}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore a valid signed revision",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m intel",
+          "expectation": "The trusted, current, correctly signed fixture indicator is actually accepted.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m intel\n{\"accepted\": true, \"id\": \"fixture-3\", \"status\": 200, \"tls\": \"TLSv1.3\", \"value\": \"192.0.2.99\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "publish a correctly signed but expired revision",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --feed expired",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --feed expired\n{\"configured\": true, \"revision\": 4}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "publish a correctly signed but expired revision",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m intel",
+          "expectation": "The indicator is rejected specifically for expired_or_invalid_time.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m intel\n{\"accepted\": false, \"reason\": \"expired_or_invalid_time\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "publish a correctly signed but expired revision",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m tls",
+          "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m tls\n{\"revision\": 4, \"service\": \"isolated-security-workbench\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore current signed intelligence",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --feed valid",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --feed valid\n{\"configured\": true, \"revision\": 5}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore current signed intelligence",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m intel",
+          "expectation": "The trusted, current, correctly signed fixture indicator is actually accepted.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m intel\n{\"accepted\": true, \"id\": \"fixture-5\", \"status\": 200, \"tls\": \"TLSv1.3\", \"value\": \"192.0.2.99\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore current signed intelligence",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m intel",
+          "expectation": "The indicator is rejected specifically for replay.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m intel\n{\"accepted\": false, \"reason\": \"replay\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "WORKBENCH": "BOOTED"
+      },
+      "images": {
+        "WORKBENCH": "cml-labs-toolbox-9f43df961cbe"
+      },
+      "plan_sha256": "c70bbb7348770b82137168b9b82b51d12e66df5824bb884b2d3fe2bd2dd222e5",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:15:54Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/031-security-api-python.yaml",
+      "sha256": "e92002ad0d0f5b56b9b44e2f88f0b7e2af9b829c5d89e62a05d511854d4f5977",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:15:54Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m tls",
+          "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m tls\n{\"revision\": 1, \"service\": \"isolated-security-workbench\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api",
+          "expectation": "The reader obtains the explicit offline fixture inventory over verified TLS.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api\n{\"admin_up\": true, \"backend\": \"offline-fixture\", \"interface\": \"Ethernet0/0\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api -o disable",
+          "expectation": "A valid reader identity cannot write fixture state.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api -o disable\n{\"authorized\": false, \"status\": 403, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api",
+          "expectation": "The fixture interface remains enabled.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api\n{\"admin_up\": true, \"backend\": \"offline-fixture\", \"interface\": \"Ethernet0/0\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "use an invalid training token",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --token invalid",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --token invalid\n{\"configured\": true, \"revision\": 1}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "use an invalid training token",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api",
+          "expectation": "An invalid identity cannot read inventory.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api\n{\"authorized\": false, \"status\": 401, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore the reader identity",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --token reader",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --token reader\n{\"configured\": true, \"revision\": 1}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore the reader identity",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api",
+          "expectation": "The reader obtains the explicit offline fixture inventory over verified TLS.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api\n{\"admin_up\": true, \"backend\": \"offline-fixture\", \"interface\": \"Ethernet0/0\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore the reader identity",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api -o disable",
+          "expectation": "A valid reader identity cannot write fixture state.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api -o disable\n{\"authorized\": false, \"status\": 403, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore the reader identity",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api",
+          "expectation": "The fixture interface remains enabled.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api\n{\"admin_up\": true, \"backend\": \"offline-fixture\", \"interface\": \"Ethernet0/0\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "select the admin role",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --token admin",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --token admin\n{\"configured\": true, \"revision\": 1}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "select the admin role",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api -o disable",
+          "expectation": "The allowed admin request changes actual fixture state.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api -o disable\n{\"accepted\": true, \"admin_up\": false, \"backend\": \"offline-fixture\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "select the admin role",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api",
+          "expectation": "The fixture records the authorized disabled state.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api\n{\"admin_up\": false, \"backend\": \"offline-fixture\", \"interface\": \"Ethernet0/0\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "select the admin role",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api -o invalid-boolean",
+          "expectation": "The string-boolean request is rejected.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api -o invalid-boolean\n{\"accepted\": false, \"status\": 400, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "select the admin role",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api",
+          "expectation": "The fixture records the authorized disabled state.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api\n{\"admin_up\": false, \"backend\": \"offline-fixture\", \"interface\": \"Ethernet0/0\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore the fixture enabled state",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api --operation enable",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api --operation enable\n{\"accepted\": true, \"admin_up\": true, \"backend\": \"offline-fixture\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore the fixture enabled state",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api",
+          "expectation": "The fixture interface remains enabled.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api\n{\"admin_up\": true, \"backend\": \"offline-fixture\", \"interface\": \"Ethernet0/0\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "return to least-privilege reader",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --token reader",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --token reader\n{\"configured\": true, \"revision\": 1}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "return to least-privilege reader",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api",
+          "expectation": "The reader obtains the explicit offline fixture inventory over verified TLS.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api\n{\"admin_up\": true, \"backend\": \"offline-fixture\", \"interface\": \"Ethernet0/0\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "return to least-privilege reader",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api -o disable",
+          "expectation": "A valid reader identity cannot write fixture state.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api -o disable\n{\"authorized\": false, \"status\": 403, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "return to least-privilege reader",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m api",
+          "expectation": "The fixture interface remains enabled.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m api\n{\"admin_up\": true, \"backend\": \"offline-fixture\", \"interface\": \"Ethernet0/0\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "WORKBENCH": "BOOTED"
+      },
+      "images": {
+        "WORKBENCH": "cml-labs-toolbox-9f43df961cbe"
+      },
+      "plan_sha256": "bf9d18a575cc1c3dfa7dbbbe14210f6704eb6672709222b0c791e329c41c8832",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:16:18Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/vpn/039-site-to-site-vpn-security-baseline.yaml",
+      "sha256": "d49273d1e1407c93b4b950f2a3c797fcfa3310cf11fc103af286db9168899a9f",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:15:33Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The unprotected peer transport remains reachable.",
+          "passed": true,
+          "output": "\n-Traceback= 13148Bz 16079Ez 1604DBz 1602B8z 15A275z 15AE3Fz 41ACAF7z 4196E6Ez 419A8E3z 5731D1Fz 50729D2z 50726C0z 5008B70z 50177A2z 5017425z 501786Cz - Process \"Crypto CA\", CPU hog, PC 0x00155F4C\n\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 202/204/207 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The actual protected service loopback replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 208/211/214 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show crypto isakmp sa",
+          "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+          "passed": true,
+          "output": "\nR1#show crypto isakmp sa\nIPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n198.18.0.2      198.18.0.1      QM_IDLE           1001 ACTIVE\n\nIPv6 Crypto ISAKMP SA\n\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 4, #pkts encrypt: 4, #pkts digest: 4\n    #pkts decaps: 4, #pkts decrypt: 4, #pkts verify: 4\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 4, #pkts encrypt: 4, #pkts digest: 4\n    #pkts decaps: 4, #pkts decrypt: 4, #pkts verify: 4\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR2#"
+        },
+        {
+          "phase": "replace one peer with an incompatible proposal",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "replace one peer with an incompatible proposal",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "crypto ipsec transform-set INCOMPATIBLE esp-aes esp-sha256-hmac",
+          "passed": true,
+          "output": "\nR2(config)#crypto ipsec transform-set INCOMPATIBLE esp-aes esp-sha256-hmac\nR2(cfg-crypto-trans)#"
+        },
+        {
+          "phase": "replace one peer with an incompatible proposal",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "mode tunnel",
+          "passed": true,
+          "output": "\nR2(cfg-crypto-trans)#mode tunnel\nR2(cfg-crypto-trans)#"
+        },
+        {
+          "phase": "replace one peer with an incompatible proposal",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(cfg-crypto-trans)#exit\nR2(config)#"
+        },
+        {
+          "phase": "replace one peer with an incompatible proposal",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "crypto map CML-VPN 10 ipsec-isakmp",
+          "passed": true,
+          "output": "\nR2(config)#crypto map CML-VPN 10 ipsec-isakmp\nR2(config-crypto-map)#"
+        },
+        {
+          "phase": "replace one peer with an incompatible proposal",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "set transform-set INCOMPATIBLE",
+          "passed": true,
+          "output": "\nR2(config-crypto-map)#set transform-set INCOMPATIBLE\nR2(config-crypto-map)#"
+        },
+        {
+          "phase": "replace one peer with an incompatible proposal",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(config-crypto-map)#exit\nR2(config)#"
+        },
+        {
+          "phase": "replace one peer with an incompatible proposal",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear crypto isakmp",
+          "passed": true,
+          "output": "\nR2(config)#do clear crypto isakmp\nR2(config)#"
+        },
+        {
+          "phase": "replace one peer with an incompatible proposal",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear crypto sa",
+          "passed": true,
+          "output": "\nR2(config)#do clear crypto sa\nR2(config)#"
+        },
+        {
+          "phase": "replace one peer with an incompatible proposal",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config)#end\nR2#"
+        },
+        {
+          "phase": "replace one peer with an incompatible proposal",
+          "node": "R2",
+          "command": "show crypto map",
+          "expectation": "The receiving peer actually selects the incompatible transform.",
+          "passed": true,
+          "output": "\nR2#show crypto map\nCrypto Map IPv4 \"CML-VPN\" 10 ipsec-isakmp\n\tPeer = 198.18.0.1\n\tExtended IP access list CML-PROTECTED\n\t    access-list CML-PROTECTED permit ip host 192.0.2.2 host 192.0.2.1\n\tCurrent peer: 198.18.0.1\n\tSecurity association lifetime: 4608000 kilobytes/3600 seconds\n\tResponder-Only (Y/N): N\n\tPFS (Y/N): Y\n\tDH group:  group14\n\tMixed-mode : Disabled\n\tTransform sets={ \n\t\tINCOMPATIBLE:  { esp-aes esp-sha256-hmac  } , \n\t}\n\tInterfaces using crypto map CML-VPN:\n\t\tGigabitEthernet0/0\n\n\tInterfaces using crypto map NiStTeSt1:\n\nR2#"
+        },
+        {
+          "phase": "replace one peer with an incompatible proposal",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The unprotected peer transport remains reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/5/8 ms\nR1#"
+        },
+        {
+          "phase": "clear the initiating peer before the negative negotiation",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "clear crypto isakmp",
+          "passed": true,
+          "output": "\nR1#clear crypto isakmp\nR1#"
+        },
+        {
+          "phase": "clear the initiating peer before the negative negotiation",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "clear crypto sa",
+          "passed": true,
+          "output": "\nR1#clear crypto sa\nR1#"
+        },
+        {
+          "phase": "clear the initiating peer before the negative negotiation",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The controlled fault blocks the protected service.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "clear the initiating peer before the negative negotiation",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The unprotected peer transport remains reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/6 ms\nR1#"
+        },
+        {
+          "phase": "restore the required proposal on the receiver",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore the required proposal on the receiver",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "crypto map CML-VPN 10 ipsec-isakmp",
+          "passed": true,
+          "output": "\nR2(config)#crypto map CML-VPN 10 ipsec-isakmp\nR2(config-crypto-map)#"
+        },
+        {
+          "phase": "restore the required proposal on the receiver",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "set transform-set CML-ESP",
+          "passed": true,
+          "output": "\nR2(config-crypto-map)#set transform-set CML-ESP\nR2(config-crypto-map)#"
+        },
+        {
+          "phase": "restore the required proposal on the receiver",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(config-crypto-map)#exit\nR2(config)#"
+        },
+        {
+          "phase": "restore the required proposal on the receiver",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear crypto isakmp",
+          "passed": true,
+          "output": "\nR2(config)#do clear crypto isakmp\nR2(config)#"
+        },
+        {
+          "phase": "restore the required proposal on the receiver",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear crypto sa",
+          "passed": true,
+          "output": "\nR2(config)#do clear crypto sa\nR2(config)#"
+        },
+        {
+          "phase": "restore the required proposal on the receiver",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config)#end\nR2#"
+        },
+        {
+          "phase": "restore the required proposal on the receiver",
+          "node": "R2",
+          "command": "show crypto map",
+          "expectation": "The receiving peer again requires the original transform.",
+          "passed": true,
+          "output": "\nR2#show crypto map\nCrypto Map IPv4 \"CML-VPN\" 10 ipsec-isakmp\n\tPeer = 198.18.0.1\n\tExtended IP access list CML-PROTECTED\n\t    access-list CML-PROTECTED permit ip host 192.0.2.2 host 192.0.2.1\n\tCurrent peer: 198.18.0.1\n\tSecurity association lifetime: 4608000 kilobytes/3600 seconds\n\tResponder-Only (Y/N): N\n\tPFS (Y/N): Y\n\tDH group:  group14\n\tMixed-mode : Disabled\n\tTransform sets={ \n\t\tCML-ESP:  { esp-256-aes esp-sha256-hmac  } , \n\t}\n\tInterfaces using crypto map CML-VPN:\n\t\tGigabitEthernet0/0\n\n\tInterfaces using crypto map NiStTeSt1:\n\nR2#"
+        },
+        {
+          "phase": "restore the required proposal on the receiver",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The unprotected peer transport remains reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/7 ms\nR1#"
+        },
+        {
+          "phase": "clear the initiating peer and prove fresh recovery",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "clear crypto isakmp",
+          "passed": true,
+          "output": "\nR1#clear crypto isakmp\nR1#"
+        },
+        {
+          "phase": "clear the initiating peer and prove fresh recovery",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "clear crypto sa",
+          "passed": true,
+          "output": "\nR1#clear crypto sa\nR1#"
+        },
+        {
+          "phase": "clear the initiating peer and prove fresh recovery",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The actual protected service loopback replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 10/13/18 ms\nR1#"
+        },
+        {
+          "phase": "clear the initiating peer and prove fresh recovery",
+          "node": "R1",
+          "command": "show crypto isakmp sa",
+          "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+          "passed": true,
+          "output": "\nR1#show crypto isakmp sa\nIPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n198.18.0.2      198.18.0.1      QM_IDLE           1003 ACTIVE\n198.18.0.2      198.18.0.1      MM_NO_STATE       1002 ACTIVE (deleted)\n198.18.0.2      198.18.0.1      MM_NO_STATE       1001 ACTIVE (deleted)\n\nIPv6 Crypto ISAKMP SA\n\nR1#"
+        },
+        {
+          "phase": "clear the initiating peer and prove fresh recovery",
+          "node": "R1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 5, #pkts encrypt: 5, #pkts digest: 5\n    #pkts decaps: 5, #pkts decrypt: 5, #pkts verify: 5\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR1#"
+        },
+        {
+          "phase": "clear the initiating peer and prove fresh recovery",
+          "node": "R2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 5, #pkts encrypt: 5, #pkts digest: 5\n    #pkts decaps: 5, #pkts decrypt: 5, #pkts verify: 5\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR2#"
+        },
+        {
+          "phase": "clear the initiating peer and prove fresh recovery",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The unprotected peer transport remains reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/5/10 ms\nR1#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "R1": "STARTED",
+        "R2": "STARTED"
+      },
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "plan_sha256": "bfb4caf484a4e1e9c138e19ffc3ad752114c3c41d1da68f29f1808b93f24f948",
+      "console_boot_fallback": [
+        "R1",
+        "R2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:21:13Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/023-ipsec-vti.yaml",
+      "sha256": "d6568e2a519d0cc49b1c41c2a6a311c2e881ea5f90cec48a7f0e1d385194c90e",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:21:26Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The unprotected peer transport remains reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 204/206/207 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The actual protected service loopback replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 146/186/208 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show crypto isakmp sa",
+          "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+          "passed": true,
+          "output": "\nR1#show crypto isakmp sa\nIPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n198.18.0.2      198.18.0.1      QM_IDLE           1001 ACTIVE\n198.18.0.1      198.18.0.2      QM_IDLE           1002 ACTIVE\n\nIPv6 Crypto ISAKMP SA\n\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 3, #pkts encrypt: 3, #pkts digest: 3\n    #pkts decaps: 3, #pkts decrypt: 3, #pkts verify: 3\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 3, #pkts encrypt: 3, #pkts digest: 3\n    #pkts decaps: 3, #pkts decrypt: 3, #pkts verify: 3\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show interfaces Tunnel0",
+          "expectation": "The actual tunnel uses native IPsec rather than GRE.",
+          "passed": true,
+          "output": "\nR1#show interfaces Tunnel0\nTunnel0 is up, line protocol is up \n  Hardware is Tunnel\n  Internet address is 172.16.0.1/30\n  MTU 17878 bytes, BW 100 Kbit/sec, DLY 50000 usec, \n     reliability 255/255, txload 1/255, rxload 1/255\n  Encapsulation TUNNEL, loopback not set\n  Keepalive not set\n  Tunnel linestate evaluation up\n  Tunnel source 198.18.0.1 (GigabitEthernet0/0), destination 198.18.0.2\n   Tunnel Subblocks:\n      src-track:\n         Tunnel0 source tracking subblock associated with GigabitEthernet0/0\n          Set of tunnels with source GigabitEthernet0/0, 1 member (includes iterators), on interface <OK>\n  Tunnel protocol/transport IPSEC/IP\n  Tunnel TTL 255\n  Tunnel transport MTU 1438 bytes\n  Tunnel transmit bandwidth 8000 (kbps)\n  Tunnel receive bandwidth 8000 (kbps)\n  Tunnel protection via IPSec (profile \"DESIGN-PROFILE\")\n  Last input never, output never, output hang never\n  Last clearing of \"show interface\" counters 00:04:12\n  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 24\n  Queueing strategy: fifo\n  Output queue: 0/0 (size/max)\n  5 minute input rate 0 bits/sec, 0 packets/sec\n  5 minute output rate 0 bits/sec, 0 packets/sec\n     3 packets input, 300 bytes, 0 no buffer\n     Received 0 broadcasts (0 IP multicasts)\n     0 runts, 0 giants, 0 throttles \n     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort\n     27 packets output, 1422 bytes, 0 underruns\n     0 output errors, 0 collisions, 0 interface resets\n     0 unknown protocol drops\n     0 output buffer failures, 0 output buffers swapped out\nR1#"
+        },
+        {
+          "phase": "drop only encrypted VTI payload",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "drop only encrypted VTI payload",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-list extended VTI-OUTER",
+          "passed": true,
+          "output": "\nR2(config)#ip access-list extended VTI-OUTER\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only encrypted VTI payload",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "deny esp any any",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#deny esp any any\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only encrypted VTI payload",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "permit ip any any",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#permit ip any any\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only encrypted VTI payload",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#exit\nR2(config)#"
+        },
+        {
+          "phase": "drop only encrypted VTI payload",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nR2(config)#interface GigabitEthernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "drop only encrypted VTI payload",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-group VTI-OUTER in",
+          "passed": true,
+          "output": "\nR2(config-if)#ip access-group VTI-OUTER in\nR2(config-if)#"
+        },
+        {
+          "phase": "drop only encrypted VTI payload",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "drop only encrypted VTI payload",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The controlled fault blocks the protected service.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "drop only encrypted VTI payload",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The unprotected peer transport remains reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/5/10 ms\nR1#"
+        },
+        {
+          "phase": "drop only encrypted VTI payload",
+          "node": "R1",
+          "command": "show crypto isakmp sa",
+          "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+          "passed": true,
+          "output": "\nR1#show crypto isakmp sa\nIPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n198.18.0.2      198.18.0.1      QM_IDLE           1001 ACTIVE\n198.18.0.1      198.18.0.2      QM_IDLE           1002 ACTIVE\n\nIPv6 Crypto ISAKMP SA\n\nR1#"
+        },
+        {
+          "phase": "drop only encrypted VTI payload",
+          "node": "R2",
+          "command": "show access-lists VTI-OUTER",
+          "expectation": "The filter counts actual ESP drops.",
+          "passed": true,
+          "output": "\nR2#show access-lists VTI-OUTER\nExtended IP access list VTI-OUTER\n    10 deny esp any any (3 matches)\n    20 permit ip any any (3 matches)\nR2#"
+        },
+        {
+          "phase": "restore VTI ESP forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore VTI ESP forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nR2(config)#interface GigabitEthernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "restore VTI ESP forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no ip access-group VTI-OUTER in",
+          "passed": true,
+          "output": "\nR2(config-if)#no ip access-group VTI-OUTER in\nR2(config-if)#"
+        },
+        {
+          "phase": "restore VTI ESP forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "restore VTI ESP forwarding",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The actual protected service loopback replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 10/13/16 ms\nR1#"
+        },
+        {
+          "phase": "restore VTI ESP forwarding",
+          "node": "R1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 9, #pkts encrypt: 9, #pkts digest: 9\n    #pkts decaps: 6, #pkts decrypt: 6, #pkts verify: 6\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR1#"
+        },
+        {
+          "phase": "restore VTI ESP forwarding",
+          "node": "R2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 6, #pkts encrypt: 6, #pkts digest: 6\n    #pkts decaps: 6, #pkts decrypt: 6, #pkts verify: 6\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR2#"
+        },
+        {
+          "phase": "withdraw only the protected service route",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "withdraw only the protected service route",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no ip route 192.0.2.2 255.255.255.255 Tunnel0",
+          "passed": true,
+          "output": "\nR1(config)#no ip route 192.0.2.2 255.255.255.255 Tunnel0\nR1(config)#"
+        },
+        {
+          "phase": "withdraw only the protected service route",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "withdraw only the protected service route",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The controlled fault blocks the protected service.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "withdraw only the protected service route",
+          "node": "R1",
+          "command": "ping 172.16.0.2 source Tunnel0 repeat 3",
+          "expectation": "The encrypted tunnel-peer path remains healthy.",
+          "passed": true,
+          "output": "\nR1#ping 172.16.0.2 source Tunnel0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 172.16.0.2, timeout is 2 seconds:\nPacket sent with a source address of 172.16.0.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 11/13/17 ms\nR1#"
+        },
+        {
+          "phase": "withdraw only the protected service route",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The unprotected peer transport remains reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/5/8 ms\nR1#"
+        },
+        {
+          "phase": "restore the service route through VTI",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore the service route through VTI",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip route 192.0.2.2 255.255.255.255 Tunnel0",
+          "passed": true,
+          "output": "\nR1(config)#ip route 192.0.2.2 255.255.255.255 Tunnel0\nR1(config)#"
+        },
+        {
+          "phase": "restore the service route through VTI",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "restore the service route through VTI",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The actual protected service loopback replies.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 11/14/21 ms\nR1#"
+        },
+        {
+          "phase": "restore the service route through VTI",
+          "node": "R1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 15, #pkts encrypt: 15, #pkts digest: 15\n    #pkts decaps: 12, #pkts decrypt: 12, #pkts verify: 12\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR1#"
+        },
+        {
+          "phase": "restore the service route through VTI",
+          "node": "R2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 12, #pkts encrypt: 12, #pkts digest: 12\n    #pkts decaps: 12, #pkts decrypt: 12, #pkts verify: 12\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR2#"
+        }
+      ],
+      "plan_sha256": "02f4e8bff06ec44df449b710ab9e68395e42e61318e7b0f997e6af41caefb57f",
+      "startup_states": {
+        "R1": "STARTED",
+        "R2": "STARTED"
+      },
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "R1",
+        "R2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:27:10Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/002-cryptography-pki-ipsec.yaml",
+      "sha256": "a1e210914099d72aa3f33e1e41400a25e9bba7c836012c38006b5f2b58f9fd00",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:27:12Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m tls",
+          "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m tls\n{\"revision\": 1, \"service\": \"isolated-security-workbench\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "use an unrelated client trust root",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --trust unrelated",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --trust unrelated\n{\"configured\": true, \"revision\": 1}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "use an unrelated client trust root",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m tls",
+          "expectation": "Actual TLS verification rejects the controlled certificate_not_trusted fault.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m tls\n{\"reason\": \"certificate_not_trusted\", \"verified\": false}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore the client CA trust",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --trust root",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --trust root\n{\"configured\": true, \"revision\": 1}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore the client CA trust",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m tls",
+          "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m tls\n{\"revision\": 1, \"service\": \"isolated-security-workbench\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "serve the wrong DNS identity",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --certificate wrong-name",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --certificate wrong-name\n{\"configured\": true, \"revision\": 2}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "serve the wrong DNS identity",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m tls",
+          "expectation": "Actual TLS verification rejects the controlled hostname_mismatch fault.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m tls\n{\"reason\": \"hostname_mismatch\", \"verified\": false}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore the expected server identity",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --certificate server",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --certificate server\n{\"configured\": true, \"revision\": 3}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore the expected server identity",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m tls",
+          "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m tls\n{\"revision\": 3, \"service\": \"isolated-security-workbench\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "serve a certificate from an untrusted issuer",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --certificate untrusted",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --certificate untrusted\n{\"configured\": true, \"revision\": 4}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "serve a certificate from an untrusted issuer",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m tls",
+          "expectation": "Actual TLS verification rejects the controlled certificate_not_trusted fault.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m tls\n{\"reason\": \"certificate_not_trusted\", \"verified\": false}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore the trusted issuer chain",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --certificate server",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --certificate server\n{\"configured\": true, \"revision\": 5}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore the trusted issuer chain",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m tls",
+          "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m tls\n{\"revision\": 5, \"service\": \"isolated-security-workbench\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "serve an actually expired X509 leaf",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --certificate expired",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --certificate expired\n{\"configured\": true, \"revision\": 6}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "serve an actually expired X509 leaf",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m tls",
+          "expectation": "Actual TLS verification rejects the controlled certificate_expired fault.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m tls\n{\"reason\": \"certificate_expired\", \"verified\": false}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore the valid certificate",
+          "kind": "configuration",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py configure --certificate server",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py configure --certificate server\n{\"configured\": true, \"revision\": 7}\nroot@WORKBENCH:~# "
+        },
+        {
+          "phase": "restore the valid certificate",
+          "node": "WORKBENCH",
+          "command": "python3 /lab/workbench.py probe -m tls",
+          "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+          "passed": true,
+          "output": "\nroot@WORKBENCH:~# python3 /lab/workbench.py probe -m tls\n{\"revision\": 7, \"service\": \"isolated-security-workbench\", \"status\": 200, \"tls\": \"TLSv1.3\", \"verified\": true}\nroot@WORKBENCH:~# "
+        }
+      ],
+      "plan_sha256": "6d96cd586e0d35221d55fd989d7055728b5cc16ac522adc4cba5157b68d3fb2c",
+      "startup_states": {
+        "WORKBENCH": "BOOTED"
+      },
+      "images": {
+        "WORKBENCH": "cml-labs-toolbox-9f43df961cbe"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:27:44Z"
     }
   ]
 }

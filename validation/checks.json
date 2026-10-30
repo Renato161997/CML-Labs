@@ -12420,5 +12420,1130 @@
         ]
       }
     ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/023-ipsec-vti.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The unprotected peer transport remains reachable."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The actual protected service loopback replies.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show crypto isakmp sa",
+        "pattern": "QM_IDLE",
+        "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+        "attempts": 20,
+        "interval_seconds": 3,
+        "command_timeout": 60
+      },
+      {
+        "node": "R2",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+        "attempts": 20,
+        "interval_seconds": 3,
+        "command_timeout": 60
+      },
+      {
+        "node": "R1",
+        "command": "show interfaces Tunnel0",
+        "pattern": "Tunnel protocol/transport IPSEC/IP",
+        "expectation": "The actual tunnel uses native IPsec rather than GRE."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "drop only encrypted VTI payload",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended VTI-OUTER",
+          "deny esp any any",
+          "permit ip any any",
+          "exit",
+          "interface GigabitEthernet0/0",
+          "ip access-group VTI-OUTER in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The controlled fault blocks the protected service."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The unprotected peer transport remains reachable."
+          },
+          {
+            "node": "R1",
+            "command": "show crypto isakmp sa",
+            "pattern": "QM_IDLE",
+            "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists VTI-OUTER",
+            "pattern": "deny esp any any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The filter counts actual ESP drops."
+          }
+        ]
+      },
+      {
+        "name": "restore VTI ESP forwarding",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip access-group VTI-OUTER in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual protected service loopback replies.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "R2",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          }
+        ]
+      },
+      {
+        "name": "withdraw only the protected service route",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.2 255.255.255.255 Tunnel0",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The controlled fault blocks the protected service."
+          },
+          {
+            "node": "R1",
+            "command": "ping 172.16.0.2 source Tunnel0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The encrypted tunnel-peer path remains healthy."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The unprotected peer transport remains reachable."
+          }
+        ]
+      },
+      {
+        "name": "restore the service route through VTI",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip route 192.0.2.2 255.255.255.255 Tunnel0",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual protected service loopback replies.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "R2",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The unprotected peer transport remains reachable."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The actual protected service loopback replies.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show crypto isakmp sa",
+        "pattern": "QM_IDLE",
+        "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+        "attempts": 20,
+        "interval_seconds": 3,
+        "command_timeout": 60
+      },
+      {
+        "node": "R2",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+        "attempts": 20,
+        "interval_seconds": 3,
+        "command_timeout": 60
+      },
+      {
+        "node": "R1",
+        "command": "show interfaces Tunnel0",
+        "pattern": "Tunnel protocol/transport GRE/IP",
+        "expectation": "The live overlay is point-to-point GRE."
+      },
+      {
+        "node": "R1",
+        "command": "show crypto ipsec sa",
+        "pattern": "in use settings =\\{Transport",
+        "expectation": "The negotiated IPsec SA actually uses transport mode."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "filter clear GRE on the receiving underlay",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended GRE-OUTER",
+          "10 deny gre any any",
+          "20 permit ip any any",
+          "exit",
+          "interface GigabitEthernet0/0",
+          "ip access-group GRE-OUTER in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual protected service loopback replies.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "R2",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists GRE-OUTER",
+            "pattern": "deny gre any any",
+            "expectation": "The clear-GRE filter exists but sees no encrypted payload.",
+            "absent_pattern": "deny gre any any[^\\n]*\\([1-9][0-9]* match"
+          }
+        ]
+      },
+      {
+        "name": "also filter the actual outer ESP protocol",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended GRE-OUTER",
+          "5 deny esp any any",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The controlled fault blocks the protected service."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The unprotected peer transport remains reachable."
+          },
+          {
+            "node": "R1",
+            "command": "show crypto isakmp sa",
+            "pattern": "QM_IDLE",
+            "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists GRE-OUTER",
+            "pattern": "deny esp any any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The actual outer ESP packets hit the new deny."
+          }
+        ]
+      },
+      {
+        "name": "remove only the ESP deny",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended GRE-OUTER",
+          "no 5",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual protected service loopback replies.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "R2",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists GRE-OUTER",
+            "pattern": "deny gre any any",
+            "expectation": "The GRE-only deny remains while protected traffic recovers."
+          }
+        ]
+      },
+      {
+        "name": "remove the exercise underlay filter",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip access-group GRE-OUTER in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual protected service loopback replies.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The unprotected peer transport remains reachable."
+          },
+          {
+            "node": "R1",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "R2",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/vpn/039-site-to-site-vpn-security-baseline.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The unprotected peer transport remains reachable."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The actual protected service loopback replies.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show crypto isakmp sa",
+        "pattern": "QM_IDLE",
+        "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+        "attempts": 20,
+        "interval_seconds": 3,
+        "command_timeout": 60
+      },
+      {
+        "node": "R2",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+        "attempts": 20,
+        "interval_seconds": 3,
+        "command_timeout": 60
+      }
+    ],
+    "transitions": [
+      {
+        "name": "replace one peer with an incompatible proposal",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "crypto ipsec transform-set INCOMPATIBLE esp-aes esp-sha256-hmac",
+          "mode tunnel",
+          "exit",
+          "crypto map CML-VPN 10 ipsec-isakmp",
+          "set transform-set INCOMPATIBLE",
+          "exit",
+          "do clear crypto isakmp",
+          "do clear crypto sa",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show crypto map",
+            "pattern": "Transform sets=\\{\\s*INCOMPATIBLE",
+            "expectation": "The receiving peer actually selects the incompatible transform."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The unprotected peer transport remains reachable."
+          }
+        ]
+      },
+      {
+        "name": "clear the initiating peer before the negative negotiation",
+        "node": "R1",
+        "commands": [
+          "clear crypto isakmp",
+          "clear crypto sa"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The controlled fault blocks the protected service."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The unprotected peer transport remains reachable."
+          }
+        ]
+      },
+      {
+        "name": "restore the required proposal on the receiver",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "crypto map CML-VPN 10 ipsec-isakmp",
+          "set transform-set CML-ESP",
+          "exit",
+          "do clear crypto isakmp",
+          "do clear crypto sa",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show crypto map",
+            "pattern": "Transform sets=\\{\\s*CML-ESP",
+            "expectation": "The receiving peer again requires the original transform."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The unprotected peer transport remains reachable."
+          }
+        ]
+      },
+      {
+        "name": "clear the initiating peer and prove fresh recovery",
+        "node": "R1",
+        "commands": [
+          "clear crypto isakmp",
+          "clear crypto sa"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual protected service loopback replies.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show crypto isakmp sa",
+            "pattern": "QM_IDLE",
+            "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "R2",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The unprotected peer transport remains reachable."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/002-cryptography-pki-ipsec.yaml": {
+    "checks": [
+      {
+        "node": "WORKBENCH",
+        "command": "python3 /lab/workbench.py probe -m tls",
+        "pattern": "(?s)(?=.*\"verified\": true)(?=.*\"status\": 200)(?=.*\"tls\": \"TLSv1\\.[23]\")",
+        "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+        "attempts": 30,
+        "interval_seconds": 2,
+        "command_timeout": 30
+      }
+    ],
+    "transitions": [
+      {
+        "name": "use an unrelated client trust root",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --trust unrelated"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m tls",
+            "pattern": "(?s)(?=.*\"verified\": false)(?=.*\"reason\": \"certificate_not_trusted\")",
+            "expectation": "Actual TLS verification rejects the controlled certificate_not_trusted fault.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "restore the client CA trust",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --trust root"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m tls",
+            "pattern": "(?s)(?=.*\"verified\": true)(?=.*\"status\": 200)(?=.*\"tls\": \"TLSv1\\.[23]\")",
+            "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+            "attempts": 30,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "serve the wrong DNS identity",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --certificate wrong-name"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m tls",
+            "pattern": "(?s)(?=.*\"verified\": false)(?=.*\"reason\": \"hostname_mismatch\")",
+            "expectation": "Actual TLS verification rejects the controlled hostname_mismatch fault.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "restore the expected server identity",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --certificate server"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m tls",
+            "pattern": "(?s)(?=.*\"verified\": true)(?=.*\"status\": 200)(?=.*\"tls\": \"TLSv1\\.[23]\")",
+            "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+            "attempts": 30,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "serve a certificate from an untrusted issuer",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --certificate untrusted"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m tls",
+            "pattern": "(?s)(?=.*\"verified\": false)(?=.*\"reason\": \"certificate_not_trusted\")",
+            "expectation": "Actual TLS verification rejects the controlled certificate_not_trusted fault.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "restore the trusted issuer chain",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --certificate server"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m tls",
+            "pattern": "(?s)(?=.*\"verified\": true)(?=.*\"status\": 200)(?=.*\"tls\": \"TLSv1\\.[23]\")",
+            "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+            "attempts": 30,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "serve an actually expired X509 leaf",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --certificate expired"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m tls",
+            "pattern": "(?s)(?=.*\"verified\": false)(?=.*\"reason\": \"certificate_expired\")",
+            "expectation": "Actual TLS verification rejects the controlled certificate_expired fault.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "restore the valid certificate",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --certificate server"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m tls",
+            "pattern": "(?s)(?=.*\"verified\": true)(?=.*\"status\": 200)(?=.*\"tls\": \"TLSv1\\.[23]\")",
+            "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+            "attempts": 30,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/004-security-intelligence-sharing.yaml": {
+    "checks": [
+      {
+        "node": "WORKBENCH",
+        "command": "python3 /lab/workbench.py probe -m tls",
+        "pattern": "(?s)(?=.*\"verified\": true)(?=.*\"status\": 200)(?=.*\"tls\": \"TLSv1\\.[23]\")",
+        "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+        "attempts": 30,
+        "interval_seconds": 2,
+        "command_timeout": 30
+      },
+      {
+        "node": "WORKBENCH",
+        "command": "python3 /lab/workbench.py probe -m intel",
+        "pattern": "(?s)(?=.*\"verified\": true)(?=.*\"accepted\": true)(?=.*\"value\": \"192\\.0\\.2\\.99\")",
+        "expectation": "The trusted, current, correctly signed fixture indicator is actually accepted.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 30
+      },
+      {
+        "node": "WORKBENCH",
+        "command": "python3 /lab/workbench.py probe -m intel",
+        "pattern": "(?s)(?=.*\"accepted\": false)(?=.*\"reason\": \"replay\")",
+        "expectation": "The indicator is rejected specifically for replay.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 30
+      }
+    ],
+    "transitions": [
+      {
+        "name": "tamper with the signed indicator value",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --feed tampered"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m intel",
+            "pattern": "(?s)(?=.*\"accepted\": false)(?=.*\"reason\": \"invalid_signature\")",
+            "expectation": "The indicator is rejected specifically for invalid_signature.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          },
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m tls",
+            "pattern": "(?s)(?=.*\"verified\": true)(?=.*\"status\": 200)(?=.*\"tls\": \"TLSv1\\.[23]\")",
+            "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+            "attempts": 30,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "restore a valid signed revision",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --feed valid"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m intel",
+            "pattern": "(?s)(?=.*\"verified\": true)(?=.*\"accepted\": true)(?=.*\"value\": \"192\\.0\\.2\\.99\")",
+            "expectation": "The trusted, current, correctly signed fixture indicator is actually accepted.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "publish a correctly signed but expired revision",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --feed expired"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m intel",
+            "pattern": "(?s)(?=.*\"accepted\": false)(?=.*\"reason\": \"expired_or_invalid_time\")",
+            "expectation": "The indicator is rejected specifically for expired_or_invalid_time.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          },
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m tls",
+            "pattern": "(?s)(?=.*\"verified\": true)(?=.*\"status\": 200)(?=.*\"tls\": \"TLSv1\\.[23]\")",
+            "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+            "attempts": 30,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "restore current signed intelligence",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --feed valid"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m intel",
+            "pattern": "(?s)(?=.*\"verified\": true)(?=.*\"accepted\": true)(?=.*\"value\": \"192\\.0\\.2\\.99\")",
+            "expectation": "The trusted, current, correctly signed fixture indicator is actually accepted.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          },
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m intel",
+            "pattern": "(?s)(?=.*\"accepted\": false)(?=.*\"reason\": \"replay\")",
+            "expectation": "The indicator is rejected specifically for replay.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/031-security-api-python.yaml": {
+    "checks": [
+      {
+        "node": "WORKBENCH",
+        "command": "python3 /lab/workbench.py probe -m tls",
+        "pattern": "(?s)(?=.*\"verified\": true)(?=.*\"status\": 200)(?=.*\"tls\": \"TLSv1\\.[23]\")",
+        "expectation": "A real local TLS connection verifies the training chain and peer identity.",
+        "attempts": 30,
+        "interval_seconds": 2,
+        "command_timeout": 30
+      },
+      {
+        "node": "WORKBENCH",
+        "command": "python3 /lab/workbench.py probe -m api",
+        "pattern": "(?s)(?=.*\"status\": 200)(?=.*\"verified\": true)(?=.*\"backend\": \"offline-fixture\")",
+        "expectation": "The reader obtains the explicit offline fixture inventory over verified TLS.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 30
+      },
+      {
+        "node": "WORKBENCH",
+        "command": "python3 /lab/workbench.py probe -m api -o disable",
+        "pattern": "(?s)(?=.*\"status\": 403)(?=.*\"authorized\": false)",
+        "expectation": "A valid reader identity cannot write fixture state.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 30
+      },
+      {
+        "node": "WORKBENCH",
+        "command": "python3 /lab/workbench.py probe -m api",
+        "pattern": "(?s)(?=.*\"status\": 200)(?=.*\"admin_up\": true)",
+        "expectation": "The fixture interface remains enabled.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 30
+      }
+    ],
+    "transitions": [
+      {
+        "name": "use an invalid training token",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --token invalid"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m api",
+            "pattern": "(?s)(?=.*\"status\": 401)(?=.*\"authorized\": false)",
+            "expectation": "An invalid identity cannot read inventory.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "restore the reader identity",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --token reader"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m api",
+            "pattern": "(?s)(?=.*\"status\": 200)(?=.*\"verified\": true)(?=.*\"backend\": \"offline-fixture\")",
+            "expectation": "The reader obtains the explicit offline fixture inventory over verified TLS.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          },
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m api -o disable",
+            "pattern": "(?s)(?=.*\"status\": 403)(?=.*\"authorized\": false)",
+            "expectation": "A valid reader identity cannot write fixture state.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          },
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m api",
+            "pattern": "(?s)(?=.*\"status\": 200)(?=.*\"admin_up\": true)",
+            "expectation": "The fixture interface remains enabled.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "select the admin role",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --token admin"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m api -o disable",
+            "pattern": "(?s)(?=.*\"status\": 200)(?=.*\"accepted\": true)(?=.*\"admin_up\": false)",
+            "expectation": "The allowed admin request changes actual fixture state.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          },
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m api",
+            "pattern": "(?s)(?=.*\"status\": 200)(?=.*\"admin_up\": false)",
+            "expectation": "The fixture records the authorized disabled state.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          },
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m api -o invalid-boolean",
+            "pattern": "(?s)(?=.*\"status\": 400)(?=.*\"accepted\": false)",
+            "expectation": "The string-boolean request is rejected.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          },
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m api",
+            "pattern": "(?s)(?=.*\"status\": 200)(?=.*\"admin_up\": false)",
+            "expectation": "The fixture records the authorized disabled state.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "restore the fixture enabled state",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py probe -m api --operation enable"
+        ],
+        "command_pattern": "\"accepted\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m api",
+            "pattern": "(?s)(?=.*\"status\": 200)(?=.*\"admin_up\": true)",
+            "expectation": "The fixture interface remains enabled.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ]
+      },
+      {
+        "name": "return to least-privilege reader",
+        "node": "WORKBENCH",
+        "commands": [
+          "python3 /lab/workbench.py configure --token reader"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m api",
+            "pattern": "(?s)(?=.*\"status\": 200)(?=.*\"verified\": true)(?=.*\"backend\": \"offline-fixture\")",
+            "expectation": "The reader obtains the explicit offline fixture inventory over verified TLS.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          },
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m api -o disable",
+            "pattern": "(?s)(?=.*\"status\": 403)(?=.*\"authorized\": false)",
+            "expectation": "A valid reader identity cannot write fixture state.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          },
+          {
+            "node": "WORKBENCH",
+            "command": "python3 /lab/workbench.py probe -m api",
+            "pattern": "(?s)(?=.*\"status\": 200)(?=.*\"admin_up\": true)",
+            "expectation": "The fixture interface remains enabled.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ],
+        "command_timeout": 30
+      }
+    ]
   }
 }
