@@ -198,6 +198,10 @@ def check_evidence(proof, path, expected_hash, phase, expected_plan_hash=None, e
                 ("check", "baseline", c["node"], c["command"])
                 for c in expected_plan.get("checks", [])
             )
+            required.update(
+                ("check", "prerequisite", c["node"], c["command"])
+                for c in expected_plan.get("prerequisites", [])
+            )
             for step in expected_plan.get("prepare", []):
                 required.update([("prepare", "prepare", step["router"], step["operation"])])
                 if not any(

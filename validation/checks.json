@@ -7549,5 +7549,2437 @@
         "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
       }
     ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/035-ipsec-site-to-site-concepts.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Unprotected peer-address reachability remains healthy."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All protected loopback packets receive replies after actual negotiation.",
+        "attempts": 12,
+        "interval_seconds": 2
+      },
+      {
+        "node": "R1",
+        "command": "show crypto isakmp sa",
+        "pattern": "QM_IDLE",
+        "expectation": "The actual IKEv1 session completes Quick Mode.",
+        "attempts": 8,
+        "interval_seconds": 2
+      },
+      {
+        "node": "R1",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual packet counters are nonzero and the negotiated transform is AES256/SHA256.",
+        "command_timeout": 60
+      },
+      {
+        "node": "R2",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual packet counters are nonzero and the negotiated transform is AES256/SHA256.",
+        "command_timeout": 60
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/009-site-to-site-ipsec-ios.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Unprotected peer-address reachability remains healthy."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All protected loopback packets receive replies after actual negotiation.",
+        "attempts": 12,
+        "interval_seconds": 2
+      },
+      {
+        "node": "R1",
+        "command": "show crypto isakmp sa",
+        "pattern": "QM_IDLE",
+        "expectation": "The actual IKEv1 session completes Quick Mode.",
+        "attempts": 8,
+        "interval_seconds": 2
+      },
+      {
+        "node": "R1",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual packet counters are nonzero and the negotiated transform is AES256/SHA256.",
+        "command_timeout": 60
+      },
+      {
+        "node": "R2",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual packet counters are nonzero and the negotiated transform is AES256/SHA256.",
+        "command_timeout": 60
+      }
+    ],
+    "transitions": [
+      {
+        "name": "drop only encrypted ESP on the receiving underlay",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended BLOCK-ESP",
+          "deny esp any any",
+          "permit ip any any",
+          "exit",
+          "interface GigabitEthernet0/0",
+          "ip access-group BLOCK-ESP in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Protected traffic fails instead of bypassing IPsec in plaintext."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Unprotected peer-address reachability remains healthy."
+          },
+          {
+            "node": "R1",
+            "command": "show crypto isakmp sa",
+            "pattern": "QM_IDLE",
+            "expectation": "The actual IKEv1 session completes Quick Mode.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists BLOCK-ESP",
+            "pattern": "deny esp any any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The actual deny counter identifies encrypted ESP as the dropped traffic."
+          }
+        ]
+      },
+      {
+        "name": "restore protected forwarding",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip access-group BLOCK-ESP in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All protected loopback packets receive replies after actual negotiation.",
+            "attempts": 12,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "show crypto isakmp sa",
+            "pattern": "QM_IDLE",
+            "expectation": "The actual IKEv1 session completes Quick Mode.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual packet counters are nonzero and the negotiated transform is AES256/SHA256.",
+            "command_timeout": 60
+          },
+          {
+            "node": "R2",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual packet counters are nonzero and the negotiated transform is AES256/SHA256.",
+            "command_timeout": 60
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Unprotected peer-address reachability remains healthy."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/041-event-driven-automation.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show event manager policy registered",
+        "pattern": "RECOVER-LAB-LO10",
+        "expectation": "The actual applet is registered."
+      },
+      {
+        "node": "R1",
+        "command": "show ip interface brief",
+        "pattern": "Loopback10\\s+192\\.0\\.2\\.10\\s+YES\\s+\\S+\\s+up\\s+up",
+        "expectation": "The actual administrative and line state is up.",
+        "attempts": 8,
+        "interval_seconds": 2
+      },
+      {
+        "node": "R2",
+        "command": "ping 192.0.2.10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The remote observer reaches the recovered loopback.",
+        "attempts": 8,
+        "interval_seconds": 2
+      },
+      {
+        "node": "R2",
+        "command": "ping 198.18.0.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The connected management/control path remains healthy."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "trigger the first automatic recovery",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Loopback10",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip interface brief",
+            "pattern": "Loopback10\\s+192\\.0\\.2\\.10\\s+YES\\s+\\S+\\s+up\\s+up",
+            "expectation": "The actual administrative and line state is up.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "show event manager history events",
+            "pattern": "RECOVER-LAB-LO10",
+            "expectation": "The router records an actual applet invocation.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R2",
+            "command": "ping 192.0.2.10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The remote observer reaches the recovered loopback.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R2",
+            "command": "ping 198.18.0.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected management/control path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "remove policy and repeat the fault",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "no event manager applet RECOVER-LAB-LO10",
+          "interface Loopback10",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip interface brief",
+            "pattern": "Loopback10\\s+192\\.0\\.2\\.10\\s+YES\\s+\\S+\\s+administratively down\\s+down",
+            "expectation": "Without the applet the deliberate fault persists."
+          },
+          {
+            "node": "R2",
+            "command": "ping 192.0.2.10 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The remote observer cannot reach the loopback while automation is absent.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R2",
+            "command": "ping 198.18.0.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected management/control path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "restore policy and prepare the interface",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "event manager applet RECOVER-LAB-LO10",
+          "event syslog pattern \"LINEPROTO-5-UPDOWN: Line protocol on Interface Loopback10, changed state to down\"",
+          "action 1.0 cli command \"enable\"",
+          "action 2.0 cli command \"configure terminal\"",
+          "action 3.0 cli command \"interface Loopback10\"",
+          "action 4.0 cli command \"no shutdown\"",
+          "action 5.0 cli command \"end\"",
+          "action 6.0 syslog msg \"CML-LO10-AUTO-RECOVERED\"",
+          "exit",
+          "interface Loopback10",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip interface brief",
+            "pattern": "Loopback10\\s+192\\.0\\.2\\.10\\s+YES\\s+\\S+\\s+up\\s+up",
+            "expectation": "The actual administrative and line state is up.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R2",
+            "command": "ping 192.0.2.10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The remote observer reaches the recovered loopback.",
+            "attempts": 8,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "trigger automatic recovery again",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Loopback10",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip interface brief",
+            "pattern": "Loopback10\\s+192\\.0\\.2\\.10\\s+YES\\s+\\S+\\s+up\\s+up",
+            "expectation": "The actual administrative and line state is up.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "show event manager history events",
+            "pattern": "RECOVER-LAB-LO10",
+            "expectation": "The router records an actual applet invocation.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R2",
+            "command": "ping 192.0.2.10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The remote observer reaches the recovered loopback.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R2",
+            "command": "ping 198.18.0.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected management/control path remains healthy."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/024-mpls-l3vpn-concepts.yaml": {
+    "checks": [
+      {
+        "node": "PE1",
+        "command": "show mpls ldp neighbor",
+        "pattern": "(?s)Peer LDP Ident:\\s*192\\.0\\.2\\.2:0.*State:\\s*Oper",
+        "expectation": "The actual transport LDP peer is operational.",
+        "attempts": 15,
+        "interval_seconds": 2
+      },
+      {
+        "node": "PE1",
+        "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Provider transport reachability survives the VPN import fault.",
+        "attempts": 12,
+        "interval_seconds": 2
+      },
+      {
+        "node": "PE1",
+        "command": "show ip bgp vpnv4 all summary",
+        "pattern": "(?m)^192\\.0\\.2\\.3\\s+4\\s+65000\\s+(?:\\S+\\s+){6}[1-9][0-9]*\\s*$",
+        "expectation": "VPNv4 BGP is established and has actually received the remote customer prefix.",
+        "attempts": 45,
+        "interval_seconds": 4
+      },
+      {
+        "node": "PE1",
+        "command": "show ip route vrf CUST 192.0.2.20",
+        "pattern": "(?s)Known via \"bgp 65000\".*192\\.0\\.2\\.3",
+        "expectation": "The customer route is imported through VPNv4 BGP.",
+        "attempts": 15,
+        "interval_seconds": 2
+      },
+      {
+        "node": "CE1",
+        "command": "ping 192.0.2.20 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The actual customer data plane crosses the labeled core.",
+        "attempts": 12,
+        "interval_seconds": 2
+      },
+      {
+        "node": "P",
+        "command": "show ip route 192.0.2.20",
+        "pattern": "(?i)(not in table|not in routing table)",
+        "expectation": "The provider transit router has no global customer-destination route."
+      },
+      {
+        "node": "P",
+        "command": "show mpls forwarding-table",
+        "pattern": "192\\.0\\.2\\.3/32\\s+[1-9][0-9]*",
+        "expectation": "Actual labeled bytes are switched toward the remote PE."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw only the customer import target",
+        "node": "PE1",
+        "commands": [
+          "configure terminal",
+          "ip vrf CUST",
+          "no route-target import 65000:10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "PE1",
+            "command": "show ip route vrf CUST 192.0.2.20",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "The target customer route is no longer imported.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CE1",
+            "command": "ping 192.0.2.20 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The actual customer data plane fails after selective route-target withdrawal.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "PE1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Provider transport reachability survives the VPN import fault.",
+            "attempts": 12,
+            "interval_seconds": 2
+          },
+          {
+            "node": "PE1",
+            "command": "show mpls ldp neighbor",
+            "pattern": "(?s)Peer LDP Ident:\\s*192\\.0\\.2\\.2:0.*State:\\s*Oper",
+            "expectation": "The actual transport LDP peer is operational.",
+            "attempts": 15,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "restore the customer import target",
+        "node": "PE1",
+        "commands": [
+          "configure terminal",
+          "ip vrf CUST",
+          "route-target import 65000:10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "PE1",
+            "command": "show ip route vrf CUST 192.0.2.20",
+            "pattern": "(?s)Known via \"bgp 65000\".*192\\.0\\.2\\.3",
+            "expectation": "The customer route is imported through VPNv4 BGP.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CE1",
+            "command": "ping 192.0.2.20 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual customer data plane crosses the labeled core.",
+            "attempts": 12,
+            "interval_seconds": 2
+          },
+          {
+            "node": "P",
+            "command": "show ip route 192.0.2.20",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "The provider transit router has no global customer-destination route."
+          },
+          {
+            "node": "P",
+            "command": "show mpls forwarding-table",
+            "pattern": "192\\.0\\.2\\.3/32\\s+[1-9][0-9]*",
+            "expectation": "Actual labeled bytes are switched toward the remote PE."
+          },
+          {
+            "node": "PE1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Provider transport reachability survives the VPN import fault.",
+            "attempts": 12,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/049-ccna-capstone-branch-office.yaml": {
+    "checks": [
+      {
+        "node": "SW1",
+        "command": "show vlan brief",
+        "pattern": "(?ms)(?=^10\\s+USERS\\s+active)(?=.*^20\\s+GUESTS\\s+active)",
+        "expectation": "Both named VLANs from day-0 configuration exist and are active."
+      },
+      {
+        "node": "USER",
+        "command": "show ip interface brief",
+        "pattern": "GigabitEthernet0/0\\s+198\\.18\\.10\\.\\d+\\s+YES DHCP\\s+up\\s+up",
+        "expectation": "The endpoint has an actual lease in its own VLAN.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "GUEST",
+        "command": "show ip interface brief",
+        "pattern": "GigabitEthernet0/0\\s+198\\.18\\.20\\.\\d+\\s+YES DHCP\\s+up\\s+up",
+        "expectation": "The endpoint has an actual lease in its own VLAN.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "USER",
+        "command": "ping app.example.test repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Local DNS resolution and actual NAT/PAT forwarding reach the isolated ISP loopback.",
+        "attempts": 8,
+        "interval_seconds": 2
+      },
+      {
+        "node": "GUEST",
+        "command": "ping app.example.test repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Local DNS resolution and actual NAT/PAT forwarding reach the isolated ISP loopback.",
+        "attempts": 8,
+        "interval_seconds": 2
+      },
+      {
+        "node": "GUEST",
+        "command": "ping 198.18.20.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The guest gateway remains reachable."
+      },
+      {
+        "node": "GUEST",
+        "command": "ping 198.18.10.1 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "The guest cannot reach the user-subnet gateway."
+      },
+      {
+        "node": "EDGE",
+        "command": "show access-lists GUEST-IN",
+        "pattern": "deny ip 198\\.18\\.20\\.0 0\\.0\\.0\\.255 198\\.18\\.10\\.0 0\\.0\\.0\\.255[^\\n]*\\([1-9][0-9]* match",
+        "expectation": "The intended segmentation rule counts the actual denied probe."
+      },
+      {
+        "node": "EDGE",
+        "command": "show ip nat translations",
+        "pattern": "(?s)198\\.18\\.0\\.1.*198\\.18\\.(10|20)\\.",
+        "expectation": "Actual translations map internal endpoint traffic to the outside interface."
+      },
+      {
+        "node": "ISP",
+        "command": "show ip route 198.18.10.0",
+        "pattern": "(?i)(not in table|not in routing table)",
+        "expectation": "The ISP has no customer-subnet route; return traffic depends on PAT."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "prune only the guest VLAN",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "switchport trunk allowed vlan 10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "GUEST",
+            "command": "ping 198.18.20.1 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Pruned guest frames cannot reach their gateway."
+          },
+          {
+            "node": "USER",
+            "command": "ping app.example.test repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Local DNS resolution and actual NAT/PAT forwarding reach the isolated ISP loopback.",
+            "attempts": 8,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "restore guest trunk membership",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "switchport trunk allowed vlan 10,20",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "GUEST",
+            "command": "ping 198.18.20.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The guest gateway remains reachable."
+          },
+          {
+            "node": "GUEST",
+            "command": "ping app.example.test repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Local DNS resolution and actual NAT/PAT forwarding reach the isolated ISP loopback.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "GUEST",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The guest cannot reach the user-subnet gateway."
+          },
+          {
+            "node": "EDGE",
+            "command": "show access-lists GUEST-IN",
+            "pattern": "deny ip 198\\.18\\.20\\.0 0\\.0\\.0\\.255 198\\.18\\.10\\.0 0\\.0\\.0\\.255[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The intended segmentation rule counts the actual denied probe."
+          },
+          {
+            "node": "USER",
+            "command": "ping app.example.test repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Local DNS resolution and actual NAT/PAT forwarding reach the isolated ISP loopback.",
+            "attempts": 8,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/assessment/047-ccna-practical-checkpoint-one.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "ping 198.18.0.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The access VLAN, trunk, default route and return path carry actual packets.",
+        "attempts": 10,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SW1",
+        "command": "show interfaces trunk",
+        "pattern": "(?s)(?:Et|Ethernet)0/0.*10",
+        "expectation": "The repaired trunk carries the user VLAN."
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 192.0.2.11 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Local switch management is reachable."
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 192.0.2.12 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Remote switch management crosses the repaired trunk."
+      }
+    ],
+    "repair": {
+      "node": "SW1",
+      "commands": [
+        "configure terminal",
+        "interface Ethernet0/0",
+        "switchport trunk allowed vlan 10",
+        "end"
+      ]
+    },
+    "initial": "SW1 excludes the user VLAN from the only inter-switch trunk.",
+    "prerequisites": [
+      {
+        "node": "SW1",
+        "command": "show ip interface brief",
+        "pattern": "Vlan10\\s+192\\.0\\.2\\.11\\s+YES\\s+\\S+\\s+up\\s+up",
+        "expectation": "The local management SVI is operational before testing the trunk fault.",
+        "attempts": 15,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SW2",
+        "command": "show ip interface brief",
+        "pattern": "Vlan10\\s+192\\.0\\.2\\.12\\s+YES\\s+\\S+\\s+up\\s+up",
+        "expectation": "The remote management SVI is independently operational."
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 192.0.2.11 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The client access segment works while the trunk is deliberately wrong."
+      },
+      {
+        "node": "RTR",
+        "command": "ping 192.0.2.12 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The router access segment works independently of the deliberate trunk fault."
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/assessment/048-ccna-practical-checkpoint-two.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "ping 203.0.113.80 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The endpoint reaches a destination with no customer return route only after PAT is repaired.",
+        "attempts": 10,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "show ip interface brief",
+        "pattern": "Ethernet0/0\\s+192\\.0\\.2\\.\\d+\\s+YES DHCP\\s+up\\s+up",
+        "expectation": "The client acquired its actual address by DHCP."
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping app.example.test repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The local DNS name resolves and the complete routed/PAT path works."
+      },
+      {
+        "node": "EDGE",
+        "command": "show ip nat translations",
+        "pattern": "(?s)198\\.18\\.0\\.1.*192\\.0\\.2\\.",
+        "expectation": "An actual outside-global to inside-local translation exists."
+      },
+      {
+        "node": "ISP",
+        "command": "show ip route 192.0.2.0",
+        "pattern": "(?i)(not in table|not in routing table)",
+        "expectation": "The ISP has no customer return route that could hide missing PAT."
+      }
+    ],
+    "repair": {
+      "node": "EDGE",
+      "commands": [
+        "configure terminal",
+        "ip access-list standard NAT-SOURCES",
+        "no permit 198.18.99.0 0.0.0.255",
+        "permit 192.0.2.0 0.0.0.255",
+        "end"
+      ]
+    },
+    "initial": "NAT-SOURCES permits an unused prefix rather than the actual DHCP client network.",
+    "prerequisites": [
+      {
+        "node": "EDGE",
+        "command": "show ip interface brief",
+        "pattern": "Ethernet0/0\\s+192\\.0\\.2\\.1\\s+YES\\s+\\S+\\s+up\\s+up",
+        "expectation": "The edge has applied its supplied inside address before DHCP acquisition is measured.",
+        "attempts": 60,
+        "interval_seconds": 5
+      },
+      {
+        "node": "CLIENT",
+        "command": "show ip interface brief",
+        "pattern": "Ethernet0/0\\s+192\\.0\\.2\\.\\d+\\s+YES DHCP\\s+up\\s+up",
+        "expectation": "Acquire the actual DHCP lease before attributing a failed probe to PAT.",
+        "attempts": 40,
+        "interval_seconds": 5
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 192.0.2.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The client can reach its real gateway before the deliberate NAT fault is measured."
+      },
+      {
+        "node": "EDGE",
+        "command": "ping 203.0.113.80 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The upstream service is reachable from the edge independently of client NAT."
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/024-ip-sla-tracking.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show track 10",
+        "pattern": "Reachability is Up",
+        "expectation": "The primary ICMP probe succeeds.",
+        "attempts": 12,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.2",
+        "pattern": "\\*\\s+198\\.18\\.0\\.2",
+        "expectation": "The tracked primary next hop is installed."
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual end-to-end payload forwarding survives the probe-only blackhole."
+      },
+      {
+        "node": "R1",
+        "command": "show interfaces GigabitEthernet0/0",
+        "pattern": "GigabitEthernet0/0 is up, line protocol is up",
+        "expectation": "The primary local carrier remains up; physical state cannot detect this fault."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "blackhole the monitored service without losing carrier",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "ip access-group DROP-SLA in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show track 10",
+            "pattern": "Reachability is Down",
+            "expectation": "Probe reachability goes down while carrier remains up.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "\\*\\s+198\\.18\\.1\\.2",
+            "expectation": "The floating route takes over.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show interfaces GigabitEthernet0/0",
+            "pattern": "GigabitEthernet0/0 is up, line protocol is up",
+            "expectation": "The primary local carrier remains up; physical state cannot detect this fault."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual end-to-end payload forwarding survives the probe-only blackhole."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists DROP-SLA",
+            "pattern": "deny icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The intended rule counts actual dropped SLA probes."
+          }
+        ]
+      },
+      {
+        "name": "restore the primary service",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip access-group DROP-SLA in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show track 10",
+            "pattern": "Reachability is Up",
+            "expectation": "The primary ICMP probe succeeds.",
+            "attempts": 12,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "\\*\\s+198\\.18\\.0\\.2",
+            "expectation": "The tracked primary next hop is installed."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual end-to-end payload forwarding survives the probe-only blackhole."
+          },
+          {
+            "node": "R1",
+            "command": "show interfaces GigabitEthernet0/0",
+            "pattern": "GigabitEthernet0/0 is up, line protocol is up",
+            "expectation": "The primary local carrier remains up; physical state cannot detect this fault."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/026-syslog-snmp-ntp.yaml": {
+    "checks": [
+      {
+        "node": "CLOCK",
+        "command": "show ntp status",
+        "pattern": "Clock is synchronized, stratum 3",
+        "expectation": "The isolated free-running reference is operational before checking client synchronization.",
+        "attempts": 60,
+        "interval_seconds": 20
+      },
+      {
+        "node": "R1",
+        "command": "ping 198.18.1.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The syslog network and neighbor resolution are ready."
+      },
+      {
+        "node": "R1",
+        "command": "show ntp status",
+        "pattern": "(?s)Clock is synchronized, stratum 4.*reference is 198\\.18\\.2\\.2",
+        "expectation": "The router is actually synchronized to the isolated stratum-3 peer, not merely configured.",
+        "attempts": 60,
+        "interval_seconds": 20
+      },
+      {
+        "node": "R1",
+        "command": "show ntp associations",
+        "pattern": "\\*~?198\\.18\\.2\\.2",
+        "expectation": "The intended NTP peer is selected."
+      },
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/snmp_probe.py healthy",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Actual SNMPv3 authPriv proves uptime, the intended sysName view and wrong-key rejection."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "correlate synchronized device and remote event",
+        "node": "R1",
+        "commands": [
+          "send log 6 CML-SERVICE-BASELINE"
+        ],
+        "checks": [
+          {
+            "node": "LOG",
+            "command": "grep -c CML-SERVICE-BASELINE /var/log/cml-lab.log",
+            "pattern": "(?m)^[1-9][0-9]*\\s*$",
+            "expectation": "The dedicated receiver records the actual router event."
+          },
+          {
+            "node": "R1",
+            "command": "show ntp status",
+            "pattern": "(?s)Clock is synchronized, stratum 4.*reference is 198\\.18\\.2\\.2",
+            "expectation": "The router is actually synchronized to the isolated stratum-3 peer, not merely configured.",
+            "attempts": 60,
+            "interval_seconds": 20
+          },
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_probe.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual SNMPv3 authPriv proves uptime, the intended sysName view and wrong-key rejection."
+          }
+        ]
+      },
+      {
+        "name": "withdraw only remote event forwarding",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "no logging host 198.18.1.2 transport udp port 514",
+          "end",
+          "send log 6 CML-SERVICE-WITHDRAWN"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show logging",
+            "pattern": "CML-SERVICE-WITHDRAWN",
+            "expectation": "The test event exists locally."
+          },
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_probe.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual SNMPv3 authPriv proves uptime, the intended sysName view and wrong-key rejection."
+          },
+          {
+            "node": "R1",
+            "command": "show ntp status",
+            "pattern": "(?s)Clock is synchronized, stratum 4.*reference is 198\\.18\\.2\\.2",
+            "expectation": "The router is actually synchronized to the isolated stratum-3 peer, not merely configured.",
+            "attempts": 60,
+            "interval_seconds": 20
+          }
+        ]
+      },
+      {
+        "name": "observe settled remote-delivery failure",
+        "node": "LOG",
+        "commands": [
+          "sleep 3"
+        ],
+        "checks": [
+          {
+            "node": "LOG",
+            "command": "grep -c CML-SERVICE-BASELINE /var/log/cml-lab.log",
+            "pattern": "(?m)^[1-9][0-9]*\\s*$",
+            "expectation": "The dedicated receiver records the actual router event."
+          },
+          {
+            "node": "LOG",
+            "command": "grep -c CML-SERVICE-WITHDRAWN /var/log/cml-lab.log",
+            "pattern": "(?m)^0\\s*$",
+            "expectation": "The dedicated receiver does not receive the deliberately withdrawn event."
+          }
+        ]
+      },
+      {
+        "name": "restore remote forwarding",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "logging host 198.18.1.2 transport udp port 514",
+          "end",
+          "send log 6 CML-SERVICE-RESTORED"
+        ],
+        "checks": [
+          {
+            "node": "LOG",
+            "command": "grep -c CML-SERVICE-RESTORED /var/log/cml-lab.log",
+            "pattern": "(?m)^[1-9][0-9]*\\s*$",
+            "expectation": "The dedicated receiver records the actual router event."
+          },
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_probe.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual SNMPv3 authPriv proves uptime, the intended sysName view and wrong-key rejection."
+          },
+          {
+            "node": "R1",
+            "command": "show ntp status",
+            "pattern": "(?s)Clock is synchronized, stratum 4.*reference is 198\\.18\\.2\\.2",
+            "expectation": "The router is actually synchronized to the isolated stratum-3 peer, not merely configured.",
+            "attempts": 60,
+            "interval_seconds": 20
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/027-ntp-syslog-snmp.yaml": {
+    "checks": [
+      {
+        "node": "CLOCK",
+        "command": "show ntp status",
+        "pattern": "Clock is synchronized, stratum 3",
+        "expectation": "The isolated free-running reference is operational before checking client synchronization.",
+        "attempts": 60,
+        "interval_seconds": 20
+      },
+      {
+        "node": "R1",
+        "command": "ping 198.18.1.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The syslog network and neighbor resolution are ready."
+      },
+      {
+        "node": "R1",
+        "command": "show ntp status",
+        "pattern": "(?s)Clock is synchronized, stratum 4.*reference is 198\\.18\\.2\\.2",
+        "expectation": "The router is actually synchronized to the isolated stratum-3 peer, not merely configured.",
+        "attempts": 60,
+        "interval_seconds": 20
+      },
+      {
+        "node": "R1",
+        "command": "show ntp associations",
+        "pattern": "\\*~?198\\.18\\.2\\.2",
+        "expectation": "The intended NTP peer is selected."
+      },
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/snmp_probe.py healthy",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Actual SNMPv3 authPriv proves uptime, the intended sysName view and wrong-key rejection."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "correlate synchronized device and remote event",
+        "node": "R1",
+        "commands": [
+          "send log 6 CML-SERVICE-BASELINE"
+        ],
+        "checks": [
+          {
+            "node": "LOG",
+            "command": "grep -c CML-SERVICE-BASELINE /var/log/cml-lab.log",
+            "pattern": "(?m)^[1-9][0-9]*\\s*$",
+            "expectation": "The dedicated receiver records the actual router event."
+          },
+          {
+            "node": "R1",
+            "command": "show ntp status",
+            "pattern": "(?s)Clock is synchronized, stratum 4.*reference is 198\\.18\\.2\\.2",
+            "expectation": "The router is actually synchronized to the isolated stratum-3 peer, not merely configured.",
+            "attempts": 60,
+            "interval_seconds": 20
+          },
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_probe.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual SNMPv3 authPriv proves uptime, the intended sysName view and wrong-key rejection."
+          }
+        ]
+      },
+      {
+        "name": "restrict only the observable identity OID",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "snmp-server view LABVIEW 1.3.6.1.2.1.1.5 excluded",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_probe.py restricted",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual SNMPv3 authPriv proves uptime, the intended sysName view and wrong-key rejection."
+          },
+          {
+            "node": "R1",
+            "command": "show ntp status",
+            "pattern": "(?s)Clock is synchronized, stratum 4.*reference is 198\\.18\\.2\\.2",
+            "expectation": "The router is actually synchronized to the isolated stratum-3 peer, not merely configured.",
+            "attempts": 60,
+            "interval_seconds": 20
+          },
+          {
+            "node": "R1",
+            "command": "show ntp associations",
+            "pattern": "\\*~?198\\.18\\.2\\.2",
+            "expectation": "The intended NTP peer is selected."
+          }
+        ]
+      },
+      {
+        "name": "prove log delivery survives the SNMP view fault",
+        "node": "R1",
+        "commands": [
+          "send log 6 CML-SERVICE-VIEW-FAULT"
+        ],
+        "checks": [
+          {
+            "node": "LOG",
+            "command": "grep -c CML-SERVICE-VIEW-FAULT /var/log/cml-lab.log",
+            "pattern": "(?m)^[1-9][0-9]*\\s*$",
+            "expectation": "The dedicated receiver records the actual router event."
+          }
+        ]
+      },
+      {
+        "name": "restore the allowed identity OID",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "snmp-server view LABVIEW 1.3.6.1.2.1.1.5 included",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_probe.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual SNMPv3 authPriv proves uptime, the intended sysName view and wrong-key rejection."
+          },
+          {
+            "node": "R1",
+            "command": "show ntp status",
+            "pattern": "(?s)Clock is synchronized, stratum 4.*reference is 198\\.18\\.2\\.2",
+            "expectation": "The router is actually synchronized to the isolated stratum-3 peer, not merely configured.",
+            "attempts": 60,
+            "interval_seconds": 20
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/021-dmvpn-phase2.yaml": {
+    "checks": [
+      {
+        "node": "SPOKE-A",
+        "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual customer traffic crosses the encrypted spoke path.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "HUB",
+        "command": "show ip nhrp",
+        "pattern": "(?s)(?=.*172\\.16\\.0\\.2/32.*NBMA address:\\s*198\\.18\\.0\\.2)(?=.*172\\.16\\.0\\.3/32.*NBMA address:\\s*198\\.18\\.0\\.3)",
+        "expectation": "Both spokes actually register their overlay/NBMA mapping.",
+        "attempts": 35,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SPOKE-A",
+        "command": "show ip route 192.0.2.3",
+        "pattern": "(?s)Known via \"eigrp 100\".*172\\.16\\.0\\.3",
+        "expectation": "Phase2 preserves the remote spoke as the EIGRP next hop.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SPOKE-A",
+        "command": "show ip nhrp 172.16.0.3",
+        "pattern": "(?s)172\\.16\\.0\\.3/32.*Type:\\s*dynamic.*NBMA address:\\s*198\\.18\\.0\\.3",
+        "expectation": "The actual remote-spoke mapping is dynamically resolved.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SPOKE-A",
+        "command": "show crypto ipsec sa peer 198.18.0.3 | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "The direct spoke peer has actual encrypted and decrypted packets with AES256/SHA256.",
+        "command_timeout": 60,
+        "attempts": 15,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "drop only direct spoke ESP",
+        "node": "SPOKE-B",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "ip access-group BLOCK-DIRECT-ESP in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SPOKE-A",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual customer traffic is blocked on the direct encrypted path.",
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SPOKE-A",
+            "command": "ping 198.18.0.3 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Direct underlay reachability remains healthy independently of encrypted payload forwarding."
+          },
+          {
+            "node": "SPOKE-A",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The encrypted hub path remains healthy."
+          },
+          {
+            "node": "SPOKE-B",
+            "command": "show access-lists BLOCK-DIRECT-ESP",
+            "pattern": "deny esp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The intended rule actually drops direct encrypted packets."
+          }
+        ]
+      },
+      {
+        "name": "restore encrypted spoke forwarding",
+        "node": "SPOKE-B",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip access-group BLOCK-DIRECT-ESP in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SPOKE-A",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual customer traffic crosses the encrypted spoke path.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SPOKE-A",
+            "command": "show ip nhrp 172.16.0.3",
+            "pattern": "(?s)172\\.16\\.0\\.3/32.*Type:\\s*dynamic.*NBMA address:\\s*198\\.18\\.0\\.3",
+            "expectation": "The actual remote-spoke mapping is dynamically resolved.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SPOKE-A",
+            "command": "show crypto ipsec sa peer 198.18.0.3 | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "The direct spoke peer has actual encrypted and decrypted packets with AES256/SHA256.",
+            "command_timeout": 60,
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SPOKE-A",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?s)Known via \"eigrp 100\".*172\\.16\\.0\\.3",
+            "expectation": "Phase2 preserves the remote spoke as the EIGRP next hop.",
+            "attempts": 30,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/022-dmvpn-phase3.yaml": {
+    "checks": [
+      {
+        "node": "SPOKE-A",
+        "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual customer traffic crosses the encrypted spoke path.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "HUB",
+        "command": "show ip nhrp",
+        "pattern": "(?s)(?=.*172\\.16\\.0\\.2/32.*NBMA address:\\s*198\\.18\\.0\\.2)(?=.*172\\.16\\.0\\.3/32.*NBMA address:\\s*198\\.18\\.0\\.3)",
+        "expectation": "Both spokes actually register their overlay/NBMA mapping.",
+        "attempts": 35,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SPOKE-A",
+        "command": "show ip route 192.0.2.0",
+        "pattern": "(?m)^D\\s+192\\.0\\.2\\.0/24\\s+\\[90/[0-9]+\\]\\s+via\\s+172\\.16\\.0\\.1",
+        "expectation": "Phase3 retains an actual EIGRP aggregate through the hub.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SPOKE-A",
+        "command": "show ip nhrp 172.16.0.3",
+        "pattern": "(?s)172\\.16\\.0\\.3/32.*Type:\\s*dynamic.*NBMA address:\\s*198\\.18\\.0\\.3",
+        "expectation": "The actual remote-spoke mapping is dynamically resolved.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SPOKE-A",
+        "command": "show crypto ipsec sa peer 198.18.0.3 | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "The direct spoke peer has actual encrypted and decrypted packets with AES256/SHA256.",
+        "command_timeout": 60,
+        "attempts": 15,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SPOKE-A",
+        "command": "show ip route nhrp",
+        "pattern": "(?s)H\\s+192\\.0\\.2\\.3(?:/32)?\\s+.*172\\.16\\.0\\.3",
+        "expectation": "A more-specific actual NHRP route provides the direct shortcut under the hub aggregate.",
+        "attempts": 20,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "drop only direct spoke ESP",
+        "node": "SPOKE-B",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "ip access-group BLOCK-DIRECT-ESP in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SPOKE-A",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual customer traffic is blocked on the direct encrypted path.",
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SPOKE-A",
+            "command": "ping 198.18.0.3 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Direct underlay reachability remains healthy independently of encrypted payload forwarding."
+          },
+          {
+            "node": "SPOKE-A",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The encrypted hub path remains healthy."
+          },
+          {
+            "node": "SPOKE-B",
+            "command": "show access-lists BLOCK-DIRECT-ESP",
+            "pattern": "deny esp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The intended rule actually drops direct encrypted packets."
+          }
+        ]
+      },
+      {
+        "name": "restore encrypted spoke forwarding",
+        "node": "SPOKE-B",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip access-group BLOCK-DIRECT-ESP in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SPOKE-A",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual customer traffic crosses the encrypted spoke path.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SPOKE-A",
+            "command": "show ip nhrp 172.16.0.3",
+            "pattern": "(?s)172\\.16\\.0\\.3/32.*Type:\\s*dynamic.*NBMA address:\\s*198\\.18\\.0\\.3",
+            "expectation": "The actual remote-spoke mapping is dynamically resolved.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SPOKE-A",
+            "command": "show crypto ipsec sa peer 198.18.0.3 | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "The direct spoke peer has actual encrypted and decrypted packets with AES256/SHA256.",
+            "command_timeout": 60,
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SPOKE-A",
+            "command": "show ip route nhrp",
+            "pattern": "(?s)H\\s+192\\.0\\.2\\.3(?:/32)?\\s+.*172\\.16\\.0\\.3",
+            "expectation": "A more-specific actual NHRP route provides the direct shortcut under the hub aggregate.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SPOKE-A",
+            "command": "show ip route 192.0.2.0",
+            "pattern": "(?m)^D\\s+192\\.0\\.2\\.0/24\\s+\\[90/[0-9]+\\]\\s+via\\s+172\\.16\\.0\\.1",
+            "expectation": "Phase3 retains an actual EIGRP aggregate through the hub.",
+            "attempts": 30,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/038-dmvpn-hub-spoke-break-fix.yaml": {
+    "checks": [
+      {
+        "node": "SPOKE-A",
+        "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual customer traffic crosses the encrypted spoke path.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "HUB",
+        "command": "show ip nhrp",
+        "pattern": "(?s)(?=.*172\\.16\\.0\\.2/32.*NBMA address:\\s*198\\.18\\.0\\.2)(?=.*172\\.16\\.0\\.3/32.*NBMA address:\\s*198\\.18\\.0\\.3)",
+        "expectation": "Both spokes actually register their overlay/NBMA mapping.",
+        "attempts": 35,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SPOKE-A",
+        "command": "show ip route 192.0.2.3",
+        "pattern": "(?s)Known via \"eigrp 100\".*172\\.16\\.0\\.3",
+        "expectation": "Phase2 preserves the remote spoke as the EIGRP next hop.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SPOKE-A",
+        "command": "show ip nhrp 172.16.0.3",
+        "pattern": "(?s)172\\.16\\.0\\.3/32.*Type:\\s*dynamic.*NBMA address:\\s*198\\.18\\.0\\.3",
+        "expectation": "The actual remote-spoke mapping is dynamically resolved.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SPOKE-A",
+        "command": "show crypto ipsec sa peer 198.18.0.3 | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "The direct spoke peer has actual encrypted and decrypted packets with AES256/SHA256.",
+        "command_timeout": 60,
+        "attempts": 15,
+        "interval_seconds": 3
+      }
+    ],
+    "repair": {
+      "node": "SPOKE-B",
+      "commands": [
+        "configure terminal",
+        "interface Tunnel0",
+        "ip nhrp authentication CMLONLY",
+        "end"
+      ]
+    },
+    "initial": "SPOKE-B uses the wrong NHRP authentication string.",
+    "prerequisites": [
+      {
+        "node": "SPOKE-A",
+        "command": "ping 198.18.0.3 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Direct underlay reachability remains healthy independently of encrypted payload forwarding."
+      },
+      {
+        "node": "SPOKE-A",
+        "command": "show ip eigrp neighbors",
+        "pattern": "172\\.16\\.0\\.1",
+        "expectation": "The healthy spoke already has an actual hub routing adjacency.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SPOKE-B",
+        "command": "show running-config interface Tunnel0",
+        "pattern": "ip nhrp authentication WRONG",
+        "expectation": "The deliberately wrong authentication is the actual starting configuration."
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/007-vrf-lite-route-leaking.yaml": {
+    "checks": [
+      {
+        "node": "PE",
+        "command": "show ip route vrf BLUE 203.0.113.80",
+        "pattern": "(?s)Known via \"bgp 65000\".*198\\.18\\.99\\.2",
+        "expectation": "BLUE actually imports the service route through local VPNv4 route-target policy.",
+        "attempts": 25,
+        "interval_seconds": 3
+      },
+      {
+        "node": "BLUE-CE",
+        "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual sourced traffic reaches the permitted destination.",
+        "attempts": 15,
+        "interval_seconds": 3
+      },
+      {
+        "node": "RED-CE",
+        "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual sourced traffic reaches the permitted destination.",
+        "attempts": 15,
+        "interval_seconds": 3
+      },
+      {
+        "node": "BLUE-CE",
+        "command": "ping 198.51.100.20 source Loopback0 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+        "attempts": 1,
+        "interval_seconds": 3
+      },
+      {
+        "node": "RED-CE",
+        "command": "ping 192.0.2.10 source Loopback0 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+        "attempts": 1,
+        "interval_seconds": 3
+      },
+      {
+        "node": "PE",
+        "command": "show ip route 203.0.113.80",
+        "pattern": "(?i)(not in table|not in routing table)",
+        "expectation": "The global RIB has no fallback service route."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "introduce a bidirectional tenant import leak",
+        "node": "PE",
+        "commands": [
+          "configure terminal",
+          "ip vrf BLUE",
+          "route-target import 65000:20",
+          "exit",
+          "ip vrf RED",
+          "route-target import 65000:10",
+          "exit",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "BLUE-CE",
+            "command": "ping 198.51.100.20 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual sourced traffic reaches the permitted destination.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "RED-CE",
+            "command": "ping 192.0.2.10 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual sourced traffic reaches the permitted destination.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "BLUE-CE",
+            "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual sourced traffic reaches the permitted destination.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "RED-CE",
+            "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual sourced traffic reaches the permitted destination.",
+            "attempts": 15,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore tenant isolation without losing shared service",
+        "node": "PE",
+        "commands": [
+          "configure terminal",
+          "ip vrf BLUE",
+          "no route-target import 65000:20",
+          "exit",
+          "ip vrf RED",
+          "no route-target import 65000:10",
+          "exit",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "PE",
+            "command": "show ip route vrf BLUE 198.51.100.20",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "The removed BLUE tenant import has actually left the RIB.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PE",
+            "command": "show ip route vrf RED 192.0.2.10",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "The removed RED tenant import has actually left the RIB.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "BLUE-CE",
+            "command": "ping 198.51.100.20 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+            "attempts": 8,
+            "interval_seconds": 3
+          },
+          {
+            "node": "RED-CE",
+            "command": "ping 192.0.2.10 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+            "attempts": 8,
+            "interval_seconds": 3
+          },
+          {
+            "node": "BLUE-CE",
+            "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual sourced traffic reaches the permitted destination.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "RED-CE",
+            "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual sourced traffic reaches the permitted destination.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PE",
+            "command": "show ip route vrf BLUE 203.0.113.80",
+            "pattern": "(?s)Known via \"bgp 65000\".*198\\.18\\.99\\.2",
+            "expectation": "BLUE actually imports the service route through local VPNv4 route-target policy.",
+            "attempts": 25,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/043-vrf-lite-shared-services.yaml": {
+    "checks": [
+      {
+        "node": "PE",
+        "command": "show ip route vrf BLUE 203.0.113.80",
+        "pattern": "(?s)Known via \"bgp 65000\".*198\\.18\\.99\\.2",
+        "expectation": "BLUE actually imports the service route through local VPNv4 route-target policy.",
+        "attempts": 25,
+        "interval_seconds": 3
+      },
+      {
+        "node": "BLUE-CE",
+        "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual sourced traffic reaches the permitted destination.",
+        "attempts": 15,
+        "interval_seconds": 3
+      },
+      {
+        "node": "RED-CE",
+        "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual sourced traffic reaches the permitted destination.",
+        "attempts": 15,
+        "interval_seconds": 3
+      },
+      {
+        "node": "BLUE-CE",
+        "command": "ping 198.51.100.20 source Loopback0 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+        "attempts": 1,
+        "interval_seconds": 3
+      },
+      {
+        "node": "RED-CE",
+        "command": "ping 192.0.2.10 source Loopback0 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+        "attempts": 1,
+        "interval_seconds": 3
+      },
+      {
+        "node": "PE",
+        "command": "show ip route 203.0.113.80",
+        "pattern": "(?i)(not in table|not in routing table)",
+        "expectation": "The global RIB has no fallback service route."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw only BLUE shared-service import",
+        "node": "PE",
+        "commands": [
+          "configure terminal",
+          "ip vrf BLUE",
+          "no route-target import 65000:99",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "PE",
+            "command": "show ip route vrf BLUE 203.0.113.80",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "Only BLUE loses the imported service route.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "BLUE-CE",
+            "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "RED-CE",
+            "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual sourced traffic reaches the permitted destination.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "BLUE-CE",
+            "command": "ping 198.51.100.20 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+            "attempts": 1,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore BLUE shared-service access",
+        "node": "PE",
+        "commands": [
+          "configure terminal",
+          "ip vrf BLUE",
+          "route-target import 65000:99",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "PE",
+            "command": "show ip route vrf BLUE 203.0.113.80",
+            "pattern": "(?s)Known via \"bgp 65000\".*198\\.18\\.99\\.2",
+            "expectation": "BLUE actually imports the service route through local VPNv4 route-target policy.",
+            "attempts": 25,
+            "interval_seconds": 3
+          },
+          {
+            "node": "BLUE-CE",
+            "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual sourced traffic reaches the permitted destination.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "RED-CE",
+            "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual sourced traffic reaches the permitted destination.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "BLUE-CE",
+            "command": "ping 198.51.100.20 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "RED-CE",
+            "command": "ping 192.0.2.10 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PE",
+            "command": "show ip route 203.0.113.80",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "The global RIB has no fallback service route."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/013-segmentation-vrf-acl.yaml": {
+    "checks": [
+      {
+        "node": "PE",
+        "command": "show ip route vrf BLUE 203.0.113.80",
+        "pattern": "(?s)Known via \"bgp 65000\".*198\\.18\\.99\\.2",
+        "expectation": "BLUE actually imports the service route through local VPNv4 route-target policy.",
+        "attempts": 25,
+        "interval_seconds": 3
+      },
+      {
+        "node": "BLUE-CE",
+        "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual sourced traffic reaches the permitted destination.",
+        "attempts": 15,
+        "interval_seconds": 3
+      },
+      {
+        "node": "RED-CE",
+        "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual sourced traffic reaches the permitted destination.",
+        "attempts": 15,
+        "interval_seconds": 3
+      },
+      {
+        "node": "BLUE-CE",
+        "command": "ping 198.51.100.20 source Loopback0 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+        "attempts": 1,
+        "interval_seconds": 3
+      },
+      {
+        "node": "RED-CE",
+        "command": "ping 192.0.2.10 source Loopback0 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+        "attempts": 1,
+        "interval_seconds": 3
+      },
+      {
+        "node": "PE",
+        "command": "show ip route 203.0.113.80",
+        "pattern": "(?i)(not in table|not in routing table)",
+        "expectation": "The global RIB has no fallback service route."
+      },
+      {
+        "node": "BLUE-CE",
+        "command": "ping 203.0.113.81 source Loopback0 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+        "attempts": 1,
+        "interval_seconds": 3
+      },
+      {
+        "node": "RED-CE",
+        "command": "ping 203.0.113.81 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual sourced traffic reaches the permitted destination.",
+        "attempts": 15,
+        "interval_seconds": 3
+      },
+      {
+        "node": "PE",
+        "command": "show access-lists BLUE-IN",
+        "pattern": "deny icmp[^\\n]*\\([1-9][0-9]* match",
+        "expectation": "The tenant ingress ACL counts actual denied traffic."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "remove only the tenant traffic selector",
+        "node": "PE",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no ip access-group BLUE-IN in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "BLUE-CE",
+            "command": "ping 203.0.113.81 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual sourced traffic reaches the permitted destination.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "BLUE-CE",
+            "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual sourced traffic reaches the permitted destination.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "BLUE-CE",
+            "command": "ping 198.51.100.20 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+            "attempts": 1,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore the tenant traffic selector",
+        "node": "PE",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ip access-group BLUE-IN in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "BLUE-CE",
+            "command": "ping 203.0.113.81 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PE",
+            "command": "show access-lists BLUE-IN",
+            "pattern": "deny icmp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The tenant ingress ACL counts actual denied traffic."
+          },
+          {
+            "node": "BLUE-CE",
+            "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual sourced traffic reaches the permitted destination.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "RED-CE",
+            "command": "ping 203.0.113.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual sourced traffic reaches the permitted destination.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "RED-CE",
+            "command": "ping 203.0.113.81 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual sourced traffic reaches the permitted destination.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "BLUE-CE",
+            "command": "ping 198.51.100.20 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual sourced traffic cannot cross the intended policy boundary.",
+            "attempts": 1,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/029-router-hardening.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The management IP path remains healthy independently of SSH admission.",
+        "attempts": 20,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "initialize ephemeral management host key",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "crypto key generate rsa general-keys label CML-LAB-SSH modulus 2048",
+          "ip ssh rsa keypair-name CML-LAB-SSH",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "Real SSH proves valid viewer login, privilege1, denied configuration, banner, wrong-password rejection and closed Telnet/HTTP ports.",
+            "command_timeout": 45
+          },
+          {
+            "node": "R1",
+            "command": "show ip ssh",
+            "pattern": "SSH Enabled - version 2",
+            "expectation": "The real SSHv2 server remains enabled."
+          },
+          {
+            "node": "R1",
+            "command": "show running-config | include username viewer",
+            "pattern": "username viewer.*secret 9",
+            "expectation": "The public fixture password is stored as a type9 secret."
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "withdraw the sole allowed SSH source",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip access-list standard MGMT",
+          "no permit host 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_policy_probe.py denied",
+            "pattern": "\"passed\": true",
+            "expectation": "The existing correct lab credential cannot establish SSH after the source policy is withdrawn; bad password or changed host key cannot count as this result.",
+            "command_timeout": 30
+          },
+          {
+            "node": "R1",
+            "command": "show access-lists MGMT",
+            "pattern": "deny\\s+any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The explicit deny rule counts actual denied management attempts."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The management IP path remains healthy independently of SSH admission.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip ssh",
+            "pattern": "SSH Enabled - version 2",
+            "expectation": "The real SSHv2 server remains enabled."
+          }
+        ]
+      },
+      {
+        "name": "restore authorized SSH source",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip access-list standard MGMT",
+          "10 permit host 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "Real SSH proves valid viewer login, privilege1, denied configuration, banner, wrong-password rejection and closed Telnet/HTTP ports.",
+            "command_timeout": 45
+          },
+          {
+            "node": "R1",
+            "command": "show ip ssh",
+            "pattern": "SSH Enabled - version 2",
+            "expectation": "The real SSHv2 server remains enabled."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/036-secure-management-plane.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The management IP path remains healthy independently of SSH admission.",
+        "attempts": 20,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "initialize ephemeral management host key",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "crypto key generate rsa general-keys label CML-LAB-SSH modulus 2048",
+          "ip ssh rsa keypair-name CML-LAB-SSH",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "Real SSH proves valid viewer login, privilege1, denied configuration, banner, wrong-password rejection and closed Telnet/HTTP ports.",
+            "command_timeout": 45
+          },
+          {
+            "node": "R1",
+            "command": "show ip ssh",
+            "pattern": "SSH Enabled - version 2",
+            "expectation": "The real SSHv2 server remains enabled."
+          },
+          {
+            "node": "R1",
+            "command": "show running-config | include username viewer",
+            "pattern": "username viewer.*secret 9",
+            "expectation": "The public fixture password is stored as a type9 secret."
+          },
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_identity_probe.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Independent SNMPv3 authPriv remains healthy, including wrong-key rejection."
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "withdraw the sole allowed SSH source",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip access-list standard MGMT",
+          "no permit host 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_policy_probe.py denied",
+            "pattern": "\"passed\": true",
+            "expectation": "The existing correct lab credential cannot establish SSH after the source policy is withdrawn; bad password or changed host key cannot count as this result.",
+            "command_timeout": 30
+          },
+          {
+            "node": "R1",
+            "command": "show access-lists MGMT",
+            "pattern": "deny\\s+any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The explicit deny rule counts actual denied management attempts."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The management IP path remains healthy independently of SSH admission.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip ssh",
+            "pattern": "SSH Enabled - version 2",
+            "expectation": "The real SSHv2 server remains enabled."
+          },
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_identity_probe.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Independent SNMPv3 authPriv remains healthy, including wrong-key rejection."
+          }
+        ]
+      },
+      {
+        "name": "restore authorized SSH source",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip access-list standard MGMT",
+          "10 permit host 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "Real SSH proves valid viewer login, privilege1, denied configuration, banner, wrong-password rejection and closed Telnet/HTTP ports.",
+            "command_timeout": 45
+          },
+          {
+            "node": "R1",
+            "command": "show ip ssh",
+            "pattern": "SSH Enabled - version 2",
+            "expectation": "The real SSHv2 server remains enabled."
+          },
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_identity_probe.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Independent SNMPv3 authPriv remains healthy, including wrong-key rejection."
+          }
+        ]
+      },
+      {
+        "name": "restrict only SNMP identity visibility",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "snmp-server view LABVIEW 1.3.6.1.2.1.1.5 excluded",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_identity_probe.py restricted",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Only sysName is excluded while authenticated uptime remains available."
+          },
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "Real SSH proves valid viewer login, privilege1, denied configuration, banner, wrong-password rejection and closed Telnet/HTTP ports.",
+            "command_timeout": 45
+          }
+        ]
+      },
+      {
+        "name": "restore SNMP identity visibility",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "snmp-server view LABVIEW 1.3.6.1.2.1.1.5 included",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_identity_probe.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Independent SNMPv3 authPriv remains healthy, including wrong-key rejection."
+          },
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "Real SSH proves valid viewer login, privilege1, denied configuration, banner, wrong-password rejection and closed Telnet/HTTP ports.",
+            "command_timeout": 45
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/management/040-secure-admin-plane.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The management IP path remains healthy independently of SSH admission.",
+        "attempts": 20,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "initialize ephemeral management host key",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "crypto key generate rsa general-keys label CML-LAB-SSH modulus 2048",
+          "ip ssh rsa keypair-name CML-LAB-SSH",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "Real SSH proves valid viewer login, privilege1, denied configuration, banner, wrong-password rejection and closed Telnet/HTTP ports.",
+            "command_timeout": 45
+          },
+          {
+            "node": "R1",
+            "command": "show ip ssh",
+            "pattern": "SSH Enabled - version 2",
+            "expectation": "The real SSHv2 server remains enabled."
+          },
+          {
+            "node": "R1",
+            "command": "show running-config | include username viewer",
+            "pattern": "username viewer.*secret 9",
+            "expectation": "The public fixture password is stored as a type9 secret."
+          }
+        ],
+        "command_timeout": 30
+      },
+      {
+        "name": "introduce an overprivileged viewer account",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "username viewer privilege 15 algorithm-type scrypt secret CML-LAB-ONLY",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_policy_probe.py elevated",
+            "pattern": "\"passed\": true",
+            "expectation": "The actual network session now has privilege15 and can enter configuration mode without making changes.",
+            "command_timeout": 30
+          }
+        ]
+      },
+      {
+        "name": "restore viewer least privilege",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "username viewer privilege 1 algorithm-type scrypt secret CML-LAB-ONLY",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "Real SSH proves valid viewer login, privilege1, denied configuration, banner, wrong-password rejection and closed Telnet/HTTP ports.",
+            "command_timeout": 45
+          },
+          {
+            "node": "R1",
+            "command": "show ip ssh",
+            "pattern": "SSH Enabled - version 2",
+            "expectation": "The real SSHv2 server remains enabled."
+          }
+        ]
+      }
+    ]
   }
 }

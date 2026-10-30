@@ -1,82 +1,57 @@
 lab:
   title: Event Driven Automation
-  description: CCNP-ENCOR CML lab generated from blueprint coverage.
-  notes: 'CCNP-ENCOR blueprint lab: Event Driven Automation
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# Event Driven Automation
 
 
-    Topics:
-
-    - event-driven automation
-
-    - webhook
-
-    - remediation
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Suggested tasks:
-
-    1. Generate event
-
-    2. Map trigger to action
-
-    3. Document rollback
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-401-041-event-driven-automation.md
 
 
-    Suggested verification:
+    This exercise uses actual IOSv EEM, which is not available in IOL-XE. A LINEPROTO event for exactly
+    Loopback10 opens an internal CLI session and restores that one interface; an independent router tests
+    the actual data plane. Recovery can be faster than a polling interval, so successful event history
+    and forwarding are paired with a removed-policy negative control rather than treating a configured
+    string as proof. No external event bus, webhook receiver, AI model, n8n service or production interface
+    is used. It demonstrates native device automation, not a cloud integration or hardware recovery timing.
 
-    - show ip interface brief
 
-    - show interfaces status
+    Objectives:
 
-    - show ip route
+    - Register a real IOSv EEM syslog policy targeting only the disposable Loopback10.
 
-    - show running-config | section router
+    - Shut the loopback and observe autonomous recovery and remote packet delivery.
 
-    - ping between the lab endpoints'
+    - Remove the policy as a negative control, prove the fault persists, then restore and trigger again.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
   node_definition: iosv
-  x: -200
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR Event Driven Automation ^C\n\
-      interface GigabitEthernet0/0\n description CCNP-ENCOR Event Driven Automation\n ip address 10.10.10.1\
-      \ 255.255.255.0\n no shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nno logging console\ninterface Loopback0\n ip address 192.0.2.1\
+      \ 255.255.255.255\n no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.1 255.255.255.252\n\
+      \ no shutdown\n exit\ninterface Loopback10\n ip address 192.0.2.10 255.255.255.255\n no shutdown\n\
+      \ exit\nevent manager applet RECOVER-LAB-LO10\nevent syslog pattern \"LINEPROTO-5-UPDOWN: Line protocol\
+      \ on Interface Loopback10, changed state to down\"\naction 1.0 cli command \"enable\"\naction 2.0\
+      \ cli command \"configure terminal\"\naction 3.0 cli command \"interface Loopback10\"\naction 4.0\
+      \ cli command \"no shutdown\"\naction 5.0 cli command \"end\"\naction 6.0 syslog msg \"CML-LO10-AUTO-RECOVERED\"\
+      \nexit\nend\n"
+  cpu_limit: 100
   priority: 100
-  tags: []
-- id: n1
-  label: SW1
-  node_definition: iosvl2
   x: 0
   y: 0
-  configuration:
-  - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR Event Driven Automation ^C\n\
-      vlan 10\n name USERS\nvlan 20\n name SERVICES\nvlan 99\n name MGMT\ninterface range GigabitEthernet0/1-3\n\
-      \ switchport mode access\n spanning-tree portfast\nend"
   interfaces:
   - id: i0
     label: Loopback0
@@ -97,20 +72,40 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 99
   tags: []
-- id: n2
-  label: DEVBOX
-  node_definition: desktop
-  x: 200
-  y: 0
+- id: n1
+  label: R2
+  node_definition: iosv
+  configuration:
+  - name: ios_config.txt
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface Loopback0\n ip address 192.0.2.2 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.2 255.255.255.252\n no\
+      \ shutdown\n exit\nip route 192.0.2.10 255.255.255.255 198.18.0.1\nend\n"
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
-    label: eth0
+    label: Loopback0
+    type: loopback
+  - id: i1
+    label: GigabitEthernet0/0
     type: physical
     slot: 0
-  configuration: []
-  priority: 98
+  - id: i2
+    label: GigabitEthernet0/1
+    type: physical
+    slot: 1
+  - id: i3
+    label: GigabitEthernet0/2
+    type: physical
+    slot: 2
+  - id: i4
+    label: GigabitEthernet0/3
+    type: physical
+    slot: 3
   tags: []
 links:
 - id: l0
@@ -118,10 +113,5 @@ links:
   i1: i1
   n2: n1
   i2: i1
-- id: l1
-  n1: n1
-  i1: i2
-  n2: n2
-  i2: i0
 annotations: []
 smart_annotations: []

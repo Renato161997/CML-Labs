@@ -52,3 +52,19 @@ listener on the lab data address while allowing that startup order.
 First boots can take several minutes. Results count observational assertions
 separately from transition/configuration commands; a successful command echo alone
 does not establish that a protocol converged or that traffic passed.
+
+A cold IOSv boot can perform initial network-configuration discovery before its
+CVAC agent applies the supplied configuration. Observed boots exceeded four
+minutes, so the console runner permits up to 600 seconds for the named IOSv
+prompt; other IOS console models retain the 240-second default. A longer startup
+window never changes a STARTED state into BOOTED or skips functional acceptance.
+
+The new IOSv VPN, MPLS, event-recovery and branch fixtures use
+`cpu_limit: 100`, matching the supplied single-vCPU reference definition, with
+512 MiB nominal RAM per IOSv router. The runner bounds each case's nominal RAM and refuses to start a live test while an unowned user lab is
+running.
+
+Privilege negotiation uses fresh named console output and a bounded 45-second
+window for delayed boot messages. It sends `enable` at most once and aborts if
+the guest requests an enable credential. Functional command parsing still
+requires the complete command echo and its subsequent matching prompt.

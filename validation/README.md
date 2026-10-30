@@ -94,3 +94,11 @@ Console requests begin on a fresh input line, so an unsolicited syslog tail
 cannot concatenate with the command echo. The parser still requires the exact
 whole-line command and a subsequent matching prompt; a command-shaped substring
 inside a log message is rejected.
+
+Deliberate-fault plans can declare observable `prerequisites`. The harness runs
+these before measuring the initial failure and before applying the repair. For
+example, a DHCP client must have its real lease and reach its gateway, and the
+edge must reach the isolated service, before a failed client probe can be
+attributed to a NAT policy fault. A failed prerequisite aborts the case. Evidence
+must include these checks under the `prerequisite` phase; a duplicate baseline
+check or a green overall flag cannot replace them.

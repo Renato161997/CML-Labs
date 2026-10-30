@@ -1,52 +1,66 @@
 lab:
   title: MPLS L3VPN Concepts
-  description: 300-410 ENARSI - Implementing Cisco Enterprise Advanced Routing and Services importable
-    CML topology.
-  notes: '300-410 ENARSI blueprint lab: MPLS L3VPN Concepts
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# MPLS L3VPN Concepts
 
 
-    Topics:
-
-    - MPLS
-
-    - L3VPN
-
-    - PE/CE
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Tasks:
-
-    1. Identify PE/CE roles
-
-    2. Model VPN routing
-
-    3. Trace customer route exchange
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/300-410-024-mpls-l3vpn-concepts.md
 
 
-    Useful checks:
+    Distinct per-PE route distinguishers share one explicit import/export route target. Five IOSv guests
+    implement a real small MPLS L3VPN, not GRE renamed as MPLS. VPNv4 convergence has an explicit bounded
+    wait because the initial BGP TCP attempt can precede OSPF reachability; a process-up indication is
+    never accepted as a route. PE-CE static routes supply customer prefixes, OSPF supplies provider loopbacks,
+    LDP supplies transport labels and VPNv4 BGP carries labeled VPN routes with route-target communities.
+    The transit P router must lack the customer /32 in its global routing table yet switch actual labeled
+    bytes. Route-target withdrawal must remove only the imported VPN route while transport stays healthy.
+    All interfaces are isolated and all addresses educational. Nominal RAM is 5x512 MiB. This is software
+    forwarding and protocol validation, not hardware throughput, carrier design scale or entitlement to
+    redistribute IOSv. Cisco lists MPLS L3VPN among IOSv features: https://developer.cisco.com/docs/modeling-labs/iosv/
+    .
 
-    - show ip interface brief
 
-    - show running-config
+    Objectives:
 
-    - show ip route
+    - Establish actual OSPF transport, LDP labels and VPNv4 BGP between provider edge routers.
 
-    - show ip protocols
+    - Carry real customer loopback traffic while the transit router has no global customer route.
 
-    - ping and traceroute between endpoints'
+    - Remove only the import route target, observe VPN failure with healthy provider transport, and restore
+    it.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: R1
+  label: PE1
   node_definition: iosv
-  x: -450
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C ENARSI MPLS L3VPN Concepts ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI MPLS L3VPN Concepts\n ip address 10.0.12.1 255.255.255.252\n\
-      \ no shutdown\ninterface Loopback0\n description ENARSI MPLS L3VPN Concepts\n ip address 10.1.1.1\
-      \ 255.255.255.255\n no shutdown\nend"
+    content: "hostname PE1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nno logging console\nip vrf CUST\n rd 65000:1\n route-target\
+      \ both 65000:10\n exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n no shutdown\n\
+      \ exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.1 255.255.255.252\n no shutdown\n mpls\
+      \ ip\n exit\ninterface GigabitEthernet0/1\n ip vrf forwarding CUST\n ip address 198.18.10.1 255.255.255.252\n\
+      \ no shutdown\n exit\nmpls label protocol ldp\nmpls ldp router-id Loopback0 force\nrouter ospf 1\n\
+      \ router-id 192.0.2.1\n network 192.0.2.1 0.0.0.0 area 0\n network 198.18.0.0 0.0.0.3 area 0\n exit\n\
+      ip route vrf CUST 192.0.2.10 255.255.255.255 198.18.10.2\nrouter bgp 65000\n bgp router-id 192.0.2.1\n\
+      \ no bgp default ipv4-unicast\n neighbor 192.0.2.3 remote-as 65000\n neighbor 192.0.2.3 update-source\
+      \ Loopback0\n address-family vpnv4\n  neighbor 192.0.2.3 activate\n  neighbor 192.0.2.3 send-community\
+      \ extended\n exit-address-family\n address-family ipv4 vrf CUST\n  redistribute static\n exit-address-family\n\
+      \ exit\nend\n"
+  cpu_limit: 100
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
@@ -67,19 +81,23 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
-  label: R2
+  label: P
   node_definition: iosv
-  x: -150
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nbanner motd ^C ENARSI MPLS L3VPN Concepts ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI MPLS L3VPN Concepts\n ip address 10.0.12.2 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description ENARSI MPLS L3VPN Concepts\n ip address\
-      \ 10.0.23.1 255.255.255.252\n no shutdown\nend"
+    content: "hostname P\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nno logging console\ninterface Loopback0\n ip address 192.0.2.2\
+      \ 255.255.255.255\n no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.2 255.255.255.252\n\
+      \ no shutdown\n mpls ip\n exit\ninterface GigabitEthernet0/1\n ip address 198.18.1.1 255.255.255.252\n\
+      \ no shutdown\n mpls ip\n exit\nmpls label protocol ldp\nmpls ldp router-id Loopback0 force\nrouter\
+      \ ospf 1\n router-id 192.0.2.2\n network 192.0.2.2 0.0.0.0 area 0\n network 198.18.0.0 0.0.0.3 area\
+      \ 0\n network 198.18.1.0 0.0.0.3 area 0\n exit\nend\n"
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
@@ -100,19 +118,28 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 99
   tags: []
 - id: n2
-  label: R3
+  label: PE2
   node_definition: iosv
-  x: 150
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R3\nno ip domain-lookup\nbanner motd ^C ENARSI MPLS L3VPN Concepts ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI MPLS L3VPN Concepts\n ip address 10.0.23.2 255.255.255.252\n\
-      \ no shutdown\ninterface GigabitEthernet0/1\n description ENARSI MPLS L3VPN Concepts\n ip address\
-      \ 10.0.34.1 255.255.255.252\n no shutdown\nend"
+    content: "hostname PE2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nno logging console\nip vrf CUST\n rd 65000:3\n route-target\
+      \ both 65000:10\n exit\ninterface Loopback0\n ip address 192.0.2.3 255.255.255.255\n no shutdown\n\
+      \ exit\ninterface GigabitEthernet0/0\n ip address 198.18.1.2 255.255.255.252\n no shutdown\n mpls\
+      \ ip\n exit\ninterface GigabitEthernet0/1\n ip vrf forwarding CUST\n ip address 198.18.20.1 255.255.255.252\n\
+      \ no shutdown\n exit\nmpls label protocol ldp\nmpls ldp router-id Loopback0 force\nrouter ospf 1\n\
+      \ router-id 192.0.2.3\n network 192.0.2.3 0.0.0.0 area 0\n network 198.18.1.0 0.0.0.3 area 0\n exit\n\
+      ip route vrf CUST 192.0.2.20 255.255.255.255 198.18.20.2\nrouter bgp 65000\n bgp router-id 192.0.2.3\n\
+      \ no bgp default ipv4-unicast\n neighbor 192.0.2.1 remote-as 65000\n neighbor 192.0.2.1 update-source\
+      \ Loopback0\n address-family vpnv4\n  neighbor 192.0.2.1 activate\n  neighbor 192.0.2.1 send-community\
+      \ extended\n exit-address-family\n address-family ipv4 vrf CUST\n  redistribute static\n exit-address-family\n\
+      \ exit\nend\n"
+  cpu_limit: 100
+  priority: 98
+  x: 520
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
@@ -133,19 +160,20 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 98
   tags: []
 - id: n3
-  label: R4
+  label: CE1
   node_definition: iosv
-  x: 450
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R4\nno ip domain-lookup\nbanner motd ^C ENARSI MPLS L3VPN Concepts ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI MPLS L3VPN Concepts\n ip address 10.0.34.2 255.255.255.252\n\
-      \ no shutdown\ninterface Loopback0\n description ENARSI MPLS L3VPN Concepts\n ip address 10.4.4.4\
-      \ 255.255.255.255\n no shutdown\nend"
+    content: "hostname CE1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface Loopback0\n ip address 192.0.2.10 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.10.2 255.255.255.252\n no\
+      \ shutdown\n exit\nip route 192.0.2.20 255.255.255.255 198.18.10.1\nend\n"
+  cpu_limit: 100
+  priority: 97
+  x: 780
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
@@ -166,7 +194,40 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 97
+  tags: []
+- id: n4
+  label: CE2
+  node_definition: iosv
+  configuration:
+  - name: ios_config.txt
+    content: "hostname CE2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface Loopback0\n ip address 192.0.2.20 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.20.2 255.255.255.252\n no\
+      \ shutdown\n exit\nip route 192.0.2.10 255.255.255.255 198.18.20.1\nend\n"
+  cpu_limit: 100
+  priority: 96
+  x: 1040
+  y: 0
+  interfaces:
+  - id: i0
+    label: Loopback0
+    type: loopback
+  - id: i1
+    label: GigabitEthernet0/0
+    type: physical
+    slot: 0
+  - id: i2
+    label: GigabitEthernet0/1
+    type: physical
+    slot: 1
+  - id: i3
+    label: GigabitEthernet0/2
+    type: physical
+    slot: 2
+  - id: i4
+    label: GigabitEthernet0/3
+    type: physical
+    slot: 3
   tags: []
 links:
 - id: l0
@@ -180,9 +241,14 @@ links:
   n2: n2
   i2: i1
 - id: l2
-  n1: n2
+  n1: n0
   i1: i2
   n2: n3
+  i2: i1
+- id: l3
+  n1: n2
+  i1: i2
+  n2: n4
   i2: i1
 annotations: []
 smart_annotations: []

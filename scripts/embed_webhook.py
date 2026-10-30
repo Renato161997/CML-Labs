@@ -18,9 +18,23 @@ PROFILES = {
     "ssh-management": {
         "/opt/cml-management/ssh_probe.py": "examples/management/ssh_probe.py",
     },
+    "ssh-policy": {
+        "/opt/cml-management/ssh_probe.py": "examples/management/ssh_probe.py",
+        "/opt/cml-management/ssh_policy_probe.py": "examples/management/ssh_policy_probe.py",
+    },
+    "secure-management": {
+        "/opt/cml-management/ssh_probe.py": "examples/management/ssh_probe.py",
+        "/opt/cml-management/ssh_policy_probe.py": "examples/management/ssh_policy_probe.py",
+    },
 }
 
 NATIVE_PROFILES = {
+    "secure-management": {
+        "TOOLS": {
+            "/lab/snmp_probe.py": "examples/management/snmp_probe.py",
+            "/lab/snmp_identity_probe.py": "examples/management/snmp_identity_probe.py",
+        },
+    },
     "native-iosxe-gitops": {
         "TOOLS": {
             "/lab/api_probe.py": "examples/automation/api_probe.py",

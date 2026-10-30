@@ -31,8 +31,16 @@ def validate_plan(plan, labels):
                 or step.get("implementation_sha256") != implementation_digest()
             ):
                 errors.append("invalid or stale registered preparation operation")
-    phases = {"baseline"}
+    phases = {"baseline", "prerequisite"}
     groups = [plan.get("checks", [])]
+    if "prerequisites" in plan:
+        prerequisites = plan["prerequisites"]
+        if not plan.get("repair"):
+            errors.append("prerequisites require a deliberate-fault repair plan")
+        if not isinstance(prerequisites, list) or not prerequisites:
+            errors.append("prerequisites must contain observable checks")
+        else:
+            groups.append(prerequisites)
     for step in plan.get("transitions", []):
         name = step.get("name")
         if not name or name in phases or step.get("node") not in labels:
@@ -79,6 +87,23 @@ def validate_plan(plan, labels):
             except (re.error, KeyError, TypeError):
                 errors.append("invalid acceptance pattern")
     return errors
+
+
+def execute_prerequisites(plan, console, record, *, sleep=time.sleep):
+    """Require healthy dependencies before measuring a deliberate fault."""
+    if "prerequisites" not in plan:
+        return
+    if not plan.get("repair") or not plan["prerequisites"]:
+        raise ValueError("Fault prerequisites need checks and a repair plan")
+    try:
+        execute_plan(
+            {"checks": plan["prerequisites"]},
+            console,
+            lambda row: record({**row, "phase": "prerequisite"}),
+            sleep=sleep,
+        )
+    except AssertionError as exc:
+        raise AssertionError(str(exc).replace(" in baseline:", " in prerequisite:")) from None
 
 
 def execute_plan(plan, console, record, *, sleep=time.sleep):
