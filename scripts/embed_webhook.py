@@ -29,6 +29,16 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-netflow": {
+        "INSIDE": {
+            "/lab/t.py": "examples/security/traffic_fixture.py",
+            "/lab/f.py": "examples/security/netflow_fixture.py",
+        },
+        "OUTSIDE": {
+            "/lab/t.py": "examples/security/traffic_fixture.py",
+            "/lab/f.py": "examples/security/netflow_fixture.py",
+        },
+    },
     "native-firewall-traffic": {
         "INSIDE": {"/lab/t.py": "examples/security/traffic_fixture.py"},
         "OUTSIDE": {"/lab/t.py": "examples/security/traffic_fixture.py"},

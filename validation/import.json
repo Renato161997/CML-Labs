@@ -78,16 +78,6 @@
       "completed_utc": "2026-10-24T18:50:03Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/025-netflow-telemetry.yaml",
-      "sha256": "e06f76856e91d379707441efcb3e20c5470f7f9735b1f3adb597f69e12e8b15e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:03Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:04Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/027-dna-center-assurance-concepts.yaml",
       "sha256": "5fce7f1a7653159ee4c623d1726ad6a6cd9faf9d54a80ccb7d9cb97cb6d7ebb1",
       "cml_version": "2.10.1+build.21",
@@ -482,16 +472,6 @@
       "sha256": "436d187b65c6b7f0d9bf47454f8f87bbc09120f3d3ab9b4a18011b21a0a3c984",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-24T18:50:18Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:19Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/026-netflow-stealthwatch.yaml",
-      "sha256": "dbe888db8d97d40be6e03e960ae436a40e5062bc2119bb1fe20b488b01a35c76",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:19Z",
       "checks": [],
       "status": "import-export-pass",
       "test_lab_removed": true,
@@ -958,16 +938,6 @@
       "completed_utc": "2026-10-25T15:56:09Z"
     },
     {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/031-acl-uRPF.yaml",
-      "sha256": "36b32e404aac2f049e341044e77cecae085bc58c58be83b0a045fd0da97879b9",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:09Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:10Z"
-    },
-    {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/032-copp-control-plane.yaml",
       "sha256": "7fb5b7fd10ef26ae43e9934462a77761f66c8e619d584fa716461bcd76d26585",
       "cml_version": "2.10.1+build.21",
@@ -996,16 +966,6 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T15:56:10Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/028-netflow-ip-sla.yaml",
-      "sha256": "91235938fb8d27cb8a01ee63843159f569c49e6e419ce585d25035c211a1cd62",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:10Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:11Z"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/037-redistribution-nightmare.yaml",
@@ -2336,6 +2296,46 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T15:56:46Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/025-netflow-telemetry.yaml",
+      "sha256": "cc0cac77dfdd9ba49e56545ce0627843d6a0636af4eb2e143070ad4543ea262c",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T16:20:32Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T16:20:33Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/028-netflow-ip-sla.yaml",
+      "sha256": "11edddfe34c68363c190d68f3796ca176f7d3fd508bf26c55c6bd0cbac7e4911",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T16:20:34Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T16:20:35Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/026-netflow-stealthwatch.yaml",
+      "sha256": "317c1a22fabd2d1e03d6eed309f65c19c0d8eb1e9f1699bc87c3ef1d5ef6cf89",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T16:20:36Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T16:20:36Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/031-acl-uRPF.yaml",
+      "sha256": "2cdffb976d853b25769242f6691f5f380ba83b09928f081d35082159fb0b57af",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T16:20:38Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T16:20:38Z"
     }
   ]
 }
