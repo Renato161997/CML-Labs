@@ -1,53 +1,59 @@
 lab:
   title: Site To Site IPsec IOS
-  description: 350-701 SCOR - Implementing and Operating Cisco Security Core Technologies importable CML
-    topology.
-  notes: '350-701 SCOR blueprint lab: Site To Site IPsec IOS
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# Site To Site IPsec IOS
 
 
-    Topics:
-
-    - IPsec
-
-    - IKE
-
-    - Cisco IOS
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Tasks:
-
-    1. Define interesting traffic
-
-    2. Build IPsec profile
-
-    3. Verify SA
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-701-009-site-to-site-ipsec-ios.md
 
 
-    Useful checks:
+    Two IOSv guests exchange actual IKEv1/IPsec ESP tunnel traffic between isolated loopbacks. Both peers
+    must report nonzero protected encapsulation and decapsulation counters; configured crypto strings
+    and a plaintext ping alone cannot pass. AES256, SHA256 and DH14/PFS14 are explicit interoperability
+    settings. IKEv1 and the published training PSK are legacy educational fixtures, not production authentication
+    recommendations. No NAT, public endpoint, external connector or real credential is involved. IOSv
+    is software/performance limited; throughput, hardware offload and production resilience are not claimed.
+    Cisco lists IPsec among IOSv features: https://developer.cisco.com/docs/modeling-labs/iosv/ . Only
+    your disposable imported copy may be stopped/wiped.
 
-    - show ip interface brief
 
-    - show running-config
+    Objectives:
 
-    - show ip route
+    - Distinguish underlay reachability, IKE establishment and protected data-plane forwarding.
 
-    - show ip protocols
+    - Generate actual interesting traffic and inspect both peers encryption/decapsulation counters.
 
-    - ping and traceroute between endpoints'
+    - For the security exercise, block only ESP while IKE/underlay remain healthy, then recover.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: HUB1
+  label: R1
   node_definition: iosv
-  x: -180
-  y: -120
   configuration:
   - name: ios_config.txt
-    content: "hostname HUB1\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR Site To Site IPsec IOS ^C\n\
-      interface GigabitEthernet0/0\n description SECCORE-SCOR Site To Site IPsec IOS\n ip address 10.0.12.1\
-      \ 255.255.255.252\n no shutdown\ninterface GigabitEthernet0/1\n description SECCORE-SCOR Site To\
-      \ Site IPsec IOS\n ip address 10.0.13.1 255.255.255.252\n no shutdown\ninterface Loopback0\n description\
-      \ SECCORE-SCOR Site To Site IPsec IOS\n ip address 172.16.0.1 255.255.255.255\n no shutdown\nend"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nno logging console\ncrypto isakmp policy 10\n encr aes 256\n\
+      \ hash sha256\n authentication pre-share\n group 14\n lifetime 3600\n exit\ncrypto isakmp key CML-LAB-PSK-only-984\
+      \ address 198.18.0.2\ncrypto ipsec transform-set CML-ESP esp-aes 256 esp-sha256-hmac\n mode tunnel\n\
+      \ exit\nip access-list extended CML-PROTECTED\n permit ip host 192.0.2.1 host 192.0.2.2\n exit\n\
+      crypto map CML-VPN 10 ipsec-isakmp\n set peer 198.18.0.2\n set transform-set CML-ESP\n set pfs group14\n\
+      \ match address CML-PROTECTED\n exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.1 255.255.255.252\n no\
+      \ shutdown\n crypto map CML-VPN\n exit\nip route 192.0.2.2 255.255.255.255 198.18.0.2\nend\n"
+  cpu_limit: 100
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
@@ -68,52 +74,25 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
-  label: SPOKE1
+  label: R2
   node_definition: iosv
-  x: -420
-  y: 120
   configuration:
   - name: ios_config.txt
-    content: "hostname SPOKE1\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR Site To Site IPsec IOS\
-      \ ^C\ninterface GigabitEthernet0/0\n description SECCORE-SCOR Site To Site IPsec IOS\n ip address\
-      \ 10.0.12.2 255.255.255.252\n no shutdown\ninterface Loopback0\n description SECCORE-SCOR Site To\
-      \ Site IPsec IOS\n ip address 172.16.1.1 255.255.255.255\n no shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nno logging console\ncrypto isakmp policy 10\n encr aes 256\n\
+      \ hash sha256\n authentication pre-share\n group 14\n lifetime 3600\n exit\ncrypto isakmp key CML-LAB-PSK-only-984\
+      \ address 198.18.0.1\ncrypto ipsec transform-set CML-ESP esp-aes 256 esp-sha256-hmac\n mode tunnel\n\
+      \ exit\nip access-list extended CML-PROTECTED\n permit ip host 192.0.2.2 host 192.0.2.1\n exit\n\
+      crypto map CML-VPN 10 ipsec-isakmp\n set peer 198.18.0.1\n set transform-set CML-ESP\n set pfs group14\n\
+      \ match address CML-PROTECTED\n exit\ninterface Loopback0\n ip address 192.0.2.2 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.2 255.255.255.252\n no\
+      \ shutdown\n crypto map CML-VPN\n exit\nip route 192.0.2.1 255.255.255.255 198.18.0.1\nend\n"
+  cpu_limit: 100
   priority: 99
-  tags: []
-- id: n2
-  label: SPOKE2
-  node_definition: iosv
-  x: 60
-  y: 120
-  configuration:
-  - name: ios_config.txt
-    content: "hostname SPOKE2\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR Site To Site IPsec IOS\
-      \ ^C\ninterface GigabitEthernet0/0\n description SECCORE-SCOR Site To Site IPsec IOS\n ip address\
-      \ 10.0.13.2 255.255.255.252\n no shutdown\ninterface Loopback0\n description SECCORE-SCOR Site To\
-      \ Site IPsec IOS\n ip address 172.16.2.1 255.255.255.255\n no shutdown\nend"
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
@@ -134,55 +113,12 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 98
-  tags: []
-- id: n3
-  label: INTERNET
-  node_definition: iosv
-  x: 300
-  y: -120
-  configuration:
-  - name: ios_config.txt
-    content: "hostname INTERNET\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR Site To Site IPsec IOS\
-      \ ^C\ninterface GigabitEthernet0/0\n description SECCORE-SCOR Site To Site IPsec IOS\n ip address\
-      \ 203.0.113.1 255.255.255.252\n no shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  priority: 97
   tags: []
 links:
 - id: l0
   n1: n0
   i1: i1
   n2: n1
-  i2: i1
-- id: l1
-  n1: n0
-  i1: i2
-  n2: n2
-  i2: i1
-- id: l2
-  n1: n0
-  i1: i3
-  n2: n3
   i2: i1
 annotations: []
 smart_annotations: []

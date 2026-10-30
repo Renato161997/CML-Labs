@@ -621,5 +621,124 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-901-031-gitops-network-change-pipeline.md",
     "example_profile": "native-iosxe-gitops"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/035-ipsec-site-to-site-concepts.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-035-ipsec-site-to-site-concepts.md"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/009-site-to-site-ipsec-ios.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-009-site-to-site-ipsec-ios.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/041-event-driven-automation.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-041-event-driven-automation.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/024-mpls-l3vpn-concepts.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 90,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-024-mpls-l3vpn-concepts.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/049-ccna-capstone-branch-office.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 90,
+    "kind": "capstone",
+    "workbook": "docs/workbooks/200-301-049-ccna-capstone-branch-office.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/assessment/047-ccna-practical-checkpoint-one.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "assessment",
+    "workbook": "docs/workbooks/200-301-047-ccna-practical-checkpoint-one.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/assessment/048-ccna-practical-checkpoint-two.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 65,
+    "kind": "assessment",
+    "workbook": "docs/workbooks/200-301-048-ccna-practical-checkpoint-two.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/024-ip-sla-tracking.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 60,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-024-ip-sla-tracking.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/026-syslog-snmp-ntp.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 85,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-026-syslog-snmp-ntp.md",
+    "example_profile": "native-snmp"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/027-ntp-syslog-snmp.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 85,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-027-ntp-syslog-snmp.md",
+    "example_profile": "native-snmp"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/021-dmvpn-phase2.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 95,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-021-dmvpn-phase2.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/022-dmvpn-phase3.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 95,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-022-dmvpn-phase3.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/038-dmvpn-hub-spoke-break-fix.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 95,
+    "kind": "break-fix",
+    "workbook": "docs/workbooks/300-410-038-dmvpn-hub-spoke-break-fix.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/007-vrf-lite-route-leaking.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 85,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-007-vrf-lite-route-leaking.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/043-vrf-lite-shared-services.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 85,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-043-vrf-lite-shared-services.md"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/013-segmentation-vrf-acl.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 85,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-013-segmentation-vrf-acl.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/029-router-hardening.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 80,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-029-router-hardening.md",
+    "example_profile": "ssh-policy"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/036-secure-management-plane.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 80,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-036-secure-management-plane.md",
+    "example_profile": "secure-management"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/management/040-secure-admin-plane.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 80,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-040-secure-admin-plane.md",
+    "example_profile": "ssh-policy"
   }
 }

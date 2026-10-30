@@ -68,16 +68,6 @@
       "completed_utc": "2026-10-24T18:49:58Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/041-event-driven-automation.yaml",
-      "sha256": "bbb3d03760a774cf2e2d469e6114a23afda725dcc9f39697581f0f009d8a90e3",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:49:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:49:59Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/capstone/050-encor-capstone-enterprise-edge.yaml",
       "sha256": "132a57cf04188e1dea4ad6c23dc031d0b9ebded36f4e75cced12ddf0ca0021d3",
       "cml_version": "2.10.1+build.21",
@@ -128,30 +118,10 @@
       "completed_utc": "2026-10-24T18:50:03Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/024-ip-sla-tracking.yaml",
-      "sha256": "c5144e55ff0fab8bfa10cc9d42214aee842e49350773cd0090801ca2461536a0",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:03Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:03Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/025-netflow-telemetry.yaml",
       "sha256": "e06f76856e91d379707441efcb3e20c5470f7f9735b1f3adb597f69e12e8b15e",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-24T18:50:03Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:04Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/026-syslog-snmp-ntp.yaml",
-      "sha256": "9dfb50736663213abeb841efb301f07c2231bf7358e784a081feeb45f4bf94c9",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:04Z",
       "checks": [],
       "status": "import-export-pass",
       "test_lab_removed": true,
@@ -186,16 +156,6 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-24T18:50:04Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/043-vrf-lite-shared-services.yaml",
-      "sha256": "f3c06a91837bfa6c4e5d440ab42f79e9ca4cd4f14ed1028a326d7995c312ee3c",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:04Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:05Z"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/044-qos-marking-and-policing.yaml",
@@ -278,16 +238,6 @@
       "completed_utc": "2026-10-24T18:50:07Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/036-secure-management-plane.yaml",
-      "sha256": "c93d00ba6f7fa6d606e7716cd7e42bc8c92a6b4ffddc025a68c53e6f4c64d3e6",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:07Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:07Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/troubleshooting/047-campus-routing-blackhole.yaml",
       "sha256": "3e7f36869f57c8cde0aba05184c36e2de55daa194b0eb62bba7c98029e4fbc0e",
       "cml_version": "2.10.1+build.21",
@@ -296,16 +246,6 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-24T18:50:07Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/007-vrf-lite-route-leaking.yaml",
-      "sha256": "2bf493f8ea094b785b2d9eb063d59ea9a9a5213ed01190735a014fda6c518170",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:08Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:08Z"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml",
@@ -518,16 +458,6 @@
       "completed_utc": "2026-10-24T18:50:13Z"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/management/040-secure-admin-plane.yaml",
-      "sha256": "fad1ed07bea1d1ff59a9d31517f7370056b6b27e21fb634f5ef0953bc847ddcc",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:13Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:13Z"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/nac/043-nac-quarantine-vlan-concept.yaml",
       "sha256": "a17e2eb9d8a891d6eb111ea2f0ab4d72f8e73047ba9b9145b641e44aaa19a2da",
       "cml_version": "2.10.1+build.21",
@@ -568,16 +498,6 @@
       "completed_utc": "2026-10-24T18:50:14Z"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/009-site-to-site-ipsec-ios.yaml",
-      "sha256": "880e443ce77a8635848e10b53d17f2df2d58af204599f07012c040fdf90e1cf5",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:14Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:14Z"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/010-remote-access-vpn-concepts.yaml",
       "sha256": "3bd96f1d66ca4a73e966648c9a607152669579f5971582a38407c8396f998853",
       "cml_version": "2.10.1+build.21",
@@ -600,16 +520,6 @@
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/012-8021x-mab-nac.yaml",
       "sha256": "cc1e61bde88f835f76772e3de82d2f39ea77344ae18b3e00d127d48f4e1272bc",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:15Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:15Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/013-segmentation-vrf-acl.yaml",
-      "sha256": "83cbd0925ea84762e8a41ca813c3854eb6d896a28f61794b460990ebd5a67c17",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-24T18:50:15Z",
       "checks": [],
@@ -1048,38 +958,8 @@
       "completed_utc": "2026-10-24T18:50:28Z"
     },
     {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/assessment/047-ccna-practical-checkpoint-one.yaml",
-      "sha256": "46e6644aa57dc43467140df97b4f148212344b6fef4d1fff1d765897e4a6c5c7",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:54Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:54Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/assessment/048-ccna-practical-checkpoint-two.yaml",
-      "sha256": "41dd03275470f1cab969c3e9d130343bf9cbc0a0be7709a59f2bc970f72dfa1a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:54Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:54Z"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/039-controller-based-networking.yaml",
       "sha256": "a45e8add4b55805c2c88c354c7bda44a6e92cbea586d98e8e567a5468c98fa4f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:55Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:55Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/049-ccna-capstone-branch-office.yaml",
-      "sha256": "0171c7e50dc52fe53ffa2206aef490b45dfe75ccdea4aaa3a06fd11e21fb524b",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-25T15:55:55Z",
       "checks": [],
@@ -1208,16 +1088,6 @@
       "completed_utc": "2026-10-25T15:56:02Z"
     },
     {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/035-ipsec-site-to-site-concepts.yaml",
-      "sha256": "98d4ae820d582f42ffd698eba25eccc30545a70cb95fd4c83b30c08f2b077d76",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:03Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:03Z"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/044-layer-2-security-stack.yaml",
       "sha256": "22a717c97408ed6e074d62991a524db4ada9715a1a1552534f91d245607495b8",
       "cml_version": "2.10.1+build.21",
@@ -1318,16 +1188,6 @@
       "completed_utc": "2026-10-25T15:56:09Z"
     },
     {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/029-router-hardening.yaml",
-      "sha256": "278a30cd5de8988e0725b19a7ab3b5e1a55fa81dc6ede319e07b4585e4e9b84e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:09Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:09Z"
-    },
-    {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/031-acl-uRPF.yaml",
       "sha256": "36b32e404aac2f049e341044e77cecae085bc58c58be83b0a045fd0da97879b9",
       "cml_version": "2.10.1+build.21",
@@ -1368,16 +1228,6 @@
       "completed_utc": "2026-10-25T15:56:10Z"
     },
     {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/027-ntp-syslog-snmp.yaml",
-      "sha256": "594a128112b4071e0a1ae0e9f5f08b1977a44946192b1255811d5025a80f225d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:10Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:10Z"
-    },
-    {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/028-netflow-ip-sla.yaml",
       "sha256": "91235938fb8d27cb8a01ee63843159f569c49e6e419ce585d25035c211a1cd62",
       "cml_version": "2.10.1+build.21",
@@ -1398,26 +1248,6 @@
       "completed_utc": "2026-10-25T15:56:14Z"
     },
     {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/021-dmvpn-phase2.yaml",
-      "sha256": "9cb35a6253dcdc096abea39e15be139e018e1ae0066739bc40c452faa18501cb",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:15Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:15Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/022-dmvpn-phase3.yaml",
-      "sha256": "191da82452d7f203b906915ad5de74fda8ed370d8fbd030fd54d07808cc6042a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:15Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:15Z"
-    },
-    {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/023-ipsec-vti.yaml",
       "sha256": "bcda5581cc1a92ca676e3fb95934f65d17e17f32df9bcb2861055db97b40dc50",
       "cml_version": "2.10.1+build.21",
@@ -1426,26 +1256,6 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T15:56:15Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/024-mpls-l3vpn-concepts.yaml",
-      "sha256": "433f409a9cd71901b706ec4472bfe750402267c918313aa83ac56a2787f29fdf",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:16Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:16Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/038-dmvpn-hub-spoke-break-fix.yaml",
-      "sha256": "29650c1e9222c414d76bd30d7b3cf0f570f88c84ee38696a7723dc99316c4db7",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:16Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:16Z"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/015-static-default-routes.yaml",
@@ -2336,6 +2146,196 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-28T16:26:06Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/035-ipsec-site-to-site-concepts.yaml",
+      "sha256": "e83eb16b032fbe097abf4db956be98f763d2a3d2caa2ab5d898bd2e1cb62508d",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T17:59:19Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T17:59:19Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/009-site-to-site-ipsec-ios.yaml",
+      "sha256": "b49f864ba0ee25ef0267d4530740f164e9bd2726ddcb958da6d5dc04d190c8cb",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T17:59:21Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T17:59:21Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/041-event-driven-automation.yaml",
+      "sha256": "b5fe7082ccb7163649c9a28c48b67377d170d35648119a170af0d27a2e8d4d81",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T17:59:23Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T17:59:23Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/024-mpls-l3vpn-concepts.yaml",
+      "sha256": "bd9bde5239d1191d17b6b146fc6487c15991efc5d102d9565bfd3624e70747e5",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T17:59:25Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T17:59:25Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/049-ccna-capstone-branch-office.yaml",
+      "sha256": "f0f22cd7cdf105bcd0b8392f3240d318e09d00ad30c2bff6bb0755585db61739",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T17:59:27Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T17:59:27Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/024-ip-sla-tracking.yaml",
+      "sha256": "1a7a5412c96d5cb9f383e4a9a2d9cdcb7e71c41ced046ae678d94f75369dc6bf",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T17:59:33Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T17:59:33Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/026-syslog-snmp-ntp.yaml",
+      "sha256": "b042e4ebc74e72b21bb91a399ed5a61534befa8d5a2b207c39f8fc576cd56206",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T17:59:35Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T17:59:35Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/027-ntp-syslog-snmp.yaml",
+      "sha256": "fd7f3e6fb527ce35dd9243b2f695282f776bb929e4b1e7b5887fd7a35683f3c4",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T17:59:37Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T17:59:37Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/assessment/047-ccna-practical-checkpoint-one.yaml",
+      "sha256": "6933125971585ab8b55c1041b3cf2eb0613b38dfe852dc71aac3dc12a9ab1982",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T18:48:11Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T18:48:11Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/assessment/048-ccna-practical-checkpoint-two.yaml",
+      "sha256": "2af1f342e8536a8d2518a74c72cd7ca6719f9c0f020b15decdb5618bdf753254",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T18:48:13Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T18:48:13Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/021-dmvpn-phase2.yaml",
+      "sha256": "5b0af8a335c061145e863bb90c32e67cd6423943882dee6c3b73fec078334b37",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T18:48:14Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T18:48:15Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/022-dmvpn-phase3.yaml",
+      "sha256": "7eadafebc54db14d85fa964d69589a689bc893769a1a1e04b38255e828c26127",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T18:48:16Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T18:48:16Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/038-dmvpn-hub-spoke-break-fix.yaml",
+      "sha256": "039e0cd2d36d794580da14a5280b15bbb6a8c59da17ae61e62179814e9aa80e8",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T18:48:18Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T18:48:18Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/007-vrf-lite-route-leaking.yaml",
+      "sha256": "1849cb1d7b260f0c9a9b683d3f53ffa246955141a361f27317a54fb4c6b62627",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T18:48:20Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T18:48:20Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/043-vrf-lite-shared-services.yaml",
+      "sha256": "59aa4d0104306311a2ab29846e437b094881e764c683a799ed48f5b283059357",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T18:48:22Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T18:48:22Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/013-segmentation-vrf-acl.yaml",
+      "sha256": "6ec099fccb06f38124cce2083a757aa66a5bf525bc4b6c54dbf8ba1887d4e32d",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T18:48:24Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T18:48:24Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/029-router-hardening.yaml",
+      "sha256": "092f7f11d13f4bdeffe0a1d7c4d03e1e6e9388b80e97adb3a108dd274355f5c6",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T18:54:23Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T18:54:23Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/management/040-secure-admin-plane.yaml",
+      "sha256": "8b8db473cb3a10051127f5486d0fbbfbcd7bde15eeb17fbe0af9b0047271c543",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-28T18:54:26Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-28T18:54:27Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/036-secure-management-plane.yaml",
+      "sha256": "e364fac744ef8238f84891d94630caa1112f09cb5acedf3d30fce8b944a73d6c",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T13:40:57Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T13:40:57Z"
     }
   ]
 }

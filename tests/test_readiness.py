@@ -2,13 +2,70 @@ import sys
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, call, patch
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
-from readiness import establish_ios_prompt, running_node_states, verify_unconfirmed_consoles
+from readiness import (
+    establish_ios_privilege,
+    establish_ios_prompt,
+    running_node_states,
+    verify_unconfirmed_consoles,
+)
 
 
 class ReadinessTests(unittest.TestCase):
+    def test_interrupted_user_prompt_requires_a_clean_redraw(self):
+        send = Mock()
+        read = Mock(side_effect=["\nHUB>[OK]\n", "\nHUB>\n", "\nHUB#\n"])
+        establish_ios_privilege("HUB", send, read)
+        self.assertEqual(send.call_args_list, [call("\r"), call("\r"), call("enable\r")])
+
+    def test_privilege_negotiation_waits_through_boot_chatter(self):
+        send = Mock()
+        read = Mock(
+            side_effect=[
+                "\nSPOKE-B>\n",
+                "enable\n[OK]\n",
+                "Boot message\nSPOKE-B>\n",
+                "\nSPOKE-B#\n",
+            ]
+        )
+        result = establish_ios_privilege("SPOKE-B", send, read)
+        self.assertIn("SPOKE-B#", result)
+        self.assertEqual(send.call_args_list, [call("\r"), call("enable\r")])
+
+    def test_privilege_needs_a_fresh_exact_named_prompt(self):
+        send = Mock()
+        read = Mock(return_value="\nR1#\n")
+        establish_ios_privilege("R1", send, read)
+        send.assert_called_once_with("\r")
+        read = Mock(return_value="Log mentions R1# while booting\nOTHER#\n")
+        with (
+            patch("readiness.time.monotonic", side_effect=[0, 0, 45]),
+            self.assertRaises(TimeoutError),
+        ):
+            establish_ios_privilege("R1", Mock(), read)
+
+    def test_privilege_negotiation_stops_at_a_credential_prompt(self):
+        send = Mock()
+        read = Mock(side_effect=["\nR1>\n", "\nPassword: "])
+        with self.assertRaises(PermissionError):
+            establish_ios_privilege("R1", send, read)
+        self.assertEqual(send.call_args_list, [call("\r"), call("enable\r")])
+        for invalid in (0, 91, True, "45"):
+            with self.assertRaises(ValueError):
+                establish_ios_privilege("R1", send, read, timeout=invalid)
+
+    def test_iosv_cold_autoconfiguration_can_finish_after_four_minutes(self):
+        send = Mock()
+        read = Mock(return_value="\nR1>\n")
+        with patch("readiness.time.monotonic", side_effect=[0, 260]):
+            result = establish_ios_prompt("R1", "Autoconfiguration\n", send, read, timeout=600)
+        self.assertIn("R1>", result)
+        for invalid in (0, 601, True, "600"):
+            with self.assertRaises(ValueError):
+                establish_ios_prompt("R1", "", send, read, timeout=invalid)
+
     def test_cold_ios_boot_waits_for_the_named_prompt(self):
         send = Mock()
         read = Mock(return_value="\r\nAPI>\r\n")

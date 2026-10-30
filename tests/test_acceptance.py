@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
-from acceptance import execute_plan, validate_plan
+from acceptance import execute_plan, execute_prerequisites, validate_plan
 from console_protocol import response_complete
 from labtools import check_evidence, plan_digest
 
@@ -30,6 +30,52 @@ CHECK = {
 
 
 class AcceptanceTests(unittest.TestCase):
+    def test_fault_dependencies_must_be_healthy_before_mutation(self):
+        plan = {
+            "checks": [CHECK],
+            "prerequisites": [CHECK],
+            "repair": {"node": "R1", "commands": ["configure terminal", "end"]},
+        }
+        self.assertEqual(validate_plan(plan, {"R1"}), [])
+        for output in ("show ip route\nno usable route", "show ip route\n% Invalid input"):
+            connection = Console([output])
+            rows = []
+            with self.assertRaises(AssertionError):
+                execute_prerequisites(
+                    plan, lambda _, connection=connection: connection, rows.append
+                )
+                connection.command("configure terminal")
+            self.assertEqual(connection.commands, [CHECK["command"]])
+            self.assertEqual(rows[0]["phase"], "prerequisite")
+            self.assertFalse(rows[0]["passed"])
+        for invalid in ([], None, "route", {}):
+            self.assertTrue(validate_plan({**plan, "prerequisites": invalid}, {"R1"}))
+        self.assertTrue(validate_plan({**plan, "repair": None}, {"R1"}))
+
+    def test_green_evidence_cannot_omit_or_relabel_fault_dependencies(self):
+        plan = {
+            "checks": [CHECK],
+            "prerequisites": [CHECK],
+            "repair": {"node": "R1", "commands": ["configure terminal", "end"]},
+        }
+        connection = Console(["show ip route\nvia 198.18.0.2"])
+        rows = []
+        execute_prerequisites(plan, lambda _: connection, rows.append)
+        proof = {
+            "sha256": "source",
+            "status": "passed",
+            "cml_version": "2.10",
+            "test_lab_removed": True,
+            "checks": [{**rows[0], "phase": "baseline"}],
+        }
+        self.assertTrue(check_evidence(proof, "fixture", "source", "runtime", expected_plan=plan))
+        proof["checks"].append({**rows[0], "phase": "baseline"})
+        self.assertTrue(check_evidence(proof, "fixture", "source", "runtime", expected_plan=plan))
+        proof["checks"][-1] = rows[0]
+        self.assertEqual(
+            check_evidence(proof, "fixture", "source", "runtime", expected_plan=plan), []
+        )
+
     def test_transition_requires_its_structured_result_before_readback(self):
         step = {
             "name": "API change",

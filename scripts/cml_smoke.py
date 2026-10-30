@@ -24,7 +24,7 @@ from urllib.parse import urlencode, urlsplit, urlunsplit
 
 import paramiko
 import yaml
-from acceptance import CLI_ERROR, execute_plan
+from acceptance import CLI_ERROR, execute_plan, execute_prerequisites
 from console_protocol import response_complete
 from httpx import HTTPError
 from labtools import (
@@ -38,7 +38,12 @@ from labtools import (
     validate,
 )
 from linux_console import NATIVE_CONSOLE_PORT, NATIVE_LINUX, establish_linux_shell
-from readiness import establish_ios_prompt, running_node_states, verify_unconfirmed_consoles
+from readiness import (
+    establish_ios_privilege,
+    establish_ios_prompt,
+    running_node_states,
+    verify_unconfirmed_consoles,
+)
 from virl2_client import ClientLibrary
 from virl2_client.exceptions import APIError
 from websockets.sync.client import connect
@@ -80,10 +85,14 @@ class WebConsole:
             self.socket.send("\x03\r")
             prompt += self.read(3)
             if node.node_definition in ("iosv", "iosvl2", "iol-xe", "ioll2-xe", "csr1000v"):
-                prompt = establish_ios_prompt(self.label, prompt, self.socket.send, self.read)
-                prompt += self.command("enable", 6)
-                if not re.search(re.escape(node.label) + r"#", prompt):
-                    raise RuntimeError("Privileged console prompt was not established")
+                prompt = establish_ios_prompt(
+                    self.label,
+                    prompt,
+                    self.socket.send,
+                    self.read,
+                    timeout=600 if node.node_definition == "iosv" else 240,
+                )
+                establish_ios_privilege(self.label, self.socket.send, self.read)
                 self.command("terminal length 0", 3)
                 self.command("terminal width 511", 3)
             elif node.node_definition in NATIVE_LINUX:
@@ -165,10 +174,14 @@ class SSHConsole:
             self.channel.send("\r")
             prompt += self.read(3)
             if node.node_definition in ("iosv", "iosvl2", "iol-xe", "ioll2-xe", "csr1000v"):
-                prompt = establish_ios_prompt(self.label, prompt, self.channel.send, self.read)
-                prompt += self.command("enable", 6)
-                if not re.search(re.escape(node.label) + r"#", prompt):
-                    raise RuntimeError("Privileged SSH console prompt was not established")
+                prompt = establish_ios_prompt(
+                    self.label,
+                    prompt,
+                    self.channel.send,
+                    self.read,
+                    timeout=600 if node.node_definition == "iosv" else 240,
+                )
+                establish_ios_privilege(self.label, self.channel.send, self.read)
                 self.command("terminal length 0", 3)
                 self.command("terminal width 511", 3)
             elif node.node_definition in NATIVE_LINUX:
@@ -382,6 +395,7 @@ def main():
                 row["console_boot_fallback"] = verify_unconfirmed_consoles(states, console)
 
                 if plan.get("repair"):
+                    execute_prerequisites(plan, console, row["checks"].append)
                     check = plan["checks"][0]
                     initial = console(check["node"]).command(check["command"])
                     assert check["command"] in initial and "% Invalid input" not in initial, (

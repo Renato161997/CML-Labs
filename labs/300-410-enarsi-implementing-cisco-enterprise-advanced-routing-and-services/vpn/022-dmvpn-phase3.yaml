@@ -1,51 +1,69 @@
 lab:
   title: DMVPN Phase 3
-  description: 300-410 ENARSI - Implementing Cisco Enterprise Advanced Routing and Services importable
-    CML topology.
-  notes: '300-410 ENARSI blueprint lab: DMVPN Phase 3
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# DMVPN Phase 3
 
 
-    Topics:
-
-    - DMVPN phase 3
-
-    - NHRP redirect
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Tasks:
-
-    1. Enable redirects
-
-    2. Optimize spoke paths
-
-    3. Verify NHRP cache
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/300-410-022-dmvpn-phase3.md
 
 
-    Useful checks:
+    Three IOSv routers share an isolated Layer2 benchmark-address underlay. The hub and both spokes use
+    mGRE, NHRP and AES256/SHA256 IPsec transport protection with PFS14. Phase2 disables hub EIGRP next-hop-self
+    so spokes learn direct overlay next hops. Phase3 retains the hub next hop, advertises a /24 summary
+    and uses actual NHRP redirect/shortcut processing to install a more-specific path. Direct-peer NHRP
+    and IPsec packet counters are checked separately from hub registration and routed pings. IKEv1 and
+    the PUBLIC CML-DMVPN-PUBLIC-ONLY / CMLONLY strings are disposable legacy interoperability fixtures,
+    never production credentials or a production security recommendation. MTU/MSS are conservative lab
+    settings; scale, throughput and Internet NAT traversal are outside scope. Nominal RAM is 3x512+768
+    MiB. A protocol-specific ESP ingress ACL drops only direct SPOKE-A to SPOKE-B encrypted packets while
+    ICMP underlay and the encrypted hub path remain healthy; removing that attachment restores payload
+    forwarding.
 
-    - show ip interface brief
 
-    - show running-config
+    Objectives:
 
-    - show ip route
+    - Register real NHRP mappings over mGRE protected with actual IPsec.
 
-    - show ip protocols
+    - Verify the distinct Phase2 next-hop or Phase3 aggregate/shortcut behavior with real spoke-to-spoke
+    traffic.
 
-    - ping and traceroute between endpoints'
+    - Isolate the intended authentication or ESP forwarding fault while preserving the healthy underlay,
+    then recover.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: HUB1
+  label: HUB
   node_definition: iosv
-  x: -180
-  y: -120
   configuration:
   - name: ios_config.txt
-    content: "hostname HUB1\nno ip domain-lookup\nbanner motd ^C ENARSI DMVPN Phase 3 ^C\ninterface GigabitEthernet0/0\n\
-      \ description ENARSI DMVPN Phase 3\n ip address 10.0.12.1 255.255.255.252\n no shutdown\ninterface\
-      \ GigabitEthernet0/1\n description ENARSI DMVPN Phase 3\n ip address 10.0.13.1 255.255.255.252\n\
-      \ no shutdown\ninterface Loopback0\n description ENARSI DMVPN Phase 3\n ip address 172.16.0.1 255.255.255.255\n\
-      \ no shutdown\nend"
+    content: "hostname HUB\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nno logging console\ninterface Loopback0\n ip address 192.0.2.1\
+      \ 255.255.255.255\n no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.1 255.255.255.0\n\
+      \ no shutdown\n exit\ncrypto isakmp policy 10\n encryption aes 256\n hash sha256\n authentication\
+      \ pre-share\n group 14\n lifetime 3600\n exit\ncrypto isakmp key CML-DMVPN-PUBLIC-ONLY address 0.0.0.0\
+      \ 0.0.0.0\ncrypto ipsec transform-set DMVPN-SET esp-aes 256 esp-sha256-hmac\n mode transport\n exit\n\
+      crypto ipsec profile DMVPN-PROFILE\n set transform-set DMVPN-SET\n set pfs group14\n exit\ninterface\
+      \ Tunnel0\n ip address 172.16.0.1 255.255.255.0\n ip mtu 1400\n ip tcp adjust-mss 1360\n no ip redirects\n\
+      \ ip nhrp authentication CMLONLY\n ip nhrp network-id 100\n ip nhrp holdtime 180\n ip nhrp map multicast\
+      \ dynamic\n no ip split-horizon eigrp 100\n ip nhrp redirect\n ip summary-address eigrp 100 192.0.2.0\
+      \ 255.255.255.0\n tunnel source GigabitEthernet0/0\n tunnel mode gre multipoint\n tunnel key 100\n\
+      \ tunnel protection ipsec profile DMVPN-PROFILE\n no shutdown\n exit\nrouter eigrp 100\n no auto-summary\n\
+      \ network 172.16.0.0 0.0.0.255\n network 192.0.2.1 0.0.0.0\n passive-interface Loopback0\n exit\n\
+      end\n"
+  cpu_limit: 100
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
@@ -66,19 +84,29 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
-  label: SPOKE1
+  label: SPOKE-A
   node_definition: iosv
-  x: -420
-  y: 120
   configuration:
   - name: ios_config.txt
-    content: "hostname SPOKE1\nno ip domain-lookup\nbanner motd ^C ENARSI DMVPN Phase 3 ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI DMVPN Phase 3\n ip address 10.0.12.2 255.255.255.252\n\
-      \ no shutdown\ninterface Loopback0\n description ENARSI DMVPN Phase 3\n ip address 172.16.1.1 255.255.255.255\n\
-      \ no shutdown\nend"
+    content: "hostname SPOKE-A\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nno logging console\ninterface Loopback0\n ip address 192.0.2.2\
+      \ 255.255.255.255\n no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.2 255.255.255.0\n\
+      \ no shutdown\n exit\ncrypto isakmp policy 10\n encryption aes 256\n hash sha256\n authentication\
+      \ pre-share\n group 14\n lifetime 3600\n exit\ncrypto isakmp key CML-DMVPN-PUBLIC-ONLY address 0.0.0.0\
+      \ 0.0.0.0\ncrypto ipsec transform-set DMVPN-SET esp-aes 256 esp-sha256-hmac\n mode transport\n exit\n\
+      crypto ipsec profile DMVPN-PROFILE\n set transform-set DMVPN-SET\n set pfs group14\n exit\ninterface\
+      \ Tunnel0\n ip address 172.16.0.2 255.255.255.0\n ip mtu 1400\n ip tcp adjust-mss 1360\n no ip redirects\n\
+      \ ip nhrp authentication CMLONLY\n ip nhrp network-id 100\n ip nhrp holdtime 180\n ip nhrp map 172.16.0.1\
+      \ 198.18.0.1\n ip nhrp map multicast 198.18.0.1\n ip nhrp nhs 172.16.0.1\n ip nhrp shortcut\n tunnel\
+      \ source GigabitEthernet0/0\n tunnel mode gre multipoint\n tunnel key 100\n tunnel protection ipsec\
+      \ profile DMVPN-PROFILE\n no shutdown\n exit\nrouter eigrp 100\n no auto-summary\n network 172.16.0.0\
+      \ 0.0.0.255\n network 192.0.2.2 0.0.0.0\n passive-interface Loopback0\n exit\nend\n"
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
@@ -99,19 +127,30 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 99
   tags: []
 - id: n2
-  label: SPOKE2
+  label: SPOKE-B
   node_definition: iosv
-  x: 60
-  y: 120
   configuration:
   - name: ios_config.txt
-    content: "hostname SPOKE2\nno ip domain-lookup\nbanner motd ^C ENARSI DMVPN Phase 3 ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI DMVPN Phase 3\n ip address 10.0.13.2 255.255.255.252\n\
-      \ no shutdown\ninterface Loopback0\n description ENARSI DMVPN Phase 3\n ip address 172.16.2.1 255.255.255.255\n\
-      \ no shutdown\nend"
+    content: "hostname SPOKE-B\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nno logging console\ninterface Loopback0\n ip address 192.0.2.3\
+      \ 255.255.255.255\n no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.3 255.255.255.0\n\
+      \ no shutdown\n exit\ncrypto isakmp policy 10\n encryption aes 256\n hash sha256\n authentication\
+      \ pre-share\n group 14\n lifetime 3600\n exit\ncrypto isakmp key CML-DMVPN-PUBLIC-ONLY address 0.0.0.0\
+      \ 0.0.0.0\ncrypto ipsec transform-set DMVPN-SET esp-aes 256 esp-sha256-hmac\n mode transport\n exit\n\
+      crypto ipsec profile DMVPN-PROFILE\n set transform-set DMVPN-SET\n set pfs group14\n exit\ninterface\
+      \ Tunnel0\n ip address 172.16.0.3 255.255.255.0\n ip mtu 1400\n ip tcp adjust-mss 1360\n no ip redirects\n\
+      \ ip nhrp authentication CMLONLY\n ip nhrp network-id 100\n ip nhrp holdtime 180\n ip nhrp map 172.16.0.1\
+      \ 198.18.0.1\n ip nhrp map multicast 198.18.0.1\n ip nhrp nhs 172.16.0.1\n ip nhrp shortcut\n tunnel\
+      \ source GigabitEthernet0/0\n tunnel mode gre multipoint\n tunnel key 100\n tunnel protection ipsec\
+      \ profile DMVPN-PROFILE\n no shutdown\n exit\nrouter eigrp 100\n no auto-summary\n network 172.16.0.0\
+      \ 0.0.0.255\n network 192.0.2.3 0.0.0.0\n passive-interface Loopback0\n exit\nip access-list extended\
+      \ BLOCK-DIRECT-ESP\n deny esp host 198.18.0.2 host 198.18.0.3\n permit ip any any\n exit\nend\n"
+  cpu_limit: 100
+  priority: 98
+  x: 520
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
@@ -132,18 +171,21 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 98
   tags: []
 - id: n3
-  label: INTERNET
-  node_definition: iosv
-  x: 300
-  y: -120
+  label: UNDERLAY
+  node_definition: iosvl2
   configuration:
   - name: ios_config.txt
-    content: "hostname INTERNET\nno ip domain-lookup\nbanner motd ^C ENARSI DMVPN Phase 3 ^C\ninterface\
-      \ GigabitEthernet0/0\n description ENARSI DMVPN Phase 3\n ip address 203.0.113.1 255.255.255.252\n\
-      \ no shutdown\nend"
+    content: "hostname UNDERLAY\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nvtp mode transparent\nspanning-tree mode rapid-pvst\ninterface\
+      \ GigabitEthernet0/0\n switchport mode access\n spanning-tree portfast\n no shutdown\n exit\ninterface\
+      \ GigabitEthernet0/1\n switchport mode access\n spanning-tree portfast\n no shutdown\n exit\ninterface\
+      \ GigabitEthernet0/2\n switchport mode access\n spanning-tree portfast\n no shutdown\n exit\nend\n"
+  cpu_limit: 100
+  priority: 97
+  x: 780
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
@@ -164,23 +206,22 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 97
   tags: []
 links:
 - id: l0
   n1: n0
   i1: i1
-  n2: n1
-  i2: i1
-- id: l1
-  n1: n0
-  i1: i2
-  n2: n2
-  i2: i1
-- id: l2
-  n1: n0
-  i1: i3
   n2: n3
   i2: i1
+- id: l1
+  n1: n1
+  i1: i1
+  n2: n3
+  i2: i2
+- id: l2
+  n1: n2
+  i1: i1
+  n2: n3
+  i2: i3
 annotations: []
 smart_annotations: []
