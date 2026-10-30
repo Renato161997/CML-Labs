@@ -14626,5 +14626,535 @@
         ]
       }
     ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/025-netflow-telemetry.yaml": {
+    "checks": [
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/f.py proof 8080",
+        "pattern": "\"observed\": true",
+        "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+        "attempts": 60,
+        "interval_seconds": 2,
+        "command_timeout": 15
+      }
+    ],
+    "transitions": [
+      {
+        "name": "block only transit flow export",
+        "node": "FILTER",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended BLOCK-EXPORT",
+          "deny udp host 198.18.30.1 host 198.18.20.20 eq 2055",
+          "permit ip any any",
+          "exit",
+          "interface GigabitEthernet0/0",
+          "ip access-group BLOCK-EXPORT in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 8081",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/f.py quiet 8081",
+            "pattern": "\"quiet\": true",
+            "expectation": "No matching new phase flow arrives during the complete40-second observation window.",
+            "attempts": 1,
+            "command_timeout": 60
+          },
+          {
+            "node": "FILTER",
+            "command": "show access-lists BLOCK-EXPORT",
+            "pattern": "deny udp host 198\\.18\\.30\\.1 host 198\\.18\\.20\\.20 eq 2055[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The transit filter counts actual attempted exports.",
+            "attempts": 45,
+            "interval_seconds": 2
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore new flow delivery",
+        "node": "FILTER",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip access-group BLOCK-EXPORT in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 8082",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/f.py proof 8082",
+            "pattern": "\"observed\": true",
+            "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+            "attempts": 60,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/028-netflow-ip-sla.yaml": {
+    "checks": [
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "GW",
+        "command": "show track 1",
+        "pattern": "Reachability is Up",
+        "expectation": "The actual SLA reachability object is Up.",
+        "attempts": 20,
+        "interval_seconds": 2
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/f.py proof 8080",
+        "pattern": "\"observed\": true",
+        "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+        "attempts": 60,
+        "interval_seconds": 2,
+        "command_timeout": 15
+      }
+    ],
+    "transitions": [
+      {
+        "name": "drop only the monitored echo request",
+        "node": "FILTER",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended DROP-SLA-FLOW",
+          "deny icmp host 198.18.30.1 host 198.18.20.20 echo",
+          "permit ip any any",
+          "exit",
+          "interface GigabitEthernet0/0",
+          "ip access-group DROP-SLA-FLOW in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "GW",
+            "command": "show track 1",
+            "pattern": "Reachability is Down",
+            "expectation": "The actual SLA reachability object becomes Down.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 8081",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/f.py proof 8081",
+            "pattern": "\"observed\": true",
+            "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+            "attempts": 60,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "FILTER",
+            "command": "show access-lists DROP-SLA-FLOW",
+            "pattern": "deny icmp host 198\\.18\\.30\\.1 host 198\\.18\\.20\\.20 echo[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The actual monitored probe hits the intended deny."
+          }
+        ]
+      },
+      {
+        "name": "recover SLA without relying on old flow records",
+        "node": "FILTER",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip access-group DROP-SLA-FLOW in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "GW",
+            "command": "show track 1",
+            "pattern": "Reachability is Up",
+            "expectation": "The actual SLA reachability object is Up.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 8082",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/f.py proof 8082",
+            "pattern": "\"observed\": true",
+            "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+            "attempts": 60,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/026-netflow-stealthwatch.yaml": {
+    "checks": [
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/f.py proof 8080",
+        "pattern": "\"observed\": true",
+        "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+        "attempts": 60,
+        "interval_seconds": 2,
+        "command_timeout": 15
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/f.py analyze",
+        "pattern": "(?s)(?=.*\"flagged\": false)(?=.*\"suppression\": false)",
+        "expectation": "Normal same-service flow records do not cross the explicit distinct-port threshold."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "generate the bounded fixture multiport traffic",
+        "node": "INSIDE",
+        "commands": [
+          "python3 /lab/f.py scan"
+        ],
+        "command_pattern": "\"fixture_tcp_attempts\": 7",
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/f.py analyze",
+            "pattern": "(?s)(?=.*\"flagged\": true)(?=.*\"suppression\": false)",
+            "expectation": "At least six actual observed destination ports cross the explicit toy-rule threshold.",
+            "attempts": 60,
+            "interval_seconds": 2
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "compare an analysis-only suppression",
+        "node": "OUTSIDE",
+        "commands": [
+          "python3 /lab/f.py analyze --suppress-scan"
+        ],
+        "command_pattern": "\"flagged\": false",
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/f.py analyze --suppress-scan",
+            "pattern": "(?s)(?=.*\"flagged\": false)(?=.*\"suppression\": true)(?=.*\"distinct_ports\": (?:[6-9]|[1-9][0-9]+))",
+            "expectation": "Suppression changes evaluation while the actual observed port set remains."
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/f.py analyze",
+            "pattern": "(?s)(?=.*\"flagged\": true)(?=.*\"suppression\": false)",
+            "expectation": "At least six actual observed destination ports cross the explicit toy-rule threshold.",
+            "attempts": 60,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/031-acl-uRPF.yaml": {
+    "checks": [
+      {
+        "node": "GW",
+        "command": "show ip route 192.0.2.10",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.1\\.2",
+        "expectation": "The real reverse route deliberately points to the other interface."
+      },
+      {
+        "node": "HOST",
+        "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The explicitly asymmetric service probe forwards.",
+        "attempts": 20,
+        "interval_seconds": 2
+      },
+      {
+        "node": "HOST",
+        "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "A source whose reverse path matches ingress remains healthy."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "enable strict reverse-path validation",
+        "node": "GW",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ip verify unicast source reachable-via rx",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The explicitly asymmetric service probe is rejected by the selected source-validation control.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "GW",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "[1-9][0-9]* verification drops",
+            "expectation": "The actual uRPF verifier counts rejected packets."
+          },
+          {
+            "node": "HOST",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "A source whose reverse path matches ingress remains healthy."
+          },
+          {
+            "node": "GW",
+            "command": "show ip route 192.0.2.10",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.1\\.2",
+            "expectation": "The real reverse route deliberately points to the other interface."
+          }
+        ]
+      },
+      {
+        "name": "allow asymmetric reachable sources with loose mode",
+        "node": "GW",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no ip verify unicast source reachable-via rx",
+          "ip verify unicast source reachable-via any",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The explicitly asymmetric service probe forwards.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "HOST",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "A source whose reverse path matches ingress remains healthy."
+          },
+          {
+            "node": "GW",
+            "command": "show ip route 192.0.2.10",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.1\\.2",
+            "expectation": "The real reverse route deliberately points to the other interface."
+          }
+        ]
+      },
+      {
+        "name": "apply an independent source-prefix ACL",
+        "node": "GW",
+        "commands": [
+          "configure terminal",
+          "ip access-list standard SOURCE-PREFIX",
+          "permit 198.18.0.0 0.0.0.3",
+          "deny any",
+          "exit",
+          "interface Ethernet0/0",
+          "ip access-group SOURCE-PREFIX in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The explicitly asymmetric service probe is rejected by the selected source-validation control.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "HOST",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "A source whose reverse path matches ingress remains healthy."
+          },
+          {
+            "node": "GW",
+            "command": "show access-lists SOURCE-PREFIX",
+            "pattern": "deny\\s+any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The independent prefix policy counts actual source denies."
+          }
+        ]
+      },
+      {
+        "name": "remove only the prefix policy",
+        "node": "GW",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no ip access-group SOURCE-PREFIX in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The explicitly asymmetric service probe forwards.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "GW",
+            "command": "show ip route 192.0.2.10",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.1\\.2",
+            "expectation": "The real reverse route deliberately points to the other interface."
+          }
+        ]
+      },
+      {
+        "name": "restore the original unfiltered asymmetric path",
+        "node": "GW",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no ip verify unicast source reachable-via any",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The explicitly asymmetric service probe forwards.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "HOST",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "A source whose reverse path matches ingress remains healthy."
+          },
+          {
+            "node": "GW",
+            "command": "show ip route 192.0.2.10",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.1\\.2",
+            "expectation": "The real reverse route deliberately points to the other interface."
+          }
+        ]
+      }
+    ]
   }
 }

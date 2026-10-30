@@ -28876,6 +28876,926 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T16:02:32Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/026-netflow-stealthwatch.yaml",
+      "sha256": "317c1a22fabd2d1e03d6eed309f65c19c0d8eb1e9f1699bc87c3ef1d5ef6cf89",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T16:12:52Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/f.py proof 8080",
+          "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/f.py proof 8080\n{\"datagrams\": 1, \"matching_records\": 1, \"observed\": true, \"port\": 8080}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/f.py analyze",
+          "expectation": "Normal same-service flow records do not cross the explicit distinct-port threshold.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/f.py analyze\n{\"distinct_ports\": 1, \"evaluated_ports\": 1, \"flagged\": false, \"suppression\": false}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "generate the bounded fixture multiport traffic",
+          "kind": "configuration",
+          "node": "INSIDE",
+          "command": "python3 /lab/f.py scan",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/f.py scan\n{\"destination\": \"198.18.20.20\", \"fixture_tcp_attempts\": 7}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "generate the bounded fixture multiport traffic",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/f.py analyze",
+          "expectation": "At least six actual observed destination ports cross the explicit toy-rule threshold.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/f.py analyze\n{\"distinct_ports\": 8, \"evaluated_ports\": 8, \"flagged\": true, \"suppression\": false}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "generate the bounded fixture multiport traffic",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "compare an analysis-only suppression",
+          "kind": "configuration",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/f.py analyze --suppress-scan",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/f.py analyze --suppress-scan\n{\"distinct_ports\": 8, \"evaluated_ports\": 1, \"flagged\": false, \"suppression\": true}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "compare an analysis-only suppression",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/f.py analyze --suppress-scan",
+          "expectation": "Suppression changes evaluation while the actual observed port set remains.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/f.py analyze --suppress-scan\n{\"distinct_ports\": 8, \"evaluated_ports\": 1, \"flagged\": false, \"suppression\": true}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "compare an analysis-only suppression",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/f.py analyze",
+          "expectation": "At least six actual observed destination ports cross the explicit toy-rule threshold.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/f.py analyze\n{\"distinct_ports\": 8, \"evaluated_ports\": 8, \"flagged\": true, \"suppression\": false}\nroot@OUTSIDE:~# "
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "GW": "STARTED",
+        "FILTER": "STARTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "BOOTED"
+      },
+      "images": {
+        "GW": "iosv-159-3-m12",
+        "FILTER": "iosv-159-3-m12",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "plan_sha256": "43d4473977eeed98391cb191657e1d41512a663d1c5edc85afe9b911c993c126",
+      "console_boot_fallback": [
+        "GW",
+        "FILTER"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T16:18:15Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/028-netflow-ip-sla.yaml",
+      "sha256": "11edddfe34c68363c190d68f3796ca176f7d3fd508bf26c55c6bd0cbac7e4911",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T16:12:52Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "GW",
+          "command": "show track 1",
+          "expectation": "The actual SLA reachability object is Up.",
+          "passed": true,
+          "output": "\nGW#show track 1\nTrack 1\n  IP SLA 1 reachability\n  Reachability is Up\n    2 changes, last change 00:00:23\n  Latest operation return code: OK\n  Latest RTT (millisecs) 1\nGW#"
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/f.py proof 8080",
+          "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/f.py proof 8080\n{\"datagrams\": 1, \"matching_records\": 1, \"observed\": true, \"port\": 8080}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "drop only the monitored echo request",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFILTER#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFILTER(config)#"
+        },
+        {
+          "phase": "drop only the monitored echo request",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "ip access-list extended DROP-SLA-FLOW",
+          "passed": true,
+          "output": "\nFILTER(config)#ip access-list extended DROP-SLA-FLOW\nFILTER(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only the monitored echo request",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "deny icmp host 198.18.30.1 host 198.18.20.20 echo",
+          "passed": true,
+          "output": "\nFILTER(config-ext-nacl)#deny icmp host 198.18.30.1 host 198.18.20.20 echo\nFILTER(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only the monitored echo request",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "permit ip any any",
+          "passed": true,
+          "output": "\nFILTER(config-ext-nacl)#permit ip any any\nFILTER(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only the monitored echo request",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "exit",
+          "passed": true,
+          "output": "\nFILTER(config-ext-nacl)#exit\nFILTER(config)#"
+        },
+        {
+          "phase": "drop only the monitored echo request",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nFILTER(config)#interface GigabitEthernet0/0\nFILTER(config-if)#"
+        },
+        {
+          "phase": "drop only the monitored echo request",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "ip access-group DROP-SLA-FLOW in",
+          "passed": true,
+          "output": "\nFILTER(config-if)#ip access-group DROP-SLA-FLOW in\nFILTER(config-if)#"
+        },
+        {
+          "phase": "drop only the monitored echo request",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "end",
+          "passed": true,
+          "output": "\nFILTER(config-if)#end\nFILTER#"
+        },
+        {
+          "phase": "drop only the monitored echo request",
+          "node": "GW",
+          "command": "show track 1",
+          "expectation": "The actual SLA reachability object becomes Down.",
+          "passed": true,
+          "output": "\nGW#show track 1\nTrack 1\n  IP SLA 1 reachability\n  Reachability is Down\n    3 changes, last change 00:00:01\n  Latest operation return code: Timeout\nGW#"
+        },
+        {
+          "phase": "drop only the monitored echo request",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 8081",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 8081\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "drop only the monitored echo request",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/f.py proof 8081",
+          "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/f.py proof 8081\n{\"datagrams\": 2, \"matching_records\": 1, \"observed\": true, \"port\": 8081}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "drop only the monitored echo request",
+          "node": "FILTER",
+          "command": "show access-lists DROP-SLA-FLOW",
+          "expectation": "The actual monitored probe hits the intended deny.",
+          "passed": true,
+          "output": "\nFILTER#show access-lists DROP-SLA-FLOW\nExtended IP access list DROP-SLA-FLOW\n    10 deny icmp host 198.18.30.1 host 198.18.20.20 echo (4 matches)\n    20 permit ip any any (6 matches)\nFILTER#"
+        },
+        {
+          "phase": "recover SLA without relying on old flow records",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFILTER#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFILTER(config)#"
+        },
+        {
+          "phase": "recover SLA without relying on old flow records",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nFILTER(config)#interface GigabitEthernet0/0\nFILTER(config-if)#"
+        },
+        {
+          "phase": "recover SLA without relying on old flow records",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "no ip access-group DROP-SLA-FLOW in",
+          "passed": true,
+          "output": "\nFILTER(config-if)#no ip access-group DROP-SLA-FLOW in\nFILTER(config-if)#"
+        },
+        {
+          "phase": "recover SLA without relying on old flow records",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "end",
+          "passed": true,
+          "output": "\nFILTER(config-if)#end\nFILTER#"
+        },
+        {
+          "phase": "recover SLA without relying on old flow records",
+          "node": "GW",
+          "command": "show track 1",
+          "expectation": "The actual SLA reachability object is Up.",
+          "passed": true,
+          "output": "\nGW#show track 1\nTrack 1\n  IP SLA 1 reachability\n  Reachability is Up\n    4 changes, last change 00:00:01\n  Latest operation return code: OK\n  Latest RTT (millisecs) 2\nGW#"
+        },
+        {
+          "phase": "recover SLA without relying on old flow records",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 8082",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 8082\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "recover SLA without relying on old flow records",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/f.py proof 8082",
+          "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/f.py proof 8082\n{\"datagrams\": 3, \"matching_records\": 1, \"observed\": true, \"port\": 8082}\nroot@OUTSIDE:~# "
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "GW": "STARTED",
+        "FILTER": "STARTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "BOOTED"
+      },
+      "images": {
+        "GW": "iosv-159-3-m12",
+        "FILTER": "iosv-159-3-m12",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "plan_sha256": "19d82955421bd252f17f3868207ed201df32c01ba7c193b8478666c75f076353",
+      "console_boot_fallback": [
+        "GW",
+        "FILTER"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T16:19:11Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/031-acl-uRPF.yaml",
+      "sha256": "2cdffb976d853b25769242f6691f5f380ba83b09928f081d35082159fb0b57af",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T16:18:15Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "GW",
+          "command": "show ip route 192.0.2.10",
+          "expectation": "The real reverse route deliberately points to the other interface.",
+          "passed": true,
+          "output": "\nGW#show ip route 192.0.2.10\nRouting entry for 192.0.2.10/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.1.2\n      Route metric is 0, traffic share count is 1\nGW#"
+        },
+        {
+          "phase": "baseline",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+          "expectation": "The explicitly asymmetric service probe forwards.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST#"
+        },
+        {
+          "phase": "baseline",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "A source whose reverse path matches ingress remains healthy.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.0.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST#"
+        },
+        {
+          "phase": "enable strict reverse-path validation",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "enable strict reverse-path validation",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nGW(config)#interface Ethernet0/0\nGW(config-if)#"
+        },
+        {
+          "phase": "enable strict reverse-path validation",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "ip verify unicast source reachable-via rx",
+          "passed": true,
+          "output": "\nGW(config-if)#ip verify unicast source reachable-via rx\nGW(config-if)#"
+        },
+        {
+          "phase": "enable strict reverse-path validation",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-if)#end\nGW#"
+        },
+        {
+          "phase": "enable strict reverse-path validation",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+          "expectation": "The explicitly asymmetric service probe is rejected by the selected source-validation control.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.10 \n...\nSuccess rate is 0 percent (0/3)\nHOST#"
+        },
+        {
+          "phase": "enable strict reverse-path validation",
+          "node": "GW",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The actual uRPF verifier counts rejected packets.",
+          "passed": true,
+          "output": "\nGW#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.0.1/30\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is not set\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: uRPF, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP verify source reachable-via RX\n   3 verification drops\n   0 suppressed verification drops\n   0 verification drop-rate\n  IP Clear Dont Fragment is disabled\nGW#"
+        },
+        {
+          "phase": "enable strict reverse-path validation",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "A source whose reverse path matches ingress remains healthy.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.0.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST#"
+        },
+        {
+          "phase": "enable strict reverse-path validation",
+          "node": "GW",
+          "command": "show ip route 192.0.2.10",
+          "expectation": "The real reverse route deliberately points to the other interface.",
+          "passed": true,
+          "output": "\nGW#show ip route 192.0.2.10\nRouting entry for 192.0.2.10/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.1.2\n      Route metric is 0, traffic share count is 1\nGW#"
+        },
+        {
+          "phase": "allow asymmetric reachable sources with loose mode",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "allow asymmetric reachable sources with loose mode",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nGW(config)#interface Ethernet0/0\nGW(config-if)#"
+        },
+        {
+          "phase": "allow asymmetric reachable sources with loose mode",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "no ip verify unicast source reachable-via rx",
+          "passed": true,
+          "output": "\nGW(config-if)#no ip verify unicast source reachable-via rx\nGW(config-if)#"
+        },
+        {
+          "phase": "allow asymmetric reachable sources with loose mode",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "ip verify unicast source reachable-via any",
+          "passed": true,
+          "output": "\nGW(config-if)#ip verify unicast source reachable-via any\nGW(config-if)#"
+        },
+        {
+          "phase": "allow asymmetric reachable sources with loose mode",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-if)#end\nGW#"
+        },
+        {
+          "phase": "allow asymmetric reachable sources with loose mode",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+          "expectation": "The explicitly asymmetric service probe forwards.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nHOST#"
+        },
+        {
+          "phase": "allow asymmetric reachable sources with loose mode",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "A source whose reverse path matches ingress remains healthy.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.0.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST#"
+        },
+        {
+          "phase": "allow asymmetric reachable sources with loose mode",
+          "node": "GW",
+          "command": "show ip route 192.0.2.10",
+          "expectation": "The real reverse route deliberately points to the other interface.",
+          "passed": true,
+          "output": "\n*Oct 30 16:18:57.513: %SYS-5-CONFIG_I: Configured from console by console\nGW#\nGW#show ip route 192.0.2.10\nRouting entry for 192.0.2.10/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.1.2\n      Route metric is 0, traffic share count is 1\nGW#"
+        },
+        {
+          "phase": "apply an independent source-prefix ACL",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "apply an independent source-prefix ACL",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "ip access-list standard SOURCE-PREFIX",
+          "passed": true,
+          "output": "\nGW(config)#ip access-list standard SOURCE-PREFIX\nGW(config-std-nacl)#"
+        },
+        {
+          "phase": "apply an independent source-prefix ACL",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "permit 198.18.0.0 0.0.0.3",
+          "passed": true,
+          "output": "\nGW(config-std-nacl)#permit 198.18.0.0 0.0.0.3\nGW(config-std-nacl)#"
+        },
+        {
+          "phase": "apply an independent source-prefix ACL",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "deny any",
+          "passed": true,
+          "output": "\nGW(config-std-nacl)#deny any\nGW(config-std-nacl)#"
+        },
+        {
+          "phase": "apply an independent source-prefix ACL",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "exit",
+          "passed": true,
+          "output": "\nGW(config-std-nacl)#exit\nGW(config)#"
+        },
+        {
+          "phase": "apply an independent source-prefix ACL",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nGW(config)#interface Ethernet0/0\nGW(config-if)#"
+        },
+        {
+          "phase": "apply an independent source-prefix ACL",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "ip access-group SOURCE-PREFIX in",
+          "passed": true,
+          "output": "\nGW(config-if)#ip access-group SOURCE-PREFIX in\nGW(config-if)#"
+        },
+        {
+          "phase": "apply an independent source-prefix ACL",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-if)#end\nGW#"
+        },
+        {
+          "phase": "apply an independent source-prefix ACL",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+          "expectation": "The explicitly asymmetric service probe is rejected by the selected source-validation control.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.10 \nU.U\nSuccess rate is 0 percent (0/3)\nHOST#"
+        },
+        {
+          "phase": "apply an independent source-prefix ACL",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "A source whose reverse path matches ingress remains healthy.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.0.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST#"
+        },
+        {
+          "phase": "apply an independent source-prefix ACL",
+          "node": "GW",
+          "command": "show access-lists SOURCE-PREFIX",
+          "expectation": "The independent prefix policy counts actual source denies.",
+          "passed": true,
+          "output": "\nGW#show access-lists SOURCE-PREFIX\nStandard IP access list SOURCE-PREFIX\n    10 permit 198.18.0.0, wildcard bits 0.0.0.3 (6 matches)\n    20 deny   any (5 matches)\nGW#"
+        },
+        {
+          "phase": "remove only the prefix policy",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "remove only the prefix policy",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nGW(config)#interface Ethernet0/0\nGW(config-if)#"
+        },
+        {
+          "phase": "remove only the prefix policy",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "no ip access-group SOURCE-PREFIX in",
+          "passed": true,
+          "output": "\nGW(config-if)#no ip access-group SOURCE-PREFIX in\nGW(config-if)#"
+        },
+        {
+          "phase": "remove only the prefix policy",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-if)#end\nGW#"
+        },
+        {
+          "phase": "remove only the prefix policy",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+          "expectation": "The explicitly asymmetric service probe forwards.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST#"
+        },
+        {
+          "phase": "remove only the prefix policy",
+          "node": "GW",
+          "command": "show ip route 192.0.2.10",
+          "expectation": "The real reverse route deliberately points to the other interface.",
+          "passed": true,
+          "output": "\nGW#show ip route 192.0.2.10\nRouting entry for 192.0.2.10/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.1.2\n      Route metric is 0, traffic share count is 1\nGW#"
+        },
+        {
+          "phase": "restore the original unfiltered asymmetric path",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\n*Oct 30 16:19:08.452: %SYS-5-CONFIG_I: Configured from console by console\nGW#\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "restore the original unfiltered asymmetric path",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nGW(config)#interface Ethernet0/0\nGW(config-if)#"
+        },
+        {
+          "phase": "restore the original unfiltered asymmetric path",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "no ip verify unicast source reachable-via any",
+          "passed": true,
+          "output": "\nGW(config-if)#no ip verify unicast source reachable-via any\nGW(config-if)#"
+        },
+        {
+          "phase": "restore the original unfiltered asymmetric path",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-if)#end\nGW#"
+        },
+        {
+          "phase": "restore the original unfiltered asymmetric path",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+          "expectation": "The explicitly asymmetric service probe forwards.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST#"
+        },
+        {
+          "phase": "restore the original unfiltered asymmetric path",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "A source whose reverse path matches ingress remains healthy.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.0.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST#"
+        },
+        {
+          "phase": "restore the original unfiltered asymmetric path",
+          "node": "GW",
+          "command": "show ip route 192.0.2.10",
+          "expectation": "The real reverse route deliberately points to the other interface.",
+          "passed": true,
+          "output": "\n*Oct 30 16:19:11.361: %SYS-5-CONFIG_I: Configured from console by console\nGW#\nGW#show ip route 192.0.2.10\nRouting entry for 192.0.2.10/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.1.2\n      Route metric is 0, traffic share count is 1\nGW#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "HOST": "BOOTED",
+        "GW": "STARTED",
+        "TRANSIT": "STARTED"
+      },
+      "images": {
+        "HOST": "iol-xe-17-18-02",
+        "GW": "iol-xe-17-18-02",
+        "TRANSIT": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "14f46bc964b7c2a9af6dd3d25ae7d183bc92042b419a5ab1615d8bd0016b5136",
+      "console_boot_fallback": [
+        "GW",
+        "TRANSIT"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T16:19:20Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/025-netflow-telemetry.yaml",
+      "sha256": "cc0cac77dfdd9ba49e56545ce0627843d6a0636af4eb2e143070ad4543ea262c",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T16:20:41Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/f.py proof 8080",
+          "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/f.py proof 8080\n{\"datagrams\": 1, \"matching_records\": 1, \"observed\": true, \"port\": 8080}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "block only transit flow export",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFILTER#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFILTER(config)#"
+        },
+        {
+          "phase": "block only transit flow export",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "ip access-list extended BLOCK-EXPORT",
+          "passed": true,
+          "output": "\nFILTER(config)#ip access-list extended BLOCK-EXPORT\nFILTER(config-ext-nacl)#"
+        },
+        {
+          "phase": "block only transit flow export",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "deny udp host 198.18.30.1 host 198.18.20.20 eq 2055",
+          "passed": true,
+          "output": "\nFILTER(config-ext-nacl)#deny udp host 198.18.30.1 host 198.18.20.20 eq 2055\nFILTER(config-ext-nacl)#"
+        },
+        {
+          "phase": "block only transit flow export",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "permit ip any any",
+          "passed": true,
+          "output": "\nFILTER(config-ext-nacl)#permit ip any any\nFILTER(config-ext-nacl)#"
+        },
+        {
+          "phase": "block only transit flow export",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "exit",
+          "passed": true,
+          "output": "\nFILTER(config-ext-nacl)#exit\nFILTER(config)#"
+        },
+        {
+          "phase": "block only transit flow export",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nFILTER(config)#interface GigabitEthernet0/0\nFILTER(config-if)#"
+        },
+        {
+          "phase": "block only transit flow export",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "ip access-group BLOCK-EXPORT in",
+          "passed": true,
+          "output": "\nFILTER(config-if)#ip access-group BLOCK-EXPORT in\nFILTER(config-if)#"
+        },
+        {
+          "phase": "block only transit flow export",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "end",
+          "passed": true,
+          "output": "\nFILTER(config-if)#end\nFILTER#"
+        },
+        {
+          "phase": "block only transit flow export",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 8081",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 8081\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "block only transit flow export",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/f.py quiet 8081",
+          "expectation": "No matching new phase flow arrives during the complete40-second observation window.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/f.py quiet 8081\n{\"port\": 8081, \"quiet\": true, \"seconds\": 40}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "block only transit flow export",
+          "node": "FILTER",
+          "command": "show access-lists BLOCK-EXPORT",
+          "expectation": "The transit filter counts actual attempted exports.",
+          "passed": true,
+          "output": "\nFILTER#show access-lists BLOCK-EXPORT\nExtended IP access list BLOCK-EXPORT\n    10 deny udp host 198.18.30.1 host 198.18.20.20 eq 2055 (1 match)\n    20 permit ip any any (5 matches)\nFILTER#"
+        },
+        {
+          "phase": "block only transit flow export",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore new flow delivery",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFILTER#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFILTER(config)#"
+        },
+        {
+          "phase": "restore new flow delivery",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nFILTER(config)#interface GigabitEthernet0/0\nFILTER(config-if)#"
+        },
+        {
+          "phase": "restore new flow delivery",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "no ip access-group BLOCK-EXPORT in",
+          "passed": true,
+          "output": "\nFILTER(config-if)#no ip access-group BLOCK-EXPORT in\nFILTER(config-if)#"
+        },
+        {
+          "phase": "restore new flow delivery",
+          "kind": "configuration",
+          "node": "FILTER",
+          "command": "end",
+          "passed": true,
+          "output": "\nFILTER(config-if)#end\nFILTER#"
+        },
+        {
+          "phase": "restore new flow delivery",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 8082",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 8082\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore new flow delivery",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/f.py proof 8082",
+          "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/f.py proof 8082\n{\"datagrams\": 2, \"matching_records\": 1, \"observed\": true, \"port\": 8082}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore new flow delivery",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        }
+      ],
+      "plan_sha256": "dbcc564cbed36cc41f040950deae1efe1edd564a8cc6213ee09234c8727f24b2",
+      "startup_states": {
+        "GW": "STARTED",
+        "FILTER": "STARTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "BOOTED"
+      },
+      "images": {
+        "GW": "iosv-159-3-m12",
+        "FILTER": "iosv-159-3-m12",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "GW",
+        "FILTER"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T16:27:30Z"
     }
   ]
 }

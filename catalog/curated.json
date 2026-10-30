@@ -890,5 +890,32 @@
     "kind": "capstone",
     "workbook": "docs/workbooks/350-701-045-scor-capstone-secure-edge.md",
     "example_profile": "native-firewall-traffic"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/025-netflow-telemetry.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-025-netflow-telemetry.md",
+    "example_profile": "native-netflow"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/028-netflow-ip-sla.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-028-netflow-ip-sla.md",
+    "example_profile": "native-netflow"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/026-netflow-stealthwatch.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-026-netflow-stealthwatch.md",
+    "example_profile": "native-netflow"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/031-acl-uRPF.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 105,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-031-acl-uRPF.md"
   }
 }

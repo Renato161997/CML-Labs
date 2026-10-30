@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **142**.
+Import/export passes: **233/233**. Functional passes: **146**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -66,7 +66,9 @@ Import/export passes: **233/233**. Functional passes: **142**.
 | [BGP Route Reflector Policy Lab](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/039-bgp-route-reflector-policy-lab.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 32 | 2026-10-30T14:37:43Z |
 | [Router Hardening](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/029-router-hardening.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ubuntu-24-04-20260307 | 10 | 12 | 2026-10-30T13:37:13Z |
 | [ENARSI 030 - AAA NAS source troubleshooting](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/030-aaa-radius-tacacs.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 14 | 6 | 2026-10-26T21:10:50Z |
+| [ACL And uRPF](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/031-acl-uRPF.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 18 | 25 | 2026-10-30T16:19:20Z |
 | [NTP Syslog SNMP](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/027-ntp-syslog-snmp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3, syslog-4-8-1-5-deb13u1 | 14 | 8 | 2026-10-28T18:42:51Z |
+| [NetFlow IP SLA](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/028-netflow-ip-sla.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 11 | 12 | 2026-10-30T16:19:11Z |
 | [EIGRP Classic Named IPv4 IPv6](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/001-eigrp-classic-named-ipv4-ipv6.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 5 | 0 | 2026-10-25T12:42:12Z |
 | [EIGRP Stub Summary Default](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/002-eigrp-stub-summary-default.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 4 | 0 | 2026-10-25T12:42:58Z |
 | [EIGRP Authentication Load Balancing](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/003-eigrp-authentication-load-balancing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 7 | 12 | 2026-10-25T12:43:13Z |
@@ -111,6 +113,7 @@ Import/export passes: **233/233**. Functional passes: **142**.
 | [IPv6 First Hop And Routing](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/022-ipv6-first-hop-and-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 22 | 18 | 2026-10-30T14:20:57Z |
 | [Flat VLAN To Routed Access](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/migration/048-flat-vlan-to-routed-access.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 19 | 66 | 2026-10-30T14:31:22Z |
 | [IP SLA Tracking](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/024-ip-sla-tracking.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 13 | 8 | 2026-10-28T17:33:08Z |
+| [NetFlow Telemetry](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/025-netflow-telemetry.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 10 | 12 | 2026-10-30T16:27:30Z |
 | [Syslog SNMP NTP](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/026-syslog-snmp-ntp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3, syslog-4-8-1-5-deb13u1 | 16 | 10 | 2026-10-28T18:38:15Z |
 | [VRF Lite Shared Services](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/043-vrf-lite-shared-services.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 16 | 8 | 2026-10-28T18:37:46Z |
 | [Dual ISP BGP Edge](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/045-dual-isp-bgp-edge.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 14 | 16 | 2026-10-30T14:49:49Z |
@@ -132,6 +135,7 @@ Import/export passes: **233/233**. Functional passes: **142**.
 | [Guest Access Isolation](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/025-guest-access-isolation.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 18 | 16 | 2026-10-30T15:44:57Z |
 | [Cryptography PKI and VPN Trust Boundaries](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/002-cryptography-pki-ipsec.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 9 | 8 | 2026-10-30T15:27:44Z |
 | [Security Intelligence Sharing](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/004-security-intelligence-sharing.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 10 | 4 | 2026-10-30T15:15:54Z |
+| [NetFlow Security Analytics and Triage](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/026-netflow-stealthwatch.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 8 | 2 | 2026-10-30T16:18:15Z |
 | [Syslog SIEM Correlation](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/027-syslog-siem-correlation.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3 | 12 | 19 | 2026-10-26T20:42:59Z |
 | [Site To Site VPN Security Baseline](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/vpn/039-site-to-site-vpn-security-baseline.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 16 | 21 | 2026-10-30T15:21:13Z |
 | [GitOps Network Change Pipeline](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/gitops/031-gitops-network-change-pipeline.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 13 | 33 | 2026-10-28T16:29:07Z |
