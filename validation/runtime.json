@@ -22414,6 +22414,1002 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T14:13:17Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/002-fhrp-design-hsrp-vrrp.yaml",
+      "sha256": "035fab4ff6bbe8cc4ad04060009d12fcd2a54221cc972aa53ce96ee2a356fcce",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:17:10Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CORE1",
+          "command": "show standby brief",
+          "expectation": "The expected core is actually HSRP active.",
+          "passed": true,
+          "output": "\nCORE1#show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   110 P Active  local           unknown         198.18.10.1\nCORE1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CORE2",
+          "command": "show vrrp brief",
+          "expectation": "The expected core has the actual VRRP Master role.",
+          "passed": true,
+          "output": "\nCORE2#show vrrp brief\nInterface          Grp Pri Time  Own Pre State   Master addr     Group addr\nVl20               20  110 3570       Y  Master  198.18.20.3     198.18.20.1    \nCORE2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CORE1",
+          "command": "show vrrp brief",
+          "expectation": "The expected core has the actual VRRP Backup role.",
+          "passed": true,
+          "output": "\nCORE1#show vrrp brief\nInterface          Grp Pri Time  Own Pre State   Master addr     Group addr\nVl20               20  100 3609       Y  Backup  198.18.20.3     198.18.20.1    \nCORE1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.10 source Ethernet0/0.10 repeat 3",
+          "expectation": "The VLAN10 endpoint route reaches the isolated service through its first-hop VIP.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.10 source Ethernet0/0.10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.10, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.20 source Ethernet0/0.20 repeat 3",
+          "expectation": "The VLAN20 endpoint route reaches the isolated service through its first-hop VIP.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.20 source Ethernet0/0.20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.20, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "isolate the preferred HSRP core",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCORE1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCORE1(config)#"
+        },
+        {
+          "phase": "isolate the preferred HSRP core",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nCORE1(config)#interface Ethernet0/0\nCORE1(config-if)#"
+        },
+        {
+          "phase": "isolate the preferred HSRP core",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nCORE1(config-if)#shutdown\nCORE1(config-if)#"
+        },
+        {
+          "phase": "isolate the preferred HSRP core",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "end",
+          "passed": true,
+          "output": "\nCORE1(config-if)#end\nCORE1#"
+        },
+        {
+          "phase": "isolate the preferred HSRP core",
+          "node": "CORE2",
+          "command": "show standby brief",
+          "expectation": "The expected core is actually HSRP active.",
+          "passed": true,
+          "output": "\nCORE2#show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   100 P Active  local           unknown         198.18.10.1\nCORE2#"
+        },
+        {
+          "phase": "isolate the preferred HSRP core",
+          "node": "CORE2",
+          "command": "show vrrp brief",
+          "expectation": "The expected core has the actual VRRP Master role.",
+          "passed": true,
+          "output": "\nCORE2#show vrrp brief\nInterface          Grp Pri Time  Own Pre State   Master addr     Group addr\nVl20               20  110 3570       Y  Master  198.18.20.3     198.18.20.1    \nCORE2#"
+        },
+        {
+          "phase": "isolate the preferred HSRP core",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.10 source Ethernet0/0.10 repeat 3",
+          "expectation": "The VLAN10 endpoint route reaches the isolated service through its first-hop VIP.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.10 source Ethernet0/0.10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.10, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "isolate the preferred HSRP core",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.20 source Ethernet0/0.20 repeat 3",
+          "expectation": "The VLAN20 endpoint route reaches the isolated service through its first-hop VIP.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.20 source Ethernet0/0.20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.20, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "restore the preferred HSRP core",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCORE1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCORE1(config)#"
+        },
+        {
+          "phase": "restore the preferred HSRP core",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nCORE1(config)#interface Ethernet0/0\nCORE1(config-if)#"
+        },
+        {
+          "phase": "restore the preferred HSRP core",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nCORE1(config-if)#no shutdown\nCORE1(config-if)#"
+        },
+        {
+          "phase": "restore the preferred HSRP core",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "end",
+          "passed": true,
+          "output": "\nCORE1(config-if)#end\nCORE1#"
+        },
+        {
+          "phase": "restore the preferred HSRP core",
+          "node": "CORE1",
+          "command": "show standby brief",
+          "expectation": "The expected core is actually HSRP active.",
+          "passed": true,
+          "output": "\nCORE1#show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   110 P Active  local           unknown         198.18.10.1\nCORE1#"
+        },
+        {
+          "phase": "restore the preferred HSRP core",
+          "node": "CORE2",
+          "command": "show vrrp brief",
+          "expectation": "The expected core has the actual VRRP Master role.",
+          "passed": true,
+          "output": "\nCORE2#show vrrp brief\nInterface          Grp Pri Time  Own Pre State   Master addr     Group addr\nVl20               20  110 3570       Y  Master  198.18.20.3     198.18.20.1    \nCORE2#"
+        },
+        {
+          "phase": "restore the preferred HSRP core",
+          "node": "CORE1",
+          "command": "show vrrp brief",
+          "expectation": "The expected core has the actual VRRP Backup role.",
+          "passed": true,
+          "output": "\nCORE1#show vrrp brief\nInterface          Grp Pri Time  Own Pre State   Master addr     Group addr\nVl20               20  100 3609       Y  Backup  198.18.20.3     198.18.20.1    \nCORE1#"
+        },
+        {
+          "phase": "restore the preferred HSRP core",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.10 source Ethernet0/0.10 repeat 3",
+          "expectation": "The VLAN10 endpoint route reaches the isolated service through its first-hop VIP.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.10 source Ethernet0/0.10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.10, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "restore the preferred HSRP core",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.20 source Ethernet0/0.20 repeat 3",
+          "expectation": "The VLAN20 endpoint route reaches the isolated service through its first-hop VIP.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.20 source Ethernet0/0.20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.20, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "isolate the preferred VRRP core",
+          "kind": "configuration",
+          "node": "CORE2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCORE2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCORE2(config)#"
+        },
+        {
+          "phase": "isolate the preferred VRRP core",
+          "kind": "configuration",
+          "node": "CORE2",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nCORE2(config)#interface Ethernet0/0\nCORE2(config-if)#"
+        },
+        {
+          "phase": "isolate the preferred VRRP core",
+          "kind": "configuration",
+          "node": "CORE2",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nCORE2(config-if)#shutdown\nCORE2(config-if)#"
+        },
+        {
+          "phase": "isolate the preferred VRRP core",
+          "kind": "configuration",
+          "node": "CORE2",
+          "command": "end",
+          "passed": true,
+          "output": "\nCORE2(config-if)#end\nCORE2#"
+        },
+        {
+          "phase": "isolate the preferred VRRP core",
+          "node": "CORE1",
+          "command": "show standby brief",
+          "expectation": "The expected core is actually HSRP active.",
+          "passed": true,
+          "output": "\nCORE1#show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   110 P Active  local           unknown         198.18.10.1\nCORE1#"
+        },
+        {
+          "phase": "isolate the preferred VRRP core",
+          "node": "CORE1",
+          "command": "show vrrp brief",
+          "expectation": "The expected core has the actual VRRP Master role.",
+          "passed": true,
+          "output": "\nCORE1#show vrrp brief\nInterface          Grp Pri Time  Own Pre State   Master addr     Group addr\nVl20               20  100 3609       Y  Master  198.18.20.2     198.18.20.1    \nCORE1#"
+        },
+        {
+          "phase": "isolate the preferred VRRP core",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.10 source Ethernet0/0.10 repeat 3",
+          "expectation": "The VLAN10 endpoint route reaches the isolated service through its first-hop VIP.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.10 source Ethernet0/0.10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.10, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "isolate the preferred VRRP core",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.20 source Ethernet0/0.20 repeat 3",
+          "expectation": "The VLAN20 endpoint route reaches the isolated service through its first-hop VIP.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.20 source Ethernet0/0.20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.20, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "restore the preferred VRRP core",
+          "kind": "configuration",
+          "node": "CORE2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCORE2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCORE2(config)#"
+        },
+        {
+          "phase": "restore the preferred VRRP core",
+          "kind": "configuration",
+          "node": "CORE2",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nCORE2(config)#interface Ethernet0/0\nCORE2(config-if)#"
+        },
+        {
+          "phase": "restore the preferred VRRP core",
+          "kind": "configuration",
+          "node": "CORE2",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nCORE2(config-if)#no shutdown\nCORE2(config-if)#"
+        },
+        {
+          "phase": "restore the preferred VRRP core",
+          "kind": "configuration",
+          "node": "CORE2",
+          "command": "end",
+          "passed": true,
+          "output": "\nCORE2(config-if)#end\nCORE2#"
+        },
+        {
+          "phase": "restore the preferred VRRP core",
+          "node": "CORE1",
+          "command": "show standby brief",
+          "expectation": "The expected core is actually HSRP active.",
+          "passed": true,
+          "output": "\nCORE1#show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   110 P Active  local           unknown         198.18.10.1\nCORE1#"
+        },
+        {
+          "phase": "restore the preferred VRRP core",
+          "node": "CORE2",
+          "command": "show vrrp brief",
+          "expectation": "The expected core has the actual VRRP Master role.",
+          "passed": true,
+          "output": "\nCORE2#show vrrp brief\nInterface          Grp Pri Time  Own Pre State   Master addr     Group addr\nVl20               20  110 3570       Y  Master  198.18.20.3     198.18.20.1    \nCORE2#"
+        },
+        {
+          "phase": "restore the preferred VRRP core",
+          "node": "CORE1",
+          "command": "show vrrp brief",
+          "expectation": "The expected core has the actual VRRP Backup role.",
+          "passed": true,
+          "output": "\nCORE1#show vrrp brief\nInterface          Grp Pri Time  Own Pre State   Master addr     Group addr\nVl20               20  100 3609       Y  Backup  198.18.20.3     198.18.20.1    \nCORE1#"
+        },
+        {
+          "phase": "restore the preferred VRRP core",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.10 source Ethernet0/0.10 repeat 3",
+          "expectation": "The VLAN10 endpoint route reaches the isolated service through its first-hop VIP.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.10 source Ethernet0/0.10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.10, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "restore the preferred VRRP core",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.20 source Ethernet0/0.20 repeat 3",
+          "expectation": "The VLAN20 endpoint route reaches the isolated service through its first-hop VIP.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.20 source Ethernet0/0.20 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.20, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "CORE1": "BOOTED",
+        "CORE2": "BOOTED",
+        "SW1": "BOOTED",
+        "CLIENT": "STARTED"
+      },
+      "images": {
+        "CORE1": "ioll2-xe-17-18-02",
+        "CORE2": "ioll2-xe-17-18-02",
+        "SW1": "ioll2-xe-17-18-02",
+        "CLIENT": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "819c7ec4b49e1a86e9c50df0e928a2109ca8afbd82d85576958b1d9d4cd71aae",
+      "console_boot_fallback": [
+        "CLIENT"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:18:58Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/042-ipv6-only-mini-campus.yaml",
+      "sha256": "5cd516e00973bdeeebe18e3fa36eb0e5cc7fb9e615f1da22f23ceec46eedbeb9",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:17:10Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip interface brief",
+          "expectation": "The named data interface has no IPv4 address.",
+          "passed": true,
+          "output": "\nR1#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            unassigned      YES TFTP   up                    up      \nEthernet0/0.10         unassigned      YES unset  up                    up      \nEthernet0/0.20         unassigned      YES unset  up                    up      \nEthernet0/1            unassigned      YES TFTP   administratively down down    \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip interface brief",
+          "expectation": "The named data interface has no IPv4 address.",
+          "passed": true,
+          "output": "\nR1#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            unassigned      YES TFTP   up                    up      \nEthernet0/0.10         unassigned      YES unset  up                    up      \nEthernet0/0.20         unassigned      YES unset  up                    up      \nEthernet0/1            unassigned      YES TFTP   administratively down down    \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip interface brief",
+          "expectation": "The named data interface has no IPv4 address.",
+          "passed": true,
+          "output": "\nR1#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            unassigned      YES TFTP   up                    up      \nEthernet0/0.10         unassigned      YES unset  up                    up      \nEthernet0/0.20         unassigned      YES unset  up                    up      \nEthernet0/1            unassigned      YES TFTP   administratively down down    \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT-A",
+          "command": "show ip interface brief",
+          "expectation": "The named data interface has no IPv4 address.",
+          "passed": true,
+          "output": "\nCLIENT-A#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            unassigned      YES TFTP   up                    up      \nEthernet0/1            unassigned      YES TFTP   administratively down down    \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nCLIENT-A#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT-B",
+          "command": "show ip interface brief",
+          "expectation": "The named data interface has no IPv4 address.",
+          "passed": true,
+          "output": "\nCLIENT-B#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            unassigned      YES TFTP   up                    up      \nEthernet0/1            unassigned      YES TFTP   administratively down down    \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nCLIENT-B#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT-A",
+          "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe actually succeeds.",
+          "passed": true,
+          "output": "\nCLIENT-A#ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:20::20, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::10\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/6/14 ms\nCLIENT-A#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT-B",
+          "command": "ping ipv6 2001:db8:10::10 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe actually succeeds.",
+          "passed": true,
+          "output": "\nCLIENT-B#ping ipv6 2001:db8:10::10 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:10::10, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:20::20\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/2/2 ms\nCLIENT-B#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ipv6 neighbors",
+          "expectation": "The router has a resolved neighbor on the actual service subinterface.",
+          "passed": true,
+          "output": "\nR1#show ipv6 neighbors\nIPv6 Address                              Age Link-layer Addr State Interface\n2001:DB8:10::10                             0 aabb.cc01.4600  DELAY Et0/0.10\n2001:DB8:20::20                             0 aabb.cc01.4700  REACH Et0/0.20\n\nR1#"
+        },
+        {
+          "phase": "prune only the IPv6 service VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "prune only the IPv6 service VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nSW1(config)#interface Ethernet0/0\nSW1(config-if)#"
+        },
+        {
+          "phase": "prune only the IPv6 service VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "switchport trunk allowed vlan 10",
+          "passed": true,
+          "output": "\nSW1(config-if)#switchport trunk allowed vlan 10\nSW1(config-if)#"
+        },
+        {
+          "phase": "prune only the IPv6 service VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW1(config-if)#end\nSW1#"
+        },
+        {
+          "phase": "prune only the IPv6 service VLAN",
+          "node": "CLIENT-A",
+          "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe fails during the controlled fault.",
+          "passed": true,
+          "output": "\nCLIENT-A#ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:20::20, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::10\n...\nSuccess rate is 0 percent (0/3)\nCLIENT-A#"
+        },
+        {
+          "phase": "prune only the IPv6 service VLAN",
+          "node": "CLIENT-A",
+          "command": "ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe actually succeeds.",
+          "passed": true,
+          "output": "\nCLIENT-A#ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:10::1, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::10\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT-A#"
+        },
+        {
+          "phase": "prune only the IPv6 service VLAN",
+          "node": "R1",
+          "command": "show ipv6 route connected",
+          "expectation": "The service prefix remains connected despite the broken trunk membership.",
+          "passed": true,
+          "output": "\nR1#show ipv6 route connected\nIPv6 Routing Table - default - 5 entries\nCodes: C - Connected, L - Local, S - Static, U - Per-user Static route\n       B - BGP, R - RIP, H - NHRP, HG - NHRP registered\n       Hg - NHRP registration summary, HE - NHRP External, I1 - ISIS L1\n       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP\n       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination\n       NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter\n       OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1\n       ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations\n       ld - LISP dyn-eid, lA - LISP away, le - LISP extranet-policy\n       lp - LISP publications, ls - LISP destinations-summary, a - Application\n       m - OMP\nC   2001:DB8:10::/64 [0/0]\n     via Ethernet0/0.10, directly connected\nC   2001:DB8:20::/64 [0/0]\n     via Ethernet0/0.20, directly connected\nR1#"
+        },
+        {
+          "phase": "restore IPv6 trunk membership",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "restore IPv6 trunk membership",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nSW1(config)#interface Ethernet0/0\nSW1(config-if)#"
+        },
+        {
+          "phase": "restore IPv6 trunk membership",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "switchport trunk allowed vlan 10,20",
+          "passed": true,
+          "output": "\nSW1(config-if)#switchport trunk allowed vlan 10,20\nSW1(config-if)#"
+        },
+        {
+          "phase": "restore IPv6 trunk membership",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW1(config-if)#end\nSW1#"
+        },
+        {
+          "phase": "restore IPv6 trunk membership",
+          "node": "CLIENT-A",
+          "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe actually succeeds.",
+          "passed": true,
+          "output": "\nCLIENT-A#ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:20::20, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::10\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/367/1098 ms\nCLIENT-A#"
+        },
+        {
+          "phase": "restore IPv6 trunk membership",
+          "node": "CLIENT-B",
+          "command": "ping ipv6 2001:db8:10::10 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe actually succeeds.",
+          "passed": true,
+          "output": "\nCLIENT-B#ping ipv6 2001:db8:10::10 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:10::10, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:20::20\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/2/3 ms\nCLIENT-B#"
+        },
+        {
+          "phase": "restore IPv6 trunk membership",
+          "node": "R1",
+          "command": "show ipv6 neighbors",
+          "expectation": "The router has a resolved neighbor on the actual service subinterface.",
+          "passed": true,
+          "output": "\nR1#show ipv6 neighbors\nIPv6 Address                              Age Link-layer Addr State Interface\n2001:DB8:10::10                             0 aabb.cc01.4600  REACH Et0/0.10\nFE80::A8BB:CCFF:FE01:4600                   0 aabb.cc01.4600  STALE Et0/0.10\n2001:DB8:20::20                             0 aabb.cc01.4700  REACH Et0/0.20\n\nR1#"
+        },
+        {
+          "phase": "withdraw only the endpoint IPv6 default",
+          "kind": "configuration",
+          "node": "CLIENT-A",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCLIENT-A#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCLIENT-A(config)#"
+        },
+        {
+          "phase": "withdraw only the endpoint IPv6 default",
+          "kind": "configuration",
+          "node": "CLIENT-A",
+          "command": "no ipv6 route ::/0 2001:db8:10::1",
+          "passed": true,
+          "output": "\nCLIENT-A(config)#no ipv6 route ::/0 2001:db8:10::1\nCLIENT-A(config)#"
+        },
+        {
+          "phase": "withdraw only the endpoint IPv6 default",
+          "kind": "configuration",
+          "node": "CLIENT-A",
+          "command": "end",
+          "passed": true,
+          "output": "\nCLIENT-A(config)#end\nCLIENT-A#"
+        },
+        {
+          "phase": "withdraw only the endpoint IPv6 default",
+          "node": "CLIENT-A",
+          "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe fails during the controlled fault.",
+          "passed": true,
+          "output": "\nCLIENT-A#ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:20::20, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::10\n\n*Oct 30 14:18:56.525: %SYS-5-CONFIG_I: Configured from console by console...\nSuccess rate is 0 percent (0/3)\nCLIENT-A#"
+        },
+        {
+          "phase": "withdraw only the endpoint IPv6 default",
+          "node": "CLIENT-A",
+          "command": "ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe actually succeeds.",
+          "passed": true,
+          "output": "\nCLIENT-A#ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:10::1, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::10\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT-A#"
+        },
+        {
+          "phase": "restore the endpoint IPv6 default",
+          "kind": "configuration",
+          "node": "CLIENT-A",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCLIENT-A#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCLIENT-A(config)#"
+        },
+        {
+          "phase": "restore the endpoint IPv6 default",
+          "kind": "configuration",
+          "node": "CLIENT-A",
+          "command": "ipv6 route ::/0 2001:db8:10::1",
+          "passed": true,
+          "output": "\nCLIENT-A(config)#ipv6 route ::/0 2001:db8:10::1\nCLIENT-A(config)#"
+        },
+        {
+          "phase": "restore the endpoint IPv6 default",
+          "kind": "configuration",
+          "node": "CLIENT-A",
+          "command": "end",
+          "passed": true,
+          "output": "\nCLIENT-A(config)#end\nCLIENT-A#"
+        },
+        {
+          "phase": "restore the endpoint IPv6 default",
+          "node": "CLIENT-A",
+          "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe actually succeeds.",
+          "passed": true,
+          "output": "\nCLIENT-A#ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:20::20, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::10\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/2/3 ms\nCLIENT-A#"
+        },
+        {
+          "phase": "restore the endpoint IPv6 default",
+          "node": "CLIENT-B",
+          "command": "ping ipv6 2001:db8:10::10 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe actually succeeds.",
+          "passed": true,
+          "output": "\nCLIENT-B#ping ipv6 2001:db8:10::10 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:10::10, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:20::20\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/2/2 ms\nCLIENT-B#"
+        },
+        {
+          "phase": "restore the endpoint IPv6 default",
+          "node": "R1",
+          "command": "show ipv6 neighbors",
+          "expectation": "The router has a resolved neighbor on the actual service subinterface.",
+          "passed": true,
+          "output": "\nR1#show ipv6 neighbors\nIPv6 Address                              Age Link-layer Addr State Interface\n2001:DB8:10::10                             0 aabb.cc01.4600  REACH Et0/0.10\nFE80::A8BB:CCFF:FE01:4600                   0 aabb.cc01.4600  REACH Et0/0.10\n2001:DB8:20::20                             0 aabb.cc01.4700  REACH Et0/0.20\nFE80::A8BB:CCFF:FE01:4700                   0 aabb.cc01.4700  REACH Et0/0.20\n\nR1#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "R1": "BOOTED",
+        "SW1": "BOOTED",
+        "CLIENT-A": "BOOTED",
+        "CLIENT-B": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "SW1": "ioll2-xe-17-18-02",
+        "CLIENT-A": "iol-xe-17-18-02",
+        "CLIENT-B": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "71a13fef47f030a1d6c7b1da06a6014be89b5de296f2dd5cccb48ab77020dcf2",
+      "console_boot_fallback": [
+        "CLIENT-B"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:19:14Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/022-ipv6-first-hop-and-routing.yaml",
+      "sha256": "4896c8dc81bb4fa5be607df75ba526774b5bb26ca19d98c442ae13e69552609f",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:19:24Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "show ipv6 interface Ethernet0/0",
+          "expectation": "The client actually acquires a global address from the RA prefix.",
+          "passed": true,
+          "output": "\nCLIENT#show ipv6 interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  IPv6 is enabled, link-local address is FE80::FF:FE00:1002 \n  No Virtual link-local address(es):\n  Stateless address autoconfig enabled\n  Global unicast address(es):\n    2001:DB8:10::FF:FE00:1002, subnet is 2001:DB8:10::/64 [EUI/CAL/PRE]\n      valid lifetime 2591997 preferred lifetime 604797\n  Joined group address(es):\n    FF02::1\n    FF02::2\n    FF02::1:FF00:1002\n  MTU is 1500 bytes\n  ICMP error messages limited to one every 100 milliseconds\n  ICMP redirects are enabled\n  ICMP unreachables are sent\n  ND DAD is enabled, number of DAD attempts: 1\n  ND reachable time is 30000 milliseconds (using 30000)\n  ND RAs are suppressed (all)\n  Hosts use stateless autoconfig for addresses.\nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "show ipv6 route",
+          "expectation": "The actual ND-derived default points to the advertising first hop.",
+          "passed": true,
+          "output": "\nCLIENT#show ipv6 route\nIPv6 Routing Table - default - 4 entries\nCodes: C - Connected, L - Local, S - Static, U - Per-user Static route\n       B - BGP, R - RIP, H - NHRP, HG - NHRP registered\n       Hg - NHRP registration summary, HE - NHRP External, I1 - ISIS L1\n       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP\n       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination\n       NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter\n       OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1\n       ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations\n       ld - LISP dyn-eid, lA - LISP away, le - LISP extranet-policy\n       lp - LISP publications, ls - LISP destinations-summary, a - Application\n       m - OMP\nND  ::/0 [2/0]\n     via FE80::1, Ethernet0/0\nNDp 2001:DB8:10::/64 [2/0]\n     via Ethernet0/0, directly connected\nL   2001:DB8:10::FF:FE00:1002/128 [0/0]\n     via Ethernet0/0, receive\nL   FF00::/8 [0/0]\n     via Null0, receive\nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ipv6 ospf neighbor",
+          "expectation": "OSPFv3 has a real FULL transit adjacency.",
+          "passed": true,
+          "output": "\n*Oct 30 14:20:09.694: %PNP-6-PNP_TECH_SUMMARY_SAVED_OK: PnP tech summary (/pnp-tech/pnp-tech-discovery-summary) saved successfully (elapsed time: 0 seconds).\n*Oct 30 14:20:09.694: %PNP-6-PNP_DISCOVERY_STOPPED: PnP Discovery stopped (Config Wizard)\nR1#\nR1#show ipv6 ospf neighbor\n\n            OSPFv3 Router with ID (192.0.2.1) (Process ID 10)\n\nNeighbor ID     Pri   State           Dead Time   Interface ID    Interface\n192.0.2.2         1   FULL/DR         00:00:06    1               Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ipv6 route ospf",
+          "expectation": "OSPFv3 actually installs the service loopback.",
+          "passed": true,
+          "output": "\nR1#show ipv6 route ospf\nIPv6 Routing Table - default - 6 entries\nCodes: C - Connected, L - Local, S - Static, U - Per-user Static route\n       B - BGP, R - RIP, H - NHRP, HG - NHRP registered\n       Hg - NHRP registration summary, HE - NHRP External, I1 - ISIS L1\n       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP\n       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination\n       NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter\n       OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1\n       ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations\n       ld - LISP dyn-eid, lA - LISP away, le - LISP extranet-policy\n       lp - LISP publications, ls - LISP destinations-summary, a - Application\n       m - OMP\nO   2001:DB8:2::2/128 [110/10]\n     via FE80::C, Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe actually succeeds.",
+          "passed": true,
+          "output": "\nCLIENT#ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:10::1, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::FF:FE00:1002\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/2/4 ms\nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe actually succeeds.",
+          "passed": true,
+          "output": "\nCLIENT#ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:2::2, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::FF:FE00:1002\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "withdraw only the RA default-router lifetime",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "withdraw only the RA default-router lifetime",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR1(config)#interface Ethernet0/0\nR1(config-if)#"
+        },
+        {
+          "phase": "withdraw only the RA default-router lifetime",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ipv6 nd ra lifetime 0",
+          "passed": true,
+          "output": "\nR1(config-if)#ipv6 nd ra lifetime 0\nR1(config-if)#"
+        },
+        {
+          "phase": "withdraw only the RA default-router lifetime",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "withdraw only the RA default-router lifetime",
+          "node": "CLIENT",
+          "command": "show ipv6 route",
+          "expectation": "The router-advertisement default has actually been withdrawn.",
+          "passed": true,
+          "output": "\nCLIENT#show ipv6 route\nIPv6 Routing Table - default - 3 entries\nCodes: C - Connected, L - Local, S - Static, U - Per-user Static route\n       B - BGP, R - RIP, H - NHRP, HG - NHRP registered\n       Hg - NHRP registration summary, HE - NHRP External, I1 - ISIS L1\n       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP\n       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination\n       NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter\n       OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1\n       ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations\n       ld - LISP dyn-eid, lA - LISP away, le - LISP extranet-policy\n       lp - LISP publications, ls - LISP destinations-summary, a - Application\n       m - OMP\nNDp 2001:DB8:10::/64 [2/0]\n     via Ethernet0/0, directly connected\nL   2001:DB8:10::FF:FE00:1002/128 [0/0]\n     via Ethernet0/0, receive\nL   FF00::/8 [0/0]\n     via Null0, receive\nCLIENT#"
+        },
+        {
+          "phase": "withdraw only the RA default-router lifetime",
+          "node": "CLIENT",
+          "command": "show ipv6 interface Ethernet0/0",
+          "expectation": "The client actually acquires a global address from the RA prefix.",
+          "passed": true,
+          "output": "\nCLIENT#show ipv6 interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  IPv6 is enabled, link-local address is FE80::FF:FE00:1002 \n  No Virtual link-local address(es):\n  Stateless address autoconfig enabled\n  Global unicast address(es):\n    2001:DB8:10::FF:FE00:1002, subnet is 2001:DB8:10::/64 [EUI/CAL/PRE]\n      valid lifetime 2591998 preferred lifetime 604798\n  Joined group address(es):\n    FF02::1\n    FF02::2\n    FF02::1:FF00:1002\n  MTU is 1500 bytes\n  ICMP error messages limited to one every 100 milliseconds\n  ICMP redirects are enabled\n  ICMP unreachables are sent\n  ND DAD is enabled, number of DAD attempts: 1\n  ND reachable time is 30000 milliseconds (using 30000)\n  ND RAs are suppressed (all)\n  Hosts use stateless autoconfig for addresses.\nCLIENT#"
+        },
+        {
+          "phase": "withdraw only the RA default-router lifetime",
+          "node": "CLIENT",
+          "command": "ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe actually succeeds.",
+          "passed": true,
+          "output": "\nCLIENT#ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:10::1, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::FF:FE00:1002\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "withdraw only the RA default-router lifetime",
+          "node": "CLIENT",
+          "command": "ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe fails during the controlled fault.",
+          "passed": true,
+          "output": "\nCLIENT#ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:2::2, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::FF:FE00:1002\n...\nSuccess rate is 0 percent (0/3)\nCLIENT#"
+        },
+        {
+          "phase": "withdraw only the RA default-router lifetime",
+          "node": "R1",
+          "command": "show ipv6 ospf neighbor",
+          "expectation": "OSPFv3 has a real FULL transit adjacency.",
+          "passed": true,
+          "output": "\nR1#show ipv6 ospf neighbor\n\n            OSPFv3 Router with ID (192.0.2.1) (Process ID 10)\n\nNeighbor ID     Pri   State           Dead Time   Interface ID    Interface\n192.0.2.2         1   FULL/DR         00:00:07    1               Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "withdraw only the RA default-router lifetime",
+          "node": "R1",
+          "command": "ping ipv6 2001:db8:2::2 source Ethernet0/1 repeat 3",
+          "expectation": "Upstream IPv6 routing remains healthy without the client default.",
+          "passed": true,
+          "output": "\nR1#ping ipv6 2001:db8:2::2 source Ethernet0/1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:2::2, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:12::1\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/2/4 ms\nR1#"
+        },
+        {
+          "phase": "restore the advertised default lifetime",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore the advertised default lifetime",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR1(config)#interface Ethernet0/0\nR1(config-if)#"
+        },
+        {
+          "phase": "restore the advertised default lifetime",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ipv6 nd ra lifetime 30",
+          "passed": true,
+          "output": "\nR1(config-if)#ipv6 nd ra lifetime 30\nR1(config-if)#"
+        },
+        {
+          "phase": "restore the advertised default lifetime",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "restore the advertised default lifetime",
+          "node": "CLIENT",
+          "command": "show ipv6 route",
+          "expectation": "The actual ND-derived default points to the advertising first hop.",
+          "passed": true,
+          "output": "\nCLIENT#show ipv6 route\nIPv6 Routing Table - default - 4 entries\nCodes: C - Connected, L - Local, S - Static, U - Per-user Static route\n       B - BGP, R - RIP, H - NHRP, HG - NHRP registered\n       Hg - NHRP registration summary, HE - NHRP External, I1 - ISIS L1\n       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP\n       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination\n       NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter\n       OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1\n       ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations\n       ld - LISP dyn-eid, lA - LISP away, le - LISP extranet-policy\n       lp - LISP publications, ls - LISP destinations-summary, a - Application\n       m - OMP\nND  ::/0 [2/0]\n     via FE80::1, Ethernet0/0\nNDp 2001:DB8:10::/64 [2/0]\n     via Ethernet0/0, directly connected\nL   2001:DB8:10::FF:FE00:1002/128 [0/0]\n     via Ethernet0/0, receive\nL   FF00::/8 [0/0]\n     via Null0, receive\nCLIENT#"
+        },
+        {
+          "phase": "restore the advertised default lifetime",
+          "node": "CLIENT",
+          "command": "ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe actually succeeds.",
+          "passed": true,
+          "output": "\nCLIENT#ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:2::2, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::FF:FE00:1002\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "mismatch only the remote transit OSPF area",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "mismatch only the remote transit OSPF area",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR2(config)#interface Ethernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "mismatch only the remote transit OSPF area",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no ipv6 ospf 10 area 0",
+          "passed": true,
+          "output": "\nR2(config-if)#no ipv6 ospf 10 area 0\nR2(config-if)#"
+        },
+        {
+          "phase": "mismatch only the remote transit OSPF area",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ipv6 ospf 10 area 10",
+          "passed": true,
+          "output": "\nR2(config-if)#ipv6 ospf 10 area 10\nR2(config-if)#"
+        },
+        {
+          "phase": "mismatch only the remote transit OSPF area",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "4:20:32.774: %OSPFv3-5-ADJCHG: Process 10, Nbr 192.0.2.1 on Ethernet0/0 from FULL to DOWN, Neighbor Down: Interface down or detached\nR2(config-if)#\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "mismatch only the remote transit OSPF area",
+          "node": "R1",
+          "command": "show ipv6 route ospf",
+          "expectation": "The service route is withdrawn after adjacency loss.",
+          "passed": true,
+          "output": "\nR1#show ipv6 route ospf\nIPv6 Routing Table - default - 5 entries\nCodes: C - Connected, L - Local, S - Static, U - Per-user Static route\n       B - BGP, R - RIP, H - NHRP, HG - NHRP registered\n       Hg - NHRP registration summary, HE - NHRP External, I1 - ISIS L1\n       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP\n       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination\n       NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter\n       OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1\n       ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations\n       ld - LISP dyn-eid, lA - LISP away, le - LISP extranet-policy\n       lp - LISP publications, ls - LISP destinations-summary, a - Application\n       m - OMP\nR1#"
+        },
+        {
+          "phase": "mismatch only the remote transit OSPF area",
+          "node": "CLIENT",
+          "command": "ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe fails during the controlled fault.",
+          "passed": true,
+          "output": "\nCLIENT#ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:2::2, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::FF:FE00:1002\nUUU\nSuccess rate is 0 percent (0/3)\nCLIENT#"
+        },
+        {
+          "phase": "mismatch only the remote transit OSPF area",
+          "node": "CLIENT",
+          "command": "show ipv6 route",
+          "expectation": "The actual ND-derived default points to the advertising first hop.",
+          "passed": true,
+          "output": "\nCLIENT#show ipv6 route\nIPv6 Routing Table - default - 4 entries\nCodes: C - Connected, L - Local, S - Static, U - Per-user Static route\n       B - BGP, R - RIP, H - NHRP, HG - NHRP registered\n       Hg - NHRP registration summary, HE - NHRP External, I1 - ISIS L1\n       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP\n       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination\n       NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter\n       OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1\n       ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations\n       ld - LISP dyn-eid, lA - LISP away, le - LISP extranet-policy\n       lp - LISP publications, ls - LISP destinations-summary, a - Application\n       m - OMP\nND  ::/0 [2/0]\n     via FE80::1, Ethernet0/0\nNDp 2001:DB8:10::/64 [2/0]\n     via Ethernet0/0, directly connected\nL   2001:DB8:10::FF:FE00:1002/128 [0/0]\n     via Ethernet0/0, receive\nL   FF00::/8 [0/0]\n     via Null0, receive\nCLIENT#"
+        },
+        {
+          "phase": "mismatch only the remote transit OSPF area",
+          "node": "CLIENT",
+          "command": "ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe actually succeeds.",
+          "passed": true,
+          "output": "\nCLIENT#ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:10::1, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::FF:FE00:1002\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "restore transit area agreement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore transit area agreement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR2(config)#interface Ethernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "restore transit area agreement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no ipv6 ospf 10 area 10",
+          "passed": true,
+          "output": "\nR2(config-if)#no ipv6 ospf 10 area 10\nR2(config-if)#"
+        },
+        {
+          "phase": "restore transit area agreement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ipv6 ospf 10 area 0",
+          "passed": true,
+          "output": "\nR2(config-if)#ipv6 ospf 10 area 0\nR2(config-if)#"
+        },
+        {
+          "phase": "restore transit area agreement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "restore transit area agreement",
+          "node": "R1",
+          "command": "show ipv6 ospf neighbor",
+          "expectation": "OSPFv3 has a real FULL transit adjacency.",
+          "passed": true,
+          "output": "\nR1#show ipv6 ospf neighbor\n\n            OSPFv3 Router with ID (192.0.2.1) (Process ID 10)\n\nNeighbor ID     Pri   State           Dead Time   Interface ID    Interface\n192.0.2.2         1   FULL/BDR        00:00:07    1               Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "restore transit area agreement",
+          "node": "R1",
+          "command": "show ipv6 route ospf",
+          "expectation": "OSPFv3 actually installs the service loopback.",
+          "passed": true,
+          "output": ":20:46.835: %OSPFv3-5-ADJCHG: Process 10, Nbr 192.0.2.2 on Ethernet0/1 from LOADING to FULL, Loading Done\nR1#\nR1#show ipv6 route ospf\nIPv6 Routing Table - default - 6 entries\nCodes: C - Connected, L - Local, S - Static, U - Per-user Static route\n       B - BGP, R - RIP, H - NHRP, HG - NHRP registered\n       Hg - NHRP registration summary, HE - NHRP External, I1 - ISIS L1\n       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP\n       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination\n       NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter\n       OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1\n       ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations\n       ld - LISP dyn-eid, lA - LISP away, le - LISP extranet-policy\n       lp - LISP publications, ls - LISP destinations-summary, a - Application\n       m - OMP\nO   2001:DB8:2::2/128 [110/10]\n     via FE80::C, Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "restore transit area agreement",
+          "node": "CLIENT",
+          "command": "ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3",
+          "expectation": "The IPv6 endpoint probe actually succeeds.",
+          "passed": true,
+          "output": "\nCLIENT#ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 2001:DB8:2::2, timeout is 2 seconds:\nPacket sent with a source address of 2001:DB8:10::FF:FE00:1002\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "restore transit area agreement",
+          "node": "CLIENT",
+          "command": "show ipv6 route",
+          "expectation": "The actual ND-derived default points to the advertising first hop.",
+          "passed": true,
+          "output": "\nCLIENT#show ipv6 route\nIPv6 Routing Table - default - 4 entries\nCodes: C - Connected, L - Local, S - Static, U - Per-user Static route\n       B - BGP, R - RIP, H - NHRP, HG - NHRP registered\n       Hg - NHRP registration summary, HE - NHRP External, I1 - ISIS L1\n       I2 - ISIS L2, IA - ISIS interarea, IS - ISIS summary, D - EIGRP\n       EX - EIGRP external, ND - ND Default, NDp - ND Prefix, DCE - Destination\n       NDr - Redirect, RL - RPL, O - OSPF Intra, OI - OSPF Inter\n       OE1 - OSPF ext 1, OE2 - OSPF ext 2, ON1 - OSPF NSSA ext 1\n       ON2 - OSPF NSSA ext 2, la - LISP alt, lr - LISP site-registrations\n       ld - LISP dyn-eid, lA - LISP away, le - LISP extranet-policy\n       lp - LISP publications, ls - LISP destinations-summary, a - Application\n       m - OMP\nND  ::/0 [2/0]\n     via FE80::1, Ethernet0/0\nNDp 2001:DB8:10::/64 [2/0]\n     via Ethernet0/0, directly connected\nL   2001:DB8:10::FF:FE00:1002/128 [0/0]\n     via Ethernet0/0, receive\nL   FF00::/8 [0/0]\n     via Null0, receive\nCLIENT#"
+        }
+      ],
+      "plan_sha256": "85460c112643a90b00ad0048ebb227ffdcd550cc72fc80de88bad273d9630ee4",
+      "startup_states": {
+        "R1": "BOOTED",
+        "R2": "STARTED",
+        "CLIENT": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "CLIENT": "iol-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "R2",
+        "CLIENT"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:20:57Z"
     }
   ]
 }

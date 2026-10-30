@@ -18,16 +18,6 @@
       "completed_utc": "2026-10-24T18:49:57Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/002-fhrp-design-hsrp-vrrp.yaml",
-      "sha256": "86a8bdee5fd05bf53cf4283aeb86b852fa0317eaaf29902383fb348a79fca8a4",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:49:57Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:49:57Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/003-sdwan-control-data-plane.yaml",
       "sha256": "6877f6d268258af5f69521456f611bd2b22887bd597d7a6b3dac13fb7baece0c",
       "cml_version": "2.10.1+build.21",
@@ -86,16 +76,6 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-24T18:50:00Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/022-ipv6-first-hop-and-routing.yaml",
-      "sha256": "7e99846008ad88ecda2b4f6c2cbeecbd924ec80aa64e9ad72508f37834296913",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:02Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:03Z"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/migration/048-flat-vlan-to-routed-access.yaml",
@@ -1050,16 +1030,6 @@
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/041-small-office-full-stack.yaml",
       "sha256": "1c303c6356786c2e7f5fc1aa22e5f3a95b3fda85e004394a2ee9c87535f794ca",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:02Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:02Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/042-ipv6-only-mini-campus.yaml",
-      "sha256": "4d29314ccf4abdc5d324f5e8a8fdf7b64562356c9901cfb0402096baa763e336",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-25T15:56:02Z",
       "checks": [],
@@ -2336,6 +2306,36 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T14:10:33Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/042-ipv6-only-mini-campus.yaml",
+      "sha256": "5cd516e00973bdeeebe18e3fa36eb0e5cc7fb9e615f1da22f23ceec46eedbeb9",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:19:17Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:19:17Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/022-ipv6-first-hop-and-routing.yaml",
+      "sha256": "4896c8dc81bb4fa5be607df75ba526774b5bb26ca19d98c442ae13e69552609f",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:19:19Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:19:19Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/002-fhrp-design-hsrp-vrrp.yaml",
+      "sha256": "035fab4ff6bbe8cc4ad04060009d12fcd2a54221cc972aa53ce96ee2a356fcce",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:19:21Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:19:22Z"
     }
   ]
 }

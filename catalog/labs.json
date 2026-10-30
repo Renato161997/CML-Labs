@@ -891,23 +891,22 @@
       "title": "IPv6 Only Mini Campus",
       "track": "200-301",
       "topic": "scenario",
-      "nodes": 6,
+      "nodes": 4,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe",
+        "ioll2-xe"
       ],
-      "nominal_ram_mib": 3584,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 85,
+      "workbook": "docs/workbooks/200-301-042-ipv6-only-mini-campus.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "4d29314ccf4abdc5d324f5e8a8fdf7b64562356c9901cfb0402096baa763e336"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T14:19:14Z",
+      "sha256": "5cd516e00973bdeeebe18e3fa36eb0e5cc7fb9e615f1da22f23ceec46eedbeb9"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/031-ssh-local-users-hardening.yaml",
@@ -2107,23 +2106,22 @@
       "title": "FHRP Design HSRP VRRP",
       "track": "350-401",
       "topic": "architecture",
-      "nodes": 5,
+      "nodes": 4,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe",
+        "ioll2-xe"
       ],
-      "nominal_ram_mib": 3072,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 100,
+      "workbook": "docs/workbooks/350-401-002-fhrp-design-hsrp-vrrp.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "86a8bdee5fd05bf53cf4283aeb86b852fa0317eaaf29902383fb348a79fca8a4"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T14:18:58Z",
+      "sha256": "035fab4ff6bbe8cc4ad04060009d12fcd2a54221cc972aa53ce96ee2a356fcce"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/003-sdwan-control-data-plane.yaml",
@@ -2632,23 +2630,21 @@
       "title": "IPv6 First Hop And Routing",
       "track": "350-401",
       "topic": "infrastructure",
-      "nodes": 5,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe"
       ],
       "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 95,
+      "workbook": "docs/workbooks/350-401-022-ipv6-first-hop-and-routing.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "7e99846008ad88ecda2b4f6c2cbeecbd924ec80aa64e9ad72508f37834296913"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T14:20:57Z",
+      "sha256": "4896c8dc81bb4fa5be607df75ba526774b5bb26ca19d98c442ae13e69552609f"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/migration/048-flat-vlan-to-routed-access.yaml",
