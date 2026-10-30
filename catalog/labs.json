@@ -1477,23 +1477,22 @@
       "title": "CoPP Control Plane",
       "track": "300-410",
       "topic": "infra-security",
-      "nodes": 5,
+      "nodes": 3,
       "node_types": [
-        "desktop",
         "iosv",
-        "iosvl2"
+        "net-tools"
       ],
-      "nominal_ram_mib": 3072,
+      "nominal_ram_mib": 1536,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 95,
+      "workbook": "docs/workbooks/300-410-032-copp-control-plane.md",
+      "kind": "scenario",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "7fb5b7fd10ef26ae43e9934462a77761f66c8e619d584fa716461bcd76d26585"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T18:52:17Z",
+      "sha256": "0a7da8925183f2ef0fda7ca8f2b26df29cbb9412169ea48494ccf048c7d87291"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/025-dhcp-relay-snooping.yaml",
@@ -2934,22 +2933,22 @@
       "title": "Control Plane Policing",
       "track": "350-401",
       "topic": "security",
-      "nodes": 2,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv"
+        "iosv",
+        "net-tools"
       ],
-      "nominal_ram_mib": 1024,
+      "nominal_ram_mib": 1536,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 85,
+      "workbook": "docs/workbooks/350-401-031-control-plane-policing.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "f09fd7ec7133d3160a5090b7aec2dbc71a366e14af856c18d72d7c59f5a5b55f"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T18:52:17Z",
+      "sha256": "95fae2f57365f2fa46c3ef9688a67b00f9cffc2d3bdd1d3ffbe742cfc1674df6"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/032-acl-vacl-pacl.yaml",
@@ -4149,23 +4148,22 @@
       "title": "Policy Enforcement Points",
       "track": "350-701",
       "topic": "visibility-enforcement",
-      "nodes": 5,
+      "nodes": 3,
       "node_types": [
-        "desktop",
         "iosv",
-        "iosvl2"
+        "net-tools"
       ],
-      "nominal_ram_mib": 3072,
+      "nominal_ram_mib": 1536,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 105,
+      "workbook": "docs/workbooks/350-701-029-policy-enforcement-points.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "3e4907bad067ea9e36dc43e4b95f95edd7e2344a59100ce98aaa4d1923caac4b"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T18:59:03Z",
+      "sha256": "668b3772080b9f9bb98e63456267d797904878f5e17e022b2d5a2ad88e9750d5"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/030-incident-response-network.yaml",

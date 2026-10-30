@@ -15156,5 +15156,548 @@
         ]
       }
     ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/031-control-plane-policing.yaml": {
+    "checks": [
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.10.10",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"INSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "ping -c 3 -W 1 192.0.2.80",
+        "pattern": "3(?: packets)? received,\\s+0% packet loss",
+        "expectation": "The actual INSIDE control-plane probe succeeds.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 15
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "ping -c 3 -W 1 192.0.2.80",
+        "pattern": "3(?: packets)? received,\\s+0% packet loss",
+        "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 15
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      }
+    ],
+    "transitions": [
+      {
+        "name": "attach selective control-plane enforcement",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "control-plane",
+          "service-policy input COPP-GUARD",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "0(?: packets)? received,\\s+100% packet loss",
+            "expectation": "The actual INSIDE control-plane probe is dropped.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "FW",
+            "command": "show policy-map control-plane",
+            "pattern": "(?s)CPU-SELECT[^\\n]*\\n\\s*[1-9][0-9]* packets",
+            "expectation": "The selected control-plane class counts actual packets."
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore the unfiltered control-plane baseline",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "control-plane",
+          "no service-policy input COPP-GUARD",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The actual INSIDE control-plane probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/032-copp-control-plane.yaml": {
+    "checks": [
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.10.10",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"INSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "ping -c 3 -W 1 192.0.2.80",
+        "pattern": "3(?: packets)? received,\\s+0% packet loss",
+        "expectation": "The actual INSIDE control-plane probe succeeds.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 15
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "ping -c 3 -W 1 192.0.2.80",
+        "pattern": "3(?: packets)? received,\\s+0% packet loss",
+        "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 15
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      }
+    ],
+    "transitions": [
+      {
+        "name": "attach an overbroad control-plane selector",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended CPU-SOURCES",
+          "no 10",
+          "10 permit icmp any host 192.0.2.80 echo",
+          "exit",
+          "control-plane",
+          "service-policy input COPP-GUARD",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "0(?: packets)? received,\\s+100% packet loss",
+            "expectation": "The actual INSIDE control-plane probe is dropped.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "0(?: packets)? received,\\s+100% packet loss",
+            "expectation": "The actual OUTSIDE control-plane probe is dropped.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "FW",
+            "command": "show policy-map control-plane",
+            "pattern": "(?s)CPU-SELECT[^\\n]*\\n\\s*[1-9][0-9]* packets",
+            "expectation": "The selected control-plane class counts actual packets."
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "repair only the trusted-source exclusion",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended CPU-SOURCES",
+          "no 10",
+          "10 permit icmp host 198.18.10.10 host 192.0.2.80 echo",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "0(?: packets)? received,\\s+100% packet loss",
+            "expectation": "The actual INSIDE control-plane probe is dropped.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "FW",
+            "command": "show policy-map control-plane",
+            "pattern": "(?s)CPU-SELECT[^\\n]*\\n\\s*[1-9][0-9]* packets",
+            "expectation": "The selected control-plane class counts actual packets."
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "remove the teaching CoPP policy",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "control-plane",
+          "no service-policy input COPP-GUARD",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The actual INSIDE control-plane probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/029-policy-enforcement-points.yaml": {
+    "checks": [
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.10.10",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"INSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "ping -c 3 -W 1 192.0.2.80",
+        "pattern": "3(?: packets)? received,\\s+0% packet loss",
+        "expectation": "The actual INSIDE control-plane probe succeeds.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 15
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "ping -c 3 -W 1 192.0.2.80",
+        "pattern": "3(?: packets)? received,\\s+0% packet loss",
+        "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 15
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      }
+    ],
+    "transitions": [
+      {
+        "name": "block the forwarded application at ingress",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended TRANSIT-WEB",
+          "deny tcp host 198.18.10.10 host 198.18.20.20 eq 8080",
+          "permit ip any any",
+          "exit",
+          "interface GigabitEthernet0/0",
+          "ip access-group TRANSIT-WEB in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The actual INSIDE control-plane probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "FW",
+            "command": "show access-lists TRANSIT-WEB",
+            "pattern": "deny tcp host 198\\.18\\.10\\.10 host 198\\.18\\.20\\.20 eq 8080[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The actual transit ingress policy counts dropped TCP requests."
+          }
+        ]
+      },
+      {
+        "name": "restore the forwarded application",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip access-group TRANSIT-WEB in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The actual INSIDE control-plane probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          }
+        ]
+      },
+      {
+        "name": "enforce only the selected control-plane source",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "control-plane",
+          "service-policy input COPP-GUARD",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "0(?: packets)? received,\\s+100% packet loss",
+            "expectation": "The actual INSIDE control-plane probe is dropped.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "FW",
+            "command": "show policy-map control-plane",
+            "pattern": "(?s)CPU-SELECT[^\\n]*\\n\\s*[1-9][0-9]* packets",
+            "expectation": "The selected control-plane class counts actual packets."
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore both management and data baseline",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "control-plane",
+          "no service-policy input COPP-GUARD",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The actual INSIDE control-plane probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "ping -c 3 -W 1 192.0.2.80",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      }
+    ]
   }
 }
