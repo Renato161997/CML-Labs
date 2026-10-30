@@ -812,5 +812,44 @@
     "duration_minutes": 100,
     "kind": "practice",
     "workbook": "docs/workbooks/300-410-018-mp-bgp-vrf-lite.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/023-ipsec-vti.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 90,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-023-ipsec-vti.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 95,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-009-ipsec-gre-design.md"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/vpn/039-site-to-site-vpn-security-baseline.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 95,
+    "kind": "scenario",
+    "workbook": "docs/workbooks/350-701-039-site-to-site-vpn-security-baseline.md"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/002-cryptography-pki-ipsec.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 85,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-002-cryptography-pki-ipsec.md",
+    "example_profile": "native-security-workbench"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/004-security-intelligence-sharing.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 80,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-004-security-intelligence-sharing.md",
+    "example_profile": "native-security-workbench"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/031-security-api-python.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 85,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-031-security-api-python.md",
+    "example_profile": "native-security-workbench"
   }
 }
