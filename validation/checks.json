@@ -14054,5 +14054,577 @@
         ]
       }
     ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/006-firewall-zone-policy.yaml": {
+    "checks": [
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.10.10",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"INSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "ip route get 198.18.10.10",
+        "pattern": "198\\.18\\.10\\.10\\s+via\\s+198\\.18\\.20\\.1\\s+dev\\s+eth1",
+        "expectation": "The outside endpoint has an actual route to inside through the firewall."
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.10.10",
+        "pattern": "(?s)(?=.*\"reachable\": false)",
+        "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "FW",
+        "command": "show policy-map type inspect zone-pair",
+        "pattern": "(?s)INSIDE-OUT.*Inspect.*Session creations since[^\\n]*[1-9][0-9]*",
+        "expectation": "The stateful policy reports actual created inspection sessions.",
+        "attempts": 10,
+        "interval_seconds": 2
+      }
+    ],
+    "transitions": [
+      {
+        "name": "replace inspection with one-way pass",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "zone-pair security INSIDE-OUT source INSIDE destination OUTSIDE",
+          "no service-policy type inspect STATEFUL-OUT",
+          "service-policy type inspect STATELESS-OUT",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.10.10",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"INSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.10.10",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore stateful return handling",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "zone-pair security INSIDE-OUT source INSIDE destination OUTSIDE",
+          "no service-policy type inspect STATELESS-OUT",
+          "service-policy type inspect STATEFUL-OUT",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.10.10",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "FW",
+            "command": "show policy-map type inspect zone-pair",
+            "pattern": "(?s)INSIDE-OUT.*Inspect.*Session creations since[^\\n]*[1-9][0-9]*",
+            "expectation": "The stateful policy reports actual created inspection sessions.",
+            "attempts": 10,
+            "interval_seconds": 2
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.10.10",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"INSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/008-acl-nat-inspection.yaml": {
+    "checks": [
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.10.10",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"INSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "ip route get 198.18.10.10",
+        "pattern": "198\\.18\\.10\\.10\\s+via\\s+198\\.18\\.20\\.1\\s+dev\\s+eth1",
+        "expectation": "The outside endpoint has an actual route to inside through the firewall."
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.1\")(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "FW",
+        "command": "show ip nat translations",
+        "pattern": "tcp\\s+198\\.18\\.20\\.1:\\d+\\s+198\\.18\\.10\\.10:\\d+\\s+198\\.18\\.20\\.20:8080",
+        "expectation": "The actual TCP translation maps the inside source to the outside interface."
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.10.10",
+        "pattern": "(?s)(?=.*\"reachable\": false)",
+        "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "FW",
+        "command": "show policy-map type inspect zone-pair",
+        "pattern": "(?s)INSIDE-OUT.*Inspect.*Session creations since[^\\n]*[1-9][0-9]*",
+        "expectation": "The stateful policy reports actual created inspection sessions.",
+        "attempts": 10,
+        "interval_seconds": 2
+      }
+    ],
+    "transitions": [
+      {
+        "name": "disable source translation while retaining routing",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip nat inside",
+          "exit",
+          "do clear ip nat translation *",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.10.10",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.10.10",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"INSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "FW",
+            "command": "show policy-map type inspect zone-pair",
+            "pattern": "(?s)INSIDE-OUT.*Inspect.*Session creations since[^\\n]*[1-9][0-9]*",
+            "expectation": "The stateful policy reports actual created inspection sessions.",
+            "attempts": 10,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "restore actual PAT behavior",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "ip nat inside",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.1\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "FW",
+            "command": "show ip nat translations",
+            "pattern": "tcp\\s+198\\.18\\.20\\.1:\\d+\\s+198\\.18\\.10\\.10:\\d+\\s+198\\.18\\.20\\.20:8080",
+            "expectation": "The actual TCP translation maps the inside source to the outside interface."
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.10.10",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "FW",
+            "command": "show policy-map type inspect zone-pair",
+            "pattern": "(?s)INSIDE-OUT.*Inspect.*Session creations since[^\\n]*[1-9][0-9]*",
+            "expectation": "The stateful policy reports actual created inspection sessions.",
+            "attempts": 10,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/045-scor-capstone-secure-edge.yaml": {
+    "checks": [
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.10.10",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"INSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "ip route get 198.18.10.10",
+        "pattern": "198\\.18\\.10\\.10\\s+via\\s+198\\.18\\.20\\.1\\s+dev\\s+eth1",
+        "expectation": "The outside endpoint has an actual route to inside through the firewall."
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.1\")(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.1 --port 8443",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.20\")(?=.*\"server\": \"INSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "FW",
+        "command": "show ip nat translations",
+        "pattern": "tcp\\s+198\\.18\\.20\\.1:8443\\s+198\\.18\\.10\\.10:8080",
+        "expectation": "The static publication maps the selected outside TCP port to the inside HTTP fixture."
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.10.10",
+        "pattern": "(?s)(?=.*\"reachable\": false)",
+        "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "FW",
+        "command": "show policy-map type inspect zone-pair",
+        "pattern": "(?s)INSIDE-OUT.*Inspect.*Session creations since[^\\n]*[1-9][0-9]*",
+        "expectation": "The stateful policy reports actual created inspection sessions.",
+        "attempts": 10,
+        "interval_seconds": 2
+      }
+    ],
+    "transitions": [
+      {
+        "name": "block the pre-NAT published endpoint",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended WAN-INGRESS",
+          "5 deny tcp host 198.18.20.20 host 198.18.20.1 eq 8443",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.1 --port 8443",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "FW",
+            "command": "show access-lists WAN-INGRESS",
+            "pattern": "deny tcp host 198\\.18\\.20\\.20 host 198\\.18\\.20\\.1 eq 8443[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The pre-NAT ingress deny counts actual publication attempts."
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.1\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.10.10",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"INSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore the pre-NAT ingress permission",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended WAN-INGRESS",
+          "no 5",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.1 --port 8443",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.20\")(?=.*\"server\": \"INSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.10.10",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "mismatch the post-NAT service classifier",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended PUBLIC-WEB",
+          "no 10",
+          "10 permit tcp host 198.18.20.20 host 198.18.10.10 eq 8081",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.1 --port 8443",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "FW",
+            "command": "show ip nat translations",
+            "pattern": "tcp\\s+198\\.18\\.20\\.1:8443\\s+198\\.18\\.10\\.10:8080",
+            "expectation": "The static publication maps the selected outside TCP port to the inside HTTP fixture."
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.1\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.10.10",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"INSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore the correct translated service port",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended PUBLIC-WEB",
+          "no 10",
+          "10 permit tcp host 198.18.20.20 host 198.18.10.10 eq 8080",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.1 --port 8443",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.20\")(?=.*\"server\": \"INSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "FW",
+            "command": "show ip nat translations",
+            "pattern": "tcp\\s+198\\.18\\.20\\.1:8443\\s+198\\.18\\.10\\.10:8080",
+            "expectation": "The static publication maps the selected outside TCP port to the inside HTTP fixture."
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.1\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.10.10",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "FW",
+            "command": "show policy-map type inspect zone-pair",
+            "pattern": "(?s)INSIDE-OUT.*Inspect.*Session creations since[^\\n]*[1-9][0-9]*",
+            "expectation": "The stateful policy reports actual created inspection sessions.",
+            "attempts": 10,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
   }
 }

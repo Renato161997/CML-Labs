@@ -268,16 +268,6 @@
       "completed_utc": "2026-10-24T18:50:10Z"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/045-scor-capstone-secure-edge.yaml",
-      "sha256": "19914761a2b8dddf6fe98333ca0dd900cb9a270045314bb06f3ea2a39552c369",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:10Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:11Z"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/046-scor-capstone-soc-network.yaml",
       "sha256": "130a520204b1eae732cd66330a4690098f3e1d3f80cafeaac9a3668ef813e4d2",
       "cml_version": "2.10.1+build.21",
@@ -368,28 +358,8 @@
       "completed_utc": "2026-10-24T18:50:12Z"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/006-firewall-zone-policy.yaml",
-      "sha256": "131f1544bc3a1c397ef01bff670f3771ecb52356444e716704225089ab17e695",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:13Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:13Z"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/007-router-switch-hardening.yaml",
       "sha256": "c3b5c71040d8d0c5941784ae056380c8959c402a101126c9de31d2b913d9508a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:14Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:14Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/008-acl-nat-inspection.yaml",
-      "sha256": "06ac96d8ab4a4700543bd0db2eb11248b1152a0e6bf1b880dcc150ab02d86955",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-24T18:50:14Z",
       "checks": [],
@@ -2336,6 +2306,36 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T15:42:12Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/006-firewall-zone-policy.yaml",
+      "sha256": "f610fc612a1bdce7f9fe9a383293dc2545fb6062e107d5d0011f1eaa53900d83",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:56:41Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:56:42Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/008-acl-nat-inspection.yaml",
+      "sha256": "5f3a10c329f69ab87bfffa19e72827ec5de1539dc796eaf9c5b842341fa4868a",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:56:43Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:56:44Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/045-scor-capstone-secure-edge.yaml",
+      "sha256": "d5053ab6aea05ebcb4da50e10a8c01c1ff0b69dc12e6baad8fa7af4377ad77ba",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:56:45Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:56:46Z"
     }
   ]
 }

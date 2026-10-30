@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **139**.
+Import/export passes: **233/233**. Functional passes: **142**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -121,9 +121,12 @@ Import/export passes: **233/233**. Functional passes: **139**.
 | [GRE Overlay Underlay](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 22 | 16 | 2026-10-26T19:54:02Z |
 | [IPsec GRE Design](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 23 | 20 | 2026-10-30T15:00:07Z |
 | [Security API Python](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/031-security-api-python.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 16 | 5 | 2026-10-30T15:16:18Z |
+| [SCOR Capstone Secure Edge](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/045-scor-capstone-secure-edge.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 23 | 18 | 2026-10-30T16:02:32Z |
 | [Suspicious Host Containment](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/incident-response/041-suspicious-host-containment.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 15 | 16 | 2026-10-30T15:35:00Z |
 | [Secure Admin Plane](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/management/040-secure-admin-plane.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ubuntu-24-04-20260307 | 7 | 10 | 2026-10-28T18:41:28Z |
 | [NAC Quarantine VLAN Concept](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/nac/043-nac-quarantine-vlan-concept.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 12 | 22 | 2026-10-30T15:35:38Z |
+| [Firewall Zone Policy](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/006-firewall-zone-policy.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 15 | 10 | 2026-10-30T15:54:43Z |
+| [ACL NAT Inspection](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/008-acl-nat-inspection.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 16 | 10 | 2026-10-30T15:55:15Z |
 | [Site To Site IPsec IOS](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/009-site-to-site-ipsec-ios.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 14 | 12 | 2026-10-28T17:12:27Z |
 | [Segmentation VRF ACL](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/013-segmentation-vrf-acl.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 18 | 8 | 2026-10-28T18:38:49Z |
 | [Guest Access Isolation](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/025-guest-access-isolation.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 18 | 16 | 2026-10-30T15:44:57Z |

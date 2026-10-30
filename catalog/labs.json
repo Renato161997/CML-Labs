@@ -3355,23 +3355,22 @@
       "title": "SCOR Capstone Secure Edge",
       "track": "350-701",
       "topic": "capstone",
-      "nodes": 6,
+      "nodes": 3,
       "node_types": [
-        "desktop",
         "iosv",
-        "iosvl2"
+        "net-tools"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 1536,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 120,
+      "workbook": "docs/workbooks/350-701-045-scor-capstone-secure-edge.md",
+      "kind": "capstone",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "19914761a2b8dddf6fe98333ca0dd900cb9a270045314bb06f3ea2a39552c369"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T16:02:32Z",
+      "sha256": "d5053ab6aea05ebcb4da50e10a8c01c1ff0b69dc12e6baad8fa7af4377ad77ba"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/046-scor-capstone-soc-network.yaml",
@@ -3643,23 +3642,22 @@
       "title": "Firewall Zone Policy",
       "track": "350-701",
       "topic": "network-security",
-      "nodes": 5,
+      "nodes": 3,
       "node_types": [
-        "desktop",
         "iosv",
-        "iosvl2"
+        "net-tools"
       ],
-      "nominal_ram_mib": 3072,
+      "nominal_ram_mib": 1536,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 90,
+      "workbook": "docs/workbooks/350-701-006-firewall-zone-policy.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "131f1544bc3a1c397ef01bff670f3771ecb52356444e716704225089ab17e695"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T15:54:43Z",
+      "sha256": "f610fc612a1bdce7f9fe9a383293dc2545fb6062e107d5d0011f1eaa53900d83"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/007-router-switch-hardening.yaml",
@@ -3689,23 +3687,22 @@
       "title": "ACL NAT Inspection",
       "track": "350-701",
       "topic": "network-security",
-      "nodes": 5,
+      "nodes": 3,
       "node_types": [
-        "desktop",
         "iosv",
-        "iosvl2"
+        "net-tools"
       ],
-      "nominal_ram_mib": 3072,
+      "nominal_ram_mib": 1536,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 95,
+      "workbook": "docs/workbooks/350-701-008-acl-nat-inspection.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "06ac96d8ab4a4700543bd0db2eb11248b1152a0e6bf1b880dcc150ab02d86955"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T15:55:15Z",
+      "sha256": "5f3a10c329f69ab87bfffa19e72827ec5de1539dc796eaf9c5b842341fa4868a"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/009-site-to-site-ipsec-ios.yaml",

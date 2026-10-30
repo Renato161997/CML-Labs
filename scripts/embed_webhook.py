@@ -29,6 +29,10 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-firewall-traffic": {
+        "INSIDE": {"/lab/t.py": "examples/security/traffic_fixture.py"},
+        "OUTSIDE": {"/lab/t.py": "examples/security/traffic_fixture.py"},
+    },
     "native-security-workbench": {
         "WORKBENCH": {
             "/lab/workbench.py": "examples/security/security_workbench.py",
