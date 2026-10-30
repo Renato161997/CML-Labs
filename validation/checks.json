@@ -9981,5 +9981,663 @@
         ]
       }
     ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/troubleshooting/043-etherchannel-stp-failure-recovery.yaml": {
+    "checks": [
+      {
+        "node": "SW2",
+        "command": "show etherchannel summary",
+        "pattern": "(?s)Po1\\(SU\\)(?=.*LACP)(?=.*(?:Et|Ethernet)0/0\\(P\\))(?=.*(?:Et|Ethernet)0/1\\(P\\))",
+        "expectation": "Both physical members actually participate in the Layer2 LACP bundle.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SW2",
+        "command": "show spanning-tree vlan 10",
+        "pattern": "Po1\\s+Root\\s+FWD",
+        "expectation": "The port-channel is the preferred root-facing path.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SW3",
+        "command": "show spanning-tree vlan 10",
+        "pattern": "(?:Et|Ethernet)0/1\\s+Altn\\s+BLK",
+        "expectation": "The redundant triangle link is blocked by STP.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SW2",
+        "command": "ping 198.18.10.1 source Vlan10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual VLAN traffic survives each supported path change.",
+        "attempts": 15,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "lose one LACP member",
+        "node": "SW2",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW2",
+            "command": "show etherchannel summary",
+            "pattern": "(?s)Po1\\(SU\\).*?(?:Et|Ethernet)0/0\\(P\\)",
+            "expectation": "The remaining member keeps the bundle usable.",
+            "absent_pattern": "(?:Et|Ethernet)0/1\\(P\\)",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SW2",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "Po1\\s+Root\\s+FWD",
+            "expectation": "The port-channel is the preferred root-facing path.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SW2",
+            "command": "ping 198.18.10.1 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual VLAN traffic survives each supported path change.",
+            "attempts": 15,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore both LACP members",
+        "node": "SW2",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW2",
+            "command": "show etherchannel summary",
+            "pattern": "(?s)Po1\\(SU\\)(?=.*LACP)(?=.*(?:Et|Ethernet)0/0\\(P\\))(?=.*(?:Et|Ethernet)0/1\\(P\\))",
+            "expectation": "Both physical members actually participate in the Layer2 LACP bundle.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SW2",
+            "command": "ping 198.18.10.1 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual VLAN traffic survives each supported path change.",
+            "attempts": 15,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "fail the logical bundle",
+        "node": "SW2",
+        "commands": [
+          "configure terminal",
+          "interface Port-channel1",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW2",
+            "command": "show interfaces Port-channel1",
+            "pattern": "Port-channel1 is administratively down",
+            "expectation": "The fault is on the actual logical interface."
+          },
+          {
+            "node": "SW2",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "(?:Et|Ethernet)0/2\\s+Root\\s+FWD",
+            "expectation": "SW2 now reaches the root through SW3.",
+            "attempts": 60,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SW3",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "(?:Et|Ethernet)0/1\\s+Desg\\s+FWD",
+            "expectation": "The former alternate path actually forwards.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SW2",
+            "command": "ping 198.18.10.1 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual VLAN traffic survives each supported path change.",
+            "attempts": 15,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "recover the preferred bundle path",
+        "node": "SW2",
+        "commands": [
+          "configure terminal",
+          "interface Port-channel1",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW2",
+            "command": "show etherchannel summary",
+            "pattern": "(?s)Po1\\(SU\\)(?=.*LACP)(?=.*(?:Et|Ethernet)0/0\\(P\\))(?=.*(?:Et|Ethernet)0/1\\(P\\))",
+            "expectation": "Both physical members actually participate in the Layer2 LACP bundle.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SW2",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "Po1\\s+Root\\s+FWD",
+            "expectation": "The port-channel is the preferred root-facing path.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SW3",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "(?:Et|Ethernet)0/1\\s+Altn\\s+BLK",
+            "expectation": "The redundant triangle link is blocked by STP.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SW2",
+            "command": "ping 198.18.10.1 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual VLAN traffic survives each supported path change.",
+            "attempts": 15,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/050-ccna-capstone-campus-access.yaml": {
+    "checks": [
+      {
+        "node": "CORE1",
+        "command": "show standby brief",
+        "pattern": "Active\\s+local",
+        "expectation": "CORE1 is the actual active gateway.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CORE2",
+        "command": "show standby brief",
+        "pattern": "Standby\\s+198\\.18\\.10\\.2\\s+local",
+        "expectation": "CORE2 is the actual standby behind the preferred core.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CORE1",
+        "command": "show spanning-tree vlan 10",
+        "pattern": "This bridge is the root",
+        "expectation": "CORE1 is the preferred actual STP root.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 198.18.10.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The actual first-hop virtual IP is reachable.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The explicit endpoint route and the active first hop reach the isolated loopback service.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "ACCESS",
+        "command": "show spanning-tree vlan 10",
+        "pattern": "(?:Et|Ethernet)0/1\\s+Altn\\s+BLK",
+        "expectation": "The redundant uplink is initially blocked."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "isolate the preferred core data links",
+        "node": "CORE1",
+        "commands": [
+          "configure terminal",
+          "interface range Ethernet0/0 - 1",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CORE2",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "CORE2 actually takes over the virtual gateway.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE2",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "This bridge is the root",
+            "expectation": "CORE2 becomes the visible root after the preferred core is isolated.",
+            "attempts": 60,
+            "interval_seconds": 3
+          },
+          {
+            "node": "ACCESS",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "(?:Et|Ethernet)0/1\\s+Root\\s+FWD",
+            "expectation": "Access forwards through the surviving core.",
+            "attempts": 60,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual first-hop virtual IP is reachable.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The explicit endpoint route and the active first hop reach the isolated loopback service.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore preferred core roles",
+        "node": "CORE1",
+        "commands": [
+          "configure terminal",
+          "interface range Ethernet0/0 - 1",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CORE1",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "CORE1 is the actual active gateway.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE2",
+            "command": "show standby brief",
+            "pattern": "Standby\\s+198\\.18\\.10\\.2\\s+local",
+            "expectation": "CORE2 is the actual standby behind the preferred core.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE1",
+            "command": "show spanning-tree vlan 10",
+            "pattern": "This bridge is the root",
+            "expectation": "CORE1 is the preferred actual STP root.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual first-hop virtual IP is reachable.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The explicit endpoint route and the active first hop reach the isolated loopback service.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "withdraw only the endpoint service route",
+        "node": "CLIENT",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.80 255.255.255.255 198.18.10.1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The endpoint cannot reach the service without its route."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual first-hop virtual IP is reachable.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE1",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "CORE1 is the actual active gateway.",
+            "attempts": 40,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore the endpoint service route",
+        "node": "CLIENT",
+        "commands": [
+          "configure terminal",
+          "ip route 192.0.2.80 255.255.255.255 198.18.10.1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The explicit endpoint route and the active first hop reach the isolated loopback service.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual first-hop virtual IP is reachable.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/044-layer-2-security-stack.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "show ip interface brief",
+        "pattern": "Ethernet0/0\\s+198\\.18\\.10\\.100\\s+YES DHCP\\s+up\\s+up",
+        "expectation": "The legitimate endpoint acquires the actual first DHCP lease.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SW1",
+        "command": "show ip dhcp snooping binding",
+        "pattern": "198\\.18\\.10\\.100\\s+\\d+\\s+dhcp-snooping\\s+10\\s+GigabitEthernet0/1",
+        "expectation": "The switch binds the legitimate lease to the expected port.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 198.18.10.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The legitimate client actually reaches its gateway.",
+        "attempts": 15,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SW1",
+        "command": "show port-security interface GigabitEthernet0/1",
+        "pattern": "Port Status\\s*:\\s*Secure-up",
+        "expectation": "The protected client access port is operational."
+      },
+      {
+        "node": "SW1",
+        "command": "show port-security address",
+        "pattern": "0200\\.0000\\.1002[^\\n]*Gi0/1",
+        "expectation": "The fixed legitimate source MAC is actually learned on the protected port."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "activate the separate static-IP impersonator",
+        "node": "SPOOFER",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SPOOFER",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The unbound static sender cannot reach the gateway."
+          },
+          {
+            "node": "SW1",
+            "command": "show ip arp inspection statistics vlan 10",
+            "pattern": "(?m)^[ \\t]*Vlan[ \\t]+Forwarded[ \\t]+Dropped[ \\t]+DHCP[ \\t]+Drops[ \\t]+ACL[ \\t]+Drops[ \\t]*\\r?\\n[ \\t-]+\\r?\\n[ \\t]*10[ \\t]+\\d+[ \\t]+[1-9][0-9]*[ \\t]+[1-9][0-9]*[ \\t]+\\d+[ \\t]*\\r?$",
+            "expectation": "Actual binding-related ARP drops are counted."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The legitimate client actually reaches its gateway.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SW1",
+            "command": "show port-security interface GigabitEthernet0/1",
+            "pattern": "Port Status\\s*:\\s*Secure-up",
+            "expectation": "The protected client access port is operational."
+          }
+        ]
+      },
+      {
+        "name": "remove the separate impersonator",
+        "node": "SPOOFER",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The legitimate client actually reaches its gateway.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SW1",
+            "command": "show port-security interface GigabitEthernet0/1",
+            "pattern": "Port Status\\s*:\\s*Secure-up",
+            "expectation": "The protected client access port is operational."
+          }
+        ]
+      },
+      {
+        "name": "change the protected DHCP client source MAC",
+        "node": "CLIENT",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "shutdown",
+          "mac-address 0200.0000.1009",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show interfaces status",
+            "pattern": "Gi0/1[^\\n]*err-disabled",
+            "expectation": "Port security actually error-disables the offending client port.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SW1",
+            "command": "show port-security interface GigabitEthernet0/1",
+            "pattern": "Security Violation Count\\s*:\\s*[1-9][0-9]*",
+            "expectation": "Port security records actual offending source frames."
+          }
+        ]
+      },
+      {
+        "name": "restore the authorized client source MAC",
+        "node": "CLIENT",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "shutdown",
+          "mac-address 0200.0000.1002",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show interfaces status",
+            "pattern": "Gi0/1[^\\n]*err-disabled",
+            "expectation": "Port security actually error-disables the offending client port.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "reset the secured port and reacquire the actual lease",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/1",
+          "shutdown",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show port-security interface GigabitEthernet0/1",
+            "pattern": "Port Status\\s*:\\s*Secure-up",
+            "expectation": "The protected client access port is operational."
+          },
+          {
+            "node": "CLIENT",
+            "command": "show ip interface brief",
+            "pattern": "Ethernet0/0\\s+198\\.18\\.10\\.(?:1\\d\\d|2[0-4]\\d|25[0-4])\\s+YES DHCP\\s+up\\s+up",
+            "expectation": "The recovered client has a real DHCP lease from the configured pool; the address need not equal the initial lease.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SW1",
+            "command": "show ip dhcp snooping binding",
+            "pattern": "02:00:00:00:10:02\\s+198\\.18\\.10\\.(?:1\\d\\d|2[0-4]\\d|25[0-4])\\s+\\d+\\s+dhcp-snooping\\s+10\\s+GigabitEthernet0/1",
+            "expectation": "A current dynamic binding matches the restored MAC, expected VLAN and protected port.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The legitimate client actually reaches its gateway.",
+            "attempts": 15,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "reset only the recovered inspection counters",
+        "node": "SW1",
+        "commands": [
+          "clear ip arp inspection statistics"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show ip dhcp snooping binding",
+            "pattern": "02:00:00:00:10:02\\s+198\\.18\\.10\\.(?:1\\d\\d|2[0-4]\\d|25[0-4])\\s+\\d+\\s+dhcp-snooping\\s+10\\s+GigabitEthernet0/1",
+            "expectation": "A current dynamic binding matches the restored MAC, expected VLAN and protected port.",
+            "attempts": 40,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "prove fresh legitimate ARP after recovery",
+        "node": "CLIENT",
+        "commands": [
+          "clear arp-cache"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The legitimate client actually reaches its gateway.",
+            "attempts": 15,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SW1",
+            "command": "show ip arp inspection statistics vlan 10",
+            "pattern": "(?m)^[ \\t]*Vlan[ \\t]+DHCP[ \\t]+Permits[^\\r\\n]*\\r?\\n[ \\t-]+\\r?\\n[ \\t]*10[ \\t]+[1-9][0-9]*\\b",
+            "expectation": "Fresh legitimate ARP is actually permitted against the DHCP binding."
+          },
+          {
+            "node": "SW1",
+            "command": "show port-security interface GigabitEthernet0/1",
+            "pattern": "Port Status\\s*:\\s*Secure-up",
+            "expectation": "The protected client access port is operational."
+          },
+          {
+            "node": "CLIENT",
+            "command": "show ip interface brief",
+            "pattern": "Ethernet0/0\\s+198\\.18\\.10\\.(?:1\\d\\d|2[0-4]\\d|25[0-4])\\s+YES DHCP\\s+up\\s+up",
+            "expectation": "The recovered client has a real DHCP lease from the configured pool; the address need not equal the initial lease.",
+            "attempts": 40,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
   }
 }

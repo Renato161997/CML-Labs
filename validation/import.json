@@ -968,16 +968,6 @@
       "completed_utc": "2026-10-25T15:55:55Z"
     },
     {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/050-ccna-capstone-campus-access.yaml",
-      "sha256": "ec6814979481fc510cfb520deb498f79c74b884947b05ee6341523eeb159b148",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:55Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:55Z"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/design/045-guest-wireless-isolation-concept.yaml",
       "sha256": "b63072f65a6bed00a3980935dbfd37638f3193231490c04797a0126b5834297d",
       "cml_version": "2.10.1+build.21",
@@ -1086,26 +1076,6 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T15:56:02Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/044-layer-2-security-stack.yaml",
-      "sha256": "22a717c97408ed6e074d62991a524db4ada9715a1a1552534f91d245607495b8",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:03Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:04Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/troubleshooting/043-etherchannel-stp-failure-recovery.yaml",
-      "sha256": "29ed0417f40072007ad3f6360af28c34d463e3033f0ad8cf4a18ae8e06b6d48f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:04Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:04Z"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/assessment/044-enarsi-practical-checkpoint.yaml",
@@ -2336,6 +2306,36 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T13:40:57Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/troubleshooting/043-etherchannel-stp-failure-recovery.yaml",
+      "sha256": "d945d5f61f2100e38ed210534ac179e85f5fad51755cc53502f2d3219b33b945",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:10:29Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:10:29Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/044-layer-2-security-stack.yaml",
+      "sha256": "c5955ad2c291c0417eeb43adae35452c800eb688d521d078affeef9bf952e7fd",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:10:31Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:10:31Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/050-ccna-capstone-campus-access.yaml",
+      "sha256": "0807c0840c19471a440a2061ed200438660c5b13716692f912bfd7c6d282c4d6",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:10:33Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:10:33Z"
     }
   ]
 }
