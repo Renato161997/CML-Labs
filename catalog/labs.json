@@ -3578,23 +3578,21 @@
       "title": "Suspicious Host Containment",
       "track": "350-701",
       "topic": "incident-response",
-      "nodes": 6,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 85,
+      "workbook": "docs/workbooks/350-701-041-suspicious-host-containment.md",
+      "kind": "scenario",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "e5799d85e26e4308e64ae79889ff0cc8a0dfcebdc88c5c2465ce2618418ec5ff"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T15:35:00Z",
+      "sha256": "d7ecbfe2c29aab88a19929a090d6a8098dd6de63a4a20185122b59d749e9eb1a"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/management/040-secure-admin-plane.yaml",
@@ -3623,23 +3621,22 @@
       "title": "NAC Quarantine VLAN Concept",
       "track": "350-701",
       "topic": "nac",
-      "nodes": 6,
+      "nodes": 4,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe",
+        "ioll2-xe"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 95,
+      "workbook": "docs/workbooks/350-701-043-nac-quarantine-vlan-concept.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "a17e2eb9d8a891d6eb111ea2f0ab4d72f8e73047ba9b9145b641e44aaa19a2da"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T15:35:38Z",
+      "sha256": "eba9c47f4757c120c04250f034e132fd12e8cd1605d2ad0353a7855dfa38867d"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/006-firewall-zone-policy.yaml",
@@ -3938,22 +3935,22 @@
       "title": "Guest Access Isolation",
       "track": "350-701",
       "topic": "secure-access",
-      "nodes": 3,
+      "nodes": 4,
       "node_types": [
-        "desktop",
-        "iosvl2"
+        "iol-xe",
+        "ioll2-xe"
       ],
-      "nominal_ram_mib": 1792,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 105,
+      "workbook": "docs/workbooks/350-701-025-guest-access-isolation.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "c92fda6aeae0316477064e4def7f2916aaeecf96689b8106e6a621933692c4fb"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T15:44:57Z",
+      "sha256": "9018f0601396d1cd67bcfba17e448bf44153ac901323e39f3d30e2dbfd071137"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/001-threats-vulnerabilities.yaml",

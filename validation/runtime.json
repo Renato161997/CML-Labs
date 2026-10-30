@@ -27154,6 +27154,897 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T15:27:44Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/incident-response/041-suspicious-host-containment.yaml",
+      "sha256": "d7ecbfe2c29aab88a19929a090d6a8098dd6de63a4a20185122b59d749e9eb1a",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:33:56Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "HOST",
+          "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nHOST#ping 198.18.20.101 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.101, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST#"
+        },
+        {
+          "phase": "baseline",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SERVICE",
+          "command": "ping 198.18.20.1 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nSERVICE#ping 198.18.20.1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.101 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSERVICE#"
+        },
+        {
+          "phase": "apply the selected host containment",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "apply the selected host containment",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nGW(config)#interface Ethernet0/0\nGW(config-if)#\n*Oct 30 15:34:34.972: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt.\nGW(config-if)#"
+        },
+        {
+          "phase": "apply the selected host containment",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "ip access-group CONTAIN-HOST in",
+          "passed": true,
+          "output": "\nGW(config-if)#ip access-group CONTAIN-HOST in\nGW(config-if)#"
+        },
+        {
+          "phase": "apply the selected host containment",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-if)#end\nGW#\n*Oct 30 15:34:35.077: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agen"
+        },
+        {
+          "phase": "apply the selected host containment",
+          "node": "HOST",
+          "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe is blocked during the controlled fault.",
+          "passed": true,
+          "output": "\nHOST#ping 198.18.20.101 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.101, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \nU.U\nSuccess rate is 0 percent (0/3)\nHOST#"
+        },
+        {
+          "phase": "apply the selected host containment",
+          "node": "GW",
+          "command": "show access-lists CONTAIN-HOST",
+          "expectation": "The containment rule counts actual blocked host traffic.",
+          "passed": true,
+          "output": "\nGW#show access-lists CONTAIN-HOST\nExtended IP access list CONTAIN-HOST\n    10 permit icmp host 198.18.10.10 host 192.0.2.80\n    20 deny ip host 198.18.10.10 any (3 matches)\n    30 permit ip any any\nGW#"
+        },
+        {
+          "phase": "apply the selected host containment",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST#"
+        },
+        {
+          "phase": "apply the selected host containment",
+          "node": "SERVICE",
+          "command": "ping 198.18.20.1 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nSERVICE#ping 198.18.20.1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.101 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSERVICE#"
+        },
+        {
+          "phase": "introduce an incorrectly ordered exception",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "introduce an incorrectly ordered exception",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "ip access-list extended CONTAIN-HOST",
+          "passed": true,
+          "output": "\nGW(config)#ip access-list extended CONTAIN-HOST\nGW(config-ext-nacl)#"
+        },
+        {
+          "phase": "introduce an incorrectly ordered exception",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "5 permit ip host 198.18.10.10 any",
+          "passed": true,
+          "output": "\nGW(config-ext-nacl)#5 permit ip host 198.18.10.10 any\nGW(config-ext-nacl)#"
+        },
+        {
+          "phase": "introduce an incorrectly ordered exception",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-ext-nacl)#end\nGW#"
+        },
+        {
+          "phase": "introduce an incorrectly ordered exception",
+          "node": "HOST",
+          "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nHOST#ping 198.18.20.101 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.101, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST#"
+        },
+        {
+          "phase": "introduce an incorrectly ordered exception",
+          "node": "GW",
+          "command": "show access-lists CONTAIN-HOST",
+          "expectation": "The early permit actually bypasses the lower deny.",
+          "passed": true,
+          "output": "\nGW#show access-lists CONTAIN-HOST\nExtended IP access list CONTAIN-HOST\n    5 permit ip host 198.18.10.10 any (3 matches)\n    10 permit icmp host 198.18.10.10 host 192.0.2.80 (6 matches)\n    20 deny ip host 198.18.10.10 any (3 matches)\n    30 permit ip any any\nGW#"
+        },
+        {
+          "phase": "repair containment rule ordering",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "repair containment rule ordering",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "ip access-list extended CONTAIN-HOST",
+          "passed": true,
+          "output": "\n*Oct 30 15:34:42.168: %SYS-5-CONFIG_I: Configured from console by console\nGW(config)#\nGW(config)#ip access-list extended CONTAIN-HOST\nGW(config-ext-nacl)#"
+        },
+        {
+          "phase": "repair containment rule ordering",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "no 5",
+          "passed": true,
+          "output": "\nGW(config-ext-nacl)#no 5\nGW(config-ext-nacl)#"
+        },
+        {
+          "phase": "repair containment rule ordering",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-ext-nacl)#end\nGW#"
+        },
+        {
+          "phase": "repair containment rule ordering",
+          "node": "HOST",
+          "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe is blocked during the controlled fault.",
+          "passed": true,
+          "output": "\nHOST#ping 198.18.20.101 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.101, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \nU.U\nSuccess rate is 0 percent (0/3)\nHOST#"
+        },
+        {
+          "phase": "repair containment rule ordering",
+          "node": "GW",
+          "command": "show access-lists CONTAIN-HOST",
+          "expectation": "The containment rule counts actual blocked host traffic.",
+          "passed": true,
+          "output": "\nGW#show access-lists CONTAIN-HOST\nExtended IP access list CONTAIN-HOST\n    10 permit icmp host 198.18.10.10 host 192.0.2.80 (6 matches)\n    20 deny ip host 198.18.10.10 any (6 matches)\n    30 permit ip any any\nGW#"
+        },
+        {
+          "phase": "repair containment rule ordering",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST#"
+        },
+        {
+          "phase": "release the host after the exercise decision",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "release the host after the exercise decision",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nGW(config)#interface Ethernet0/0\nGW(config-if)#"
+        },
+        {
+          "phase": "release the host after the exercise decision",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "no ip access-group CONTAIN-HOST in",
+          "passed": true,
+          "output": "\nGW(config-if)#no ip access-group CONTAIN-HOST in\nGW(config-if)#"
+        },
+        {
+          "phase": "release the host after the exercise decision",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-if)#end\nGW#"
+        },
+        {
+          "phase": "release the host after the exercise decision",
+          "node": "HOST",
+          "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nHOST#ping 198.18.20.101 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.101, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nHOST#"
+        },
+        {
+          "phase": "release the host after the exercise decision",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nHOST#"
+        },
+        {
+          "phase": "release the host after the exercise decision",
+          "node": "SERVICE",
+          "command": "ping 198.18.20.1 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nSERVICE#ping 198.18.20.1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.101 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSERVICE#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "HOST": "BOOTED",
+        "GW": "BOOTED",
+        "SERVICE": "STARTED"
+      },
+      "images": {
+        "HOST": "iol-xe-17-18-02",
+        "GW": "iol-xe-17-18-02",
+        "SERVICE": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "cb4d2848be91b785af0bfad3299f4e85b18bda05a105b56318a9ba72d58bb151",
+      "console_boot_fallback": [
+        "SERVICE"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:35:00Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/nac/043-nac-quarantine-vlan-concept.yaml",
+      "sha256": "eba9c47f4757c120c04250f034e132fd12e8cd1605d2ad0353a7855dfa38867d",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:33:56Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "HOST",
+          "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nHOST#ping 198.18.20.101 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.101, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nHOST#"
+        },
+        {
+          "phase": "baseline",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nHOST#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show interfaces Ethernet0/1 switchport",
+          "expectation": "The endpoint initially belongs to the authorized VLAN.",
+          "passed": true,
+          "output": "\nSW1#show interfaces Ethernet0/1 switchport\nName: Et0/1\nSwitchport: Enabled\nAdministrative Mode: static access\nOperational Mode: static access\nAdministrative Trunking Encapsulation: negotiate\nOperational Trunking Encapsulation: native\nNegotiation of Trunking: Off\nAccess Mode VLAN: 10 (AUTHORIZED)\nTrunking Native Mode VLAN: 1 (default)\nAdministrative Native VLAN tagging: disabled\nVoice VLAN: none\nAdministrative private-vlan host-association: none \nAdministrative private-vlan mapping: none \nAdministrative private-vlan trunk native VLAN: none\nAdministrative private-vlan trunk Native VLAN tagging: enabled\nAdministrative private-vlan trunk encapsulation: dot1q\nAdministrative private-vlan trunk normal VLANs: none\nAdministrative private-vlan trunk associations: none\nAdministrative private-vlan trunk mappings: none\nOperational private-vlan: none\nTrunking VLANs Enabled: ALL\nPruning VLANs Enabled: 2-1001\nCapture Mode Disabled\nCapture VLANs Allowed: ALL\n\nProtected: false\nAppliance trust: none\nSW1#"
+        },
+        {
+          "phase": "move the access port into quarantine",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "move the access port into quarantine",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface Ethernet0/1",
+          "passed": true,
+          "output": "\nSW1(config)#interface Ethernet0/1\nSW1(config-if)#"
+        },
+        {
+          "phase": "move the access port into quarantine",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "switchport access vlan 999",
+          "passed": true,
+          "output": "\nSW1(config-if)#switchport access vlan 999\nSW1(config-if)#"
+        },
+        {
+          "phase": "move the access port into quarantine",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW1(config-if)#end\nSW1#"
+        },
+        {
+          "phase": "move the access port into quarantine",
+          "node": "SW1",
+          "command": "show interfaces Ethernet0/1 switchport",
+          "expectation": "The actual endpoint access port belongs to the quarantine VLAN.",
+          "passed": true,
+          "output": "\n*Oct 30 15:35:08.431: %SYS-5-CONFIG_I: Configured from console by console\n*Oct 30 15:35:08.716: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt.\nSW1#\nSW1#show interfaces Ethernet0/1 switchport\nName: Et0/1\nSwitchport: Enabled\nAdministrative Mode: static access\nOperational Mode: static access\nAdministrative Trunking Encapsulation: negotiate\nOperational Trunking Encapsulation: native\nNegotiation of Trunking: Off\nAccess Mode VLAN: 999 (QUARANTINE)\nTrunking Native Mode VLAN: 1 (default)\nAdministrative Native VLAN tagging: disabled\nVoice VLAN: none\nAdministrative private-vlan host-association: none \nAdministrative private-vlan mapping: none \nAdministrative private-vlan trunk native VLAN: none\nAdministrative private-vlan trunk Native VLAN tagging: enabled\nAdministrative private-vlan trunk encapsulation: dot1q\nAdministrative private-vlan trunk normal VLANs: none\nAdministrative private-vlan trunk associations: none\nAdministrative private-vlan trunk mappings: none\nOperational private-vlan: none\nTrunking VLANs Enabled: ALL\nPruning VLANs Enabled: 2-1001\nCapture Mode Disabled\nCapture VLANs Allowed: ALL\n\nProtected: false\nAppliance trust: none\nSW1#"
+        },
+        {
+          "phase": "configure the explicit quarantine endpoint state",
+          "kind": "configuration",
+          "node": "HOST",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nHOST#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nHOST(config)#"
+        },
+        {
+          "phase": "configure the explicit quarantine endpoint state",
+          "kind": "configuration",
+          "node": "HOST",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nHOST(config)#interface Ethernet0/0\nHOST(config-if)#"
+        },
+        {
+          "phase": "configure the explicit quarantine endpoint state",
+          "kind": "configuration",
+          "node": "HOST",
+          "command": "ip address 198.18.99.10 255.255.255.0",
+          "passed": true,
+          "output": "\nHOST(config-if)#ip address 198.18.99.10 255.255.255.0\nHOST(config-if)#"
+        },
+        {
+          "phase": "configure the explicit quarantine endpoint state",
+          "kind": "configuration",
+          "node": "HOST",
+          "command": "exit",
+          "passed": true,
+          "output": "\nHOST(config-if)#exit\nHOST(config)#"
+        },
+        {
+          "phase": "configure the explicit quarantine endpoint state",
+          "kind": "configuration",
+          "node": "HOST",
+          "command": "no ip route 0.0.0.0 0.0.0.0 198.18.10.1",
+          "passed": true,
+          "output": "\nHOST(config)#no ip route 0.0.0.0 0.0.0.0 198.18.10.1\nHOST(config)#"
+        },
+        {
+          "phase": "configure the explicit quarantine endpoint state",
+          "kind": "configuration",
+          "node": "HOST",
+          "command": "ip route 0.0.0.0 0.0.0.0 198.18.99.1",
+          "passed": true,
+          "output": "\nHOST(config)#ip route 0.0.0.0 0.0.0.0 198.18.99.1\nHOST(config)#"
+        },
+        {
+          "phase": "configure the explicit quarantine endpoint state",
+          "kind": "configuration",
+          "node": "HOST",
+          "command": "end",
+          "passed": true,
+          "output": "\nHOST(config)#end\nHOST#"
+        },
+        {
+          "phase": "configure the explicit quarantine endpoint state",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.99.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nHOST#"
+        },
+        {
+          "phase": "configure the explicit quarantine endpoint state",
+          "node": "HOST",
+          "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe is blocked during the controlled fault.",
+          "passed": true,
+          "output": "\nHOST#ping 198.18.20.101 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.101, timeout is 2 seconds:\nPacket sent with a source address of 198.18.99.10 \nU\n*Oct 30 15:35:12.479: %SYS-5-CONFIG_I: Configured from console by console.U\nSuccess rate is 0 percent (0/3)\nHOST#"
+        },
+        {
+          "phase": "configure the explicit quarantine endpoint state",
+          "node": "GW",
+          "command": "show access-lists QUARANTINE",
+          "expectation": "The quarantine gateway counts actual denied service traffic.",
+          "passed": true,
+          "output": "\nGW#show access-lists QUARANTINE\nExtended IP access list QUARANTINE\n    10 permit icmp 198.18.99.0 0.0.0.255 host 192.0.2.80 (6 matches)\n    20 deny ip any any (3 matches)\nGW#"
+        },
+        {
+          "phase": "configure the explicit quarantine endpoint state",
+          "node": "SERVICE",
+          "command": "ping 198.18.20.1 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nSERVICE#ping 198.18.20.1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.101 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSERVICE#"
+        },
+        {
+          "phase": "restore authorized port membership",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "restore authorized port membership",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface Ethernet0/1",
+          "passed": true,
+          "output": "\nSW1(config)#interface Ethernet0/1\nSW1(config-if)#"
+        },
+        {
+          "phase": "restore authorized port membership",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "switchport access vlan 10",
+          "passed": true,
+          "output": "\nSW1(config-if)#switchport access vlan 10\nSW1(config-if)#"
+        },
+        {
+          "phase": "restore authorized port membership",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW1(config-if)#end\nSW1#"
+        },
+        {
+          "phase": "restore authorized port membership",
+          "node": "SW1",
+          "command": "show interfaces Ethernet0/1 switchport",
+          "expectation": "The access switch restores the authorized VLAN.",
+          "passed": true,
+          "output": "\nSW1#show interfaces Ethernet0/1 switchport\nName: Et0/1\nSwitchport: Enabled\nAdministrative Mode: static access\nOperational Mode: static access\nAdministrative Trunking Encapsulation: negotiate\nOperational Trunking Encapsulation: native\nNegotiation of Trunking: Off\nAccess Mode VLAN: 10 (AUTHORIZED)\nTrunking Native Mode VLAN: 1 (default)\nAdministrative Native VLAN tagging: disabled\nVoice VLAN: none\nAdministrative private-vlan host-association: none \nAdministrative private-vlan mapping: none \nAdministrative private-vlan trunk native VLAN: none\nAdministrative private-vlan trunk Native VLAN tagging: enabled\nAdministrative private-vlan trunk encapsulation: dot1q\nAdministrative private-vlan trunk normal VLANs: none\nAdministrative private-vlan trunk associations: none\nAdministrative private-vlan trunk mappings: none\nOperational private-vlan: none\nTrunking VLANs Enabled: ALL\nPruning VLANs Enabled: 2-1001\nCapture Mode Disabled\nCapture VLANs Allowed: ALL\n\nProtected: false\nAppliance trust: none\nSW1#"
+        },
+        {
+          "phase": "restore the original explicit endpoint configuration",
+          "kind": "configuration",
+          "node": "HOST",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nHOST#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nHOST(config)#"
+        },
+        {
+          "phase": "restore the original explicit endpoint configuration",
+          "kind": "configuration",
+          "node": "HOST",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nHOST(config)#interface Ethernet0/0\nHOST(config-if)#"
+        },
+        {
+          "phase": "restore the original explicit endpoint configuration",
+          "kind": "configuration",
+          "node": "HOST",
+          "command": "ip address 198.18.10.10 255.255.255.0",
+          "passed": true,
+          "output": "\nHOST(config-if)#ip address 198.18.10.10 255.255.255.0\nHOST(config-if)#"
+        },
+        {
+          "phase": "restore the original explicit endpoint configuration",
+          "kind": "configuration",
+          "node": "HOST",
+          "command": "exit",
+          "passed": true,
+          "output": "\nHOST(config-if)#exit\nHOST(config)#"
+        },
+        {
+          "phase": "restore the original explicit endpoint configuration",
+          "kind": "configuration",
+          "node": "HOST",
+          "command": "no ip route 0.0.0.0 0.0.0.0 198.18.99.1",
+          "passed": true,
+          "output": "\nHOST(config)#no ip route 0.0.0.0 0.0.0.0 198.18.99.1\nHOST(config)#"
+        },
+        {
+          "phase": "restore the original explicit endpoint configuration",
+          "kind": "configuration",
+          "node": "HOST",
+          "command": "ip route 0.0.0.0 0.0.0.0 198.18.10.1",
+          "passed": true,
+          "output": "\nHOST(config)#ip route 0.0.0.0 0.0.0.0 198.18.10.1\nHOST(config)#"
+        },
+        {
+          "phase": "restore the original explicit endpoint configuration",
+          "kind": "configuration",
+          "node": "HOST",
+          "command": "end",
+          "passed": true,
+          "output": "\nHOST(config)#end\nHOST#"
+        },
+        {
+          "phase": "restore the original explicit endpoint configuration",
+          "node": "HOST",
+          "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nHOST#ping 198.18.20.101 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.101, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nHOST#"
+        },
+        {
+          "phase": "restore the original explicit endpoint configuration",
+          "node": "HOST",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nHOST#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nHOST#"
+        },
+        {
+          "phase": "restore the original explicit endpoint configuration",
+          "node": "SERVICE",
+          "command": "ping 198.18.20.1 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nSERVICE#ping 198.18.20.1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.101 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSERVICE#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "GW": "BOOTED",
+        "SW1": "BOOTED",
+        "HOST": "BOOTED",
+        "SERVICE": "STARTED"
+      },
+      "images": {
+        "GW": "iol-xe-17-18-02",
+        "SW1": "ioll2-xe-17-18-02",
+        "HOST": "iol-xe-17-18-02",
+        "SERVICE": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "c650290cbce7c61c0c959df69d3ea74a71562253d678479b1470b879cadaf032",
+      "console_boot_fallback": [
+        "SERVICE"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:35:38Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/025-guest-access-isolation.yaml",
+      "sha256": "9018f0601396d1cd67bcfba17e448bf44153ac901323e39f3d30e2dbfd071137",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:42:14Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "GUEST",
+          "command": "show ip interface brief",
+          "expectation": "The guest obtains an actual DHCP lease.",
+          "passed": true,
+          "output": "\nGUEST#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.20.100   YES DHCP   up                    up      \nEthernet0/1            unassigned      YES TFTP   administratively down down    \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nGUEST#"
+        },
+        {
+          "phase": "baseline",
+          "node": "GUEST",
+          "command": "ping portal.lab.example source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nGUEST#ping portal.lab.example source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.100 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nGUEST#"
+        },
+        {
+          "phase": "baseline",
+          "node": "GUEST",
+          "command": "ping 198.18.10.10 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe is blocked during the controlled fault.",
+          "passed": true,
+          "output": "\nGUEST#ping 198.18.10.10 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.10, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.100 \nU.U\nSuccess rate is 0 percent (0/3)\nGUEST#"
+        },
+        {
+          "phase": "baseline",
+          "node": "GW",
+          "command": "show access-lists GUEST-POLICY",
+          "expectation": "Actual guest-to-trusted packets hit the isolation deny.",
+          "passed": true,
+          "output": "\nGW#show access-lists GUEST-POLICY\nExtended IP access list GUEST-POLICY\n    10 permit udp any eq bootpc any eq bootps (4 matches)\n    20 permit udp 198.18.20.0 0.0.0.255 host 198.18.20.1 eq domain (2 matches)\n    30 permit tcp 198.18.20.0 0.0.0.255 host 198.18.20.1 eq domain\n    40 deny ip any 198.18.10.0 0.0.0.255 (3 matches)\n    50 permit ip 198.18.20.0 0.0.0.255 any (6 matches)\n    60 deny ip any any\nGW#"
+        },
+        {
+          "phase": "baseline",
+          "node": "TRUSTED",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nTRUSTED#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nTRUSTED#"
+        },
+        {
+          "phase": "introduce an early guest policy bypass",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "introduce an early guest policy bypass",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "ip access-list extended GUEST-POLICY",
+          "passed": true,
+          "output": "\nGW(config)#ip access-list extended GUEST-POLICY\nGW(config-ext-nacl)#"
+        },
+        {
+          "phase": "introduce an early guest policy bypass",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "5 permit ip any any",
+          "passed": true,
+          "output": "\nGW(config-ext-nacl)#5 permit ip any any\nGW(config-ext-nacl)#"
+        },
+        {
+          "phase": "introduce an early guest policy bypass",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-ext-nacl)#end\nGW#"
+        },
+        {
+          "phase": "introduce an early guest policy bypass",
+          "node": "GUEST",
+          "command": "ping 198.18.10.10 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nGUEST#ping 198.18.10.10 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.10, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.100 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/2/2 ms\nGUEST#"
+        },
+        {
+          "phase": "introduce an early guest policy bypass",
+          "node": "GW",
+          "command": "show access-lists GUEST-POLICY",
+          "expectation": "The misplaced permit actually bypasses isolation.",
+          "passed": true,
+          "output": "YS-5-CONFIG_I: Configured from console by console\nGW#\nGW#show access-lists GUEST-POLICY\nExtended IP access list GUEST-POLICY\n    5 permit ip any any (3 matches)\n    10 permit udp any eq bootpc any eq bootps (4 matches)\n    20 permit udp 198.18.20.0 0.0.0.255 host 198.18.20.1 eq domain (2 matches)\n    30 permit tcp 198.18.20.0 0.0.0.255 host 198.18.20.1 eq domain\n    40 deny ip any 198.18.10.0 0.0.0.255 (3 matches)\n    50 permit ip 198.18.20.0 0.0.0.255 any (6 matches)\n    60 deny ip any any\nGW#"
+        },
+        {
+          "phase": "restore the ordered guest policy",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "restore the ordered guest policy",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "ip access-list extended GUEST-POLICY",
+          "passed": true,
+          "output": "\nGW(config)#ip access-list extended GUEST-POLICY\nGW(config-ext-nacl)#"
+        },
+        {
+          "phase": "restore the ordered guest policy",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "no 5",
+          "passed": true,
+          "output": "\nGW(config-ext-nacl)#no 5\nGW(config-ext-nacl)#"
+        },
+        {
+          "phase": "restore the ordered guest policy",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-ext-nacl)#end\nGW#"
+        },
+        {
+          "phase": "restore the ordered guest policy",
+          "node": "GUEST",
+          "command": "ping 198.18.10.10 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe is blocked during the controlled fault.",
+          "passed": true,
+          "output": "\nGUEST#ping 198.18.10.10 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.10, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.100 \nU.U\nSuccess rate is 0 percent (0/3)\nGUEST#"
+        },
+        {
+          "phase": "restore the ordered guest policy",
+          "node": "GW",
+          "command": "show access-lists GUEST-POLICY",
+          "expectation": "Actual guest-to-trusted packets hit the isolation deny.",
+          "passed": true,
+          "output": "\nGW#show access-lists GUEST-POLICY\nExtended IP access list GUEST-POLICY\n    10 permit udp any eq bootpc any eq bootps (4 matches)\n    20 permit udp 198.18.20.0 0.0.0.255 host 198.18.20.1 eq domain (2 matches)\n    30 permit tcp 198.18.20.0 0.0.0.255 host 198.18.20.1 eq domain\n    40 deny ip any 198.18.10.0 0.0.0.255 (6 matches)\n    50 permit ip 198.18.20.0 0.0.0.255 any (6 matches)\n    60 deny ip any any\nGW#"
+        },
+        {
+          "phase": "restore the ordered guest policy",
+          "node": "GUEST",
+          "command": "ping portal.lab.example source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nGUEST#ping portal.lab.example source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.100 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nGUEST#"
+        },
+        {
+          "phase": "restore the ordered guest policy",
+          "node": "TRUSTED",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nTRUSTED#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nTRUSTED#"
+        },
+        {
+          "phase": "prune only the guest VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "prune only the guest VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nSW1(config)#interface Ethernet0/0\nSW1(config-if)#"
+        },
+        {
+          "phase": "prune only the guest VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "switchport trunk allowed vlan 10",
+          "passed": true,
+          "output": "\nSW1(config-if)#switchport trunk allowed vlan 10\nSW1(config-if)#"
+        },
+        {
+          "phase": "prune only the guest VLAN",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW1(config-if)#end\nSW1#"
+        },
+        {
+          "phase": "prune only the guest VLAN",
+          "node": "GUEST",
+          "command": "ping 198.18.20.1 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe is blocked during the controlled fault.",
+          "passed": true,
+          "output": "\nGUEST#ping 198.18.20.1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.100 \n...\nSuccess rate is 0 percent (0/3)\nGUEST#"
+        },
+        {
+          "phase": "prune only the guest VLAN",
+          "node": "TRUSTED",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nTRUSTED#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nTRUSTED#"
+        },
+        {
+          "phase": "restore guest trunk availability",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "restore guest trunk availability",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nSW1(config)#interface Ethernet0/0\nSW1(config-if)#"
+        },
+        {
+          "phase": "restore guest trunk availability",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "switchport trunk allowed vlan 10,20",
+          "passed": true,
+          "output": "\nSW1(config-if)#switchport trunk allowed vlan 10,20\nSW1(config-if)#"
+        },
+        {
+          "phase": "restore guest trunk availability",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW1(config-if)#end\nSW1#"
+        },
+        {
+          "phase": "restore guest trunk availability",
+          "node": "GUEST",
+          "command": "ping 198.18.20.1 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nGUEST#ping 198.18.20.1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.20.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.100 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nGUEST#"
+        },
+        {
+          "phase": "restore guest trunk availability",
+          "node": "GUEST",
+          "command": "ping portal.lab.example source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nGUEST#ping portal.lab.example source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.100 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nGUEST#"
+        },
+        {
+          "phase": "restore guest trunk availability",
+          "node": "GUEST",
+          "command": "ping 198.18.10.10 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe is blocked during the controlled fault.",
+          "passed": true,
+          "output": "\nGUEST#ping 198.18.10.10 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.10, timeout is 2 seconds:\nPacket sent with a source address of 198.18.20.100 \nU.U\nSuccess rate is 0 percent (0/3)\nGUEST#"
+        },
+        {
+          "phase": "restore guest trunk availability",
+          "node": "GW",
+          "command": "show access-lists GUEST-POLICY",
+          "expectation": "Actual guest-to-trusted packets hit the isolation deny.",
+          "passed": true,
+          "output": "\nGW#show access-lists GUEST-POLICY\nExtended IP access list GUEST-POLICY\n    10 permit udp any eq bootpc any eq bootps (4 matches)\n    20 permit udp 198.18.20.0 0.0.0.255 host 198.18.20.1 eq domain (6 matches)\n    30 permit tcp 198.18.20.0 0.0.0.255 host 198.18.20.1 eq domain\n    40 deny ip any 198.18.10.0 0.0.0.255 (9 matches)\n    50 permit ip 198.18.20.0 0.0.0.255 any (24 matches)\n    60 deny ip any any\nGW#"
+        },
+        {
+          "phase": "restore guest trunk availability",
+          "node": "TRUSTED",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The actual endpoint probe succeeds.",
+          "passed": true,
+          "output": "\nTRUSTED#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nTRUSTED#"
+        }
+      ],
+      "plan_sha256": "f0b4ae8dcc1844128c0dc6ee0b1d74ee211b8b49fa60ae3302bfe9a4b573701b",
+      "startup_states": {
+        "GW": "BOOTED",
+        "SW1": "BOOTED",
+        "TRUSTED": "BOOTED",
+        "GUEST": "STARTED"
+      },
+      "images": {
+        "GW": "iol-xe-17-18-02",
+        "SW1": "ioll2-xe-17-18-02",
+        "TRUSTED": "iol-xe-17-18-02",
+        "GUEST": "iol-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "GUEST"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:44:57Z"
     }
   ]
 }

@@ -1,107 +1,207 @@
 lab:
   title: Guest Access Isolation
-  description: 350-701 SCOR - Implementing and Operating Cisco Security Core Technologies importable CML
-    topology.
-  notes: '350-701 SCOR blueprint lab: Guest Access Isolation
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# Guest Access Isolation
 
 
-    Topics:
-
-    - guest access
-
-    - isolation
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Tasks:
-
-    1. Create guest VLAN
-
-    2. Deny internal access
-
-    3. Allow internet path
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-701-025-guest-access-isolation.md
 
 
-    Useful checks:
+    Four IOL reference nodes implement a trusted VLAN, a guest VLAN, real guest DHCP and gateway-local
+    DNS for a documentation portal loopback. IOL models the guest endpoint: its address is acquired dynamically,
+    while gateway and DNS client configuration are explicit; no desktop DHCP-option behavior is claimed.
+    The guest ingress ACL permits DHCP/DNS, denies trusted-subnet destinations, allows only the guest
+    source prefix for remaining traffic, and denies other sources. This is stateless policy, so guest
+    replies toward trusted destinations are also denied; stateful trusted-initiated sessions are not claimed.
+    An early permit must visibly bypass isolation, its removal must restore actual denies, and separate
+    guest trunk pruning must preserve trusted portal availability. Restoring the trunk must first recover
+    actual gateway reachability, then DNS/portal while retaining isolation. DNS command collection has
+    a bounded90-second limit separate from Layer2 convergence. The portal is a local router loopback,
+    not Internet access or a captive portal product. Nominal RAM is4GiB.
 
-    - show ip interface brief
 
-    - show running-config
+    Objectives:
 
-    - show ip route
+    - Acquire a real guest DHCP lease and resolve an isolated portal through the allowed DNS path.
 
-    - show ip protocols
+    - Prove routed guest isolation using actual deny counters while trusted service remains healthy.
 
-    - ping and traceroute between endpoints'
+    - Repair an early permit and distinguish policy enforcement from a pruned guest trunk.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: SW1
-  node_definition: iosvl2
-  x: 0
-  y: 0
+  label: GW
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR Guest Access Isolation ^C\n\
-      vlan 10\n name USERS\nvlan 20\n name SERVERS\nvlan 30\n name GUEST\nvlan 99\n name MGMT\ninterface\
-      \ range GigabitEthernet0/1-3\n switchport mode access\n spanning-tree portfast\nend"
+    content: "hostname GW\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\nip dns server\nip host portal.lab.example 192.0.2.80\ninterface Ethernet0/0\n no shutdown\n\
+      \ exit\ninterface Ethernet0/0.10\n encapsulation dot1Q 10\n ip address 198.18.10.1 255.255.255.0\n\
+      \ no shutdown\n exit\ninterface Ethernet0/0.20\n encapsulation dot1Q 20\n ip address 198.18.20.1\
+      \ 255.255.255.0\n no shutdown\n exit\ninterface Loopback0\n ip address 192.0.2.80 255.255.255.255\n\
+      \ no shutdown\n exit\nip dhcp excluded-address 198.18.20.1 198.18.20.99\nip dhcp pool GUESTS\n network\
+      \ 198.18.20.0 255.255.255.0\n default-router 198.18.20.1\n dns-server 198.18.20.1\n exit\nip access-list\
+      \ extended GUEST-POLICY\n 10 permit udp any eq bootpc any eq bootps\n 20 permit udp 198.18.20.0\
+      \ 0.0.0.255 host 198.18.20.1 eq domain\n 30 permit tcp 198.18.20.0 0.0.0.255 host 198.18.20.1 eq\
+      \ domain\n 40 deny ip any 198.18.10.0 0.0.0.255\n 50 permit ip 198.18.20.0 0.0.0.255 any\n 60 deny\
+      \ ip any any\n exit\ninterface Ethernet0/0.20\n ip access-group GUEST-POLICY in\n exit\nend\n"
+  cpu_limit: 100
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
-  label: PC1
-  node_definition: desktop
-  x: -180
+  label: SW1
+  node_definition: ioll2-xe
+  configuration:
+  - name: ios_config.txt
+    content: "hostname SW1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nvtp mode transparent\nspanning-tree mode rapid-pvst\ninterface\
+      \ range Ethernet0/0 - 3\n shutdown\n exit\nvlan 10\n exit\nvlan 20\n exit\ninterface Ethernet0/0\n\
+      \ switchport trunk encapsulation dot1q\n switchport mode trunk\n switchport trunk allowed vlan 10,20\n\
+      \ spanning-tree vlan 10 cost 4\n no shutdown\n exit\ninterface Ethernet0/1\n switchport mode access\n\
+      \ switchport access vlan 10\n spanning-tree portfast\n no shutdown\n exit\ninterface Ethernet0/2\n\
+      \ switchport mode access\n switchport access vlan 20\n spanning-tree portfast\n no shutdown\n exit\n\
+      end\n"
+  cpu_limit: 100
+  priority: 99
+  x: 260
   y: 160
   interfaces:
   - id: i0
-    label: eth0
+    label: Loopback0
+    type: loopback
+  - id: i1
+    label: Ethernet0/0
     type: physical
     slot: 0
-  configuration: []
-  priority: 99
+  - id: i2
+    label: Ethernet0/1
+    type: physical
+    slot: 1
+  - id: i3
+    label: Ethernet0/2
+    type: physical
+    slot: 2
+  - id: i4
+    label: Ethernet0/3
+    type: physical
+    slot: 3
   tags: []
 - id: n2
-  label: PC2
-  node_definition: desktop
-  x: 180
+  label: TRUSTED
+  node_definition: iol-xe
+  configuration:
+  - name: ios_config.txt
+    content: "hostname TRUSTED\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Ethernet0/0\n ip address 198.18.10.10 255.255.255.0\n no shutdown\n exit\nip route\
+      \ 0.0.0.0 0.0.0.0 198.18.10.1\nend\n"
+  cpu_limit: 100
+  priority: 98
+  x: 520
+  y: 0
+  interfaces:
+  - id: i0
+    label: Loopback0
+    type: loopback
+  - id: i1
+    label: Ethernet0/0
+    type: physical
+    slot: 0
+  - id: i2
+    label: Ethernet0/1
+    type: physical
+    slot: 1
+  - id: i3
+    label: Ethernet0/2
+    type: physical
+    slot: 2
+  - id: i4
+    label: Ethernet0/3
+    type: physical
+    slot: 3
+  tags: []
+- id: n3
+  label: GUEST
+  node_definition: iol-xe
+  configuration:
+  - name: ios_config.txt
+    content: "hostname GUEST\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\nip domain-lookup\nip name-server 198.18.20.1\ninterface Ethernet0/0\n ip address dhcp\n\
+      \ no shutdown\n exit\nip route 0.0.0.0 0.0.0.0 198.18.20.1\nend\n"
+  cpu_limit: 100
+  priority: 97
+  x: 780
   y: 160
   interfaces:
   - id: i0
-    label: eth0
+    label: Loopback0
+    type: loopback
+  - id: i1
+    label: Ethernet0/0
     type: physical
     slot: 0
-  configuration: []
-  priority: 98
+  - id: i2
+    label: Ethernet0/1
+    type: physical
+    slot: 1
+  - id: i3
+    label: Ethernet0/2
+    type: physical
+    slot: 2
+  - id: i4
+    label: Ethernet0/3
+    type: physical
+    slot: 3
   tags: []
 links:
 - id: l0
   n1: n0
-  i1: i2
+  i1: i1
   n2: n1
-  i2: i0
+  i2: i1
 - id: l1
-  n1: n0
-  i1: i3
-  n2: n2
-  i2: i0
+  n1: n2
+  i1: i1
+  n2: n1
+  i2: i2
+- id: l2
+  n1: n3
+  i1: i1
+  n2: n1
+  i2: i3
 annotations: []
 smart_annotations: []

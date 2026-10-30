@@ -13545,5 +13545,514 @@
         "command_timeout": 30
       }
     ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/incident-response/041-suspicious-host-containment.yaml": {
+    "checks": [
+      {
+        "node": "HOST",
+        "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The actual endpoint probe succeeds.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "HOST",
+        "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The actual endpoint probe succeeds.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SERVICE",
+        "command": "ping 198.18.20.1 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The actual endpoint probe succeeds.",
+        "attempts": 20,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "apply the selected host containment",
+        "node": "GW",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ip access-group CONTAIN-HOST in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST",
+            "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The actual endpoint probe is blocked during the controlled fault.",
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "GW",
+            "command": "show access-lists CONTAIN-HOST",
+            "pattern": "deny ip host 198\\.18\\.10\\.10 any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The containment rule counts actual blocked host traffic."
+          },
+          {
+            "node": "HOST",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SERVICE",
+            "command": "ping 198.18.20.1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "introduce an incorrectly ordered exception",
+        "node": "GW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended CONTAIN-HOST",
+          "5 permit ip host 198.18.10.10 any",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST",
+            "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "GW",
+            "command": "show access-lists CONTAIN-HOST",
+            "pattern": "5 permit ip host 198\\.18\\.10\\.10 any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The early permit actually bypasses the lower deny."
+          }
+        ]
+      },
+      {
+        "name": "repair containment rule ordering",
+        "node": "GW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended CONTAIN-HOST",
+          "no 5",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST",
+            "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The actual endpoint probe is blocked during the controlled fault.",
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "GW",
+            "command": "show access-lists CONTAIN-HOST",
+            "pattern": "deny ip host 198\\.18\\.10\\.10 any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The containment rule counts actual blocked host traffic."
+          },
+          {
+            "node": "HOST",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "release the host after the exercise decision",
+        "node": "GW",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no ip access-group CONTAIN-HOST in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST",
+            "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "HOST",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SERVICE",
+            "command": "ping 198.18.20.1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/nac/043-nac-quarantine-vlan-concept.yaml": {
+    "checks": [
+      {
+        "node": "HOST",
+        "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The actual endpoint probe succeeds.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "HOST",
+        "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The actual endpoint probe succeeds.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SW1",
+        "command": "show interfaces Ethernet0/1 switchport",
+        "pattern": "Access Mode VLAN:\\s+10",
+        "expectation": "The endpoint initially belongs to the authorized VLAN."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "move the access port into quarantine",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "switchport access vlan 999",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show interfaces Ethernet0/1 switchport",
+            "pattern": "Access Mode VLAN:\\s+999",
+            "expectation": "The actual endpoint access port belongs to the quarantine VLAN."
+          }
+        ]
+      },
+      {
+        "name": "configure the explicit quarantine endpoint state",
+        "node": "HOST",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ip address 198.18.99.10 255.255.255.0",
+          "exit",
+          "no ip route 0.0.0.0 0.0.0.0 198.18.10.1",
+          "ip route 0.0.0.0 0.0.0.0 198.18.99.1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "HOST",
+            "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The actual endpoint probe is blocked during the controlled fault.",
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "GW",
+            "command": "show access-lists QUARANTINE",
+            "pattern": "deny ip any any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The quarantine gateway counts actual denied service traffic."
+          },
+          {
+            "node": "SERVICE",
+            "command": "ping 198.18.20.1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore authorized port membership",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "switchport access vlan 10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "SW1",
+            "command": "show interfaces Ethernet0/1 switchport",
+            "pattern": "Access Mode VLAN:\\s+10",
+            "expectation": "The access switch restores the authorized VLAN."
+          }
+        ]
+      },
+      {
+        "name": "restore the original explicit endpoint configuration",
+        "node": "HOST",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ip address 198.18.10.10 255.255.255.0",
+          "exit",
+          "no ip route 0.0.0.0 0.0.0.0 198.18.99.1",
+          "ip route 0.0.0.0 0.0.0.0 198.18.10.1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "HOST",
+            "command": "ping 198.18.20.101 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "HOST",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SERVICE",
+            "command": "ping 198.18.20.1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/025-guest-access-isolation.yaml": {
+    "checks": [
+      {
+        "node": "GUEST",
+        "command": "show ip interface brief",
+        "pattern": "Ethernet0/0\\s+198\\.18\\.20\\.100\\s+YES DHCP\\s+up\\s+up",
+        "expectation": "The guest obtains an actual DHCP lease.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "GUEST",
+        "command": "ping portal.lab.example source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The actual endpoint probe succeeds.",
+        "attempts": 20,
+        "interval_seconds": 3,
+        "command_timeout": 90
+      },
+      {
+        "node": "GUEST",
+        "command": "ping 198.18.10.10 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "The actual endpoint probe is blocked during the controlled fault.",
+        "attempts": 1,
+        "interval_seconds": 3
+      },
+      {
+        "node": "GW",
+        "command": "show access-lists GUEST-POLICY",
+        "pattern": "deny ip any 198\\.18\\.10\\.0 0\\.0\\.0\\.255[^\\n]*\\([1-9][0-9]* match",
+        "expectation": "Actual guest-to-trusted packets hit the isolation deny."
+      },
+      {
+        "node": "TRUSTED",
+        "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The actual endpoint probe succeeds.",
+        "attempts": 20,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "introduce an early guest policy bypass",
+        "node": "GW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended GUEST-POLICY",
+          "5 permit ip any any",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "GUEST",
+            "command": "ping 198.18.10.10 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "GW",
+            "command": "show access-lists GUEST-POLICY",
+            "pattern": "5 permit ip any any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The misplaced permit actually bypasses isolation."
+          }
+        ]
+      },
+      {
+        "name": "restore the ordered guest policy",
+        "node": "GW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended GUEST-POLICY",
+          "no 5",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "GUEST",
+            "command": "ping 198.18.10.10 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The actual endpoint probe is blocked during the controlled fault.",
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "GW",
+            "command": "show access-lists GUEST-POLICY",
+            "pattern": "deny ip any 198\\.18\\.10\\.0 0\\.0\\.0\\.255[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Actual guest-to-trusted packets hit the isolation deny."
+          },
+          {
+            "node": "GUEST",
+            "command": "ping portal.lab.example source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 90
+          },
+          {
+            "node": "TRUSTED",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "prune only the guest VLAN",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "switchport trunk allowed vlan 10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "GUEST",
+            "command": "ping 198.18.20.1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The actual endpoint probe is blocked during the controlled fault.",
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "TRUSTED",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore guest trunk availability",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "switchport trunk allowed vlan 10,20",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "GUEST",
+            "command": "ping 198.18.20.1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "GUEST",
+            "command": "ping portal.lab.example source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 90
+          },
+          {
+            "node": "GUEST",
+            "command": "ping 198.18.10.10 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The actual endpoint probe is blocked during the controlled fault.",
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "GW",
+            "command": "show access-lists GUEST-POLICY",
+            "pattern": "deny ip any 198\\.18\\.10\\.0 0\\.0\\.0\\.255[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Actual guest-to-trusted packets hit the isolation deny."
+          },
+          {
+            "node": "TRUSTED",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual endpoint probe succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
   }
 }
