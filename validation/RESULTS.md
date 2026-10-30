@@ -2,9 +2,9 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **231/233**. Functional passes: **149**.
+Import/export passes: **232/233**. Functional passes: **150**.
 
-[Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
+[Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
 | Exercise | Functional status | CML | Explicit image selections | Checks passed | Transition commands | Completed UTC |
 | --- | --- | --- | --- | ---: | ---: | --- |
@@ -94,6 +94,7 @@ Import/export passes: **231/233**. Functional passes: **149**.
 | [DMVPN Hub Spoke Break Fix](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/038-dmvpn-hub-spoke-break-fix.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, iosvl2-2020 | 9 | 0 | 2026-10-28T18:34:07Z |
 | [Campus Two Tier Three Tier HA](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/001-campus-two-three-tier-ha.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 11 | 16 | 2026-10-30T14:25:51Z |
 | [FHRP Design HSRP VRRP](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/002-fhrp-design-hsrp-vrrp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 23 | 16 | 2026-10-30T14:18:58Z |
+| [QoS Policy Interpretation](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/005-qos-policy-interpretation.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 6 | 8 | 2026-10-30T19:26:06Z |
 | [CEF CAM TCAM RIB FIB](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 21 | 18 | 2026-10-26T19:52:51Z |
 | [RESTCONF NETCONF YANG](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/037-restconf-netconf-yang.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 5 | 34 | 2026-10-27T19:04:45Z |
 | [Python Requests Network Change](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/038-python-requests-network-change.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-27T19:12:10Z |

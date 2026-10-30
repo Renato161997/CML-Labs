@@ -2,9 +2,9 @@
 
 ## Scope and prerequisites
 
-An actual official Snort3 container operates as an AFPacket inline pair between two isolated Net-Tools guests. No Linux bridge or parallel bypass exists. A deliberately benign plaintext HTTP GET is the signature fixture: matching it does not establish maliciousness, a vulnerability or a useful production detection. In the working reference, the alert action records the request without dropping it. An intentionally overbroad drop rule blocks both HTTP fixture ports while independent ICMP and the local server remain healthy. Narrowing the rule to TCP 8080 restores 8081 but continues to block 8080, proving selective policy repair rather than disabling inspection. Restoring alert recovers both services. Each rule reload clears the phase alert file and requires the previous engine to exit. This teaches IDS/IPS action, false-positive scope and rollback; it is not Cisco Secure Firewall, a threat feed or a malware benchmark. Nominal RAM is 2048 MiB. Primary reference: https://docs.snort.org/start/inspection .
+An actual Snort3 container in the separately built CML-Labs Inspection image operates as an AFPacket inline pair between two isolated Net-Tools guests. No Linux bridge or parallel bypass exists. A deliberately benign plaintext HTTP GET is the signature fixture: matching it does not establish maliciousness, a vulnerability or a useful production detection. In the working reference, the alert action records the request without dropping it. An intentionally overbroad drop rule blocks both HTTP fixture ports while independent ICMP and the local server remain healthy. Narrowing the rule to TCP 8080 restores 8081 but continues to block 8080, proving selective policy repair rather than disabling inspection. Restoring alert recovers both services. Each rule reload clears the phase alert file and requires the previous engine to exit. This teaches IDS/IPS action, false-positive scope and rollback; it is not Cisco Secure Firewall, a threat feed or a malware benchmark. Nominal RAM is 2048 MiB. Primary reference: https://docs.snort.org/start/inspection .
 
-Use licensed reference images for net-tools, snort in CML 2.10.1. All addresses are educational. No Internet, external connector or production credentials are required. Starting state: Working isolated reference baseline. Functional status and exact tested images: [results](../../validation/RESULTS.md).
+Use licensed reference images for cml-labs-inspection, net-tools in CML 2.10.1. All addresses are educational. No Internet, external connector or production credentials are required. Starting state: Working isolated reference baseline. Functional status and exact tested images: [results](../../validation/RESULTS.md).
 
 ## Topology and addressing
 
@@ -27,7 +27,7 @@ Use licensed reference images for net-tools, snort in CML 2.10.1. All addresses 
 | Node | Command | Observable result |
 | --- | --- | --- |
 | SENSOR | `cat /lab/start.status` | The actual Snort engine starts successfully before traffic checks. |
-| SENSOR | `snort -V` | The actual official reference image supplies Snort3, not a mocked IDS API. |
+| SENSOR | `snort-cml -V` | The actual isolated inspection image supplies Snort3, not a mocked IDS API. |
 | OUTSIDE | `python3 /lab/t.py probe 198.18.0.20` | The actual plain-HTTP connection succeeds with the expected observed peer. |
 | INSIDE | `python3 /lab/t.py probe 198.18.0.20` | The actual plain-HTTP connection succeeds with the expected observed peer. |
 | INSIDE | `python3 /lab/t.py probe 198.18.0.20 --port 8081` | The actual plain-HTTP connection succeeds with the expected observed peer. |
@@ -113,7 +113,9 @@ if [ -f /lab/snort.pid ]; then
 fi
 printf '%s tcp any any -> 198.18.0.20 %s (msg:"CML benign HTTP fixture"; content:"GET"; sid:1000001; rev:1;)\n' "$action" "$destination" >/lab/local.rules
 : >/lab/alert_fast.txt
-snort -q -c /usr/local/etc/snort/snort.lua -R /lab/local.rules -Q --daq afpacket -i eth1:eth2 -A alert_fast -l /lab --lua 'alert_fast={file=true}' >/lab/engine.log 2>&1 &
+config=$(cat /opt/cml-inspection/config-path)
+cd "$(dirname "$config")"
+snort-cml -q -c "$config" -R /lab/local.rules -Q --daq afpacket -i eth1:eth2 -A alert_fast -l /lab --lua 'alert_fast={file=true}' >/lab/engine.log 2>&1 &
 pid=$!
 echo "$pid" >/lab/snort.pid
 sleep 2
@@ -125,25 +127,6 @@ if ! /lab/mode ids >/lab/start.status 2>&1; then cat /lab/engine.log >>/lab/star
 echo READY >/dev/console
 exit 0
 ```
-
-### SENSOR: environment
-
-```text
-# Create additional environment variables
-# VARIABLE="some value"```
-
-### SENSOR: mounts
-
-```text
-# Can map a volume with signatures into container so that Snort can
-# use them. By default, only type=volume is allowed, see
-# /etc/default/docker-shim.env
-# Note: Use source=<name> below; docker-shim scopes volumes to the lab
-# by prefixing the name with the lab ID. Docker creates the volume on
-# first use if it does not already exist. Only type, source, target,
-# readonly, and tmpfs-* options are accepted in this file.
-#
-# type=volume,source=signatures,target=/wherever```
 
 ### INSIDE: boot.sh
 

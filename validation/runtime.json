@@ -30627,6 +30627,153 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T18:59:03Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/005-qos-policy-interpretation.yaml",
+      "sha256": "60918d44d0dad2156d21b469b03e5d9bb6bc99613266e8cc4d61420cc492c0aa",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T19:20:31Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/q.py 8080 0",
+          "expectation": "Actual downstream-ingress binary NetFlow records for this fresh port contain only DSCP 0; ECN bits are considered separately.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/q.py 8080 0\n{\"expected_dscp\": 0, \"matching_records\": 1, \"observed\": true, \"port\": 8080, \"received_dscp\": [0]}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "attach application marking",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "attach application marking",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nGW(config)#interface GigabitEthernet0/0\nGW(config-if)#"
+        },
+        {
+          "phase": "attach application marking",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "service-policy input MARK-APP",
+          "passed": true,
+          "output": "\nGW(config-if)#service-policy input MARK-APP\nGW(config-if)#"
+        },
+        {
+          "phase": "attach application marking",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-if)#end\nGW#"
+        },
+        {
+          "phase": "attach application marking",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 8081",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 8081\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "attach application marking",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/q.py 8081 26",
+          "expectation": "Actual downstream-ingress binary NetFlow records for this fresh port contain only DSCP 26; ECN bits are considered separately.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/q.py 8081 26\n{\"expected_dscp\": 26, \"matching_records\": 1, \"observed\": true, \"port\": 8081, \"received_dscp\": [26]}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the unmarked reference",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nGW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nGW(config)#"
+        },
+        {
+          "phase": "restore the unmarked reference",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nGW(config)#interface GigabitEthernet0/0\nGW(config-if)#"
+        },
+        {
+          "phase": "restore the unmarked reference",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "no service-policy input MARK-APP",
+          "passed": true,
+          "output": "\nGW(config-if)#no service-policy input MARK-APP\nGW(config-if)#"
+        },
+        {
+          "phase": "restore the unmarked reference",
+          "kind": "configuration",
+          "node": "GW",
+          "command": "end",
+          "passed": true,
+          "output": "\nGW(config-if)#end\nGW#"
+        },
+        {
+          "phase": "restore the unmarked reference",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 8082",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 8082\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the unmarked reference",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/q.py 8082 0",
+          "expectation": "Actual downstream-ingress binary NetFlow records for this fresh port contain only DSCP 0; ECN bits are considered separately.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/q.py 8082 0\n{\"expected_dscp\": 0, \"matching_records\": 1, \"observed\": true, \"port\": 8082, \"received_dscp\": [0]}\nroot@OUTSIDE:~# "
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "GW": "STARTED",
+        "FILTER": "STARTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "STARTED"
+      },
+      "images": {
+        "GW": "iosv-159-3-m12",
+        "FILTER": "iosv-159-3-m12",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "plan_sha256": "05e4e76dee08f2d09c04eb544cf6c71e3934b489440e92c449927ace16010334",
+      "console_boot_fallback": [
+        "GW",
+        "FILTER",
+        "OUTSIDE"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T19:26:06Z"
     }
   ]
 }

@@ -26,11 +26,20 @@ PHYSICAL = {
 PHYSICAL.update(
     {
         kind: [f"eth{i}" for i in range(4)]
-        for kind in ("net-tools", "radius", "syslog", "tacplus", "cml-labs-toolbox", "snort")
+        for kind in (
+            "net-tools",
+            "radius",
+            "syslog",
+            "tacplus",
+            "cml-labs-toolbox",
+            "cml-labs-inspection",
+        )
     }
 )
 RAM_MIB = {"iosv": 512, "iosvl2": 768, "desktop": 512, "alpine": 512, "ubuntu": 2048}
-RAM_MIB.update({"iol-xe": 1024, "ioll2-xe": 1024, "cml-labs-toolbox": 1024, "snort": 1024})
+RAM_MIB.update(
+    {"iol-xe": 1024, "ioll2-xe": 1024, "cml-labs-toolbox": 1024, "cml-labs-inspection": 1024}
+)
 RAM_MIB.update({"csr1000v": 3072, "net-tools": 512, "radius": 512, "syslog": 512, "tacplus": 512})
 
 
@@ -368,7 +377,7 @@ def generated_files(root=ROOT):
         "| --- | --- | ---: | ---: | --- | --- | --- | --- |",
     ]
     for r in data["labs"]:
-        wb = f"[Guide](../{r['workbook']})" if r["workbook"] else "—"
+        wb = f"[Guide](../{r['workbook']})" if r["workbook"] else "â€”"
         lines.append(
             f"| [{r['title']}](../{r['path']}) | {r['track']} | {r['nodes']} | {r['nominal_ram_mib']} | {r['kind']} | {r['import_status']} | {r['runtime_status']} | {wb} |"
         )
@@ -387,7 +396,7 @@ def generated_files(root=ROOT):
         "",
         f"Import/export passes: **{imported}/{data['lab_count']}**. Functional passes: **{sum(r['status'] == 'passed' for r in runtime)}**.",
         "",
-        "[Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)",
+        "[Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)",
         "",
         "| Exercise | Functional status | CML | Explicit image selections | Checks passed | Transition commands | Completed UTC |",
         "| --- | --- | --- | --- | ---: | ---: | --- |",
@@ -402,7 +411,7 @@ def generated_files(root=ROOT):
                     }
                 )
             )
-            or "—"
+            or "â€”"
         )
         passed = sum(
             c.get("passed") is True and c.get("kind") not in ("action", "configuration")
@@ -413,7 +422,7 @@ def generated_files(root=ROOT):
             for c in row.get("checks", [])
         )
         results.append(
-            f"| [{titles[row['path']]}](../{row['path']}) | {row['status']} | {row.get('cml_version', '—')} | {images} | {passed} | {actions} | {row.get('completed_utc', '—')} |"
+            f"| [{titles[row['path']]}](../{row['path']}) | {row['status']} | {row.get('cml_version', 'â€”')} | {images} | {passed} | {actions} | {row.get('completed_utc', 'â€”')} |"
         )
     results += [
         "",

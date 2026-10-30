@@ -11,7 +11,9 @@ Never connect an untrusted teaching lab to a production external connector.
 ## Build and verify
 
 `bash inspection/build.sh` verifies actual UID zero, Snort3 execution, configuration
-presence and the AFPacket DAQ module before exporting an amd64 archive. It records
+presence and the AFPacket DAQ module before exporting an amd64 archive. These
+checks drop every capability except NET_ADMIN/NET_RAW, matching CML. An actual
+Snort configuration/signature compilation test also runs under that restriction. It records
 the pinned base, source revision, engine version, DAQ list, Debian package inventory
 and independent archive checksums. The CML image identity uses the validated Docker
 config digest, not the compressed archive checksum. Base/tutorial contents remain

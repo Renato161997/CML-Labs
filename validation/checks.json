@@ -15710,9 +15710,9 @@
       },
       {
         "node": "SENSOR",
-        "command": "snort -V",
+        "command": "snort-cml -V",
         "pattern": "Version 3\\.10\\.0\\.0",
-        "expectation": "The actual official reference image supplies Snort3, not a mocked IDS API."
+        "expectation": "The actual isolated inspection image supplies Snort3, not a mocked IDS API."
       },
       {
         "node": "OUTSIDE",

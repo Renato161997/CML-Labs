@@ -2178,10 +2178,10 @@
       "duration_minutes": 90,
       "workbook": "docs/workbooks/350-401-005-qos-policy-interpretation.md",
       "kind": "practice",
-      "runtime_status": "not-run",
-      "import_status": "not-run",
-      "cml_version": null,
-      "validated_utc": null,
+      "runtime_status": "passed",
+      "import_status": "import-export-pass",
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T19:26:06Z",
       "sha256": "60918d44d0dad2156d21b469b03e5d9bb6bc99613266e8cc4d61420cc492c0aa"
     },
     {
@@ -3839,8 +3839,8 @@
       "topic": "network-security",
       "nodes": 3,
       "node_types": [
-        "net-tools",
-        "snort"
+        "cml-labs-inspection",
+        "net-tools"
       ],
       "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
@@ -3852,7 +3852,7 @@
       "import_status": "not-run",
       "cml_version": null,
       "validated_utc": null,
-      "sha256": "d826fd20adf5c9152403807f05d0e84e19b41107ac107f9a1d73f8237be61a82"
+      "sha256": "deb93b9cac35da07aa52162b0baf61f270a100f4c65f69519b8f2949209dcc11"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/scenario/037-zero-trust-branch-segmentation.yaml",

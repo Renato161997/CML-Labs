@@ -2,6 +2,7 @@ FROM ciscotalos/snort3@sha256:f15f714fd61ade114b1039687dd43352cae26cd6401b89f2b0
 # Dedicated isolated teaching node: never change Cisco's stock Snort definition.
 USER root
 RUN set -eu; \
+    chmod 0755 /home/snorty; \
     binary="$(find /home/snorty /usr/local -type f -name snort -perm /111 | head -n 1)"; \
     config="$(find /home/snorty /usr/local -type f -name snort.lua | head -n 1)"; \
     test -n "$binary"; test -n "$config"; \
