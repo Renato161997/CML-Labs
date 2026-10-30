@@ -368,26 +368,6 @@
       "completed_utc": "2026-10-24T18:50:12Z"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/incident-response/041-suspicious-host-containment.yaml",
-      "sha256": "e5799d85e26e4308e64ae79889ff0cc8a0dfcebdc88c5c2465ce2618418ec5ff",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:12Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:13Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/nac/043-nac-quarantine-vlan-concept.yaml",
-      "sha256": "a17e2eb9d8a891d6eb111ea2f0ab4d72f8e73047ba9b9145b641e44aaa19a2da",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:13Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:13Z"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/006-firewall-zone-policy.yaml",
       "sha256": "131f1544bc3a1c397ef01bff670f3771ecb52356444e716704225089ab17e695",
       "cml_version": "2.10.1+build.21",
@@ -492,16 +472,6 @@
       "sha256": "43d7cf3122b017bcefcdb8df1127839fa86519fc2ed40d9af6e3974444298c91",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-24T18:50:16Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:17Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/025-guest-access-isolation.yaml",
-      "sha256": "c92fda6aeae0316477064e4def7f2916aaeecf96689b8106e6a621933692c4fb",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:17Z",
       "checks": [],
       "status": "import-export-pass",
       "test_lab_removed": true,
@@ -2336,6 +2306,36 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T15:21:24Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/incident-response/041-suspicious-host-containment.yaml",
+      "sha256": "d7ecbfe2c29aab88a19929a090d6a8098dd6de63a4a20185122b59d749e9eb1a",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:42:08Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:42:08Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/nac/043-nac-quarantine-vlan-concept.yaml",
+      "sha256": "eba9c47f4757c120c04250f034e132fd12e8cd1605d2ad0353a7855dfa38867d",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:42:10Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:42:10Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/025-guest-access-isolation.yaml",
+      "sha256": "9018f0601396d1cd67bcfba17e448bf44153ac901323e39f3d30e2dbfd071137",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:42:11Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:42:12Z"
     }
   ]
 }

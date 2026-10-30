@@ -851,5 +851,23 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-701-031-security-api-python.md",
     "example_profile": "native-security-workbench"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/incident-response/041-suspicious-host-containment.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 85,
+    "kind": "scenario",
+    "workbook": "docs/workbooks/350-701-041-suspicious-host-containment.md"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/nac/043-nac-quarantine-vlan-concept.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 95,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-043-nac-quarantine-vlan-concept.md"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/025-guest-access-isolation.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 105,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-025-guest-access-isolation.md"
   }
 }
