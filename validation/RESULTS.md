@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **121**.
+Import/export passes: **233/233**. Functional passes: **124**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -44,6 +44,7 @@ Import/export passes: **233/233**. Functional passes: **121**.
 | [IPv6 Addressing Static](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/003-ipv6-addressing-static.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 6 | 8 | 2026-10-25T17:11:33Z |
 | [CDP And LLDP Discovery](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/004-cdp-lldp-discovery.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 3 | 0 | 2026-10-25T12:41:40Z |
 | [Interface Status Duplex Speed](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/005-interface-status-duplex.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 4 | 8 | 2026-10-25T13:06:29Z |
+| [IPv6 Only Mini Campus](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/042-ipv6-only-mini-campus.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 19 | 14 | 2026-10-30T14:19:14Z |
 | [SSH Local Users Hardening](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/031-ssh-local-users-hardening.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ubuntu-24-04-20260307 | 4 | 4 | 2026-10-25T17:57:46Z |
 | [Standard And Extended ACLs](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/032-standard-extended-acls.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 3 | 0 | 2026-10-24T18:30:00Z |
 | [DHCP Snooping And DAI](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/033-dhcp-snooping-dai.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, iosvl2-2020 | 18 | 11 | 2026-10-25T18:56:55Z |
@@ -85,6 +86,7 @@ Import/export passes: **233/233**. Functional passes: **121**.
 | [DMVPN Phase 3](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/022-dmvpn-phase3.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, iosvl2-2020 | 15 | 8 | 2026-10-28T18:54:21Z |
 | [MPLS L3VPN Concepts](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/024-mpls-l3vpn-concepts.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 16 | 8 | 2026-10-28T17:39:52Z |
 | [DMVPN Hub Spoke Break Fix](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/038-dmvpn-hub-spoke-break-fix.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, iosvl2-2020 | 9 | 0 | 2026-10-28T18:34:07Z |
+| [FHRP Design HSRP VRRP](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/002-fhrp-design-hsrp-vrrp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 23 | 16 | 2026-10-30T14:18:58Z |
 | [CEF CAM TCAM RIB FIB](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 21 | 18 | 2026-10-26T19:52:51Z |
 | [RESTCONF NETCONF YANG](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/037-restconf-netconf-yang.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 5 | 34 | 2026-10-27T19:04:45Z |
 | [Python Requests Network Change](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/038-python-requests-network-change.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-27T19:12:10Z |
@@ -102,6 +104,7 @@ Import/export passes: **233/233**. Functional passes: **121**.
 | [Multilayer Switching SVI Routing](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/019-multilayer-switching-svi-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 7 | 6 | 2026-10-26T19:20:01Z |
 | [MST RPVST STP Tuning](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/020-mst-rpvst-stp-tuning.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 14 | 18 | 2026-10-26T19:20:19Z |
 | [LACP PAgP EtherChannel](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/021-lacp-pagp-etherchannel.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 8 | 60 | 2026-10-26T19:25:31Z |
+| [IPv6 First Hop And Routing](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/022-ipv6-first-hop-and-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 22 | 18 | 2026-10-30T14:20:57Z |
 | [IP SLA Tracking](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/024-ip-sla-tracking.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 13 | 8 | 2026-10-28T17:33:08Z |
 | [Syslog SNMP NTP](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/026-syslog-snmp-ntp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3, syslog-4-8-1-5-deb13u1 | 16 | 10 | 2026-10-28T18:38:15Z |
 | [VRF Lite Shared Services](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/043-vrf-lite-shared-services.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 16 | 8 | 2026-10-28T18:37:46Z |

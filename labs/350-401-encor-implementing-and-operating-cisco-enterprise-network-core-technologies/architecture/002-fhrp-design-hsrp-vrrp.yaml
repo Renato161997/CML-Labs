@@ -1,182 +1,211 @@
 lab:
   title: FHRP Design HSRP VRRP
-  description: CCNP-ENCOR CML lab generated from blueprint coverage.
-  notes: 'CCNP-ENCOR blueprint lab: FHRP Design HSRP VRRP
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# FHRP Design HSRP VRRP
 
 
-    Topics:
-
-    - FHRP
-
-    - gateway redundancy
-
-    - SSO concepts
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Suggested tasks:
-
-    1. Build gateway redundancy
-
-    2. Tune priority
-
-    3. Validate failover
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-401-002-fhrp-design-hsrp-vrrp.md
 
 
-    Suggested verification:
+    Four IOL reference nodes compare two real IPv4 first-hop protocols on separate VLANs. HSRPv2 group10
+    prefers CORE1; VRRPv2 group20 prefers CORE2. A routed IOL endpoint has explicit service host routes
+    through the corresponding VIPs. Each core hosts the same two isolated loopback identities, deliberately
+    modeling service availability behind the selected gateway; this is not an external application or
+    a duplicate IP on a shared Ethernet segment. Shutting one core trunk isolates both of its SVIs without
+    powering off its CML VM. The surviving core must take both active roles and forward both endpoint
+    probes. Recovery must restore the opposite preferred roles. This tests protocol behavior, not physical
+    HA timing, stateful application failover or forwarding throughput. Nominal RAM is4GiB.
 
-    - show ip interface brief
 
-    - show interfaces status
+    Objectives:
 
-    - show ip route
+    - Compare actual HSRPv2 active/standby with VRRPv2 master/backup on separate VLANs.
 
-    - show running-config | section router
+    - Use opposite preferred cores and prove real traffic through both virtual gateways.
 
-    - ping between the lab endpoints'
+    - Isolate each core in turn and recover preferred roles with preemption.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: R1
-  node_definition: iosv
-  x: 0
-  y: -180
+  label: CORE1
+  node_definition: ioll2-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR FHRP Design HSRP VRRP ^C\ninterface\
-      \ GigabitEthernet0/0\n description CCNP-ENCOR FHRP Design HSRP VRRP\n ip address 10.0.0.1 255.255.255.252\n\
-      \ no shutdown\nend"
+    content: "hostname CORE1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nvtp mode transparent\nspanning-tree mode rapid-pvst\ninterface\
+      \ range Ethernet0/0 - 3\n shutdown\n exit\nvlan 10\n exit\nvlan 20\n exit\ninterface Ethernet0/0\n\
+      \ switchport trunk encapsulation dot1q\n switchport mode trunk\n switchport trunk allowed vlan 10,20\n\
+      \ spanning-tree vlan 10 cost 4\n no shutdown\n exit\ninterface Vlan10\n ip address 198.18.10.2 255.255.255.0\n\
+      \ no shutdown\n exit\ninterface Vlan10\n standby version 2\n standby 10 ip 198.18.10.1\n standby\
+      \ 10 priority 110\n standby 10 preempt\n exit\ninterface Loopback10\n ip address 192.0.2.10 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface Vlan20\n ip address 198.18.20.2 255.255.255.0\n no shutdown\n exit\n\
+      interface Vlan20\n vrrp 20 ip 198.18.20.1\n vrrp 20 priority 100\n vrrp 20 preempt\n exit\ninterface\
+      \ Loopback20\n ip address 192.0.2.20 255.255.255.255\n no shutdown\n exit\nend\n"
+  cpu_limit: 100
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
-  label: SW1
-  node_definition: iosvl2
-  x: -160
-  y: 0
+  label: CORE2
+  node_definition: ioll2-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR FHRP Design HSRP VRRP ^C\n\
-      vlan 10\n name USERS\nvlan 20\n name SERVICES\nvlan 99\n name MGMT\ninterface range GigabitEthernet0/1-3\n\
-      \ switchport mode access\n spanning-tree portfast\nend"
+    content: "hostname CORE2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nvtp mode transparent\nspanning-tree mode rapid-pvst\ninterface\
+      \ range Ethernet0/0 - 3\n shutdown\n exit\nvlan 10\n exit\nvlan 20\n exit\ninterface Ethernet0/0\n\
+      \ switchport trunk encapsulation dot1q\n switchport mode trunk\n switchport trunk allowed vlan 10,20\n\
+      \ spanning-tree vlan 10 cost 4\n no shutdown\n exit\ninterface Vlan10\n ip address 198.18.10.3 255.255.255.0\n\
+      \ no shutdown\n exit\ninterface Vlan10\n standby version 2\n standby 10 ip 198.18.10.1\n standby\
+      \ 10 priority 100\n standby 10 preempt\n exit\ninterface Loopback10\n ip address 192.0.2.10 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface Vlan20\n ip address 198.18.20.3 255.255.255.0\n no shutdown\n exit\n\
+      interface Vlan20\n vrrp 20 ip 198.18.20.1\n vrrp 20 priority 110\n vrrp 20 preempt\n exit\ninterface\
+      \ Loopback20\n ip address 192.0.2.20 255.255.255.255\n no shutdown\n exit\nend\n"
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 99
   tags: []
 - id: n2
-  label: SW2
-  node_definition: iosvl2
-  x: 160
-  y: 0
+  label: SW1
+  node_definition: ioll2-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname SW2\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR FHRP Design HSRP VRRP ^C\n\
-      vlan 10\n name USERS\nvlan 20\n name SERVICES\nvlan 99\n name MGMT\ninterface range GigabitEthernet0/1-3\n\
-      \ switchport mode access\n spanning-tree portfast\nend"
+    content: "hostname SW1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nvtp mode transparent\nspanning-tree mode rapid-pvst\ninterface\
+      \ range Ethernet0/0 - 3\n shutdown\n exit\nvlan 10\n exit\nvlan 20\n exit\ninterface Ethernet0/0\n\
+      \ switchport trunk encapsulation dot1q\n switchport mode trunk\n switchport trunk allowed vlan 10,20\n\
+      \ spanning-tree vlan 10 cost 4\n no shutdown\n exit\ninterface Ethernet0/1\n switchport trunk encapsulation\
+      \ dot1q\n switchport mode trunk\n switchport trunk allowed vlan 10,20\n spanning-tree vlan 10 cost\
+      \ 4\n no shutdown\n exit\ninterface Ethernet0/2\n switchport trunk encapsulation dot1q\n switchport\
+      \ mode trunk\n switchport trunk allowed vlan 10,20\n spanning-tree vlan 10 cost 4\n no shutdown\n\
+      \ exit\nend\n"
+  cpu_limit: 100
+  priority: 98
+  x: 520
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 98
   tags: []
 - id: n3
-  label: PC1
-  node_definition: desktop
-  x: -320
-  y: 180
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  configuration: []
+  label: CLIENT
+  node_definition: iol-xe
+  configuration:
+  - name: ios_config.txt
+    content: "hostname CLIENT\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Ethernet0/0.10\n encapsulation dot1Q 10\n ip address 198.18.10.10 255.255.255.0\n\
+      \ no shutdown\n exit\nip route 192.0.2.10 255.255.255.255 198.18.10.1\ninterface Ethernet0/0.20\n\
+      \ encapsulation dot1Q 20\n ip address 198.18.20.10 255.255.255.0\n no shutdown\n exit\nip route\
+      \ 192.0.2.20 255.255.255.255 198.18.20.1\ninterface Ethernet0/0\n no shutdown\n exit\nend\n"
+  cpu_limit: 100
   priority: 97
-  tags: []
-- id: n4
-  label: PC2
-  node_definition: desktop
-  x: 320
-  y: 180
+  x: 780
+  y: 160
   interfaces:
   - id: i0
-    label: eth0
+    label: Loopback0
+    type: loopback
+  - id: i1
+    label: Ethernet0/0
     type: physical
     slot: 0
-  configuration: []
-  priority: 96
+  - id: i2
+    label: Ethernet0/1
+    type: physical
+    slot: 1
+  - id: i3
+    label: Ethernet0/2
+    type: physical
+    slot: 2
+  - id: i4
+    label: Ethernet0/3
+    type: physical
+    slot: 3
   tags: []
 links:
 - id: l0
   n1: n0
   i1: i1
-  n2: n1
+  n2: n2
   i2: i1
 - id: l1
   n1: n1
-  i1: i2
+  i1: i1
   n2: n2
   i2: i2
 - id: l2
-  n1: n1
-  i1: i3
-  n2: n3
-  i2: i0
-- id: l3
-  n1: n2
-  i1: i3
-  n2: n4
-  i2: i0
+  n1: n3
+  i1: i1
+  n2: n2
+  i2: i3
 annotations: []
 smart_annotations: []

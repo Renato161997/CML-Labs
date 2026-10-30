@@ -10639,5 +10639,661 @@
         ]
       }
     ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/042-ipv6-only-mini-campus.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip interface brief",
+        "pattern": "(?m)^Ethernet0/0\\s+unassigned\\s+YES\\s+\\S+\\s+up\\s+up",
+        "expectation": "The named data interface has no IPv4 address."
+      },
+      {
+        "node": "R1",
+        "command": "show ip interface brief",
+        "pattern": "(?m)^Ethernet0/0\\.10\\s+unassigned\\s+YES\\s+\\S+\\s+up\\s+up",
+        "expectation": "The named data interface has no IPv4 address."
+      },
+      {
+        "node": "R1",
+        "command": "show ip interface brief",
+        "pattern": "(?m)^Ethernet0/0\\.20\\s+unassigned\\s+YES\\s+\\S+\\s+up\\s+up",
+        "expectation": "The named data interface has no IPv4 address."
+      },
+      {
+        "node": "CLIENT-A",
+        "command": "show ip interface brief",
+        "pattern": "(?m)^Ethernet0/0\\s+unassigned\\s+YES\\s+\\S+\\s+up\\s+up",
+        "expectation": "The named data interface has no IPv4 address."
+      },
+      {
+        "node": "CLIENT-B",
+        "command": "show ip interface brief",
+        "pattern": "(?m)^Ethernet0/0\\s+unassigned\\s+YES\\s+\\S+\\s+up\\s+up",
+        "expectation": "The named data interface has no IPv4 address."
+      },
+      {
+        "node": "CLIENT-A",
+        "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The IPv6 endpoint probe actually succeeds.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT-B",
+        "command": "ping ipv6 2001:db8:10::10 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The IPv6 endpoint probe actually succeeds.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show ipv6 neighbors",
+        "pattern": "(?im)^2001:DB8:20::20\\s+[^\\n]+\\s(?:REACH|STALE|DELAY|PROBE)\\s+(?:Et|Ethernet)0/0\\.20\\s*$",
+        "expectation": "The router has a resolved neighbor on the actual service subinterface."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "prune only the IPv6 service VLAN",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "switchport trunk allowed vlan 10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT-A",
+            "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The IPv6 endpoint probe fails during the controlled fault.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT-A",
+            "command": "ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The IPv6 endpoint probe actually succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ipv6 route connected",
+            "pattern": "C\\s+2001:DB8:20::/64",
+            "expectation": "The service prefix remains connected despite the broken trunk membership."
+          }
+        ]
+      },
+      {
+        "name": "restore IPv6 trunk membership",
+        "node": "SW1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "switchport trunk allowed vlan 10,20",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT-A",
+            "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The IPv6 endpoint probe actually succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT-B",
+            "command": "ping ipv6 2001:db8:10::10 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The IPv6 endpoint probe actually succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ipv6 neighbors",
+            "pattern": "(?im)^2001:DB8:20::20\\s+[^\\n]+\\s(?:REACH|STALE|DELAY|PROBE)\\s+(?:Et|Ethernet)0/0\\.20\\s*$",
+            "expectation": "The router has a resolved neighbor on the actual service subinterface."
+          }
+        ]
+      },
+      {
+        "name": "withdraw only the endpoint IPv6 default",
+        "node": "CLIENT-A",
+        "commands": [
+          "configure terminal",
+          "no ipv6 route ::/0 2001:db8:10::1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT-A",
+            "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The IPv6 endpoint probe fails during the controlled fault.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT-A",
+            "command": "ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The IPv6 endpoint probe actually succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore the endpoint IPv6 default",
+        "node": "CLIENT-A",
+        "commands": [
+          "configure terminal",
+          "ipv6 route ::/0 2001:db8:10::1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT-A",
+            "command": "ping ipv6 2001:db8:20::20 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The IPv6 endpoint probe actually succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT-B",
+            "command": "ping ipv6 2001:db8:10::10 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The IPv6 endpoint probe actually succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ipv6 neighbors",
+            "pattern": "(?im)^2001:DB8:20::20\\s+[^\\n]+\\s(?:REACH|STALE|DELAY|PROBE)\\s+(?:Et|Ethernet)0/0\\.20\\s*$",
+            "expectation": "The router has a resolved neighbor on the actual service subinterface."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/022-ipv6-first-hop-and-routing.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "show ipv6 interface Ethernet0/0",
+        "pattern": "2001:DB8:10:",
+        "expectation": "The client actually acquires a global address from the RA prefix.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "show ipv6 route",
+        "pattern": "(?s)ND\\s+::/0.*via FE80::1, Ethernet0/0",
+        "expectation": "The actual ND-derived default points to the advertising first hop.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show ipv6 ospf neighbor",
+        "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL/",
+        "expectation": "OSPFv3 has a real FULL transit adjacency.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show ipv6 route ospf",
+        "pattern": "O\\s+2001:DB8:2::2/128",
+        "expectation": "OSPFv3 actually installs the service loopback.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The IPv6 endpoint probe actually succeeds.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The IPv6 endpoint probe actually succeeds.",
+        "attempts": 20,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw only the RA default-router lifetime",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ipv6 nd ra lifetime 0",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "show ipv6 route",
+            "pattern": "IPv6 Routing Table",
+            "expectation": "The router-advertisement default has actually been withdrawn.",
+            "absent_pattern": "ND\\s+::/0",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "show ipv6 interface Ethernet0/0",
+            "pattern": "2001:DB8:10:",
+            "expectation": "The client actually acquires a global address from the RA prefix.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The IPv6 endpoint probe actually succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The IPv6 endpoint probe fails during the controlled fault.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ipv6 ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL/",
+            "expectation": "OSPFv3 has a real FULL transit adjacency.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "ping ipv6 2001:db8:2::2 source Ethernet0/1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Upstream IPv6 routing remains healthy without the client default."
+          }
+        ]
+      },
+      {
+        "name": "restore the advertised default lifetime",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ipv6 nd ra lifetime 30",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "show ipv6 route",
+            "pattern": "(?s)ND\\s+::/0.*via FE80::1, Ethernet0/0",
+            "expectation": "The actual ND-derived default points to the advertising first hop.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The IPv6 endpoint probe actually succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "mismatch only the remote transit OSPF area",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no ipv6 ospf 10 area 0",
+          "ipv6 ospf 10 area 10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ipv6 route ospf",
+            "pattern": "IPv6 Routing Table",
+            "expectation": "The service route is withdrawn after adjacency loss.",
+            "absent_pattern": "2001:DB8:2::2/128",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The IPv6 endpoint probe fails during the controlled fault.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "show ipv6 route",
+            "pattern": "(?s)ND\\s+::/0.*via FE80::1, Ethernet0/0",
+            "expectation": "The actual ND-derived default points to the advertising first hop.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping ipv6 2001:db8:10::1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The IPv6 endpoint probe actually succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore transit area agreement",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no ipv6 ospf 10 area 10",
+          "ipv6 ospf 10 area 0",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ipv6 ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL/",
+            "expectation": "OSPFv3 has a real FULL transit adjacency.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ipv6 route ospf",
+            "pattern": "O\\s+2001:DB8:2::2/128",
+            "expectation": "OSPFv3 actually installs the service loopback.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping ipv6 2001:db8:2::2 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The IPv6 endpoint probe actually succeeds.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "show ipv6 route",
+            "pattern": "(?s)ND\\s+::/0.*via FE80::1, Ethernet0/0",
+            "expectation": "The actual ND-derived default points to the advertising first hop.",
+            "attempts": 40,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/002-fhrp-design-hsrp-vrrp.yaml": {
+    "checks": [
+      {
+        "node": "CORE1",
+        "command": "show standby brief",
+        "pattern": "Active\\s+local",
+        "expectation": "The expected core is actually HSRP active.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CORE2",
+        "command": "show vrrp brief",
+        "pattern": "(?im)^(?:Vl|Vlan)20\\s+20\\s+[^\\n]*\\bMaster\\b",
+        "expectation": "The expected core has the actual VRRP Master role.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CORE1",
+        "command": "show vrrp brief",
+        "pattern": "(?im)^(?:Vl|Vlan)20\\s+20\\s+[^\\n]*\\bBackup\\b",
+        "expectation": "The expected core has the actual VRRP Backup role.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 192.0.2.10 source Ethernet0/0.10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The VLAN10 endpoint route reaches the isolated service through its first-hop VIP.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 192.0.2.20 source Ethernet0/0.20 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The VLAN20 endpoint route reaches the isolated service through its first-hop VIP.",
+        "attempts": 20,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "isolate the preferred HSRP core",
+        "node": "CORE1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CORE2",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "The expected core is actually HSRP active.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE2",
+            "command": "show vrrp brief",
+            "pattern": "(?im)^(?:Vl|Vlan)20\\s+20\\s+[^\\n]*\\bMaster\\b",
+            "expectation": "The expected core has the actual VRRP Master role.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.10 source Ethernet0/0.10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The VLAN10 endpoint route reaches the isolated service through its first-hop VIP.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.20 source Ethernet0/0.20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The VLAN20 endpoint route reaches the isolated service through its first-hop VIP.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore the preferred HSRP core",
+        "node": "CORE1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CORE1",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "The expected core is actually HSRP active.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE2",
+            "command": "show vrrp brief",
+            "pattern": "(?im)^(?:Vl|Vlan)20\\s+20\\s+[^\\n]*\\bMaster\\b",
+            "expectation": "The expected core has the actual VRRP Master role.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE1",
+            "command": "show vrrp brief",
+            "pattern": "(?im)^(?:Vl|Vlan)20\\s+20\\s+[^\\n]*\\bBackup\\b",
+            "expectation": "The expected core has the actual VRRP Backup role.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.10 source Ethernet0/0.10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The VLAN10 endpoint route reaches the isolated service through its first-hop VIP.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.20 source Ethernet0/0.20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The VLAN20 endpoint route reaches the isolated service through its first-hop VIP.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "isolate the preferred VRRP core",
+        "node": "CORE2",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CORE1",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "The expected core is actually HSRP active.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE1",
+            "command": "show vrrp brief",
+            "pattern": "(?im)^(?:Vl|Vlan)20\\s+20\\s+[^\\n]*\\bMaster\\b",
+            "expectation": "The expected core has the actual VRRP Master role.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.10 source Ethernet0/0.10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The VLAN10 endpoint route reaches the isolated service through its first-hop VIP.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.20 source Ethernet0/0.20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The VLAN20 endpoint route reaches the isolated service through its first-hop VIP.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore the preferred VRRP core",
+        "node": "CORE2",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CORE1",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "The expected core is actually HSRP active.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE2",
+            "command": "show vrrp brief",
+            "pattern": "(?im)^(?:Vl|Vlan)20\\s+20\\s+[^\\n]*\\bMaster\\b",
+            "expectation": "The expected core has the actual VRRP Master role.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE1",
+            "command": "show vrrp brief",
+            "pattern": "(?im)^(?:Vl|Vlan)20\\s+20\\s+[^\\n]*\\bBackup\\b",
+            "expectation": "The expected core has the actual VRRP Backup role.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.10 source Ethernet0/0.10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The VLAN10 endpoint route reaches the isolated service through its first-hop VIP.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.20 source Ethernet0/0.20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The VLAN20 endpoint route reaches the isolated service through its first-hop VIP.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
   }
 }
