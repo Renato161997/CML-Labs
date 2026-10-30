@@ -1302,21 +1302,21 @@
       "title": "MP-BGP VRF Lite",
       "track": "300-410",
       "topic": "bgp",
-      "nodes": 4,
+      "nodes": 3,
       "node_types": [
         "iosv"
       ],
-      "nominal_ram_mib": 2048,
+      "nominal_ram_mib": 1536,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 100,
+      "workbook": "docs/workbooks/300-410-018-mp-bgp-vrf-lite.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "5c524b071b343f1aa0d4a062faf2be87eaaac91b277977d865b486230103ddd2"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T14:42:20Z",
+      "sha256": "49d48add1df4c3739aad21ef4a6df9329eaa3a6858d600bc826b77b9d8867c47"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/019-bgp-troubleshooting.yaml",
@@ -1344,23 +1344,21 @@
       "title": "BGP Route Reflector Policy Lab",
       "track": "300-410",
       "topic": "bgp",
-      "nodes": 6,
+      "nodes": 4,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 110,
+      "workbook": "docs/workbooks/300-410-039-bgp-route-reflector-policy-lab.md",
+      "kind": "scenario",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "f95f540b16d5e7141bdc8155936137bda63aa2d8e3596089f7580cfbd4f6394b"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T14:37:43Z",
+      "sha256": "59584015c10dca163f4cbae9090b7a4fdff2e2b18ad7753f32c6a7f977991cd2"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/045-enarsi-capstone-advanced-routing.yaml",
@@ -2871,23 +2869,21 @@
       "title": "Dual ISP BGP Edge",
       "track": "350-401",
       "topic": "scenario",
-      "nodes": 6,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 95,
+      "workbook": "docs/workbooks/350-401-045-dual-isp-bgp-edge.md",
+      "kind": "scenario",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "6fbd30cbcd7cdc45164fece5c6a230c62e8b56cc01f8a63a57da5c2339aa9c79"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T14:49:49Z",
+      "sha256": "e89b7154908062530245cdb0844926bee83e6bbde7f8ead436afbde16f79e79d"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml",

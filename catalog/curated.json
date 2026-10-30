@@ -794,5 +794,23 @@
     "duration_minutes": 90,
     "kind": "scenario",
     "workbook": "docs/workbooks/350-401-047-campus-routing-blackhole.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/045-dual-isp-bgp-edge.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 95,
+    "kind": "scenario",
+    "workbook": "docs/workbooks/350-401-045-dual-isp-bgp-edge.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/039-bgp-route-reflector-policy-lab.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "scenario",
+    "workbook": "docs/workbooks/300-410-039-bgp-route-reflector-policy-lab.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/018-mp-bgp-vrf-lite.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-018-mp-bgp-vrf-lite.md"
   }
 }

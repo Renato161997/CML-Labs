@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **127**.
+Import/export passes: **233/233**. Functional passes: **130**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -61,7 +61,9 @@ Import/export passes: **233/233**. Functional passes: **127**.
 | [BGP Route Reflector](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/015-bgp-route-reflector.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 11 | 14 | 2026-10-25T13:16:16Z |
 | [BGP Filtering Prefix AS Path](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/016-bgp-filtering-prefix-aspath.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 7 | 10 | 2026-10-25T15:52:38Z |
 | [BGP Communities](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/017-bgp-communities.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 7 | 14 | 2026-10-25T16:32:21Z |
+| [MP-BGP VRF Lite](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/018-mp-bgp-vrf-lite.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 18 | 8 | 2026-10-30T14:42:20Z |
 | [BGP Troubleshooting](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/019-bgp-troubleshooting.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 4 | 4 | 2026-10-25T15:57:37Z |
+| [BGP Route Reflector Policy Lab](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/039-bgp-route-reflector-policy-lab.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 32 | 2026-10-30T14:37:43Z |
 | [Router Hardening](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/029-router-hardening.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ubuntu-24-04-20260307 | 10 | 12 | 2026-10-30T13:37:13Z |
 | [ENARSI 030 - AAA NAS source troubleshooting](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/030-aaa-radius-tacacs.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 14 | 6 | 2026-10-26T21:10:50Z |
 | [NTP Syslog SNMP](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/027-ntp-syslog-snmp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3, syslog-4-8-1-5-deb13u1 | 14 | 8 | 2026-10-28T18:42:51Z |
@@ -110,6 +112,7 @@ Import/export passes: **233/233**. Functional passes: **127**.
 | [IP SLA Tracking](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/024-ip-sla-tracking.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 13 | 8 | 2026-10-28T17:33:08Z |
 | [Syslog SNMP NTP](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/026-syslog-snmp-ntp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3, syslog-4-8-1-5-deb13u1 | 16 | 10 | 2026-10-28T18:38:15Z |
 | [VRF Lite Shared Services](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/043-vrf-lite-shared-services.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 16 | 8 | 2026-10-28T18:37:46Z |
+| [Dual ISP BGP Edge](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/045-dual-isp-bgp-edge.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 14 | 16 | 2026-10-30T14:49:49Z |
 | [ENCOR 029 - RADIUS and TACACS+ authentication](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 13 | 8 | 2026-10-26T21:19:56Z |
 | [Secure Management Plane](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/036-secure-management-plane.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3, ubuntu-24-04-20260307 | 17 | 18 | 2026-10-30T13:42:50Z |
 | [Campus Routing Blackhole](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/troubleshooting/047-campus-routing-blackhole.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 18 | 18 | 2026-10-30T14:25:45Z |

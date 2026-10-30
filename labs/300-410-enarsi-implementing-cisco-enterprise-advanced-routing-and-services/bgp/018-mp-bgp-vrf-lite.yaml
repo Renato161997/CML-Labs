@@ -1,52 +1,64 @@
 lab:
   title: MP-BGP VRF Lite
-  description: 300-410 ENARSI - Implementing Cisco Enterprise Advanced Routing and Services importable
-    CML topology.
-  notes: '300-410 ENARSI blueprint lab: MP-BGP VRF Lite
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# MP-BGP VRF Lite
 
 
-    Topics:
-
-    - MP-BGP
-
-    - VRF
-
-    - address-family
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Tasks:
-
-    1. Configure VRF address family
-
-    2. Exchange routes
-
-    3. Verify per-VRF tables
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/300-410-018-mp-bgp-vrf-lite.md
 
 
-    Useful checks:
+    Three IOSv reference routers implement two PEs and an actual OSPF/LDP provider transit. Each PE contains
+    RED and BLUE VRFs with overlapping customer loopback addresses. Unique per-PE/per-VRF RDs and separate
+    route targets preserve both VPNv4 identities. Local VRF loopbacks model customer prefixes; no CE devices
+    are instantiated. This extends the VRF-Lite namespace concept with real MP-BGP VPNv4 and labeled transport
+    rather than claiming VRF-Lite alone carries VPN labels. Actual per-VRF traffic succeeds while P lacks
+    the customer IP route and counts labeled bytes. Removing only BLUE import must withdraw that RIB entry
+    before its negative probe; RED, LDP and provider reachability remain healthy. Recovery must restore
+    both namespaces. This does not model a full carrier deployment or hardware scale. Nominal RAM is1536MiB.
 
-    - show ip interface brief
 
-    - show running-config
+    Objectives:
 
-    - show ip route
+    - Separate VRF-local addressing from MP-BGP VPNv4 transport and route-target import.
 
-    - show ip protocols
+    - Carry the same customer addresses in two real independent VRFs across labeled transport.
 
-    - ping and traceroute between endpoints'
+    - Withdraw only BLUE import, keep RED and provider transport healthy, then recover BLUE.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: R1
+  label: PE1
   node_definition: iosv
-  x: -450
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C ENARSI MP-BGP VRF Lite ^C\ninterface GigabitEthernet0/0\n\
-      \ description ENARSI MP-BGP VRF Lite\n ip address 10.0.12.1 255.255.255.252\n no shutdown\ninterface\
-      \ Loopback0\n description ENARSI MP-BGP VRF Lite\n ip address 10.1.1.1 255.255.255.255\n no shutdown\n\
-      end"
+    content: "hostname PE1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nno logging console\ninterface Loopback0\n ip address 192.0.2.1\
+      \ 255.255.255.255\n no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.1 255.255.255.252\n\
+      \ no shutdown\n mpls ip\n exit\nmpls label protocol ldp\nmpls ldp router-id Loopback0 force\nrouter\
+      \ ospf 1\n router-id 192.0.2.1\n network 192.0.2.1 0.0.0.0 area 0\n network 198.18.0.0 0.0.0.3 area\
+      \ 0\n exit\nip vrf RED\n rd 65000:110\n route-target both 65000:10\n exit\ninterface Loopback10\n\
+      \ ip vrf forwarding RED\n ip address 203.0.113.1 255.255.255.255\n exit\nip vrf BLUE\n rd 65000:120\n\
+      \ route-target both 65000:20\n exit\ninterface Loopback20\n ip vrf forwarding BLUE\n ip address\
+      \ 203.0.113.1 255.255.255.255\n exit\nrouter bgp 65000\n bgp router-id 192.0.2.1\n no bgp default\
+      \ ipv4-unicast\n neighbor 192.0.2.3 remote-as 65000\n neighbor 192.0.2.3 update-source Loopback0\n\
+      \ address-family vpnv4\n neighbor 192.0.2.3 activate\n neighbor 192.0.2.3 send-community extended\n\
+      \ exit-address-family\n address-family ipv4 vrf RED\n network 203.0.113.1 mask 255.255.255.255\n\
+      \ exit-address-family\n address-family ipv4 vrf BLUE\n network 203.0.113.1 mask 255.255.255.255\n\
+      \ exit-address-family\n exit\nend\n"
+  cpu_limit: 100
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
@@ -67,19 +79,23 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
-  label: R2
+  label: P
   node_definition: iosv
-  x: -150
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nbanner motd ^C ENARSI MP-BGP VRF Lite ^C\ninterface GigabitEthernet0/0\n\
-      \ description ENARSI MP-BGP VRF Lite\n ip address 10.0.12.2 255.255.255.252\n no shutdown\ninterface\
-      \ GigabitEthernet0/1\n description ENARSI MP-BGP VRF Lite\n ip address 10.0.23.1 255.255.255.252\n\
-      \ no shutdown\nend"
+    content: "hostname P\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nno logging console\ninterface Loopback0\n ip address 192.0.2.2\
+      \ 255.255.255.255\n no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.2 255.255.255.252\n\
+      \ no shutdown\n mpls ip\n exit\ninterface GigabitEthernet0/1\n ip address 198.18.1.1 255.255.255.252\n\
+      \ no shutdown\n mpls ip\n exit\nmpls label protocol ldp\nmpls ldp router-id Loopback0 force\nrouter\
+      \ ospf 1\n router-id 192.0.2.2\n network 192.0.2.2 0.0.0.0 area 0\n network 198.18.0.0 0.0.0.3 area\
+      \ 0\n network 198.18.1.0 0.0.0.3 area 0\n exit\nend\n"
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
@@ -100,52 +116,30 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 99
   tags: []
 - id: n2
-  label: R3
+  label: PE2
   node_definition: iosv
-  x: 150
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R3\nno ip domain-lookup\nbanner motd ^C ENARSI MP-BGP VRF Lite ^C\ninterface GigabitEthernet0/0\n\
-      \ description ENARSI MP-BGP VRF Lite\n ip address 10.0.23.2 255.255.255.252\n no shutdown\ninterface\
-      \ GigabitEthernet0/1\n description ENARSI MP-BGP VRF Lite\n ip address 10.0.34.1 255.255.255.252\n\
-      \ no shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
+    content: "hostname PE2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nno logging console\ninterface Loopback0\n ip address 192.0.2.3\
+      \ 255.255.255.255\n no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.1.2 255.255.255.252\n\
+      \ no shutdown\n mpls ip\n exit\nmpls label protocol ldp\nmpls ldp router-id Loopback0 force\nrouter\
+      \ ospf 1\n router-id 192.0.2.3\n network 192.0.2.3 0.0.0.0 area 0\n network 198.18.1.0 0.0.0.3 area\
+      \ 0\n exit\nip vrf RED\n rd 65000:310\n route-target both 65000:10\n exit\ninterface Loopback10\n\
+      \ ip vrf forwarding RED\n ip address 203.0.113.2 255.255.255.255\n exit\nip vrf BLUE\n rd 65000:320\n\
+      \ route-target both 65000:20\n exit\ninterface Loopback20\n ip vrf forwarding BLUE\n ip address\
+      \ 203.0.113.2 255.255.255.255\n exit\nrouter bgp 65000\n bgp router-id 192.0.2.3\n no bgp default\
+      \ ipv4-unicast\n neighbor 192.0.2.1 remote-as 65000\n neighbor 192.0.2.1 update-source Loopback0\n\
+      \ address-family vpnv4\n neighbor 192.0.2.1 activate\n neighbor 192.0.2.1 send-community extended\n\
+      \ exit-address-family\n address-family ipv4 vrf RED\n network 203.0.113.2 mask 255.255.255.255\n\
+      \ exit-address-family\n address-family ipv4 vrf BLUE\n network 203.0.113.2 mask 255.255.255.255\n\
+      \ exit-address-family\n exit\nend\n"
+  cpu_limit: 100
   priority: 98
-  tags: []
-- id: n3
-  label: R4
-  node_definition: iosv
-  x: 450
+  x: 520
   y: 0
-  configuration:
-  - name: ios_config.txt
-    content: "hostname R4\nno ip domain-lookup\nbanner motd ^C ENARSI MP-BGP VRF Lite ^C\ninterface GigabitEthernet0/0\n\
-      \ description ENARSI MP-BGP VRF Lite\n ip address 10.0.34.2 255.255.255.252\n no shutdown\ninterface\
-      \ Loopback0\n description ENARSI MP-BGP VRF Lite\n ip address 10.4.4.4 255.255.255.255\n no shutdown\n\
-      end"
   interfaces:
   - id: i0
     label: Loopback0
@@ -166,7 +160,6 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 97
   tags: []
 links:
 - id: l0
@@ -178,11 +171,6 @@ links:
   n1: n1
   i1: i2
   n2: n2
-  i2: i1
-- id: l2
-  n1: n2
-  i1: i2
-  n2: n3
   i2: i1
 annotations: []
 smart_annotations: []
