@@ -21370,6 +21370,1050 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T13:48:55Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/050-ccna-capstone-campus-access.yaml",
+      "sha256": "0807c0840c19471a440a2061ed200438660c5b13716692f912bfd7c6d282c4d6",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T13:53:14Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CORE1",
+          "command": "show standby brief",
+          "expectation": "CORE1 is the actual active gateway.",
+          "passed": true,
+          "output": "\nCORE1#show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   110 P Active  local           unknown         198.18.10.1\nCORE1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CORE2",
+          "command": "show standby brief",
+          "expectation": "CORE2 is the actual standby behind the preferred core.",
+          "passed": true,
+          "output": "\nCORE2#show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   100 P Standby 198.18.10.2     local           198.18.10.1\nCORE2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CORE1",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "CORE1 is the preferred actual STP root.",
+          "passed": true,
+          "output": "\nCORE1#show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc01.2b00\n             This bridge is the root\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    4106   (priority 4096 sys-id-ext 10)\n             Address     aabb.cc01.2b00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Desg FWD 4         128.1    P2p \nEt0/1               Desg FWD 4         128.2    P2p \n\n\nCORE1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The actual first-hop virtual IP is reachable.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The explicit endpoint route and the active first hop reach the isolated loopback service.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "ACCESS",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "The redundant uplink is initially blocked.",
+          "passed": true,
+          "output": "\nACCESS#show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc01.2b00\n             Cost        4\n             Port        1 (Ethernet0/0)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)\n             Address     aabb.cc01.2a00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Root FWD 4         128.1    P2p \nEt0/1               Altn BLK 4         128.2    P2p \nEt0/2               Desg FWD 100       128.3    P2p Edge \n\n\nACCESS#"
+        },
+        {
+          "phase": "isolate the preferred core data links",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCORE1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCORE1(config)#"
+        },
+        {
+          "phase": "isolate the preferred core data links",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "interface range Ethernet0/0 - 1",
+          "passed": true,
+          "output": "\nCORE1(config)#interface range Ethernet0/0 - 1\nCORE1(config-if-range)#"
+        },
+        {
+          "phase": "isolate the preferred core data links",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nCORE1(config-if-range)#shutdown\nCORE1(config-if-range)#"
+        },
+        {
+          "phase": "isolate the preferred core data links",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "end",
+          "passed": true,
+          "output": "\nCORE1(config-if-range)#end\nCORE1#"
+        },
+        {
+          "phase": "isolate the preferred core data links",
+          "node": "CORE2",
+          "command": "show standby brief",
+          "expectation": "CORE2 actually takes over the virtual gateway.",
+          "passed": true,
+          "output": "\nCORE2#show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   100 P Active  local           unknown         198.18.10.1\nCORE2#"
+        },
+        {
+          "phase": "isolate the preferred core data links",
+          "node": "CORE2",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "CORE2 becomes the visible root after the preferred core is isolated.",
+          "passed": true,
+          "output": "\nCORE2#show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    8202\n             Address     aabb.cc01.2c00\n             This bridge is the root\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    8202   (priority 8192 sys-id-ext 10)\n             Address     aabb.cc01.2c00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Desg FWD 4         128.1    P2p \nEt0/1               Desg FWD 4         128.2    P2p \n\n\nCORE2#"
+        },
+        {
+          "phase": "isolate the preferred core data links",
+          "node": "ACCESS",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "Access forwards through the surviving core.",
+          "passed": true,
+          "output": "\nACCESS#show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    8202\n             Address     aabb.cc01.2c00\n             Cost        4\n             Port        2 (Ethernet0/1)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)\n             Address     aabb.cc01.2a00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Desg BLK 4         128.1    P2p \nEt0/1               Root FWD 4         128.2    P2p \nEt0/2               Desg FWD 100       128.3    P2p Edge \n\n\nACCESS#"
+        },
+        {
+          "phase": "isolate the preferred core data links",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The actual first-hop virtual IP is reachable.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "isolate the preferred core data links",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The explicit endpoint route and the active first hop reach the isolated loopback service.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "restore preferred core roles",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCORE1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCORE1(config)#"
+        },
+        {
+          "phase": "restore preferred core roles",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "interface range Ethernet0/0 - 1",
+          "passed": true,
+          "output": "\nCORE1(config)#interface range Ethernet0/0 - 1\nCORE1(config-if-range)#"
+        },
+        {
+          "phase": "restore preferred core roles",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nCORE1(config-if-range)#no shutdown\nCORE1(config-if-range)#"
+        },
+        {
+          "phase": "restore preferred core roles",
+          "kind": "configuration",
+          "node": "CORE1",
+          "command": "end",
+          "passed": true,
+          "output": "\nCORE1(config-if-range)#end\nCORE1#"
+        },
+        {
+          "phase": "restore preferred core roles",
+          "node": "CORE1",
+          "command": "show standby brief",
+          "expectation": "CORE1 is the actual active gateway.",
+          "passed": true,
+          "output": "\nCORE1#show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   110 P Active  local           unknown         198.18.10.1\nCORE1#"
+        },
+        {
+          "phase": "restore preferred core roles",
+          "node": "CORE2",
+          "command": "show standby brief",
+          "expectation": "CORE2 is the actual standby behind the preferred core.",
+          "passed": true,
+          "output": "\nCORE2#show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   100 P Standby 198.18.10.2     local           198.18.10.1\nCORE2#"
+        },
+        {
+          "phase": "restore preferred core roles",
+          "node": "CORE1",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "CORE1 is the preferred actual STP root.",
+          "passed": true,
+          "output": "\nCORE1#show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc01.2b00\n             This bridge is the root\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    4106   (priority 4096 sys-id-ext 10)\n             Address     aabb.cc01.2b00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Desg FWD 4         128.1    P2p \nEt0/1               Desg FWD 4         128.2    P2p \n\n\nCORE1#"
+        },
+        {
+          "phase": "restore preferred core roles",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The actual first-hop virtual IP is reachable.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "restore preferred core roles",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The explicit endpoint route and the active first hop reach the isolated loopback service.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "withdraw only the endpoint service route",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCLIENT#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCLIENT(config)#"
+        },
+        {
+          "phase": "withdraw only the endpoint service route",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "no ip route 192.0.2.80 255.255.255.255 198.18.10.1",
+          "passed": true,
+          "output": "\nCLIENT(config)#no ip route 192.0.2.80 255.255.255.255 198.18.10.1\nCLIENT(config)#"
+        },
+        {
+          "phase": "withdraw only the endpoint service route",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "end",
+          "passed": true,
+          "output": "\nCLIENT(config)#end\nCLIENT#"
+        },
+        {
+          "phase": "withdraw only the endpoint service route",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The endpoint cannot reach the service without its route.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n\n*Oct 30 13:55:09.715: %SYS-5-CONFIG_I: Configured from console by console...\nSuccess rate is 0 percent (0/3)\nCLIENT#"
+        },
+        {
+          "phase": "withdraw only the endpoint service route",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The actual first-hop virtual IP is reachable.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "withdraw only the endpoint service route",
+          "node": "CORE1",
+          "command": "show standby brief",
+          "expectation": "CORE1 is the actual active gateway.",
+          "passed": true,
+          "output": "\nCORE1#show standby brief\n                     P indicates configured to preempt.\n                     |\nInterface   Grp  Pri P State   Active          Standby         Virtual IP\nVl10        10   110 P Active  local           198.18.10.3     198.18.10.1\nCORE1#"
+        },
+        {
+          "phase": "restore the endpoint service route",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCLIENT#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCLIENT(config)#"
+        },
+        {
+          "phase": "restore the endpoint service route",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "ip route 192.0.2.80 255.255.255.255 198.18.10.1",
+          "passed": true,
+          "output": "\nCLIENT(config)#ip route 192.0.2.80 255.255.255.255 198.18.10.1\nCLIENT(config)#"
+        },
+        {
+          "phase": "restore the endpoint service route",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "end",
+          "passed": true,
+          "output": "\nCLIENT(config)#end\nCLIENT#"
+        },
+        {
+          "phase": "restore the endpoint service route",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+          "expectation": "The explicit endpoint route and the active first hop reach the isolated loopback service.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.80 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.80, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "restore the endpoint service route",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The actual first-hop virtual IP is reachable.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "CORE1": "BOOTED",
+        "CORE2": "BOOTED",
+        "ACCESS": "BOOTED",
+        "CLIENT": "STARTED"
+      },
+      "images": {
+        "CORE1": "ioll2-xe-17-18-02",
+        "CORE2": "ioll2-xe-17-18-02",
+        "ACCESS": "ioll2-xe-17-18-02",
+        "CLIENT": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "e30e80219985a0756aee098769d2bd5991b904952c33a4081195b0163b6a9734",
+      "console_boot_fallback": [
+        "CLIENT"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T13:55:27Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/troubleshooting/043-etherchannel-stp-failure-recovery.yaml",
+      "sha256": "d945d5f61f2100e38ed210534ac179e85f5fad51755cc53502f2d3219b33b945",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T13:53:14Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "SW2",
+          "command": "show etherchannel summary",
+          "expectation": "Both physical members actually participate in the Layer2 LACP bundle.",
+          "passed": true,
+          "output": "\nSW2#show etherchannel summary\nFlags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\n        H - Hot-standby (LACP only)\n        R - Layer3      S - Layer2\n        U - in use      f - failed to allocate aggregator\n\n        M - not in use, minimum links not met\n        u - unsuitable for bundling\n        w - waiting to be aggregated\n        d - default port\n\n        A - formed by Auto LAG\n\n\nNumber of channel-groups in use: 1\nNumber of aggregators:           1\n\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+-----------------------------------------------\n1      Po1(SU)         LACP        Et0/0(P)        Et0/1(P)        \n\nSW2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW2",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "The port-channel is the preferred root-facing path.",
+          "passed": true,
+          "output": "\nSW2#show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc01.2e00\n             Cost        4\n             Port        65 (Port-channel1)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    8202   (priority 8192 sys-id-ext 10)\n             Address     aabb.cc01.2f00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/2               Desg FWD 4         128.3    P2p \nPo1                 Root FWD 4         128.65   P2p \n\n\nSW2#\n*Oct 30 13:53:46.536: %PKI-6-SUDI_INFO: PKI: platform doesn't support sudi certificate\n*Oct 30 13:53:46.536: %PKI-6-SUDI_INFO: PKI: no sudi certificate is installed\n*Oct 30 13:53:46.536: %PKI-2-NON_AUTHORITATIVE_CLOCK: PKI functions can not be initialized until an authoritative time source, like NTP, can be obtained.\n*Oct 30 13:53:46.554: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt.\nSW2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW3",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "The redundant triangle link is blocked by STP.",
+          "passed": true,
+          "output": "\nSW3#show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc01.2e00\n             Cost        4\n             Port        1 (Ethernet0/0)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)\n             Address     aabb.cc01.3000\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Root FWD 4         128.1    P2p \nEt0/1               Altn BLK 4         128.2    P2p \n\n\nSW3#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW2",
+          "command": "ping 198.18.10.1 source Vlan10 repeat 3",
+          "expectation": "Actual VLAN traffic survives each supported path change.",
+          "passed": true,
+          "output": "\nSW2#ping 198.18.10.1 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSW2#"
+        },
+        {
+          "phase": "lose one LACP member",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW2(config)#"
+        },
+        {
+          "phase": "lose one LACP member",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "interface Ethernet0/1",
+          "passed": true,
+          "output": "\nSW2(config)#interface Ethernet0/1\nSW2(config-if)#"
+        },
+        {
+          "phase": "lose one LACP member",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nSW2(config-if)#shutdown\nSW2(config-if)#"
+        },
+        {
+          "phase": "lose one LACP member",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW2(config-if)#end\nSW2#"
+        },
+        {
+          "phase": "lose one LACP member",
+          "node": "SW2",
+          "command": "show etherchannel summary",
+          "expectation": "The remaining member keeps the bundle usable.",
+          "passed": true,
+          "output": "\nSW2#show etherchannel summary\nFlags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\n        H - Hot-standby (LACP only)\n        R - Layer3      S - Layer2\n        U - in use      f - failed to allocate aggregator\n\n        M - not in use, minimum links not met\n        u - unsuitable for bundling\n        w - waiting to be aggregated\n        d - default port\n\n        A - formed by Auto LAG\n\n\nNumber of channel-groups in use: 1\nNumber of aggregators:           1\n\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+-----------------------------------------------\n1      Po1(SU)         LACP        Et0/0(P)        Et0/1(D)        \n\nSW2#"
+        },
+        {
+          "phase": "lose one LACP member",
+          "node": "SW2",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "The port-channel is the preferred root-facing path.",
+          "passed": true,
+          "output": "\nSW2#show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc01.2e00\n             Cost        4\n             Port        65 (Port-channel1)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    8202   (priority 8192 sys-id-ext 10)\n             Address     aabb.cc01.2f00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/2               Desg FWD 4         128.3    P2p \nPo1                 Root FWD 4         128.65   P2p \n\n\nSW2#"
+        },
+        {
+          "phase": "lose one LACP member",
+          "node": "SW2",
+          "command": "ping 198.18.10.1 source Vlan10 repeat 3",
+          "expectation": "Actual VLAN traffic survives each supported path change.",
+          "passed": true,
+          "output": "\nSW2#ping 198.18.10.1 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSW2#"
+        },
+        {
+          "phase": "restore both LACP members",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW2(config)#"
+        },
+        {
+          "phase": "restore both LACP members",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "interface Ethernet0/1",
+          "passed": true,
+          "output": "\nSW2(config)#interface Ethernet0/1\nSW2(config-if)#"
+        },
+        {
+          "phase": "restore both LACP members",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nSW2(config-if)#no shutdown\nSW2(config-if)#"
+        },
+        {
+          "phase": "restore both LACP members",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW2(config-if)#end\nSW2#"
+        },
+        {
+          "phase": "restore both LACP members",
+          "node": "SW2",
+          "command": "show etherchannel summary",
+          "expectation": "Both physical members actually participate in the Layer2 LACP bundle.",
+          "passed": true,
+          "output": "\nSW2#show etherchannel summary\nFlags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\n        H - Hot-standby (LACP only)\n        R - Layer3      S - Layer2\n        U - in use      f - failed to allocate aggregator\n\n        M - not in use, minimum links not met\n        u - unsuitable for bundling\n        w - waiting to be aggregated\n        d - default port\n\n        A - formed by Auto LAG\n\n\nNumber of channel-groups in use: 1\nNumber of aggregators:           1\n\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+-----------------------------------------------\n1      Po1(SU)         LACP        Et0/0(P)        Et0/1(P)        \n\nSW2#"
+        },
+        {
+          "phase": "restore both LACP members",
+          "node": "SW2",
+          "command": "ping 198.18.10.1 source Vlan10 repeat 3",
+          "expectation": "Actual VLAN traffic survives each supported path change.",
+          "passed": true,
+          "output": "\nSW2#ping 198.18.10.1 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSW2#"
+        },
+        {
+          "phase": "fail the logical bundle",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW2(config)#"
+        },
+        {
+          "phase": "fail the logical bundle",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "interface Port-channel1",
+          "passed": true,
+          "output": "\nSW2(config)#interface Port-channel1\nSW2(config-if)#"
+        },
+        {
+          "phase": "fail the logical bundle",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nSW2(config-if)#shutdown\nSW2(config-if)#"
+        },
+        {
+          "phase": "fail the logical bundle",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW2(config-if)#end\nSW2#"
+        },
+        {
+          "phase": "fail the logical bundle",
+          "node": "SW2",
+          "command": "show interfaces Port-channel1",
+          "expectation": "The fault is on the actual logical interface.",
+          "passed": true,
+          "output": "\nSW2#show interfaces Port-channel1\nPort-channel1 is administratively down, line protocol is down (disabled) \n  Hardware is EtherChannel, address is 0000.0000.0000 (bia 0000.0000.0000)\n  MTU 1500 bytes, BW 100000 Kbit/sec, DLY 100 usec, \n     reliability 255/255, txload 1/255, rxload 1/255\n  Encapsulation ARPA, loopback not set\n  Keepalive set (10 sec)\n  Full-duplex, Auto-speed, media type is 10/100/1000BaseTX\n  input flow-control is off, output flow-control is unsupported \n  ARP type: ARPA, ARP Timeout 04:00:00\n  Last input 00:00:02, output never, output hang never\n  Last clearing of \"show interface\" counters never\n  Input queue: 0/2000/0/0 (size/max/drops/flushes); Total output drops: 0\n  Queueing strategy: fifo\n  Output queue: 0/40 (size/max)\n  5 minute input rate 0 bits/sec, 0 packets/sec\n  5 minute output rate 1000 bits/sec, 1 packets/sec\n     70 packets input, 5226 bytes, 0 no buffer\n     Received 54 broadcasts (0 multicasts)\n     0 runts, 0 giants, 0 throttles \n     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored\n     0 input packets with dribble condition detected\n     77 packets output, 14548 bytes, 0 underruns\n     Output 45 broadcasts (0 multicasts)\n     0 output errors, 0 collisions, 0 interface resets\n     0 unknown protocol drops\n     0 babbles, 0 late collision, 0 deferred\n     0 lost carrier, 0 no carrier\n     0 output buffer failures, 0 output buffers swapped out\nSW2#"
+        },
+        {
+          "phase": "fail the logical bundle",
+          "node": "SW2",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "SW2 now reaches the root through SW3.",
+          "passed": true,
+          "output": "\nSW2#show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc01.2e00\n             Cost        8\n             Port        3 (Ethernet0/2)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    8202   (priority 8192 sys-id-ext 10)\n             Address     aabb.cc01.2f00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/2               Root FWD 4         128.3    P2p \n\n\nSW2#"
+        },
+        {
+          "phase": "fail the logical bundle",
+          "node": "SW3",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "The former alternate path actually forwards.",
+          "passed": true,
+          "output": "\nSW3#show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc01.2e00\n             Cost        4\n             Port        1 (Ethernet0/0)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)\n             Address     aabb.cc01.3000\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Root FWD 4         128.1    P2p \nEt0/1               Desg FWD 4         128.2    P2p \n\n\nSW3#"
+        },
+        {
+          "phase": "fail the logical bundle",
+          "node": "SW2",
+          "command": "ping 198.18.10.1 source Vlan10 repeat 3",
+          "expectation": "Actual VLAN traffic survives each supported path change.",
+          "passed": true,
+          "output": "\nSW2#ping 198.18.10.1 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nSW2#"
+        },
+        {
+          "phase": "recover the preferred bundle path",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW2(config)#"
+        },
+        {
+          "phase": "recover the preferred bundle path",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "interface Port-channel1",
+          "passed": true,
+          "output": "\nSW2(config)#interface Port-channel1\nSW2(config-if)#"
+        },
+        {
+          "phase": "recover the preferred bundle path",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nSW2(config-if)#no shutdown\nSW2(config-if)#"
+        },
+        {
+          "phase": "recover the preferred bundle path",
+          "kind": "configuration",
+          "node": "SW2",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW2(config-if)#end\nSW2#"
+        },
+        {
+          "phase": "recover the preferred bundle path",
+          "node": "SW2",
+          "command": "show etherchannel summary",
+          "expectation": "Both physical members actually participate in the Layer2 LACP bundle.",
+          "passed": true,
+          "output": "\nSW2#show etherchannel summary\nFlags:  D - down        P - bundled in port-channel\n        I - stand-alone s - suspended\n        H - Hot-standby (LACP only)\n        R - Layer3      S - Layer2\n        U - in use      f - failed to allocate aggregator\n\n        M - not in use, minimum links not met\n        u - unsuitable for bundling\n        w - waiting to be aggregated\n        d - default port\n\n        A - formed by Auto LAG\n\n\nNumber of channel-groups in use: 1\nNumber of aggregators:           1\n\nGroup  Port-channel  Protocol    Ports\n------+-------------+-----------+-----------------------------------------------\n1      Po1(SU)         LACP        Et0/0(P)        Et0/1(P)        \n\nSW2#"
+        },
+        {
+          "phase": "recover the preferred bundle path",
+          "node": "SW2",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "The port-channel is the preferred root-facing path.",
+          "passed": true,
+          "output": "\nSW2#show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc01.2e00\n             Cost        4\n             Port        65 (Port-channel1)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    8202   (priority 8192 sys-id-ext 10)\n             Address     aabb.cc01.2f00\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/2               Desg FWD 4         128.3    P2p \nPo1                 Root FWD 4         128.65   P2p \n\n\nSW2#"
+        },
+        {
+          "phase": "recover the preferred bundle path",
+          "node": "SW3",
+          "command": "show spanning-tree vlan 10",
+          "expectation": "The redundant triangle link is blocked by STP.",
+          "passed": true,
+          "output": "\nSW3#show spanning-tree vlan 10\n\nVLAN0010\n  Spanning tree enabled protocol rstp\n  Root ID    Priority    4106\n             Address     aabb.cc01.2e00\n             Cost        4\n             Port        1 (Ethernet0/0)\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n\n  Bridge ID  Priority    32778  (priority 32768 sys-id-ext 10)\n             Address     aabb.cc01.3000\n             Hello Time   2 sec  Max Age 20 sec  Forward Delay 15 sec\n             Aging Time  300 sec\n\nInterface           Role Sts Cost      Prio.Nbr Type\n------------------- ---- --- --------- -------- --------------------------------\nEt0/0               Root FWD 4         128.1    P2p \nEt0/1               Altn BLK 4         128.2    P2p \n\n\nSW3#"
+        },
+        {
+          "phase": "recover the preferred bundle path",
+          "node": "SW2",
+          "command": "ping 198.18.10.1 source Vlan10 repeat 3",
+          "expectation": "Actual VLAN traffic survives each supported path change.",
+          "passed": true,
+          "output": "\nSW2#ping 198.18.10.1 source Vlan10 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nSW2#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "SW1": "BOOTED",
+        "SW2": "BOOTED",
+        "SW3": "STARTED"
+      },
+      "images": {
+        "SW1": "ioll2-xe-17-18-02",
+        "SW2": "ioll2-xe-17-18-02",
+        "SW3": "ioll2-xe-17-18-02"
+      },
+      "plan_sha256": "24939a8c0bdf1365b593071e54cfb30124799690388499692c3b5e63d1a283cb",
+      "console_boot_fallback": [
+        "SW3"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T13:55:36Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/044-layer-2-security-stack.yaml",
+      "sha256": "c5955ad2c291c0417eeb43adae35452c800eb688d521d078affeef9bf952e7fd",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:10:36Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "show ip interface brief",
+          "expectation": "The legitimate endpoint acquires the actual first DHCP lease.",
+          "passed": true,
+          "output": "\nCLIENT#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.10.100   YES DHCP   up                    up      \nEthernet0/1            unassigned      YES TFTP   administratively down down    \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show ip dhcp snooping binding",
+          "expectation": "The switch binds the legitimate lease to the expected port.",
+          "passed": true,
+          "output": "\nSW1#show ip dhcp snooping binding\nMacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface\n------------------  ---------------  ----------  -------------  ----  --------------------\n02:00:00:00:10:02   198.18.10.100    86347       dhcp-snooping   10    GigabitEthernet0/1\nTotal number of bindings: 1\n\nSW1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The legitimate client actually reaches its gateway.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/3/4 ms\nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show port-security interface GigabitEthernet0/1",
+          "expectation": "The protected client access port is operational.",
+          "passed": true,
+          "output": "\nSW1#show port-security interface GigabitEthernet0/1\nPort Security              : Enabled\nPort Status                : Secure-up\nViolation Mode             : Shutdown\nAging Time                 : 0 mins\nAging Type                 : Absolute\nSecureStatic Address Aging : Disabled\nMaximum MAC Addresses      : 1\nTotal MAC Addresses        : 1\nConfigured MAC Addresses   : 0\nSticky MAC Addresses       : 1\nLast Source Address:Vlan   : 0200.0000.1002:10\nSecurity Violation Count   : 0\n\nSW1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SW1",
+          "command": "show port-security address",
+          "expectation": "The fixed legitimate source MAC is actually learned on the protected port.",
+          "passed": true,
+          "output": "\nSW1#show port-security address\n               Secure Mac Address Table\n-----------------------------------------------------------------------------\nVlan    Mac Address       Type                          Ports   Remaining Age\n                                                                   (mins)    \n----    -----------       ----                          -----   -------------\n  10    0200.0000.1002    SecureSticky                  Gi0/1        -\n-----------------------------------------------------------------------------\nTotal Addresses in System (excluding one mac per port)     : 0\nMax Addresses limit in System (excluding one mac per port) : 4096\nSW1#"
+        },
+        {
+          "phase": "activate the separate static-IP impersonator",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSPOOFER#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSPOOFER(config)#"
+        },
+        {
+          "phase": "activate the separate static-IP impersonator",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nSPOOFER(config)#interface Ethernet0/0\nSPOOFER(config-if)#"
+        },
+        {
+          "phase": "activate the separate static-IP impersonator",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nSPOOFER(config-if)#no shutdown\nSPOOFER(config-if)#"
+        },
+        {
+          "phase": "activate the separate static-IP impersonator",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "end",
+          "passed": true,
+          "output": "\nSPOOFER(config-if)#end\nSPOOFER#"
+        },
+        {
+          "phase": "activate the separate static-IP impersonator",
+          "node": "SPOOFER",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The unbound static sender cannot reach the gateway.",
+          "passed": true,
+          "output": "\nSPOOFER#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n\n*Oct 30 14:12:12.130: %SYS-5-CONFIG_I: Configured from console by console\n*Oct 30 14:12:13.428: %LINK-3-UPDOWN: Interface Ethernet0/0, changed state to up.\n*Oct 30 14:12:14.428: %LINEPROTO-5-UPDOWN: Line protocol on Interface Ethernet0/0, changed state to up..\nSuccess rate is 0 percent (0/3)\nSPOOFER#"
+        },
+        {
+          "phase": "activate the separate static-IP impersonator",
+          "node": "SW1",
+          "command": "show ip arp inspection statistics vlan 10",
+          "expectation": "Actual binding-related ARP drops are counted.",
+          "passed": true,
+          "output": "\nSW1#show ip arp inspection statistics vlan 10\n\n Vlan      Forwarded        Dropped     DHCP Drops      ACL Drops\n ----      ---------        -------     ----------      ---------\n   10              6              5              5              0\n\n Vlan   DHCP Permits    ACL Permits  Probe Permits   Source MAC Failures\n ----   ------------    -----------  -------------   -------------------\n   10              4              0              0                     0\n\n Vlan   Dest MAC Failures   IP Validation Failures   Invalid Protocol Data\n ----   -----------------   ----------------------   ---------------------\n   10                   0                        0                       0\nSW1#\n*Oct 30 14:12:13.977: %SW_DAI-4-DHCP_SNO"
+        },
+        {
+          "phase": "activate the separate static-IP impersonator",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The legitimate client actually reaches its gateway.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/5 ms\nCLIENT#"
+        },
+        {
+          "phase": "activate the separate static-IP impersonator",
+          "node": "SW1",
+          "command": "show port-security interface GigabitEthernet0/1",
+          "expectation": "The protected client access port is operational.",
+          "passed": true,
+          "output": "\nSW1#show port-security interface GigabitEthernet0/1\nPort Security              : Enabled\nPort Status                : Secure-up\nViolation Mode             : Shutdown\nAging Time                 : 0 mins\nAging Type                 : Absolute\nSecureStatic Address Aging : Disabled\nMaximum MAC Addresses      : 1\nTotal MAC Addresses        : 1\nConfigured MAC Addresses   : 0\nSticky MAC Addresses       : 1\nLast Source Address:Vlan   : 0200.0000.1002:10\nSecurity Violation Count   : 0\n\nSW1#"
+        },
+        {
+          "phase": "remove the separate impersonator",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSPOOFER#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSPOOFER(config)#"
+        },
+        {
+          "phase": "remove the separate impersonator",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nSPOOFER(config)#interface Ethernet0/0\nSPOOFER(config-if)#"
+        },
+        {
+          "phase": "remove the separate impersonator",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nSPOOFER(config-if)#shutdown\nSPOOFER(config-if)#"
+        },
+        {
+          "phase": "remove the separate impersonator",
+          "kind": "configuration",
+          "node": "SPOOFER",
+          "command": "end",
+          "passed": true,
+          "output": "\nSPOOFER(config-if)#end\nSPOOFER#"
+        },
+        {
+          "phase": "remove the separate impersonator",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The legitimate client actually reaches its gateway.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/5 ms\nCLIENT#"
+        },
+        {
+          "phase": "remove the separate impersonator",
+          "node": "SW1",
+          "command": "show port-security interface GigabitEthernet0/1",
+          "expectation": "The protected client access port is operational.",
+          "passed": true,
+          "output": "\nSW1#show port-security interface GigabitEthernet0/1\nPort Security              : Enabled\nPort Status                : Secure-up\nViolation Mode             : Shutdown\nAging Time                 : 0 mins\nAging Type                 : Absolute\nSecureStatic Address Aging : Disabled\nMaximum MAC Addresses      : 1\nTotal MAC Addresses        : 1\nConfigured MAC Addresses   : 0\nSticky MAC Addresses       : 1\nLast Source Address:Vlan   : 0200.0000.1002:10\nSecurity Violation Count   : 0\n\nSW1#"
+        },
+        {
+          "phase": "change the protected DHCP client source MAC",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCLIENT#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCLIENT(config)#"
+        },
+        {
+          "phase": "change the protected DHCP client source MAC",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nCLIENT(config)#interface Ethernet0/0\nCLIENT(config-if)#"
+        },
+        {
+          "phase": "change the protected DHCP client source MAC",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nCLIENT(config-if)#shutdown\nCLIENT(config-if)#"
+        },
+        {
+          "phase": "change the protected DHCP client source MAC",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "mac-address 0200.0000.1009",
+          "passed": true,
+          "output": "\nCLIENT(config-if)#mac-address 0200.0000.1009\nCLIENT(config-if)#"
+        },
+        {
+          "phase": "change the protected DHCP client source MAC",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nCLIENT(config-if)#no shutdown\nCLIENT(config-if)#"
+        },
+        {
+          "phase": "change the protected DHCP client source MAC",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "end",
+          "passed": true,
+          "output": "\nCLIENT(config-if)#end\nCLIENT#"
+        },
+        {
+          "phase": "change the protected DHCP client source MAC",
+          "node": "SW1",
+          "command": "show interfaces status",
+          "expectation": "Port security actually error-disables the offending client port.",
+          "passed": true,
+          "output": "\nSW1#show interfaces status\n\nPort      Name               Status       Vlan       Duplex  Speed Type \nGi0/0                        connected    10         a-full   auto RJ45\nGi0/1                        err-disabled 10           auto   auto RJ45\nGi0/2                        connected    10         a-full   auto RJ45\nGi0/3                        disabled     1            auto   auto RJ45\nSW1#\n*Oct 30 14:12:31.312: %PORT_SECURITY-2-PSECU"
+        },
+        {
+          "phase": "change the protected DHCP client source MAC",
+          "node": "SW1",
+          "command": "show port-security interface GigabitEthernet0/1",
+          "expectation": "Port security records actual offending source frames.",
+          "passed": true,
+          "output": "\nSW1#show port-security interface GigabitEthernet0/1\nPort Security              : Enabled\nPort Status                : Secure-shutdown\nViolation Mode             : Shutdown\nAging Time                 : 0 mins\nAging Type                 : Absolute\nSecureStatic Address Aging : Disabled\nMaximum MAC Addresses      : 1\nTotal MAC Addresses        : 1\nConfigured MAC Addresses   : 0\nSticky MAC Addresses       : 1\nLast Source Address:Vlan   : 0200.0000.1009:10\nSecurity Violation Count   : 1\n\nSW1#\n*Oct 30 14:12:32.31"
+        },
+        {
+          "phase": "restore the authorized client source MAC",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCLIENT#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCLIENT(config)#"
+        },
+        {
+          "phase": "restore the authorized client source MAC",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nCLIENT(config)#interface Ethernet0/0\nCLIENT(config-if)#"
+        },
+        {
+          "phase": "restore the authorized client source MAC",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nCLIENT(config-if)#shutdown\nCLIENT(config-if)#"
+        },
+        {
+          "phase": "restore the authorized client source MAC",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "mac-address 0200.0000.1002",
+          "passed": true,
+          "output": "\nCLIENT(config-if)#mac-address 0200.0000.1002\nCLIENT(config-if)#"
+        },
+        {
+          "phase": "restore the authorized client source MAC",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nCLIENT(config-if)#no shutdown\nCLIENT(config-if)#"
+        },
+        {
+          "phase": "restore the authorized client source MAC",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "end",
+          "passed": true,
+          "output": "\nCLIENT(config-if)#end\nCLIENT#"
+        },
+        {
+          "phase": "restore the authorized client source MAC",
+          "node": "SW1",
+          "command": "show interfaces status",
+          "expectation": "Port security actually error-disables the offending client port.",
+          "passed": true,
+          "output": "\nSW1#show interfaces status\n\nPort      Name               Status       Vlan       Duplex  Speed Type \nGi0/0                        connected    10         a-full   auto RJ45\nGi0/1                        err-disabled 10           auto   auto RJ45\nGi0/2                        connected    10         a-full   auto RJ45\nGi0/3                        disabled     1            auto   auto RJ45\nSW1#"
+        },
+        {
+          "phase": "reset the secured port and reacquire the actual lease",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSW1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSW1(config)#"
+        },
+        {
+          "phase": "reset the secured port and reacquire the actual lease",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "interface GigabitEthernet0/1",
+          "passed": true,
+          "output": "\nSW1(config)#interface GigabitEthernet0/1\nSW1(config-if)#"
+        },
+        {
+          "phase": "reset the secured port and reacquire the actual lease",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nSW1(config-if)#shutdown\nSW1(config-if)#"
+        },
+        {
+          "phase": "reset the secured port and reacquire the actual lease",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nSW1(config-if)#no shutdown\nSW1(config-if)#"
+        },
+        {
+          "phase": "reset the secured port and reacquire the actual lease",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "end",
+          "passed": true,
+          "output": "\nSW1(config-if)#end\nSW1#"
+        },
+        {
+          "phase": "reset the secured port and reacquire the actual lease",
+          "node": "SW1",
+          "command": "show port-security interface GigabitEthernet0/1",
+          "expectation": "The protected client access port is operational.",
+          "passed": true,
+          "output": "\nSW1#show port-security interface GigabitEthernet0/1\nPort Security              : Enabled\nPort Status                : Secure-up\nViolation Mode             : Shutdown\nAging Time                 : 0 mins\nAging Type                 : Absolute\nSecureStatic Address Aging : Disabled\nMaximum MAC Addresses      : 1\nTotal MAC Addresses        : 1\nConfigured MAC Addresses   : 0\nSticky MAC Addresses       : 1\nLast Source Address:Vlan   : 0000.0000.0000:0\nSecurity Violation Count   : 1\n\nSW1#\n*Oct 30 14:12:43.997: %SYS-5-CONFIG_I: Configured from console by console"
+        },
+        {
+          "phase": "reset the secured port and reacquire the actual lease",
+          "node": "CLIENT",
+          "command": "show ip interface brief",
+          "expectation": "The recovered client has a real DHCP lease from the configured pool; the address need not equal the initial lease.",
+          "passed": true,
+          "output": "\n*Oct 30 14:12:55.565: %DHCP-6-ADDRESS_ASSIGN: Interface Ethernet0/0 assigned DHCP address 198.18.10.101, mask 255.255.255.0, hostname CLIENT\n\nCLIENT#\nCLIENT#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.10.101   YES DHCP   up                    up      \nEthernet0/1            unassigned      YES TFTP   administratively down down    \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nCLIENT#"
+        },
+        {
+          "phase": "reset the secured port and reacquire the actual lease",
+          "node": "SW1",
+          "command": "show ip dhcp snooping binding",
+          "expectation": "A current dynamic binding matches the restored MAC, expected VLAN and protected port.",
+          "passed": true,
+          "output": "\nSW1#show ip dhcp snooping binding\nMacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface\n------------------  ---------------  ----------  -------------  ----  --------------------\n02:00:00:00:10:02   198.18.10.101    86393       dhcp-snooping   10    GigabitEthernet0/1\nTotal number of bindings: 1\n\nSW1#"
+        },
+        {
+          "phase": "reset the secured port and reacquire the actual lease",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The legitimate client actually reaches its gateway.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 2/3/4 ms\nCLIENT#"
+        },
+        {
+          "phase": "reset only the recovered inspection counters",
+          "kind": "configuration",
+          "node": "SW1",
+          "command": "clear ip arp inspection statistics",
+          "passed": true,
+          "output": "\nSW1#clear ip arp inspection statistics\nSW1#"
+        },
+        {
+          "phase": "reset only the recovered inspection counters",
+          "node": "SW1",
+          "command": "show ip dhcp snooping binding",
+          "expectation": "A current dynamic binding matches the restored MAC, expected VLAN and protected port.",
+          "passed": true,
+          "output": "\nSW1#show ip dhcp snooping binding\nMacAddress          IpAddress        Lease(sec)  Type           VLAN  Interface\n------------------  ---------------  ----------  -------------  ----  --------------------\n02:00:00:00:10:02   198.18.10.101    86390       dhcp-snooping   10    GigabitEthernet0/1\nTotal number of bindings: 1\n\nSW1#"
+        },
+        {
+          "phase": "prove fresh legitimate ARP after recovery",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "clear arp-cache",
+          "passed": true,
+          "output": "\nCLIENT#clear arp-cache\nCLIENT#"
+        },
+        {
+          "phase": "prove fresh legitimate ARP after recovery",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The legitimate client actually reaches its gateway.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/4/4 ms\nCLIENT#"
+        },
+        {
+          "phase": "prove fresh legitimate ARP after recovery",
+          "node": "SW1",
+          "command": "show ip arp inspection statistics vlan 10",
+          "expectation": "Fresh legitimate ARP is actually permitted against the DHCP binding.",
+          "passed": true,
+          "output": "\nSW1#show ip arp inspection statistics vlan 10\n\n Vlan      Forwarded        Dropped     DHCP Drops      ACL Drops\n ----      ---------        -------     ----------      ---------\n   10              3              0              0              0\n\n Vlan   DHCP Permits    ACL Permits  Probe Permits   Source MAC Failures\n ----   ------------    -----------  -------------   -------------------\n   10              2              0              0                     0\n\n Vlan   Dest MAC Failures   IP Validation Failures   Invalid Protocol Data\n ----   -----------------   ----------------------   ---------------------\n   10                   0                        0                       0\nSW1#"
+        },
+        {
+          "phase": "prove fresh legitimate ARP after recovery",
+          "node": "SW1",
+          "command": "show port-security interface GigabitEthernet0/1",
+          "expectation": "The protected client access port is operational.",
+          "passed": true,
+          "output": "\nSW1#show port-security interface GigabitEthernet0/1\nPort Security              : Enabled\nPort Status                : Secure-up\nViolation Mode             : Shutdown\nAging Time                 : 0 mins\nAging Type                 : Absolute\nSecureStatic Address Aging : Disabled\nMaximum MAC Addresses      : 1\nTotal MAC Addresses        : 1\nConfigured MAC Addresses   : 0\nSticky MAC Addresses       : 1\nLast Source Address:Vlan   : 0200.0000.1002:10\nSecurity Violation Count   : 1\n\nSW1#"
+        },
+        {
+          "phase": "prove fresh legitimate ARP after recovery",
+          "node": "CLIENT",
+          "command": "show ip interface brief",
+          "expectation": "The recovered client has a real DHCP lease from the configured pool; the address need not equal the initial lease.",
+          "passed": true,
+          "output": "\nCLIENT#show ip interface brief\nInterface              IP-Address      OK? Method Status                Protocol\nEthernet0/0            198.18.10.101   YES DHCP   up                    up      \nEthernet0/1            unassigned      YES TFTP   administratively down down    \nEthernet0/2            unassigned      YES TFTP   administratively down down    \nEthernet0/3            unassigned      YES TFTP   administratively down down    \nCLIENT#"
+        }
+      ],
+      "plan_sha256": "3d42f84e78883fcde2fe46b7225261f86cc92ff678a01224362c280df1ebd868",
+      "startup_states": {
+        "SW1": "STARTED",
+        "SERVER": "BOOTED",
+        "CLIENT": "BOOTED",
+        "SPOOFER": "STARTED"
+      },
+      "images": {
+        "SW1": "iosvl2-2020",
+        "SERVER": "iol-xe-17-18-02",
+        "CLIENT": "iol-xe-17-18-02",
+        "SPOOFER": "iol-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "SW1",
+        "SPOOFER"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:13:17Z"
     }
   ]
 }

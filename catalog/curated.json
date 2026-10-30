@@ -740,5 +740,23 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-701-040-secure-admin-plane.md",
     "example_profile": "ssh-policy"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/troubleshooting/043-etherchannel-stp-failure-recovery.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 85,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-043-etherchannel-stp-failure-recovery.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/050-ccna-capstone-campus-access.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "capstone",
+    "workbook": "docs/workbooks/200-301-050-ccna-capstone-campus-access.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/044-layer-2-security-stack.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "scenario",
+    "workbook": "docs/workbooks/200-301-044-layer-2-security-stack.md"
   }
 }

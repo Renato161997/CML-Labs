@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **118**.
+Import/export passes: **233/233**. Functional passes: **121**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -14,6 +14,7 @@ Import/export passes: **233/233**. Functional passes: **118**.
 | [JSON YAML Data Models](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/038-json-yaml-data-models.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-27T19:36:54Z |
 | [Python API Inventory](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/040-python-api-inventory.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-27T18:57:28Z |
 | [CCNA Capstone Branch Office](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/049-ccna-capstone-branch-office.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, iosvl2-2020 | 17 | 8 | 2026-10-28T18:06:10Z |
+| [CCNA Capstone Campus Access](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/050-ccna-capstone-campus-access.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 21 | 14 | 2026-10-30T13:55:27Z |
 | [Static And Default Routes](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/015-static-default-routes.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 4 | 6 | 2026-10-25T11:36:06Z |
 | [Floating Static Routes](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/016-floating-static-routes.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 9 | 16 | 2026-10-25T12:02:44Z |
 | [Single Area OSPFv2](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/017-single-area-ospfv2.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 0 | 2026-10-24T18:23:04Z |
@@ -49,6 +50,8 @@ Import/export passes: **233/233**. Functional passes: **118**.
 | [Port Security Sticky MAC](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/034-port-security-sticky.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 5 | 8 | 2026-10-25T17:11:24Z |
 | [IPsec Site To Site Concepts](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/035-ipsec-site-to-site-concepts.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 5 | 0 | 2026-10-28T17:11:55Z |
 | [Passwords Banners Secure Management](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/036-passwords-banners-secure-management.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ubuntu-24-04-20260307 | 5 | 4 | 2026-10-25T17:55:21Z |
+| [Layer 2 Security Stack](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/044-layer-2-security-stack.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, iosvl2-2020 | 23 | 27 | 2026-10-30T14:13:17Z |
+| [EtherChannel STP Failure Recovery](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/troubleshooting/043-etherchannel-stp-failure-recovery.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 17 | 16 | 2026-10-30T13:55:36Z |
 | [NETCONF RESTCONF Routing](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/033-netconf-restconf-routing.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 13 | 31 | 2026-10-27T19:18:58Z |
 | [Python Routing Troubleshooter](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/034-python-routing-troubleshooter.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 13 | 31 | 2026-10-27T19:30:47Z |
 | [Ansible Routing Baseline](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/035-ansible-routing-baseline.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 16 | 32 | 2026-10-28T16:14:57Z |
