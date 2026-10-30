@@ -3848,11 +3848,11 @@
       "duration_minutes": 100,
       "workbook": "docs/workbooks/350-701-015-intrusion-policy-concepts.md",
       "kind": "practice",
-      "runtime_status": "not-run",
-      "import_status": "not-run",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "deb93b9cac35da07aa52162b0baf61f270a100f4c65f69519b8f2949209dcc11"
+      "runtime_status": "passed",
+      "import_status": "import-export-pass",
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T20:10:39Z",
+      "sha256": "4ff9aa363861dbff1c5e3be481a01b2639c5d2a7c61327fe04c98e1e2f297cf4"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/scenario/037-zero-trust-branch-segmentation.yaml",

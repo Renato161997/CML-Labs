@@ -15,22 +15,33 @@ lab:
     inline pair between two isolated Net-Tools guests. No Linux bridge or parallel bypass exists. A deliberately
     benign plaintext HTTP GET is the signature fixture: matching it does not establish maliciousness,
     a vulnerability or a useful production detection. In the working reference, the alert action records
-    the request without dropping it. An intentionally overbroad drop rule blocks both HTTP fixture ports
-    while independent ICMP and the local server remain healthy. Narrowing the rule to TCP 8080 restores
-    8081 but continues to block 8080, proving selective policy repair rather than disabling inspection.
-    Restoring alert recovers both services. Each rule reload clears the phase alert file and requires
-    the previous engine to exit. This teaches IDS/IPS action, false-positive scope and rollback; it is
-    not Cisco Secure Firewall, a threat feed or a malware benchmark. Nominal RAM is 2048 MiB. Primary
-    reference: https://docs.snort.org/start/inspection .
+    the request without dropping it. An intentionally overbroad flow-block rule blocks both HTTP ports
+    on 198.18.0.20 and an independent HTTP service on 198.18.0.21:8081. Local probes prove both servers
+    remain healthy, and ICMP still forwards. The HTTP-method buffer associates the rule with the HTTP
+    service, which can supersede signature-header port matching in the tested engine: the tuned rule therefore
+    deliberately constrains destination host 198.18.0.20. Both HTTP ports on that host must stay blocked,
+    while the independent 198.18.0.21 service must recover. This teaches why signature port scope must
+    not be assumed equivalent to an access-control policy. The complete measured network scope and final
+    recovery are required; no unrelated-service outage is accepted as success. Restoring alert recovers
+    both services. Each rule reload clears the phase alert file and requires the previous engine to exit.
+    This teaches IDS/IPS action, false-positive scope and rollback; it is not Cisco Secure Firewall, a
+    threat feed or a malware benchmark. Nominal RAM is 2048 MiB. Primary references: https://docs.snort.org/start/inspection
+    and https://docs.snort.org/rules/options/payload/http/method . The signature selects the actual HTTP-method
+    sticky buffer and established client-to-server direction; it does not search a file/body buffer for
+    an HTTP request method. Checksum validation stays enabled. The rule uses Snort3 block to stop the
+    current packet and subsequent flow packets; drop alone affects only the current packet and is not
+    treated as a persistent HTTP-session restriction. Action reference: https://docs.snort.org/rules/headers/actions
+    and https://docs.snort.org/rules/options/general/service .
 
 
     Objectives:
 
     - Observe a real Snort3 alert while a deliberately benign matching request still succeeds.
 
-    - Enable an overbroad inline drop and distinguish application policy from link or server failure.
+    - Enable an overbroad inline flow block and distinguish application policy from link or server failure.
 
-    - Narrow the rule to one service so an independent service recovers, then restore alert-only behavior.
+    - Narrow the rule by destination address so an independent virtual service recovers, then restore
+    alert-only behavior.
 
     '
   version: 0.3.1
@@ -46,15 +57,16 @@ nodes:
   - name: boot.sh
     content: "#!/bin/bash\nset -eu\nmkdir -p /lab\nip link set eth1 up\nip link set eth2 up\nip link set\
       \ eth1 promisc on\nip link set eth2 promisc on\ncat >/lab/mode <<'CML_SNORT_MODE'\n#!/bin/bash\n\
-      set -eu\ncase \"${1:-}\" in\n ids) action=alert; destination=8080 ;;\n broad) action=drop; destination=any\
-      \ ;;\n tuned) action=drop; destination=8080 ;;\n *) echo INVALID_MODE; exit 2 ;;\nesac\nif [ -f\
-      \ /lab/snort.pid ]; then\n old=$(cat /lab/snort.pid)\n kill \"$old\" 2>/dev/null || true\n for i\
-      \ in $(seq 1 30); do\n  if ! kill -0 \"$old\" 2>/dev/null; then break; fi\n  sleep 0.1\n done\n\
-      \ if kill -0 \"$old\" 2>/dev/null; then echo OLD_ENGINE_RUNNING; exit 1; fi\nfi\nprintf '%s tcp\
-      \ any any -> 198.18.0.20 %s (msg:\"CML benign HTTP fixture\"; content:\"GET\"; sid:1000001; rev:1;)\\\
-      n' \"$action\" \"$destination\" >/lab/local.rules\n: >/lab/alert_fast.txt\nconfig=$(cat /opt/cml-inspection/config-path)\n\
-      cd \"$(dirname \"$config\")\"\nsnort-cml -q -c \"$config\" -R /lab/local.rules -Q --daq afpacket\
-      \ -i eth1:eth2 -A alert_fast -l /lab --lua 'alert_fast={file=true}' >/lab/engine.log 2>&1 &\npid=$!\n\
+      set -eu\ncase \"${1:-}\" in\n ids) action=alert; target=198.18.0.20; destination=8080 ;;\n broad)\
+      \ action=block; target=any; destination=any ;;\n tuned) action=block; target=198.18.0.20; destination=8080\
+      \ ;;\n *) echo INVALID_MODE; exit 2 ;;\nesac\nif [ -f /lab/snort.pid ]; then\n old=$(cat /lab/snort.pid)\n\
+      \ kill \"$old\" 2>/dev/null || true\n for i in $(seq 1 30); do\n  if ! kill -0 \"$old\" 2>/dev/null;\
+      \ then break; fi\n  sleep 0.1\n done\n if kill -0 \"$old\" 2>/dev/null; then echo OLD_ENGINE_RUNNING;\
+      \ exit 1; fi\nfi\nprintf '%s tcp any any -> %s %s (msg:\"CML benign HTTP fixture\"; flow:to_server,established;\
+      \ http_method; content:\"GET\",fast_pattern; sid:1000001; rev:1;)\\n' \"$action\" \"$target\" \"\
+      $destination\" >/lab/local.rules\n: >/lab/alert_fast.txt\nconfig=$(cat /opt/cml-inspection/config-path)\n\
+      cd \"$(dirname \"$config\")\"\nsnort-cml -c \"$config\" -R /lab/local.rules -Q --daq afpacket -i\
+      \ eth1:eth2 -A alert_fast -l /lab --lua 'alert_fast={file=true}' >/lab/engine.log 2>&1 &\npid=$!\n\
       echo \"$pid\" >/lab/snort.pid\nsleep 2\nkill -0 \"$pid\"\necho SNORT_READY\nCML_SNORT_MODE\nchmod\
       \ 700 /lab/mode\nif ! /lab/mode ids >/lab/start.status 2>&1; then cat /lab/engine.log >>/lab/start.status;\
       \ fi\necho READY >/dev/console\nexit 0\n"
@@ -353,9 +365,13 @@ nodes:
 
       CML_EMBED_EXAMPLES_SECURITY_TRAFFIC_FIXTURE_PY
 
+      ip address add 198.18.0.21/24 dev eth1
+
       python3 /lab/t.py serve 198.18.0.20 --label OUTSIDE >/lab/http.log 2>&1 &
 
       python3 /lab/t.py serve 198.18.0.20 --port 8081 --label OUTSIDE >/lab/http-alt.log 2>&1 &
+
+      python3 /lab/t.py serve 198.18.0.21 --port 8081 --label OUTSIDE >/lab/http-control.log 2>&1 &
 
       echo READY >/dev/console
 
