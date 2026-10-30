@@ -406,3 +406,8 @@ Use the [reference-platform guide](../PLATFORMS.md) for the node models named by
 ## Readable implementation
 
 [Security workbench source](../../examples/security/security_workbench.py). The registered source payload is checked byte-for-byte by `python scripts/embed_webhook.py --check`. Training keys are generated at boot, never embedded in the YAML. Stop and wipe only this disposable lab copy to remove its keys, fixture state and replay ledger.
+
+## VPN reference exercises
+
+- [SCOR009: actual policy-based IPsec](350-701-009-site-to-site-ipsec-ios.md).
+- [ENARSI023: actual route-based IPsec VTI](300-410-023-ipsec-vti.md).
