@@ -29796,6 +29796,837 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T16:27:30Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/031-control-plane-policing.yaml",
+      "sha256": "95fae2f57365f2fa46c3ef9688a67b00f9cffc2d3bdd1d3ffbe742cfc1674df6",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T18:46:56Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"INSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual INSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=2743 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=1701 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=678 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2068ms\nrtt min/avg/max/mdev = 677.582/1707.011/2742.909/843.178 ms, pipe 3\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=192 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=12.7 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=41.2 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2002ms\nrtt min/avg/max/mdev = 12.711/82.109/192.452/78.883 ms\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "attach selective control-plane enforcement",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "attach selective control-plane enforcement",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "control-plane",
+          "passed": true,
+          "output": "\nFW(config)#control-plane\nFW(config-cp)#"
+        },
+        {
+          "phase": "attach selective control-plane enforcement",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "service-policy input COPP-GUARD",
+          "passed": true,
+          "output": "\nFW(config-cp)#service-policy input COPP-GUARD\nFW(config-cp)#"
+        },
+        {
+          "phase": "attach selective control-plane enforcement",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-cp)#end\nFW#"
+        },
+        {
+          "phase": "attach selective control-plane enforcement",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual INSIDE control-plane probe is dropped.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 0 received, 100% packet loss, time 2051ms\n\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "attach selective control-plane enforcement",
+          "node": "FW",
+          "command": "show policy-map control-plane",
+          "expectation": "The selected control-plane class counts actual packets.",
+          "passed": true,
+          "output": "\nFW#show policy-map control-plane\n Control Plane \n\n  Service-policy input: COPP-GUARD\n\n    Class-map: CPU-SELECT (match-all)  \n      3 packets, 294 bytes\n      5 minute offered rate 0000 bps, drop rate 0000 bps\n      Match: access-group name CPU-SOURCES\n      police:\n          cir 8000 bps, bc 1500 bytes\n        conformed 3 packets, 294 bytes; actions:\n          drop \n        exceeded 0 packets, 0 bytes; actions:\n          drop \n        conformed 0000 bps, exceeded 0000 bps\n\n    Class-map: class-default (match-any)  \n      0 packets, 0 bytes\n      5 minute offered rate 0000 bps, drop rate 0000 bps\n      Match: any \nFW#"
+        },
+        {
+          "phase": "attach selective control-plane enforcement",
+          "node": "OUTSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=83.7 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=107 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=139 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 83.746/110.101/139.397/22.814 ms\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "attach selective control-plane enforcement",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the unfiltered control-plane baseline",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "restore the unfiltered control-plane baseline",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "control-plane",
+          "passed": true,
+          "output": "\nFW(config)#control-plane\nFW(config-cp)#"
+        },
+        {
+          "phase": "restore the unfiltered control-plane baseline",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no service-policy input COPP-GUARD",
+          "passed": true,
+          "output": "\nFW(config-cp)#no service-policy input COPP-GUARD\nFW(config-cp)#"
+        },
+        {
+          "phase": "restore the unfiltered control-plane baseline",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-cp)#end\nFW#"
+        },
+        {
+          "phase": "restore the unfiltered control-plane baseline",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual INSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=1.67 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=2.63 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=2.01 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2004ms\nrtt min/avg/max/mdev = 1.670/2.101/2.626/0.395 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the unfiltered control-plane baseline",
+          "node": "OUTSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=1.68 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=2.00 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=2.05 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 1.675/1.908/2.051/0.166 ms\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the unfiltered control-plane baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "FW": "STARTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "BOOTED"
+      },
+      "images": {
+        "FW": "iosv-159-3-m12",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "plan_sha256": "dc5aee7e000851d3ddae44e1cedb4b16cab88a107d6b9e261570cd9227a5682d",
+      "console_boot_fallback": [
+        "FW"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T18:52:17Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/032-copp-control-plane.yaml",
+      "sha256": "0a7da8925183f2ef0fda7ca8f2b26df29cbb9412169ea48494ccf048c7d87291",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T18:46:56Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"INSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual INSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=2300 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=1283 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=260 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2042ms\nrtt min/avg/max/mdev = 260.289/1281.039/2299.742/832.604 ms, pipe 3\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=199 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=22.2 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=50.2 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 22.197/90.628/199.493/77.823 ms\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "attach an overbroad control-plane selector",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "attach an overbroad control-plane selector",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "ip access-list extended CPU-SOURCES",
+          "passed": true,
+          "output": "\nFW(config)#ip access-list extended CPU-SOURCES\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "attach an overbroad control-plane selector",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no 10",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#no 10\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "attach an overbroad control-plane selector",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "10 permit icmp any host 192.0.2.80 echo",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#10 permit icmp any host 192.0.2.80 echo\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "attach an overbroad control-plane selector",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "exit",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#exit\nFW(config)#"
+        },
+        {
+          "phase": "attach an overbroad control-plane selector",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "control-plane",
+          "passed": true,
+          "output": "\nFW(config)#control-plane\nFW(config-cp)#"
+        },
+        {
+          "phase": "attach an overbroad control-plane selector",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "service-policy input COPP-GUARD",
+          "passed": true,
+          "output": "\nFW(config-cp)#service-policy input COPP-GUARD\nFW(config-cp)#"
+        },
+        {
+          "phase": "attach an overbroad control-plane selector",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-cp)#end\nFW#"
+        },
+        {
+          "phase": "attach an overbroad control-plane selector",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual INSIDE control-plane probe is dropped.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 0 received, 100% packet loss, time 2063ms\n\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "attach an overbroad control-plane selector",
+          "node": "OUTSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual OUTSIDE control-plane probe is dropped.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 0 received, 100% packet loss, time 2046ms\n\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "attach an overbroad control-plane selector",
+          "node": "FW",
+          "command": "show policy-map control-plane",
+          "expectation": "The selected control-plane class counts actual packets.",
+          "passed": true,
+          "output": "\nFW#show policy-map control-plane\n Control Plane \n\n  Service-policy input: COPP-GUARD\n\n    Class-map: CPU-SELECT (match-all)  \n      6 packets, 588 bytes\n      5 minute offered rate 0000 bps, drop rate 0000 bps\n      Match: access-group name CPU-SOURCES\n      police:\n          cir 8000 bps, bc 1500 bytes\n        conformed 6 packets, 588 bytes; actions:\n          drop \n        exceeded 0 packets, 0 bytes; actions:\n          drop \n        conformed 0000 bps, exceeded 0000 bps\n\n    Class-map: class-default (match-any)  \n      0 packets, 0 bytes\n      5 minute offered rate 0000 bps, drop rate 0000 bps\n      Match: any \nFW#"
+        },
+        {
+          "phase": "attach an overbroad control-plane selector",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "repair only the trusted-source exclusion",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "repair only the trusted-source exclusion",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "ip access-list extended CPU-SOURCES",
+          "passed": true,
+          "output": "\nFW(config)#ip access-list extended CPU-SOURCES\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "repair only the trusted-source exclusion",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no 10",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#no 10\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "repair only the trusted-source exclusion",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "10 permit icmp host 198.18.10.10 host 192.0.2.80 echo",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#10 permit icmp host 198.18.10.10 host 192.0.2.80 echo\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "repair only the trusted-source exclusion",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#end\nFW#"
+        },
+        {
+          "phase": "repair only the trusted-source exclusion",
+          "node": "OUTSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=2.05 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=1.82 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=1.64 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 1.642/1.837/2.054/0.168 ms\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "repair only the trusted-source exclusion",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual INSIDE control-plane probe is dropped.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 0 received, 100% packet loss, time 2033ms\n\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "repair only the trusted-source exclusion",
+          "node": "FW",
+          "command": "show policy-map control-plane",
+          "expectation": "The selected control-plane class counts actual packets.",
+          "passed": true,
+          "output": "\nFW#show policy-map control-plane\n Control Plane \n\n  Service-policy input: COPP-GUARD\n\n    Class-map: CPU-SELECT (match-all)  \n      9 packets, 882 bytes\n      5 minute offered rate 0000 bps, drop rate 0000 bps\n      Match: access-group name CPU-SOURCES\n      police:\n          cir 8000 bps, bc 1500 bytes\n        conformed 9 packets, 882 bytes; actions:\n          drop \n        exceeded 0 packets, 0 bytes; actions:\n          drop \n        conformed 0000 bps, exceeded 0000 bps\n\n    Class-map: class-default (match-any)  \n      4 packets, 336 bytes\n      5 minute offered rate 0000 bps, drop rate 0000 bps\n      Match: any \nFW#"
+        },
+        {
+          "phase": "repair only the trusted-source exclusion",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove the teaching CoPP policy",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "remove the teaching CoPP policy",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "control-plane",
+          "passed": true,
+          "output": "\nFW(config)#control-plane\nFW(config-cp)#"
+        },
+        {
+          "phase": "remove the teaching CoPP policy",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no service-policy input COPP-GUARD",
+          "passed": true,
+          "output": "\nFW(config-cp)#no service-policy input COPP-GUARD\nFW(config-cp)#"
+        },
+        {
+          "phase": "remove the teaching CoPP policy",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-cp)#end\nFW#"
+        },
+        {
+          "phase": "remove the teaching CoPP policy",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual INSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=1.62 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=1.59 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=1.61 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 1.586/1.604/1.621/0.014 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove the teaching CoPP policy",
+          "node": "OUTSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=2.20 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=1.53 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=1.62 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 1.529/1.781/2.195/0.294 ms\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "remove the teaching CoPP policy",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "FW": "STARTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "BOOTED"
+      },
+      "images": {
+        "FW": "iosv-159-3-m12",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "plan_sha256": "a6c72e20a1840cd009fef4542609aa58fb46154ced8156edbab4c722168fff3c",
+      "console_boot_fallback": [
+        "FW"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T18:52:17Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/029-policy-enforcement-points.yaml",
+      "sha256": "668b3772080b9f9bb98e63456267d797904878f5e17e022b2d5a2ad88e9750d5",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T18:53:12Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"INSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual INSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=7.63 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=2.55 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=2.45 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 2.449/4.211/7.631/2.418 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=7.37 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=2.35 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=2.37 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2002ms\nrtt min/avg/max/mdev = 2.352/4.028/7.367/2.360 ms\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "block the forwarded application at ingress",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "block the forwarded application at ingress",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "ip access-list extended TRANSIT-WEB",
+          "passed": true,
+          "output": "\nFW(config)#ip access-list extended TRANSIT-WEB\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "block the forwarded application at ingress",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "deny tcp host 198.18.10.10 host 198.18.20.20 eq 8080",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#deny tcp host 198.18.10.10 host 198.18.20.20 eq 8080\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "block the forwarded application at ingress",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "permit ip any any",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#permit ip any any\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "block the forwarded application at ingress",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "exit",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#exit\nFW(config)#"
+        },
+        {
+          "phase": "block the forwarded application at ingress",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nFW(config)#interface GigabitEthernet0/0\nFW(config-if)#"
+        },
+        {
+          "phase": "block the forwarded application at ingress",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "ip access-group TRANSIT-WEB in",
+          "passed": true,
+          "output": "\nFW(config-if)#ip access-group TRANSIT-WEB in\nFW(config-if)#"
+        },
+        {
+          "phase": "block the forwarded application at ingress",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-if)#end\nFW#"
+        },
+        {
+          "phase": "block the forwarded application at ingress",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "block the forwarded application at ingress",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual INSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=2.39 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=2.76 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=2.17 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 2.167/2.436/2.758/0.244 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "block the forwarded application at ingress",
+          "node": "OUTSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=2.15 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=2.14 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=2.06 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 2.064/2.119/2.151/0.039 ms\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "block the forwarded application at ingress",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "block the forwarded application at ingress",
+          "node": "FW",
+          "command": "show access-lists TRANSIT-WEB",
+          "expectation": "The actual transit ingress policy counts dropped TCP requests.",
+          "passed": true,
+          "output": "\nFW#show access-lists TRANSIT-WEB\nExtended IP access list TRANSIT-WEB\n    10 deny tcp host 198.18.10.10 host 198.18.20.20 eq 8080 (1 match)\n    20 permit ip any any (3 matches)\nFW#"
+        },
+        {
+          "phase": "restore the forwarded application",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "restore the forwarded application",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nFW(config)#interface GigabitEthernet0/0\nFW(config-if)#"
+        },
+        {
+          "phase": "restore the forwarded application",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no ip access-group TRANSIT-WEB in",
+          "passed": true,
+          "output": "\nFW(config-if)#no ip access-group TRANSIT-WEB in\nFW(config-if)#"
+        },
+        {
+          "phase": "restore the forwarded application",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-if)#end\nFW#"
+        },
+        {
+          "phase": "restore the forwarded application",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the forwarded application",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual INSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=2.65 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=2.10 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=2.21 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 2.098/2.320/2.651/0.238 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "enforce only the selected control-plane source",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "enforce only the selected control-plane source",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "control-plane",
+          "passed": true,
+          "output": "\nFW(config)#control-plane\nFW(config-cp)#"
+        },
+        {
+          "phase": "enforce only the selected control-plane source",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "service-policy input COPP-GUARD",
+          "passed": true,
+          "output": "\nFW(config-cp)#service-policy input COPP-GUARD\nFW(config-cp)#"
+        },
+        {
+          "phase": "enforce only the selected control-plane source",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-cp)#end\nFW#"
+        },
+        {
+          "phase": "enforce only the selected control-plane source",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual INSIDE control-plane probe is dropped.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 0 received, 100% packet loss, time 2086ms\n\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "enforce only the selected control-plane source",
+          "node": "FW",
+          "command": "show policy-map control-plane",
+          "expectation": "The selected control-plane class counts actual packets.",
+          "passed": true,
+          "output": "\nFW#show policy-map control-plane\n Control Plane \n\n  Service-policy input: COPP-GUARD\n\n    Class-map: CPU-SELECT (match-all)  \n      3 packets, 294 bytes\n      5 minute offered rate 0000 bps, drop rate 0000 bps\n      Match: access-group name CPU-SOURCES\n      police:\n          cir 8000 bps, bc 1500 bytes\n        conformed 3 packets, 294 bytes; actions:\n          drop \n        exceeded 0 packets, 0 bytes; actions:\n          drop \n        conformed 0000 bps, exceeded 0000 bps\n\n    Class-map: class-default (match-any)  \n      0 packets, 0 bytes\n      5 minute offered rate 0000 bps, drop rate 0000 bps\n      Match: any \nFW#"
+        },
+        {
+          "phase": "enforce only the selected control-plane source",
+          "node": "OUTSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=2.20 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=2.07 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=2.03 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2002ms\nrtt min/avg/max/mdev = 2.032/2.100/2.200/0.072 ms\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "enforce only the selected control-plane source",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore both management and data baseline",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "restore both management and data baseline",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "control-plane",
+          "passed": true,
+          "output": "\nFW(config)#control-plane\nFW(config-cp)#"
+        },
+        {
+          "phase": "restore both management and data baseline",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no service-policy input COPP-GUARD",
+          "passed": true,
+          "output": "\nFW(config-cp)#no service-policy input COPP-GUARD\nFW(config-cp)#"
+        },
+        {
+          "phase": "restore both management and data baseline",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-cp)#end\nFW#"
+        },
+        {
+          "phase": "restore both management and data baseline",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual INSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=2.08 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=2.35 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=2.01 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 2.005/2.146/2.354/0.150 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore both management and data baseline",
+          "node": "OUTSIDE",
+          "command": "ping -c 3 -W 1 192.0.2.80",
+          "expectation": "The actual OUTSIDE control-plane probe succeeds.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# ping -c 3 -W 1 192.0.2.80\nPING 192.0.2.80 (192.0.2.80) 56(84) bytes of data.\n64 bytes from 192.0.2.80: icmp_seq=1 ttl=255 time=2.11 ms\n64 bytes from 192.0.2.80: icmp_seq=2 ttl=255 time=1.97 ms\n64 bytes from 192.0.2.80: icmp_seq=3 ttl=255 time=2.43 ms\n\n--- 192.0.2.80 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 1.965/2.170/2.434/0.195 ms\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore both management and data baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        }
+      ],
+      "plan_sha256": "0fb009ae5b9852eebfd4c3c01d87b8e6b655e14d5801246dade37d134f7a9e06",
+      "startup_states": {
+        "FW": "STARTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "BOOTED"
+      },
+      "images": {
+        "FW": "iosv-159-3-m12",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "FW"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T18:59:03Z"
     }
   ]
 }

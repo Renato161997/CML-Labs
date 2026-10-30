@@ -917,5 +917,26 @@
     "duration_minutes": 105,
     "kind": "practice",
     "workbook": "docs/workbooks/300-410-031-acl-uRPF.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/031-control-plane-policing.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 85,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-031-control-plane-policing.md",
+    "example_profile": "native-firewall-traffic"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/032-copp-control-plane.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 95,
+    "kind": "scenario",
+    "workbook": "docs/workbooks/300-410-032-copp-control-plane.md",
+    "example_profile": "native-firewall-traffic"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/029-policy-enforcement-points.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 105,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-029-policy-enforcement-points.md",
+    "example_profile": "native-firewall-traffic"
   }
 }
