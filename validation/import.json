@@ -128,16 +128,6 @@
       "completed_utc": "2026-10-24T18:50:05Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/045-dual-isp-bgp-edge.yaml",
-      "sha256": "6fbd30cbcd7cdc45164fece5c6a230c62e8b56cc01f8a63a57da5c2339aa9c79",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:05Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:05Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/030-8021x-mab-concepts.yaml",
       "sha256": "e85e31416873ab748296d402dbbf6e96af1b91bc9c6f98bb64c7e659ac795cb5",
       "cml_version": "2.10.1+build.21",
@@ -1056,26 +1046,6 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-25T15:56:07Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/018-mp-bgp-vrf-lite.yaml",
-      "sha256": "5c524b071b343f1aa0d4a062faf2be87eaaac91b277977d865b486230103ddd2",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:08Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:08Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/039-bgp-route-reflector-policy-lab.yaml",
-      "sha256": "f95f540b16d5e7141bdc8155936137bda63aa2d8e3596089f7580cfbd4f6394b",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:08Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:08Z"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/045-enarsi-capstone-advanced-routing.yaml",
@@ -2336,6 +2306,36 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T14:29:05Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/045-dual-isp-bgp-edge.yaml",
+      "sha256": "e89b7154908062530245cdb0844926bee83e6bbde7f8ead436afbde16f79e79d",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:44:13Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:44:13Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/039-bgp-route-reflector-policy-lab.yaml",
+      "sha256": "59584015c10dca163f4cbae9090b7a4fdff2e2b18ad7753f32c6a7f977991cd2",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:44:15Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:44:15Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/018-mp-bgp-vrf-lite.yaml",
+      "sha256": "49d48add1df4c3739aad21ef4a6df9329eaa3a6858d600bc826b77b9d8867c47",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:44:17Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:44:17Z"
     }
   ]
 }
