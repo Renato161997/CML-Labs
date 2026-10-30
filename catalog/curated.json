@@ -776,5 +776,23 @@
     "duration_minutes": 100,
     "kind": "practice",
     "workbook": "docs/workbooks/350-401-002-fhrp-design-hsrp-vrrp.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/001-campus-two-three-tier-ha.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 90,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-001-campus-two-three-tier-ha.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/migration/048-flat-vlan-to-routed-access.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 120,
+    "kind": "scenario",
+    "workbook": "docs/workbooks/350-401-048-flat-vlan-to-routed-access.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/troubleshooting/047-campus-routing-blackhole.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 90,
+    "kind": "scenario",
+    "workbook": "docs/workbooks/350-401-047-campus-routing-blackhole.md"
   }
 }

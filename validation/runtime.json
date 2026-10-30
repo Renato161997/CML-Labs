@@ -23410,6 +23410,1289 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T14:20:57Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/troubleshooting/047-campus-routing-blackhole.yaml",
+      "sha256": "2f94781803ab51c813a421f8518f7162429731c6f2ac596ae55631b6b5e5e110",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:24:28Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip ospf neighbor",
+          "expectation": "The upstream adjacency remains FULL despite the service fault.",
+          "passed": true,
+          "output": "\nR2#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.3         1   FULL/DR         00:00:07    198.18.0.6      Ethernet0/1\n192.0.2.1         1   FULL/BDR        00:00:06    198.18.0.1      Ethernet0/0\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The service route is actually learned through OSPF.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"ospf 10\", distance 110, metric 11, type intra area\n  Last update from 198.18.0.6 on Ethernet0/1, 00:00:07 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.6, from 192.0.2.3, 00:00:07 ago, via Ethernet0/1\n      Route metric is 11, traffic share count is 1\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The service loopbacks exchange actual end-to-end traffic.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.0.6 source Loopback0 repeat 3",
+          "expectation": "The same remote router transit address remains reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.6 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.6, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        },
+        {
+          "phase": "prefer a service discard route",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "prefer a service discard route",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip route 192.0.2.3 255.255.255.255 Null0",
+          "passed": true,
+          "output": "\nR2(config)#ip route 192.0.2.3 255.255.255.255 Null0\nR2(config)#"
+        },
+        {
+          "phase": "prefer a service discard route",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config)#end\nR2#"
+        },
+        {
+          "phase": "prefer a service discard route",
+          "node": "R2",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The actual selected service route discards through Null0.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"static\", distance 1, metric 0 (connected)\n  Routing Descriptor Blocks:\n  * directly connected, via Null0\n      Route metric is 0, traffic share count is 1\nR2#"
+        },
+        {
+          "phase": "prefer a service discard route",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The controlled data-plane fault blocks the service.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \nU.U\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "prefer a service discard route",
+          "node": "R1",
+          "command": "ping 198.18.0.6 source Loopback0 repeat 3",
+          "expectation": "The same remote router transit address remains reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.6 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.6, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "prefer a service discard route",
+          "node": "R2",
+          "command": "show ip ospf neighbor",
+          "expectation": "The upstream adjacency remains FULL despite the service fault.",
+          "passed": true,
+          "output": "\nR2#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.3         1   FULL/DR         00:00:06    198.18.0.6      Ethernet0/1\n192.0.2.1         1   FULL/BDR        00:00:06    198.18.0.1      Ethernet0/0\nR2#"
+        },
+        {
+          "phase": "recover dynamic service forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "recover dynamic service forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no ip route 192.0.2.3 255.255.255.255 Null0",
+          "passed": true,
+          "output": "\nR2(config)#no ip route 192.0.2.3 255.255.255.255 Null0\nR2(config)#"
+        },
+        {
+          "phase": "recover dynamic service forwarding",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config)#end\nR2#"
+        },
+        {
+          "phase": "recover dynamic service forwarding",
+          "node": "R2",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The service route is actually learned through OSPF.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"ospf 10\", distance 110, metric 11, type intra area\n  Last update from 198.18.0.6 on Ethernet0/1, 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.6, from 192.0.2.3, 00:00:01 ago, via Ethernet0/1\n      Route metric is 11, traffic share count is 1\nR2#"
+        },
+        {
+          "phase": "recover dynamic service forwarding",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The service loopbacks exchange actual end-to-end traffic.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "drop only service echo replies",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "drop only service echo replies",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-list extended SERVICE-RETURN",
+          "passed": true,
+          "output": "\nR2(config)#ip access-list extended SERVICE-RETURN\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only service echo replies",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "deny icmp host 192.0.2.3 host 192.0.2.1 echo-reply",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#deny icmp host 192.0.2.3 host 192.0.2.1 echo-reply\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only service echo replies",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "permit ip any any",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#permit ip any any\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only service echo replies",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#exit\nR2(config)#"
+        },
+        {
+          "phase": "drop only service echo replies",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface Ethernet0/1",
+          "passed": true,
+          "output": "\nR2(config)#interface Ethernet0/1\nR2(config-if)#"
+        },
+        {
+          "phase": "drop only service echo replies",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-group SERVICE-RETURN in",
+          "passed": true,
+          "output": "\nR2(config-if)#ip access-group SERVICE-RETURN in\nR2(config-if)#"
+        },
+        {
+          "phase": "drop only service echo replies",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "drop only service echo replies",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The controlled data-plane fault blocks the service.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "drop only service echo replies",
+          "node": "R2",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The service route is actually learned through OSPF.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"ospf 10\", distance 110, metric 11, type intra area\n  Last update from 198.18.0.6 on Ethernet0/1, 00:00:12 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.6, from 192.0.2.3, 00:00:12 ago, via Ethernet0/1\n      Route metric is 11, traffic share count is 1\nR2#"
+        },
+        {
+          "phase": "drop only service echo replies",
+          "node": "R2",
+          "command": "show ip ospf neighbor",
+          "expectation": "The upstream adjacency remains FULL despite the service fault.",
+          "passed": true,
+          "output": "\nR2#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.3         1   FULL/DR         00:00:06    198.18.0.6      Ethernet0/1\n192.0.2.1         1   FULL/BDR        00:00:06    198.18.0.1      Ethernet0/0\nR2#"
+        },
+        {
+          "phase": "drop only service echo replies",
+          "node": "R1",
+          "command": "ping 198.18.0.6 source Loopback0 repeat 3",
+          "expectation": "The same remote router transit address remains reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.6 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.6, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nR1#"
+        },
+        {
+          "phase": "drop only service echo replies",
+          "node": "R2",
+          "command": "show access-lists SERVICE-RETURN",
+          "expectation": "The return policy counts actual blocked replies.",
+          "passed": true,
+          "output": "\nR2#show access-lists SERVICE-RETURN\nExtended IP access list SERVICE-RETURN\n    10 deny icmp host 192.0.2.3 host 192.0.2.1 echo-reply (3 matches)\n    20 permit ip any any (8 matches)\nR2#"
+        },
+        {
+          "phase": "remove the return-direction policy fault",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "remove the return-direction policy fault",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface Ethernet0/1",
+          "passed": true,
+          "output": "\nR2(config)#interface Ethernet0/1\nR2(config-if)#"
+        },
+        {
+          "phase": "remove the return-direction policy fault",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no ip access-group SERVICE-RETURN in",
+          "passed": true,
+          "output": "\nR2(config-if)#no ip access-group SERVICE-RETURN in\nR2(config-if)#"
+        },
+        {
+          "phase": "remove the return-direction policy fault",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "remove the return-direction policy fault",
+          "node": "R1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "The service loopbacks exchange actual end-to-end traffic.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "remove the return-direction policy fault",
+          "node": "R2",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The service route is actually learned through OSPF.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"ospf 10\", distance 110, metric 11, type intra area\n  Last update from 198.18.0.6 on Ethernet0/1, 00:00:16 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.6, from 192.0.2.3, 00:00:16 ago, via Ethernet0/1\n      Route metric is 11, traffic share count is 1\nR2#"
+        },
+        {
+          "phase": "remove the return-direction policy fault",
+          "node": "R1",
+          "command": "ping 198.18.0.6 source Loopback0 repeat 3",
+          "expectation": "The same remote router transit address remains reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.6 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.6, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "R1": "STARTED",
+        "R2": "BOOTED",
+        "R3": "STARTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "f86997315a694c1b83803b200f6a4a03adaddb550cae4579529cd10e4254ad29",
+      "console_boot_fallback": [
+        "R1",
+        "R3"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:25:45Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/001-campus-two-three-tier-ha.yaml",
+      "sha256": "ddb3c23de3f4378b1bec406a8732c5593da291c7f4101fe5d4a7bafde6e53223",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:24:28Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "ACCESS1",
+          "command": "show ip route 192.0.2.12",
+          "expectation": "Both equal-cost distribution next hops are actually installed.",
+          "passed": true,
+          "output": "\nACCESS1#show ip route 192.0.2.12\nRouting entry for 192.0.2.12/32\n  Known via \"ospf 10\", distance 110, metric 21, type intra area\n  Last update from 198.18.0.5 on Ethernet0/1, 00:00:05 ago\n  Routing Descriptor Blocks:\n    198.18.0.5, from 192.0.2.12, 00:00:05 ago, via Ethernet0/1\n      Route metric is 21, traffic share count is 1\n  * 198.18.0.1, from 192.0.2.12, 00:00:09 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nACCESS1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "ACCESS1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "The access service loopbacks exchange actual routed traffic.",
+          "passed": true,
+          "output": "\nACCESS1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nACCESS1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "ACCESS2",
+          "command": "ping 192.0.2.11 source Loopback0 repeat 3",
+          "expectation": "The reverse access service path also forwards.",
+          "passed": true,
+          "output": "\nACCESS2#ping 192.0.2.11 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.11, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.12 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nACCESS2#"
+        },
+        {
+          "phase": "remove only one access uplink",
+          "kind": "configuration",
+          "node": "ACCESS1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\n*Oct 30 14:25:01.090: %PKI-6-SUDI_INFO: PKI: platform doesn't support sudi certificate\n*Oct 30 14:25:01.090: %PKI-6-SUDI_INFO: PKI: no sudi certificate is installed\n*Oct 30 14:25:01.090: %PKI-2-NON_AUTHORITATIVE_CLOCK: PKI functions can not be initialized until an authoritative time source, like NTP, can be obtained.\n*Oct 30 14:25:01.103: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt.\nACCESS1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nACCESS1(config)#"
+        },
+        {
+          "phase": "remove only one access uplink",
+          "kind": "configuration",
+          "node": "ACCESS1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nACCESS1(config)#interface Ethernet0/0\nACCESS1(config-if)#"
+        },
+        {
+          "phase": "remove only one access uplink",
+          "kind": "configuration",
+          "node": "ACCESS1",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nACCESS1(config-if)#shutdown\nACCESS1(config-if)#\n*Oct 30 14:25:01.205: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 30 14:25:01.206: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 30 14:25:01.311: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\nACCESS1(config-if)#"
+        },
+        {
+          "phase": "remove only one access uplink",
+          "kind": "configuration",
+          "node": "ACCESS1",
+          "command": "end",
+          "passed": true,
+          "output": "\nACCESS1(config-if)#end\nACCESS1#"
+        },
+        {
+          "phase": "remove only one access uplink",
+          "node": "ACCESS1",
+          "command": "show ip route 192.0.2.12",
+          "expectation": "Only the surviving distribution path remains.",
+          "passed": true,
+          "output": "\nACCESS1#show ip route 192.0.2.12\nRouting entry for 192.0.2.12/32\n  Known via \"ospf 10\", distance 110, metric 21, type intra area\n  Last update from 198.18.0.5 on Ethernet0/1, 00:00:08 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.5, from 192.0.2.12, 00:00:08 ago, via Ethernet0/1\n      Route metric is 21, traffic share count is 1\nACCESS1#\n*Oct 30 14:25:01.412: %PNP-6-PNP_TECH_SUMMARY_SAVED_OK: PnP tech summary (/pnp-tech/pnp-tech-discovery-summary) saved successfully (elapsed time: 0 seconds).\n*Oct 30 14:25:01.412: %PNP-6-PNP_DISCOVERY_STOPPED: PnP Discovery stopped (Config Wizard)\n*Oct 30 14:25:02.251: %OSPF-5-ADJCHG: Process 10, Nbr 192.0.2.1 on Ethernet0/0 from FULL to DOWN, Neighbor Down: Interface down or detached\n*Oct 30 14:25:02.752: %SYS-5-CONFIG_I: Configured from console by console\nACCESS1#"
+        },
+        {
+          "phase": "remove only one access uplink",
+          "node": "ACCESS1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "The access service loopbacks exchange actual routed traffic.",
+          "passed": true,
+          "output": "\nACCESS1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nACCESS1#"
+        },
+        {
+          "phase": "restore access ECMP",
+          "kind": "configuration",
+          "node": "ACCESS1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nACCESS1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nACCESS1(config)#"
+        },
+        {
+          "phase": "restore access ECMP",
+          "kind": "configuration",
+          "node": "ACCESS1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nACCESS1(config)#interface Ethernet0/0\nACCESS1(config-if)#"
+        },
+        {
+          "phase": "restore access ECMP",
+          "kind": "configuration",
+          "node": "ACCESS1",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nACCESS1(config-if)#no shutdown\nACCESS1(config-if)#\n*Oct 30 14:25:04.249: %LINK-5-CHANGED: Interface Ethernet0/0, changed state to administratively down\n*Oct 30 14:25:05.249: %LINEPROTO-5-UPDOWN: Line protocol on Interface Ethernet0/0, changed state to down\nACCESS1(config-if)#"
+        },
+        {
+          "phase": "restore access ECMP",
+          "kind": "configuration",
+          "node": "ACCESS1",
+          "command": "end",
+          "passed": true,
+          "output": "\nACCESS1(config-if)#end\nACCESS1#"
+        },
+        {
+          "phase": "restore access ECMP",
+          "node": "ACCESS1",
+          "command": "show ip route 192.0.2.12",
+          "expectation": "Both equal-cost distribution next hops are actually installed.",
+          "passed": true,
+          "output": "\nACCESS1#show ip route 192.0.2.12\nRouting entry for 192.0.2.12/32\n  Known via \"ospf 10\", distance 110, metric 21, type intra area\n  Last update from 198.18.0.1 on Ethernet0/0, 00:00:00 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.5, from 192.0.2.12, 00:00:18 ago, via Ethernet0/1\n      Route metric is 21, traffic share count is 1\n    198.18.0.1, from 192.0.2.12, 00:00:00 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nACCESS1#"
+        },
+        {
+          "phase": "restore access ECMP",
+          "node": "ACCESS1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "The access service loopbacks exchange actual routed traffic.",
+          "passed": true,
+          "output": "\nACCESS1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nACCESS1#"
+        },
+        {
+          "phase": "isolate the second distribution data plane",
+          "kind": "configuration",
+          "node": "DIST2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nDIST2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nDIST2(config)#"
+        },
+        {
+          "phase": "isolate the second distribution data plane",
+          "kind": "configuration",
+          "node": "DIST2",
+          "command": "interface range Ethernet0/0 - 1",
+          "passed": true,
+          "output": "\nDIST2(config)#interface range Ethernet0/0 - 1\nDIST2(config-if-range)#"
+        },
+        {
+          "phase": "isolate the second distribution data plane",
+          "kind": "configuration",
+          "node": "DIST2",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nDIST2(config-if-range)#shutdown\nDIST2(config-if-range)#"
+        },
+        {
+          "phase": "isolate the second distribution data plane",
+          "kind": "configuration",
+          "node": "DIST2",
+          "command": "end",
+          "passed": true,
+          "output": "\nDIST2(config-if-range)#end\nDIST2#"
+        },
+        {
+          "phase": "isolate the second distribution data plane",
+          "node": "ACCESS1",
+          "command": "show ip route 192.0.2.12",
+          "expectation": "Only the surviving distribution path remains.",
+          "passed": true,
+          "output": "\n*Oct 30 14:25:27.439: %OSPF-5-ADJCHG: Process 10, Nbr 192.0.2.2 on Ethernet0/1 from FULL to DOWN, Neighbor Down: Dead timer expired\nACCESS1#\nACCESS1#show ip route 192.0.2.12\nRouting entry for 192.0.2.12/32\n  Known via \"ospf 10\", distance 110, metric 21, type intra area\n  Last update from 198.18.0.1 on Ethernet0/0, 00:00:16 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.1, from 192.0.2.12, 00:00:16 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nACCESS1#"
+        },
+        {
+          "phase": "isolate the second distribution data plane",
+          "node": "ACCESS1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "The access service loopbacks exchange actual routed traffic.",
+          "passed": true,
+          "output": "\nACCESS1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nACCESS1#"
+        },
+        {
+          "phase": "restore both distribution paths",
+          "kind": "configuration",
+          "node": "DIST2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nDIST2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nDIST2(config)#"
+        },
+        {
+          "phase": "restore both distribution paths",
+          "kind": "configuration",
+          "node": "DIST2",
+          "command": "interface range Ethernet0/0 - 1",
+          "passed": true,
+          "output": "\nDIST2(config)#interface range Ethernet0/0 - 1\nDIST2(config-if-range)#"
+        },
+        {
+          "phase": "restore both distribution paths",
+          "kind": "configuration",
+          "node": "DIST2",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nDIST2(config-if-range)#no shutdown\nDIST2(config-if-range)#"
+        },
+        {
+          "phase": "restore both distribution paths",
+          "kind": "configuration",
+          "node": "DIST2",
+          "command": "end",
+          "passed": true,
+          "output": "\nDIST2(config-if-range)#end\nDIST2#"
+        },
+        {
+          "phase": "restore both distribution paths",
+          "node": "ACCESS1",
+          "command": "show ip route 192.0.2.12",
+          "expectation": "Both equal-cost distribution next hops are actually installed.",
+          "passed": true,
+          "output": "\nACCESS1#show ip route 192.0.2.12\nRouting entry for 192.0.2.12/32\n  Known via \"ospf 10\", distance 110, metric 21, type intra area\n  Last update from 198.18.0.5 on Ethernet0/1, 00:00:02 ago\n  Routing Descriptor Blocks:\n    198.18.0.5, from 192.0.2.12, 00:00:02 ago, via Ethernet0/1\n      Route metric is 21, traffic share count is 1\n  * 198.18.0.1, from 192.0.2.12, 00:00:30 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nACCESS1#"
+        },
+        {
+          "phase": "restore both distribution paths",
+          "node": "ACCESS1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "The access service loopbacks exchange actual routed traffic.",
+          "passed": true,
+          "output": "\nACCESS1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nACCESS1#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "DIST1": "BOOTED",
+        "DIST2": "BOOTED",
+        "ACCESS1": "BOOTED",
+        "ACCESS2": "STARTED"
+      },
+      "images": {
+        "DIST1": "ioll2-xe-17-18-02",
+        "DIST2": "ioll2-xe-17-18-02",
+        "ACCESS1": "ioll2-xe-17-18-02",
+        "ACCESS2": "ioll2-xe-17-18-02"
+      },
+      "plan_sha256": "e0ad3bf36535590461718713601e70ddd762e2193b44d48448675ad70f3a6e8e",
+      "console_boot_fallback": [
+        "ACCESS2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:25:51Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/migration/048-flat-vlan-to-routed-access.yaml",
+      "sha256": "06230c8ce5c5dc6250f08ab36ff3fd023d857df6eaf7f1971224e35ee2373241",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:29:08Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The initial distribution gateway is reachable.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.1 source Ethernet0/0 repeat 3",
+          "expectation": "The client reaches the distribution loopback with a valid return path.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "ACCESS",
+          "command": "show interfaces Ethernet0/0 switchport",
+          "expectation": "The initial uplink is a real Layer2 trunk.",
+          "passed": true,
+          "output": "\n*Oct 30 14:29:52.558: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt.\nACCESS#\nACCESS#show interfaces Ethernet0/0 switchport\nName: Et0/0\nSwitchport: Enabled\nAdministrative Mode: trunk\nOperational Mode: trunk\nAdministrative Trunking Encapsulation: dot1q\nOperational Trunking Encapsulation: dot1q\nNegotiation of Trunking: On\nAccess Mode VLAN: 1 (default)\nTrunking Native Mode VLAN: 1 (default)\nAdministrative Native VLAN tagging: disabled\nVoice VLAN: none\nAdministrative private-vlan host-association: none \nAdministrative private-vlan mapping: none \nAdministrative private-vlan trunk native VLAN: none\nAdministrative private-vlan trunk Native VLAN tagging: enabled\nAdministrative private-vlan trunk encapsulation: dot1q\nAdministrative private-vlan trunk normal VLANs: none\nAdministrative private-vlan trunk associations: none\nAdministrative private-vlan trunk mappings: none\nOperational private-vlan: none\nTrunking VLANs Enabled: 10,20\nPruning VLANs Enabled: 2-1001\nCapture Mode Disabled\nCapture VLANs Allowed: ALL\n\nProtected: false\nAppliance trust: none\nACCESS#"
+        },
+        {
+          "phase": "move the endpoint default to access",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCLIENT#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCLIENT(config)#"
+        },
+        {
+          "phase": "move the endpoint default to access",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "no ip route 0.0.0.0 0.0.0.0 198.18.10.1",
+          "passed": true,
+          "output": "\nCLIENT(config)#no ip route 0.0.0.0 0.0.0.0 198.18.10.1\nCLIENT(config)#"
+        },
+        {
+          "phase": "move the endpoint default to access",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "ip route 0.0.0.0 0.0.0.0 198.18.10.2",
+          "passed": true,
+          "output": "\nCLIENT(config)#ip route 0.0.0.0 0.0.0.0 198.18.10.2\nCLIENT(config)#"
+        },
+        {
+          "phase": "move the endpoint default to access",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "end",
+          "passed": true,
+          "output": "\nCLIENT(config)#end\nCLIENT#"
+        },
+        {
+          "phase": "move the endpoint default to access",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.2 repeat 3",
+          "expectation": "The local access gateway remains reachable.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "move the endpoint default to access",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.1 source Ethernet0/0 repeat 3",
+          "expectation": "The client reaches the distribution loopback with a valid return path.",
+          "passed": true,
+          "output": "4:29:55.478: %SYS-5-CONFIG_I: Configured from console by console\nCLIENT#\nCLIENT#ping 192.0.2.1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "open the deliberate migration interruption",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nDIST#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nDIST(config)#"
+        },
+        {
+          "phase": "open the deliberate migration interruption",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nDIST(config)#interface Ethernet0/0\nDIST(config-if)#"
+        },
+        {
+          "phase": "open the deliberate migration interruption",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nDIST(config-if)#shutdown\nDIST(config-if)#"
+        },
+        {
+          "phase": "open the deliberate migration interruption",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "end",
+          "passed": true,
+          "output": "\nDIST(config-if)#end\nDIST#"
+        },
+        {
+          "phase": "open the deliberate migration interruption",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.1 repeat 3",
+          "expectation": "The planned uplink interruption is visible to the service.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\n...\nSuccess rate is 0 percent (0/3)\nCLIENT#"
+        },
+        {
+          "phase": "open the deliberate migration interruption",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.2 repeat 3",
+          "expectation": "The local access gateway remains reachable.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "convert the distribution uplink",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nDIST#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nDIST(config)#"
+        },
+        {
+          "phase": "convert the distribution uplink",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nDIST(config)#interface Ethernet0/0\nDIST(config-if)#"
+        },
+        {
+          "phase": "convert the distribution uplink",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "no switchport",
+          "passed": true,
+          "output": "\nDIST(config-if)#no switchport\nDIST(config-if)#"
+        },
+        {
+          "phase": "convert the distribution uplink",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "ip address 198.18.0.1 255.255.255.252",
+          "passed": true,
+          "output": "\nDIST(config-if)#ip address 198.18.0.1 255.255.255.252\nDIST(config-if)#"
+        },
+        {
+          "phase": "convert the distribution uplink",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nDIST(config-if)#no shutdown\nDIST(config-if)#"
+        },
+        {
+          "phase": "convert the distribution uplink",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "exit",
+          "passed": true,
+          "output": "\nDIST(config-if)#exit\nDIST(config)#"
+        },
+        {
+          "phase": "convert the distribution uplink",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "interface Vlan10",
+          "passed": true,
+          "output": "\nDIST(config)#interface Vlan10\nDIST(config-if)#"
+        },
+        {
+          "phase": "convert the distribution uplink",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "shutdown",
+          "passed": true,
+          "output": "30 14:30:10.590: %LINEPROTO-5-UPDOWN: Line protocol on Interface Ethernet0/0, changed state to up\nDIST(config-if)#\nDIST(config-if)#shutdown\nDIST(config-if)#"
+        },
+        {
+          "phase": "convert the distribution uplink",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "exit",
+          "passed": true,
+          "output": "\nDIST(config-if)#exit\nDIST(config)#"
+        },
+        {
+          "phase": "convert the distribution uplink",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "ip route 198.18.10.0 255.255.255.0 198.18.0.2",
+          "passed": true,
+          "output": "\nDIST(config)#ip route 198.18.10.0 255.255.255.0 198.18.0.2\nDIST(config)#"
+        },
+        {
+          "phase": "convert the distribution uplink",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "end",
+          "passed": true,
+          "output": "DOWN: Interface Ethernet0/0, changed state to up\nDIST(config)#\nDIST(config)#end\nDIST#"
+        },
+        {
+          "phase": "convert the distribution uplink",
+          "node": "DIST",
+          "command": "show interfaces Ethernet0/0 switchport",
+          "expectation": "The interswitch interface is actually routed rather than a VLAN trunk.",
+          "passed": true,
+          "output": "\nDIST#show interfaces Ethernet0/0 switchport\nName: Et0/0\nSwitchport: Disabled\n\nDIST#"
+        },
+        {
+          "phase": "convert access and restore routed forwarding",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nACCESS#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nACCESS(config)#"
+        },
+        {
+          "phase": "convert access and restore routed forwarding",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nACCESS(config)#interface Ethernet0/0\nACCESS(config-if)#"
+        },
+        {
+          "phase": "convert access and restore routed forwarding",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nACCESS(config-if)#shutdown\nACCESS(config-if)#"
+        },
+        {
+          "phase": "convert access and restore routed forwarding",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "no switchport",
+          "passed": true,
+          "output": "\nACCESS(config-if)#no switchport\nACCESS(config-if)#"
+        },
+        {
+          "phase": "convert access and restore routed forwarding",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "ip address 198.18.0.2 255.255.255.252",
+          "passed": true,
+          "output": "\nACCESS(config-if)#ip address 198.18.0.2 255.255.255.252\nACCESS(config-if)#"
+        },
+        {
+          "phase": "convert access and restore routed forwarding",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nACCESS(config-if)#no shutdown\nACCESS(config-if)#"
+        },
+        {
+          "phase": "convert access and restore routed forwarding",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "exit",
+          "passed": true,
+          "output": "\nACCESS(config-if)#exit\nACCESS(config)#"
+        },
+        {
+          "phase": "convert access and restore routed forwarding",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "no ip route 0.0.0.0 0.0.0.0 198.18.10.1",
+          "passed": true,
+          "output": "\nACCESS(config)#no ip route 0.0.0.0 0.0.0.0 198.18.10.1\nACCESS(config)#"
+        },
+        {
+          "phase": "convert access and restore routed forwarding",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "ip route 0.0.0.0 0.0.0.0 198.18.0.1",
+          "passed": true,
+          "output": "\nACCESS(config)#ip route 0.0.0.0 0.0.0.0 198.18.0.1\nACCESS(config)#"
+        },
+        {
+          "phase": "convert access and restore routed forwarding",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "end",
+          "passed": true,
+          "output": "\nACCESS(config)#end\nACCESS#"
+        },
+        {
+          "phase": "convert access and restore routed forwarding",
+          "node": "ACCESS",
+          "command": "show interfaces Ethernet0/0 switchport",
+          "expectation": "The interswitch interface is actually routed rather than a VLAN trunk.",
+          "passed": true,
+          "output": "\nACCESS#show interfaces Ethernet0/0 switchport\nName: Et0/0\nSwitchport: Disabled\n\nACCESS#"
+        },
+        {
+          "phase": "convert access and restore routed forwarding",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.2 repeat 3",
+          "expectation": "The local access gateway remains reachable.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "convert access and restore routed forwarding",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.1 source Ethernet0/0 repeat 3",
+          "expectation": "The client reaches the distribution loopback with a valid return path.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "convert access and restore routed forwarding",
+          "node": "DIST",
+          "command": "ping 198.18.10.10 source Loopback0 repeat 3",
+          "expectation": "The distribution return route and endpoint reply path both work.",
+          "passed": true,
+          "output": "\nDIST#ping 198.18.10.10 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.10, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nDIST#"
+        },
+        {
+          "phase": "withdraw only the distribution return route",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nDIST#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nDIST(config)#"
+        },
+        {
+          "phase": "withdraw only the distribution return route",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "no ip route 198.18.10.0 255.255.255.0 198.18.0.2",
+          "passed": true,
+          "output": "\nDIST(config)#no ip route 198.18.10.0 255.255.255.0 198.18.0.2\nDIST(config)#"
+        },
+        {
+          "phase": "withdraw only the distribution return route",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "end",
+          "passed": true,
+          "output": "\nDIST(config)#end\nDIST#"
+        },
+        {
+          "phase": "withdraw only the distribution return route",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.1 repeat 3",
+          "expectation": "The missing return path breaks end-to-end forwarding.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\n...\nSuccess rate is 0 percent (0/3)\nCLIENT#"
+        },
+        {
+          "phase": "withdraw only the distribution return route",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.2 repeat 3",
+          "expectation": "The local access gateway remains reachable.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "restore the routed return path",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nDIST#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nDIST(config)#"
+        },
+        {
+          "phase": "restore the routed return path",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "ip route 198.18.10.0 255.255.255.0 198.18.0.2",
+          "passed": true,
+          "output": "\nDIST(config)#ip route 198.18.10.0 255.255.255.0 198.18.0.2\nDIST(config)#"
+        },
+        {
+          "phase": "restore the routed return path",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "end",
+          "passed": true,
+          "output": "\nDIST(config)#end\nDIST#"
+        },
+        {
+          "phase": "restore the routed return path",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.1 source Ethernet0/0 repeat 3",
+          "expectation": "The client reaches the distribution loopback with a valid return path.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "rollback access to the VLAN trunk",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nACCESS#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nACCESS(config)#"
+        },
+        {
+          "phase": "rollback access to the VLAN trunk",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nACCESS(config)#interface Ethernet0/0\nACCESS(config-if)#"
+        },
+        {
+          "phase": "rollback access to the VLAN trunk",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nACCESS(config-if)#shutdown\nACCESS(config-if)#"
+        },
+        {
+          "phase": "rollback access to the VLAN trunk",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "no ip address",
+          "passed": true,
+          "output": "\nACCESS(config-if)#no ip address\nACCESS(config-if)#"
+        },
+        {
+          "phase": "rollback access to the VLAN trunk",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "switchport",
+          "passed": true,
+          "output": "\nACCESS(config-if)#switchport\nACCESS(config-if)#"
+        },
+        {
+          "phase": "rollback access to the VLAN trunk",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "switchport trunk encapsulation dot1q",
+          "passed": true,
+          "output": "\nACCESS(config-if)#switchport trunk encapsulation dot1q\nACCESS(config-if)#"
+        },
+        {
+          "phase": "rollback access to the VLAN trunk",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "switchport mode trunk",
+          "passed": true,
+          "output": "\nACCESS(config-if)#switchport mode trunk\nACCESS(config-if)#"
+        },
+        {
+          "phase": "rollback access to the VLAN trunk",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "switchport trunk allowed vlan 10,20",
+          "passed": true,
+          "output": "\nACCESS(config-if)#switchport trunk allowed vlan 10,20\nACCESS(config-if)#"
+        },
+        {
+          "phase": "rollback access to the VLAN trunk",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nACCESS(config-if)#no shutdown\nACCESS(config-if)#"
+        },
+        {
+          "phase": "rollback access to the VLAN trunk",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "exit",
+          "passed": true,
+          "output": "\nACCESS(config-if)#exit\nACCESS(config)#"
+        },
+        {
+          "phase": "rollback access to the VLAN trunk",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "no ip route 0.0.0.0 0.0.0.0 198.18.0.1",
+          "passed": true,
+          "output": "\nACCESS(config)#no ip route 0.0.0.0 0.0.0.0 198.18.0.1\nACCESS(config)#"
+        },
+        {
+          "phase": "rollback access to the VLAN trunk",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "ip route 0.0.0.0 0.0.0.0 198.18.10.1",
+          "passed": true,
+          "output": "\nACCESS(config)#ip route 0.0.0.0 0.0.0.0 198.18.10.1\nACCESS(config)#"
+        },
+        {
+          "phase": "rollback access to the VLAN trunk",
+          "kind": "configuration",
+          "node": "ACCESS",
+          "command": "end",
+          "passed": true,
+          "output": "\nACCESS(config)#end\nACCESS#"
+        },
+        {
+          "phase": "rollback access to the VLAN trunk",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.2 repeat 3",
+          "expectation": "The local access gateway remains reachable.",
+          "passed": true,
+          "output": "\nCLIENT#ping 198.18.10.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nDIST#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nDIST(config)#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nDIST(config)#interface Ethernet0/0\nDIST(config-if)#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nDIST(config-if)#shutdown\nDIST(config-if)#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "no ip address",
+          "passed": true,
+          "output": "\nDIST(config-if)#no ip address\nDIST(config-if)#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "switchport",
+          "passed": true,
+          "output": "\nDIST(config-if)#switchport\nDIST(config-if)#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "switchport trunk encapsulation dot1q",
+          "passed": true,
+          "output": "\nDIST(config-if)#switchport trunk encapsulation dot1q\nDIST(config-if)#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "switchport mode trunk",
+          "passed": true,
+          "output": "\nDIST(config-if)#switchport mode trunk\nDIST(config-if)#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "switchport trunk allowed vlan 10,20",
+          "passed": true,
+          "output": "\nDIST(config-if)#switchport trunk allowed vlan 10,20\nDIST(config-if)#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nDIST(config-if)#no shutdown\nDIST(config-if)#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "exit",
+          "passed": true,
+          "output": "\nDIST(config-if)#exit\nDIST(config)#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "no ip route 198.18.10.0 255.255.255.0 198.18.0.2",
+          "passed": true,
+          "output": "\nDIST(config)#no ip route 198.18.10.0 255.255.255.0 198.18.0.2\nDIST(config)#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "interface Vlan10",
+          "passed": true,
+          "output": "\nDIST(config)#interface Vlan10\nDIST(config-if)#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nDIST(config-if)#no shutdown\nDIST(config-if)#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "kind": "configuration",
+          "node": "DIST",
+          "command": "end",
+          "passed": true,
+          "output": "\n*Oct 30 14:30:54.675: %LINK-3-UPDOWN: Interface Ethernet0/0, changed state to up\nDIST(config-if)#\nDIST(config-if)#end\nDIST#"
+        },
+        {
+          "phase": "rollback distribution to the original SVI",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.1 source Ethernet0/0 repeat 3",
+          "expectation": "The client reaches the distribution loopback with a valid return path.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "restore the original endpoint gateway",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nCLIENT#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nCLIENT(config)#"
+        },
+        {
+          "phase": "restore the original endpoint gateway",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "no ip route 0.0.0.0 0.0.0.0 198.18.10.2",
+          "passed": true,
+          "output": "\nCLIENT(config)#no ip route 0.0.0.0 0.0.0.0 198.18.10.2\nCLIENT(config)#"
+        },
+        {
+          "phase": "restore the original endpoint gateway",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "ip route 0.0.0.0 0.0.0.0 198.18.10.1",
+          "passed": true,
+          "output": "\nCLIENT(config)#ip route 0.0.0.0 0.0.0.0 198.18.10.1\nCLIENT(config)#"
+        },
+        {
+          "phase": "restore the original endpoint gateway",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "end",
+          "passed": true,
+          "output": "\nCLIENT(config)#end\nCLIENT#"
+        },
+        {
+          "phase": "restore the original endpoint gateway",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.1 source Ethernet0/0 repeat 3",
+          "expectation": "The client reaches the distribution loopback with a valid return path.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.1 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 198.18.10.10 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        },
+        {
+          "phase": "restore the original endpoint gateway",
+          "node": "CLIENT",
+          "command": "ping 198.18.10.1 repeat 3",
+          "expectation": "The initial flat-VLAN gateway is restored.",
+          "passed": true,
+          "output": ".390: %SYS-5-CONFIG_I: Configured from console by console\nCLIENT#\nCLIENT#ping 198.18.10.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.10.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCLIENT#"
+        }
+      ],
+      "plan_sha256": "c6e39e8e638bffbd1054ecc441a34f709e2b516060d7541325518d9e6ae4ff08",
+      "startup_states": {
+        "DIST": "STARTED",
+        "ACCESS": "BOOTED",
+        "CLIENT": "STARTED"
+      },
+      "images": {
+        "DIST": "ioll2-xe-17-18-02",
+        "ACCESS": "ioll2-xe-17-18-02",
+        "CLIENT": "iol-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "DIST",
+        "CLIENT"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:31:22Z"
     }
   ]
 }

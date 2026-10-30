@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **124**.
+Import/export passes: **233/233**. Functional passes: **127**.
 
 [Raw import/export evidence](import.json) · [Raw functional evidence](runtime.json) · [Meaning and reproduction](README.md)
 
@@ -86,6 +86,7 @@ Import/export passes: **233/233**. Functional passes: **124**.
 | [DMVPN Phase 3](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/022-dmvpn-phase3.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, iosvl2-2020 | 15 | 8 | 2026-10-28T18:54:21Z |
 | [MPLS L3VPN Concepts](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/024-mpls-l3vpn-concepts.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 16 | 8 | 2026-10-28T17:39:52Z |
 | [DMVPN Hub Spoke Break Fix](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/038-dmvpn-hub-spoke-break-fix.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, iosvl2-2020 | 9 | 0 | 2026-10-28T18:34:07Z |
+| [Campus Two Tier Three Tier HA](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/001-campus-two-three-tier-ha.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 11 | 16 | 2026-10-30T14:25:51Z |
 | [FHRP Design HSRP VRRP](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/002-fhrp-design-hsrp-vrrp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 23 | 16 | 2026-10-30T14:18:58Z |
 | [CEF CAM TCAM RIB FIB](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 21 | 18 | 2026-10-26T19:52:51Z |
 | [RESTCONF NETCONF YANG](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/037-restconf-netconf-yang.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 5 | 34 | 2026-10-27T19:04:45Z |
@@ -105,11 +106,13 @@ Import/export passes: **233/233**. Functional passes: **124**.
 | [MST RPVST STP Tuning](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/020-mst-rpvst-stp-tuning.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 14 | 18 | 2026-10-26T19:20:19Z |
 | [LACP PAgP EtherChannel](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/021-lacp-pagp-etherchannel.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 8 | 60 | 2026-10-26T19:25:31Z |
 | [IPv6 First Hop And Routing](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/022-ipv6-first-hop-and-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 22 | 18 | 2026-10-30T14:20:57Z |
+| [Flat VLAN To Routed Access](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/migration/048-flat-vlan-to-routed-access.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 19 | 66 | 2026-10-30T14:31:22Z |
 | [IP SLA Tracking](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/024-ip-sla-tracking.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 13 | 8 | 2026-10-28T17:33:08Z |
 | [Syslog SNMP NTP](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/026-syslog-snmp-ntp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3, syslog-4-8-1-5-deb13u1 | 16 | 10 | 2026-10-28T18:38:15Z |
 | [VRF Lite Shared Services](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/043-vrf-lite-shared-services.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 16 | 8 | 2026-10-28T18:37:46Z |
 | [ENCOR 029 - RADIUS and TACACS+ authentication](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 13 | 8 | 2026-10-26T21:19:56Z |
 | [Secure Management Plane](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/036-secure-management-plane.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3, ubuntu-24-04-20260307 | 17 | 18 | 2026-10-30T13:42:50Z |
+| [Campus Routing Blackhole](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/troubleshooting/047-campus-routing-blackhole.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 18 | 18 | 2026-10-30T14:25:45Z |
 | [VRF Lite Route Leaking](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/007-vrf-lite-route-leaking.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 16 | 2026-10-28T18:46:40Z |
 | [GRE Overlay Underlay](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 22 | 16 | 2026-10-26T19:54:02Z |
 | [Secure Admin Plane](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/management/040-secure-admin-plane.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ubuntu-24-04-20260307 | 7 | 10 | 2026-10-28T18:41:28Z |

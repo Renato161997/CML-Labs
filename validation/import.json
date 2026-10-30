@@ -8,16 +8,6 @@
   "test_labs_remaining": 0,
   "labs": [
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/001-campus-two-three-tier-ha.yaml",
-      "sha256": "533ca208c16fcaaa3cf53a1c181707b3be14e915cf66891186e64c11a684c590",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:49:57Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:49:57Z"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/003-sdwan-control-data-plane.yaml",
       "sha256": "6877f6d268258af5f69521456f611bd2b22887bd597d7a6b3dac13fb7baece0c",
       "cml_version": "2.10.1+build.21",
@@ -76,16 +66,6 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-24T18:50:00Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/migration/048-flat-vlan-to-routed-access.yaml",
-      "sha256": "01ed058da63506db1108a5a145e696deae9d5bca27dd166eef37d1c4795e9052",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:03Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:03Z"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/023-span-rspan-erspan.yaml",
@@ -210,16 +190,6 @@
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/035-macsec-concepts.yaml",
       "sha256": "aa65066bb472a81055185f1b82ee5dedd2003e3649642de84050c14231cafd3f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:07Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:07Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/troubleshooting/047-campus-routing-blackhole.yaml",
-      "sha256": "3e7f36869f57c8cde0aba05184c36e2de55daa194b0eb62bba7c98029e4fbc0e",
       "cml_version": "2.10.1+build.21",
       "started_utc": "2026-10-24T18:50:07Z",
       "checks": [],
@@ -2336,6 +2306,36 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T14:19:22Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/001-campus-two-three-tier-ha.yaml",
+      "sha256": "ddb3c23de3f4378b1bec406a8732c5593da291c7f4101fe5d4a7bafde6e53223",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:29:00Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:29:00Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/troubleshooting/047-campus-routing-blackhole.yaml",
+      "sha256": "2f94781803ab51c813a421f8518f7162429731c6f2ac596ae55631b6b5e5e110",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:29:02Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:29:03Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/migration/048-flat-vlan-to-routed-access.yaml",
+      "sha256": "06230c8ce5c5dc6250f08ab36ff3fd023d857df6eaf7f1971224e35ee2373241",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T14:29:05Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T14:29:05Z"
     }
   ]
 }

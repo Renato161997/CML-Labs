@@ -11295,5 +11295,601 @@
         ]
       }
     ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/001-campus-two-three-tier-ha.yaml": {
+    "checks": [
+      {
+        "node": "ACCESS1",
+        "command": "show ip route 192.0.2.12",
+        "pattern": "(?s)Known via \"ospf 10\"(?=.*198\\.18\\.0\\.1,)(?=.*198\\.18\\.0\\.5,)",
+        "expectation": "Both equal-cost distribution next hops are actually installed.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "ACCESS1",
+        "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The access service loopbacks exchange actual routed traffic.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "ACCESS2",
+        "command": "ping 192.0.2.11 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The reverse access service path also forwards."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "remove only one access uplink",
+        "node": "ACCESS1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "ACCESS1",
+            "command": "show ip route 192.0.2.12",
+            "pattern": "(?s)Known via \"ospf 10\".*198\\.18\\.0\\.5,",
+            "expectation": "Only the surviving distribution path remains.",
+            "absent_pattern": "198\\.18\\.0\\.1,",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "ACCESS1",
+            "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The access service loopbacks exchange actual routed traffic.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore access ECMP",
+        "node": "ACCESS1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "ACCESS1",
+            "command": "show ip route 192.0.2.12",
+            "pattern": "(?s)Known via \"ospf 10\"(?=.*198\\.18\\.0\\.1,)(?=.*198\\.18\\.0\\.5,)",
+            "expectation": "Both equal-cost distribution next hops are actually installed.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "ACCESS1",
+            "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The access service loopbacks exchange actual routed traffic.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "isolate the second distribution data plane",
+        "node": "DIST2",
+        "commands": [
+          "configure terminal",
+          "interface range Ethernet0/0 - 1",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "ACCESS1",
+            "command": "show ip route 192.0.2.12",
+            "pattern": "(?s)Known via \"ospf 10\".*198\\.18\\.0\\.1,",
+            "expectation": "Only the surviving distribution path remains.",
+            "absent_pattern": "198\\.18\\.0\\.5,",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "ACCESS1",
+            "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The access service loopbacks exchange actual routed traffic.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore both distribution paths",
+        "node": "DIST2",
+        "commands": [
+          "configure terminal",
+          "interface range Ethernet0/0 - 1",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "ACCESS1",
+            "command": "show ip route 192.0.2.12",
+            "pattern": "(?s)Known via \"ospf 10\"(?=.*198\\.18\\.0\\.1,)(?=.*198\\.18\\.0\\.5,)",
+            "expectation": "Both equal-cost distribution next hops are actually installed.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "ACCESS1",
+            "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The access service loopbacks exchange actual routed traffic.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/migration/048-flat-vlan-to-routed-access.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "ping 198.18.10.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The initial distribution gateway is reachable."
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 192.0.2.1 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The client reaches the distribution loopback with a valid return path.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "ACCESS",
+        "command": "show interfaces Ethernet0/0 switchport",
+        "pattern": "Administrative Mode:\\s+trunk",
+        "expectation": "The initial uplink is a real Layer2 trunk."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "move the endpoint default to access",
+        "node": "CLIENT",
+        "commands": [
+          "configure terminal",
+          "no ip route 0.0.0.0 0.0.0.0 198.18.10.1",
+          "ip route 0.0.0.0 0.0.0.0 198.18.10.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The local access gateway remains reachable."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The client reaches the distribution loopback with a valid return path.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "open the deliberate migration interruption",
+        "node": "DIST",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.1 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The planned uplink interruption is visible to the service."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The local access gateway remains reachable."
+          }
+        ]
+      },
+      {
+        "name": "convert the distribution uplink",
+        "node": "DIST",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no switchport",
+          "ip address 198.18.0.1 255.255.255.252",
+          "no shutdown",
+          "exit",
+          "interface Vlan10",
+          "shutdown",
+          "exit",
+          "ip route 198.18.10.0 255.255.255.0 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "DIST",
+            "command": "show interfaces Ethernet0/0 switchport",
+            "pattern": "Switchport:\\s+Disabled",
+            "expectation": "The interswitch interface is actually routed rather than a VLAN trunk."
+          }
+        ]
+      },
+      {
+        "name": "convert access and restore routed forwarding",
+        "node": "ACCESS",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "shutdown",
+          "no switchport",
+          "ip address 198.18.0.2 255.255.255.252",
+          "no shutdown",
+          "exit",
+          "no ip route 0.0.0.0 0.0.0.0 198.18.10.1",
+          "ip route 0.0.0.0 0.0.0.0 198.18.0.1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "ACCESS",
+            "command": "show interfaces Ethernet0/0 switchport",
+            "pattern": "Switchport:\\s+Disabled",
+            "expectation": "The interswitch interface is actually routed rather than a VLAN trunk."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The local access gateway remains reachable."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The client reaches the distribution loopback with a valid return path.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "DIST",
+            "command": "ping 198.18.10.10 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The distribution return route and endpoint reply path both work."
+          }
+        ]
+      },
+      {
+        "name": "withdraw only the distribution return route",
+        "node": "DIST",
+        "commands": [
+          "configure terminal",
+          "no ip route 198.18.10.0 255.255.255.0 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.1 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The missing return path breaks end-to-end forwarding."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The local access gateway remains reachable."
+          }
+        ]
+      },
+      {
+        "name": "restore the routed return path",
+        "node": "DIST",
+        "commands": [
+          "configure terminal",
+          "ip route 198.18.10.0 255.255.255.0 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The client reaches the distribution loopback with a valid return path.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "rollback access to the VLAN trunk",
+        "node": "ACCESS",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "shutdown",
+          "no ip address",
+          "switchport",
+          "switchport trunk encapsulation dot1q",
+          "switchport mode trunk",
+          "switchport trunk allowed vlan 10,20",
+          "no shutdown",
+          "exit",
+          "no ip route 0.0.0.0 0.0.0.0 198.18.0.1",
+          "ip route 0.0.0.0 0.0.0.0 198.18.10.1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The local access gateway remains reachable."
+          }
+        ]
+      },
+      {
+        "name": "rollback distribution to the original SVI",
+        "node": "DIST",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "shutdown",
+          "no ip address",
+          "switchport",
+          "switchport trunk encapsulation dot1q",
+          "switchport mode trunk",
+          "switchport trunk allowed vlan 10,20",
+          "no shutdown",
+          "exit",
+          "no ip route 198.18.10.0 255.255.255.0 198.18.0.2",
+          "interface Vlan10",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The client reaches the distribution loopback with a valid return path.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore the original endpoint gateway",
+        "node": "CLIENT",
+        "commands": [
+          "configure terminal",
+          "no ip route 0.0.0.0 0.0.0.0 198.18.10.2",
+          "ip route 0.0.0.0 0.0.0.0 198.18.10.1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.1 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The client reaches the distribution loopback with a valid return path.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The initial flat-VLAN gateway is restored."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/troubleshooting/047-campus-routing-blackhole.yaml": {
+    "checks": [
+      {
+        "node": "R2",
+        "command": "show ip ospf neighbor",
+        "pattern": "192\\.0\\.2\\.3\\s+\\d+\\s+FULL/",
+        "expectation": "The upstream adjacency remains FULL despite the service fault.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R2",
+        "command": "show ip route 192.0.2.3",
+        "pattern": "Known via \"ospf 10\"",
+        "expectation": "The service route is actually learned through OSPF.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The service loopbacks exchange actual end-to-end traffic.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.6 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The same remote router transit address remains reachable."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "prefer a service discard route",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip route 192.0.2.3 255.255.255.255 Null0",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?s)Known via \"static\".*Null0",
+            "expectation": "The actual selected service route discards through Null0."
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The controlled data-plane fault blocks the service."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.6 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The same remote router transit address remains reachable."
+          },
+          {
+            "node": "R2",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.3\\s+\\d+\\s+FULL/",
+            "expectation": "The upstream adjacency remains FULL despite the service fault.",
+            "attempts": 30,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "recover dynamic service forwarding",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.3 255.255.255.255 Null0",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R2",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "Known via \"ospf 10\"",
+            "expectation": "The service route is actually learned through OSPF.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The service loopbacks exchange actual end-to-end traffic.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "drop only service echo replies",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended SERVICE-RETURN",
+          "deny icmp host 192.0.2.3 host 192.0.2.1 echo-reply",
+          "permit ip any any",
+          "exit",
+          "interface Ethernet0/1",
+          "ip access-group SERVICE-RETURN in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The controlled data-plane fault blocks the service."
+          },
+          {
+            "node": "R2",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "Known via \"ospf 10\"",
+            "expectation": "The service route is actually learned through OSPF.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.3\\s+\\d+\\s+FULL/",
+            "expectation": "The upstream adjacency remains FULL despite the service fault.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.6 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The same remote router transit address remains reachable."
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists SERVICE-RETURN",
+            "pattern": "deny icmp host 192\\.0\\.2\\.3 host 192\\.0\\.2\\.1 echo-reply\\s+\\([1-9][0-9]* match",
+            "expectation": "The return policy counts actual blocked replies."
+          }
+        ]
+      },
+      {
+        "name": "remove the return-direction policy fault",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "no ip access-group SERVICE-RETURN in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The service loopbacks exchange actual end-to-end traffic.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "Known via \"ospf 10\"",
+            "expectation": "The service route is actually learned through OSPF.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.6 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The same remote router transit address remains reachable."
+          }
+        ]
+      }
+    ]
   }
 }

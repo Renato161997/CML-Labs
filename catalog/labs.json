@@ -2083,23 +2083,21 @@
       "title": "Campus Two Tier Three Tier HA",
       "track": "350-401",
       "topic": "architecture",
-      "nodes": 5,
+      "nodes": 4,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "ioll2-xe"
       ],
-      "nominal_ram_mib": 3072,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 90,
+      "workbook": "docs/workbooks/350-401-001-campus-two-three-tier-ha.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "533ca208c16fcaaa3cf53a1c181707b3be14e915cf66891186e64c11a684c590"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T14:25:51Z",
+      "sha256": "ddb3c23de3f4378b1bec406a8732c5593da291c7f4101fe5d4a7bafde6e53223"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/002-fhrp-design-hsrp-vrrp.yaml",
@@ -2651,23 +2649,22 @@
       "title": "Flat VLAN To Routed Access",
       "track": "350-401",
       "topic": "migration",
-      "nodes": 6,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe",
+        "ioll2-xe"
       ],
-      "nominal_ram_mib": 3584,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 120,
+      "workbook": "docs/workbooks/350-401-048-flat-vlan-to-routed-access.md",
+      "kind": "scenario",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "01ed058da63506db1108a5a145e696deae9d5bca27dd166eef37d1c4795e9052"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T14:31:22Z",
+      "sha256": "06230c8ce5c5dc6250f08ab36ff3fd023d857df6eaf7f1971224e35ee2373241"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/023-span-rspan-erspan.yaml",
@@ -3078,23 +3075,21 @@
       "title": "Campus Routing Blackhole",
       "track": "350-401",
       "topic": "troubleshooting",
-      "nodes": 6,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 3584,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 90,
+      "workbook": "docs/workbooks/350-401-047-campus-routing-blackhole.md",
+      "kind": "scenario",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "3e7f36869f57c8cde0aba05184c36e2de55daa194b0eb62bba7c98029e4fbc0e"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-30T14:25:45Z",
+      "sha256": "2f94781803ab51c813a421f8518f7162429731c6f2ac596ae55631b6b5e5e110"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/007-vrf-lite-route-leaking.yaml",
