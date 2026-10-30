@@ -869,5 +869,26 @@
     "duration_minutes": 105,
     "kind": "practice",
     "workbook": "docs/workbooks/350-701-025-guest-access-isolation.md"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/006-firewall-zone-policy.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 90,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-006-firewall-zone-policy.md",
+    "example_profile": "native-firewall-traffic"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/008-acl-nat-inspection.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 95,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-008-acl-nat-inspection.md",
+    "example_profile": "native-firewall-traffic"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/045-scor-capstone-secure-edge.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 120,
+    "kind": "capstone",
+    "workbook": "docs/workbooks/350-701-045-scor-capstone-secure-edge.md",
+    "example_profile": "native-firewall-traffic"
   }
 }

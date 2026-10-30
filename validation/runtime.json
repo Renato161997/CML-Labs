@@ -28045,6 +28045,837 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-30T15:44:57Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/006-firewall-zone-policy.yaml",
+      "sha256": "f610fc612a1bdce7f9fe9a383293dc2545fb6062e107d5d0011f1eaa53900d83",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:49:22Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"INSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "ip route get 198.18.10.10",
+          "expectation": "The outside endpoint has an actual route to inside through the firewall.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# ip route get 198.18.10.10\n198.18.10.10 via 198.18.20.1 dev eth1 src 198.18.20.20 uid 0 \n    cache \nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"reachable\": false, \"reason\": \"timeout\"}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "FW",
+          "command": "show policy-map type inspect zone-pair",
+          "expectation": "The stateful policy reports actual created inspection sessions.",
+          "passed": true,
+          "output": "\nFW#show policy-map type inspect zone-pair\n\npolicy exists on zp INSIDE-OUT\n  Zone-pair: INSIDE-OUT \n\n  Service-policy inspect : STATEFUL-OUT\n\n    Class-map: CLIENT-TRAFFIC (match-any)  \n      Match: protocol tcp\n        2 packets, 80 bytes\n        30 second rate 0 bps\n      Match: protocol icmp\n        0 packets, 0 bytes\n        30 second rate 0 bps\n\n   Inspect\n        Packet inspection statistics [process switch:fast switch]\n        tcp packets: [20:0]\n\n        Session creations since subsystem startup or last reset 2\n        Current session counts (estab/half-open/terminating) [0:1:0]\n        Maxever session counts (estab/half-open/terminating) [1:2:1]\n        Last session created 00:00:04\n        Last statistic reset never\n        Last session creation rate 2\n        Maxever session creation rate 2\n        Last half-open session total 1\n        TCP reassembly statistics\n        received 0 packets out-of-order; dropped 0\n        peak memory usage 0 KB; current usage: 0 KB\n        peak queue length 0\n\n\n    Class-map: class-default (match-any)  \n      Match: any \n      Drop\n        0 packets, 0 bytes\nFW#"
+        },
+        {
+          "phase": "replace inspection with one-way pass",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "replace inspection with one-way pass",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "zone-pair security INSIDE-OUT source INSIDE destination OUTSIDE",
+          "passed": true,
+          "output": "\nFW(config)#zone-pair security INSIDE-OUT source INSIDE destination OUTSIDE\nFW(config-sec-zone-pair)#"
+        },
+        {
+          "phase": "replace inspection with one-way pass",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no service-policy type inspect STATEFUL-OUT",
+          "passed": true,
+          "output": "\nFW(config-sec-zone-pair)#no service-policy type inspect STATEFUL-OUT\nFW(config-sec-zone-pair)#"
+        },
+        {
+          "phase": "replace inspection with one-way pass",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "service-policy type inspect STATELESS-OUT",
+          "passed": true,
+          "output": "\nFW(config-sec-zone-pair)#service-policy type inspect STATELESS-OUT\nFW(config-sec-zone-pair)#"
+        },
+        {
+          "phase": "replace inspection with one-way pass",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-sec-zone-pair)#end\nFW#"
+        },
+        {
+          "phase": "replace inspection with one-way pass",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"reachable\": false, \"reason\": \"timeout\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "replace inspection with one-way pass",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"INSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "replace inspection with one-way pass",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "replace inspection with one-way pass",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"reachable\": false, \"reason\": \"timeout\"}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore stateful return handling",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "restore stateful return handling",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "zone-pair security INSIDE-OUT source INSIDE destination OUTSIDE",
+          "passed": true,
+          "output": "\nFW(config)#zone-pair security INSIDE-OUT source INSIDE destination OUTSIDE\nFW(config-sec-zone-pair)#"
+        },
+        {
+          "phase": "restore stateful return handling",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no service-policy type inspect STATELESS-OUT",
+          "passed": true,
+          "output": "\nFW(config-sec-zone-pair)#no service-policy type inspect STATELESS-OUT\nFW(config-sec-zone-pair)#"
+        },
+        {
+          "phase": "restore stateful return handling",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "service-policy type inspect STATEFUL-OUT",
+          "passed": true,
+          "output": "\nFW(config-sec-zone-pair)#service-policy type inspect STATEFUL-OUT\nFW(config-sec-zone-pair)#"
+        },
+        {
+          "phase": "restore stateful return handling",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-sec-zone-pair)#end\nFW#"
+        },
+        {
+          "phase": "restore stateful return handling",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore stateful return handling",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"reachable\": false, \"reason\": \"timeout\"}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore stateful return handling",
+          "node": "FW",
+          "command": "show policy-map type inspect zone-pair",
+          "expectation": "The stateful policy reports actual created inspection sessions.",
+          "passed": true,
+          "output": "\nFW#show policy-map type inspect zone-pair\n\npolicy exists on zp INSIDE-OUT\n  Zone-pair: INSIDE-OUT \n\n  Service-policy inspect : STATEFUL-OUT\n\n    Class-map: CLIENT-TRAFFIC (match-any)  \n      Match: protocol tcp\n        1 packets, 40 bytes\n        30 second rate 0 bps\n      Match: protocol icmp\n        0 packets, 0 bytes\n        30 second rate 0 bps\n\n   Inspect\n        Packet inspection statistics [process switch:fast switch]\n        tcp packets: [10:0]\n\n        Session creations since subsystem startup or last reset 1\n        Current session counts (estab/half-open/terminating) [0:0:0]\n        Maxever session counts (estab/half-open/terminating) [1:1:1]\n        Last session created 00:00:03\n        Last statistic reset never\n        Last session creation rate 1\n        Maxever session creation rate 1\n        Last half-open session total 0\n        TCP reassembly statistics\n        received 0 packets out-of-order; dropped 0\n        peak memory usage 0 KB; current usage: 0 KB\n        peak queue length 0\n\n\n    Class-map: class-default (match-any)  \n      Match: any \n      Drop\n        0 packets, 0 bytes\nFW#"
+        },
+        {
+          "phase": "restore stateful return handling",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"INSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore stateful return handling",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "FW": "STARTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "BOOTED"
+      },
+      "images": {
+        "FW": "iosv-159-3-m12",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "plan_sha256": "840ac15d980033a8ca4c98234570d77d0b9bde6a884006d9a3aa0cddb0be79ce",
+      "console_boot_fallback": [
+        "FW"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:54:43Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/008-acl-nat-inspection.yaml",
+      "sha256": "5f3a10c329f69ab87bfffa19e72827ec5de1539dc796eaf9c5b842341fa4868a",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:49:22Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"INSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "ip route get 198.18.10.10",
+          "expectation": "The outside endpoint has an actual route to inside through the firewall.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# ip route get 198.18.10.10\n198.18.10.10 via 198.18.20.1 dev eth1 src 198.18.20.20 uid 0 \n    cache \nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.1\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "FW",
+          "command": "show ip nat translations",
+          "expectation": "The actual TCP translation maps the inside source to the outside interface.",
+          "passed": true,
+          "output": "\nFW#show ip nat translations\nPro Inside global         Inside local          Outside local         Outside global\ntcp 198.18.20.1:32900     198.18.10.10:32900    198.18.20.20:8080     198.18.20.20:8080\ntcp 198.18.20.1:52808     198.18.10.10:52808    198.18.20.20:8080     198.18.20.20:8080\nFW#"
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"reachable\": false, \"reason\": \"timeout\"}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "FW",
+          "command": "show policy-map type inspect zone-pair",
+          "expectation": "The stateful policy reports actual created inspection sessions.",
+          "passed": true,
+          "output": "\nFW#show policy-map type inspect zone-pair\n\npolicy exists on zp INSIDE-OUT\n  Zone-pair: INSIDE-OUT \n\n  Service-policy inspect : STATEFUL-OUT\n\n    Class-map: CLIENT-TRAFFIC (match-any)  \n      Match: protocol tcp\n        2 packets, 80 bytes\n        30 second rate 0 bps\n      Match: protocol icmp\n        0 packets, 0 bytes\n        30 second rate 0 bps\n\n   Inspect\n        Packet inspection statistics [process switch:fast switch]\n        tcp packets: [24:0]\n\n        Session creations since subsystem startup or last reset 2\n        Current session counts (estab/half-open/terminating) [0:0:0]\n        Maxever session counts (estab/half-open/terminating) [1:2:1]\n        Last session created 00:00:08\n        Last statistic reset never\n        Last session creation rate 2\n        Maxever session creation rate 2\n        Last half-open session total 0\n        TCP reassembly statistics\n        received 0 packets out-of-order; dropped 0\n        peak memory usage 0 KB; current usage: 0 KB\n        peak queue length 0\n\n\n    Class-map: class-default (match-any)  \n      Match: any \n      Drop\n        0 packets, 0 bytes\nFW#"
+        },
+        {
+          "phase": "disable source translation while retaining routing",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "disable source translation while retaining routing",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nFW(config)#interface GigabitEthernet0/0\nFW(config-if)#"
+        },
+        {
+          "phase": "disable source translation while retaining routing",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no ip nat inside",
+          "passed": true,
+          "output": "\nFW(config-if)#no ip nat inside\nFW(config-if)#"
+        },
+        {
+          "phase": "disable source translation while retaining routing",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "exit",
+          "passed": true,
+          "output": "\nFW(config-if)#exit\nFW(config)#"
+        },
+        {
+          "phase": "disable source translation while retaining routing",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "do clear ip nat translation *",
+          "passed": true,
+          "output": "\nFW(config)#do clear ip nat translation *\nFW(config)#"
+        },
+        {
+          "phase": "disable source translation while retaining routing",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config)#end\nFW#"
+        },
+        {
+          "phase": "disable source translation while retaining routing",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "disable source translation while retaining routing",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"reachable\": false, \"reason\": \"timeout\"}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "disable source translation while retaining routing",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"INSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "disable source translation while retaining routing",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "disable source translation while retaining routing",
+          "node": "FW",
+          "command": "show policy-map type inspect zone-pair",
+          "expectation": "The stateful policy reports actual created inspection sessions.",
+          "passed": true,
+          "output": "\nFW#show policy-map type inspect zone-pair\n\npolicy exists on zp INSIDE-OUT\n  Zone-pair: INSIDE-OUT \n\n  Service-policy inspect : STATEFUL-OUT\n\n    Class-map: CLIENT-TRAFFIC (match-any)  \n      Match: protocol tcp\n        3 packets, 120 bytes\n        30 second rate 0 bps\n      Match: protocol icmp\n        0 packets, 0 bytes\n        30 second rate 0 bps\n\n   Inspect\n        Packet inspection statistics [process switch:fast switch]\n        tcp packets: [34:0]\n\n        Session creations since subsystem startup or last reset 3\n        Current session counts (estab/half-open/terminating) [0:0:0]\n        Maxever session counts (estab/half-open/terminating) [1:2:1]\n        Last session created 00:00:04\n        Last statistic reset never\n        Last session creation rate 3\n        Maxever session creation rate 3\n        Last half-open session total 0\n        TCP reassembly statistics\n        received 0 packets out-of-order; dropped 0\n        peak memory usage 0 KB; current usage: 0 KB\n        peak queue length 0\n\n\n    Class-map: class-default (match-any)  \n      Match: any \n      Drop\n        0 packets, 0 bytes\nFW#"
+        },
+        {
+          "phase": "restore actual PAT behavior",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "restore actual PAT behavior",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nFW(config)#interface GigabitEthernet0/0\nFW(config-if)#"
+        },
+        {
+          "phase": "restore actual PAT behavior",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "ip nat inside",
+          "passed": true,
+          "output": "\nFW(config-if)#ip nat inside\nFW(config-if)#"
+        },
+        {
+          "phase": "restore actual PAT behavior",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-if)#end\nFW#"
+        },
+        {
+          "phase": "restore actual PAT behavior",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.1\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore actual PAT behavior",
+          "node": "FW",
+          "command": "show ip nat translations",
+          "expectation": "The actual TCP translation maps the inside source to the outside interface.",
+          "passed": true,
+          "output": "\nFW#show ip nat translations\nPro Inside global         Inside local          Outside local         Outside global\ntcp 198.18.20.1:34008     198.18.10.10:34008    198.18.20.20:8080     198.18.20.20:8080\nFW#"
+        },
+        {
+          "phase": "restore actual PAT behavior",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"reachable\": false, \"reason\": \"timeout\"}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore actual PAT behavior",
+          "node": "FW",
+          "command": "show policy-map type inspect zone-pair",
+          "expectation": "The stateful policy reports actual created inspection sessions.",
+          "passed": true,
+          "output": "\nFW#show policy-map type inspect zone-pair\n\npolicy exists on zp INSIDE-OUT\n  Zone-pair: INSIDE-OUT \n\n  Service-policy inspect : STATEFUL-OUT\n\n    Class-map: CLIENT-TRAFFIC (match-any)  \n      Match: protocol tcp\n        4 packets, 160 bytes\n        30 second rate 0 bps\n      Match: protocol icmp\n        0 packets, 0 bytes\n        30 second rate 0 bps\n\n   Inspect\n        Packet inspection statistics [process switch:fast switch]\n        tcp packets: [44:0]\n\n        Session creations since subsystem startup or last reset 4\n        Current session counts (estab/half-open/terminating) [0:0:0]\n        Maxever session counts (estab/half-open/terminating) [1:2:1]\n        Last session created 00:00:04\n        Last statistic reset never\n        Last session creation rate 4\n        Maxever session creation rate 4\n        Last half-open session total 0\n        TCP reassembly statistics\n        received 0 packets out-of-order; dropped 0\n        peak memory usage 0 KB; current usage: 0 KB\n        peak queue length 0\n\n\n    Class-map: class-default (match-any)  \n      Match: any \n      Drop\n        0 packets, 0 bytes\nFW#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "FW": "STARTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "BOOTED"
+      },
+      "images": {
+        "FW": "iosv-159-3-m12",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "plan_sha256": "7495038b5485a9e2e6544b2708c0b4ddd104df1b2bbd38ab6fac569d46e4ebc9",
+      "console_boot_fallback": [
+        "FW"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T15:55:15Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/045-scor-capstone-secure-edge.yaml",
+      "sha256": "d5053ab6aea05ebcb4da50e10a8c01c1ff0b69dc12e6baad8fa7af4377ad77ba",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-30T15:56:48Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"INSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "ip route get 198.18.10.10",
+          "expectation": "The outside endpoint has an actual route to inside through the firewall.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# ip route get 198.18.10.10\n198.18.10.10 via 198.18.20.1 dev eth1 src 198.18.20.20 uid 0 \n    cache \nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.1\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.1 --port 8443",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.1 --port 8443\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"INSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "FW",
+          "command": "show ip nat translations",
+          "expectation": "The static publication maps the selected outside TCP port to the inside HTTP fixture.",
+          "passed": true,
+          "output": "\nFW#show ip nat translations\nPro Inside global         Inside local          Outside local         Outside global\ntcp 198.18.20.1:8443      198.18.10.10:8080     198.18.20.20:39254    198.18.20.20:39254\ntcp 198.18.20.1:8443      198.18.10.10:8080     ---                   ---\ntcp 198.18.20.1:37038     198.18.10.10:37038    198.18.20.20:8080     198.18.20.20:8080\nFW#"
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "FW",
+          "command": "show policy-map type inspect zone-pair",
+          "expectation": "The stateful policy reports actual created inspection sessions.",
+          "passed": true,
+          "output": "\nFW#show policy-map type inspect zone-pair\n\npolicy exists on zp INSIDE-OUT\n  Zone-pair: INSIDE-OUT \n\n  Service-policy inspect : STATEFUL-OUT\n\n    Class-map: CLIENT-TRAFFIC (match-any)  \n      Match: protocol tcp\n        1 packets, 40 bytes\n        30 second rate 0 bps\n      Match: protocol icmp\n        0 packets, 0 bytes\n        30 second rate 0 bps\n\n   Inspect\n        Packet inspection statistics [process switch:fast switch]\n        tcp packets: [9:0]\n\n        Session creations since subsystem startup or last reset 1\n        Current session counts (estab/half-open/terminating) [0:0:0]\n        Maxever session counts (estab/half-open/terminating) [1:1:1]\n        Last session created 00:00:08\n        Last statistic reset never\n        Last session creation rate 1\n        Maxever session creation rate 1\n        Last half-open session total 0\n        TCP reassembly statistics\n        received 0 packets out-of-order; dropped 0\n        peak memory usage 0 KB; current usage: 0 KB\n        peak queue length 0\n\n\n    Class-map: class-default (match-any)  \n      Match: any \n      Drop\n        0 packets, 0 bytes\n\npolicy exists on zp OUTSIDE-IN\n  Zone-pair: OUTSIDE-IN \n\n  Service-policy inspect : PUBLISHED-IN\n\n    Class-map: PUBLISHED-WEB (match-any)  \n      Match: access-group name PUBLIC-WEB\n        1 packets, 40 bytes\n        30 second rate 0 bps\n\n   Inspect\n        Packet inspection statistics [process switch:fast switch]\n        tcp packets: [10:0]\n\n        Session creations since subsystem startup or last reset 1\n        Current session counts (estab/half-open/terminating) [0:0:0]\n        Maxever session counts (estab/half-open/terminating) [1:1:1]\n        Last session created 00:00:07\n        Last statistic reset never\n        Last session creation rate 1\n        Maxever session creation rate 1\n        Last half-open session total 0\n        TCP reassembly statistics\n        received 0 packets out-of-order; dropped 0\n        peak memory usage 0 KB; current usage: 0 KB\n        peak queue length 0\n\n\n    Class-map: class-default (match-any)  \n      Match: any \n      Drop\n        0 packets, 0 bytes\nFW#"
+        },
+        {
+          "phase": "block the pre-NAT published endpoint",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "block the pre-NAT published endpoint",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "ip access-list extended WAN-INGRESS",
+          "passed": true,
+          "output": "\nFW(config)#ip access-list extended WAN-INGRESS\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "block the pre-NAT published endpoint",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "5 deny tcp host 198.18.20.20 host 198.18.20.1 eq 8443",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#5 deny tcp host 198.18.20.20 host 198.18.20.1 eq 8443\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "block the pre-NAT published endpoint",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#end\nFW#"
+        },
+        {
+          "phase": "block the pre-NAT published endpoint",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.1 --port 8443",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.1 --port 8443\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "block the pre-NAT published endpoint",
+          "node": "FW",
+          "command": "show access-lists WAN-INGRESS",
+          "expectation": "The pre-NAT ingress deny counts actual publication attempts.",
+          "passed": true,
+          "output": "\nFW#show access-lists WAN-INGRESS\nExtended IP access list WAN-INGRESS\n    5 deny tcp host 198.18.20.20 host 198.18.20.1 eq 8443 (1 match)\n    10 permit tcp host 198.18.20.20 host 198.18.20.1 eq 8443 (5 matches)\n    20 deny ip any 198.18.10.0 0.0.0.255 (1 match)\n    30 permit ip any any (5 matches)\nFW#"
+        },
+        {
+          "phase": "block the pre-NAT published endpoint",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.1\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "block the pre-NAT published endpoint",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"INSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the pre-NAT ingress permission",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "restore the pre-NAT ingress permission",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "ip access-list extended WAN-INGRESS",
+          "passed": true,
+          "output": "\nFW(config)#ip access-list extended WAN-INGRESS\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "restore the pre-NAT ingress permission",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no 5",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#no 5\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "restore the pre-NAT ingress permission",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#end\nFW#"
+        },
+        {
+          "phase": "restore the pre-NAT ingress permission",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.1 --port 8443",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.1 --port 8443\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"INSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the pre-NAT ingress permission",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "mismatch the post-NAT service classifier",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "mismatch the post-NAT service classifier",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "ip access-list extended PUBLIC-WEB",
+          "passed": true,
+          "output": "\nFW(config)#ip access-list extended PUBLIC-WEB\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "mismatch the post-NAT service classifier",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no 10",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#no 10\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "mismatch the post-NAT service classifier",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "10 permit tcp host 198.18.20.20 host 198.18.10.10 eq 8081",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#10 permit tcp host 198.18.20.20 host 198.18.10.10 eq 8081\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "mismatch the post-NAT service classifier",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#end\nFW#"
+        },
+        {
+          "phase": "mismatch the post-NAT service classifier",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.1 --port 8443",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.1 --port 8443\n{\"reachable\": false, \"reason\": \"timeout\"}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "mismatch the post-NAT service classifier",
+          "node": "FW",
+          "command": "show ip nat translations",
+          "expectation": "The static publication maps the selected outside TCP port to the inside HTTP fixture.",
+          "passed": true,
+          "output": "\nFW#show ip nat translations\nPro Inside global         Inside local          Outside local         Outside global\ntcp 198.18.20.1:8443      198.18.10.10:8080     198.18.20.20:39254    198.18.20.20:39254\ntcp 198.18.20.1:8443      198.18.10.10:8080     198.18.20.20:57428    198.18.20.20:57428\ntcp 198.18.20.1:8443      198.18.10.10:8080     198.18.20.20:57436    198.18.20.20:57436\ntcp 198.18.20.1:8443      198.18.10.10:8080     ---                   ---\ntcp 198.18.20.1:35344     198.18.10.10:35344    198.18.20.20:8080     198.18.20.20:8080\ntcp 198.18.20.1:37038     198.18.10.10:37038    198.18.20.20:8080     198.18.20.20:8080\nFW#"
+        },
+        {
+          "phase": "mismatch the post-NAT service classifier",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.1\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "mismatch the post-NAT service classifier",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"INSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the correct translated service port",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "restore the correct translated service port",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "ip access-list extended PUBLIC-WEB",
+          "passed": true,
+          "output": "\nFW(config)#ip access-list extended PUBLIC-WEB\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "restore the correct translated service port",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no 10",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#no 10\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "restore the correct translated service port",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "10 permit tcp host 198.18.20.20 host 198.18.10.10 eq 8080",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#10 permit tcp host 198.18.20.20 host 198.18.10.10 eq 8080\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "restore the correct translated service port",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#end\nFW#"
+        },
+        {
+          "phase": "restore the correct translated service port",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.1 --port 8443",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.1 --port 8443\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"INSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the correct translated service port",
+          "node": "FW",
+          "command": "show ip nat translations",
+          "expectation": "The static publication maps the selected outside TCP port to the inside HTTP fixture.",
+          "passed": true,
+          "output": "\nFW#show ip nat translations\nPro Inside global         Inside local          Outside local         Outside global\ntcp 198.18.20.1:8443      198.18.10.10:8080     198.18.20.20:39254    198.18.20.20:39254\ntcp 198.18.20.1:8443      198.18.10.10:8080     198.18.20.20:55604    198.18.20.20:55604\ntcp 198.18.20.1:8443      198.18.10.10:8080     198.18.20.20:57428    198.18.20.20:57428\ntcp 198.18.20.1:8443      198.18.10.10:8080     198.18.20.20:57436    198.18.20.20:57436\ntcp 198.18.20.1:8443      198.18.10.10:8080     ---                   ---\ntcp 198.18.20.1:35232     198.18.10.10:35232    198.18.20.20:8080     198.18.20.20:8080\ntcp 198.18.20.1:35344     198.18.10.10:35344    198.18.20.20:8080     198.18.20.20:8080\ntcp 198.18.20.1:37038     198.18.10.10:37038    198.18.20.20:8080     198.18.20.20:8080\nFW#"
+        },
+        {
+          "phase": "restore the correct translated service port",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.1\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the correct translated service port",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.10.10",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.10.10\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the correct translated service port",
+          "node": "FW",
+          "command": "show policy-map type inspect zone-pair",
+          "expectation": "The stateful policy reports actual created inspection sessions.",
+          "passed": true,
+          "output": "\nFW#show policy-map type inspect zone-pair\n\npolicy exists on zp INSIDE-OUT\n  Zone-pair: INSIDE-OUT \n\n  Service-policy inspect : STATEFUL-OUT\n\n    Class-map: CLIENT-TRAFFIC (match-any)  \n      Match: protocol tcp\n        4 packets, 160 bytes\n        30 second rate 0 bps\n      Match: protocol icmp\n        0 packets, 0 bytes\n        30 second rate 0 bps\n\n   Inspect\n        Packet inspection statistics [process switch:fast switch]\n        tcp packets: [39:0]\n\n        Session creations since subsystem startup or last reset 4\n        Current session counts (estab/half-open/terminating) [0:0:0]\n        Maxever session counts (estab/half-open/terminating) [1:1:1]\n        Last session created 00:00:01\n        Last statistic reset never\n        Last session creation rate 4\n        Maxever session creation rate 4\n        Last half-open session total 0\n        TCP reassembly statistics\n        received 0 packets out-of-order; dropped 0\n        peak memory usage 0 KB; current usage: 0 KB\n        peak queue length 0\n\n\n    Class-map: class-default (match-any)  \n      Match: any \n      Drop\n        0 packets, 0 bytes\n\npolicy exists on zp OUTSIDE-IN\n  Zone-pair: OUTSIDE-IN \n\n  Service-policy inspect : PUBLISHED-IN\n\n    Class-map: PUBLISHED-WEB (match-any)  \n      Match: access-group name PUBLIC-WEB\n        3 packets, 120 bytes\n        30 second rate 0 bps\n\n   Inspect\n        Packet inspection statistics [process switch:fast switch]\n        tcp packets: [30:0]\n\n        Session creations since subsystem startup or last reset 3\n        Current session counts (estab/half-open/terminating) [0:0:0]\n        Maxever session counts (estab/half-open/terminating) [1:1:1]\n        Last session created 00:00:03\n        Last statistic reset never\n        Last session creation rate 3\n        Maxever session creation rate 3\n        Last half-open session total 0\n        TCP reassembly statistics\n        received 0 packets out-of-order; dropped 0\n        peak memory usage 0 KB; current usage: 0 KB\n        peak queue length 0\n\n\n    Class-map: class-default (match-any)  \n      Match: any \n      Drop\n        3 packets, 120 bytes\nFW#"
+        }
+      ],
+      "plan_sha256": "2122b012cff43f2dd5be42f92ed8fcc2ff93fd0f39367a575307055540bbeed7",
+      "startup_states": {
+        "FW": "STARTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "BOOTED"
+      },
+      "images": {
+        "FW": "iosv-159-3-m12",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "FW"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-30T16:02:32Z"
     }
   ]
 }
