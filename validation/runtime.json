@@ -35418,6 +35418,142 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T11:16:43Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/010-oauth2-three-legged-flow.yaml",
+      "sha256": "893b030916c9b337838cf097c2fa2dc7a9a7b3b7dc69d9c28db33de087152580",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T11:23:36Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/oauth.py code --phase baseline",
+          "expectation": "Actual remote HTTP responses and local client checks satisfy the baseline code contract; fault means the named unsafe behavior is actually observed.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/oauth.py code --phase baseline\n{\"backend\": \"offline-fixture\", \"checks\": [\"state mismatch rejected before exchange\", \"exact redirect and S256 verifier enforced\", \"single-use code replay revokes issued family\", \"explicit synthetic consent denial produces no usable grant\"], \"mode\": \"code\", \"phase\": \"baseline\", \"status\": \"passed\", \"tokens_logged\": false}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "observe a weak verifier binding",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/oauth.py configure --mode weak-pkce",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/oauth.py configure --mode weak-pkce\n{\"configured\": true, \"mode\": \"weak-pkce\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "observe a weak verifier binding",
+          "node": "CLIENT",
+          "command": "python3 /lab/oauth.py code --phase fault",
+          "expectation": "Actual remote HTTP responses and local client checks satisfy the fault code contract; fault means the named unsafe behavior is actually observed.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/oauth.py code --phase fault\n{\"backend\": \"offline-fixture\", \"checks\": [\"controlled weak-PKCE fault actually admits the wrong verifier and exposes the resource\"], \"mode\": \"code\", \"phase\": \"fault\", \"status\": \"passed\", \"tokens_logged\": false, \"vulnerability_observed\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore code and verifier binding",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/oauth.py configure --mode healthy",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/oauth.py configure --mode healthy\n{\"configured\": true, \"mode\": \"healthy\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore code and verifier binding",
+          "node": "CLIENT",
+          "command": "python3 /lab/oauth.py code --phase recovered",
+          "expectation": "Actual remote HTTP responses and local client checks satisfy the recovered code contract; fault means the named unsafe behavior is actually observed.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/oauth.py code --phase recovered\n{\"backend\": \"offline-fixture\", \"checks\": [\"state mismatch rejected before exchange\", \"exact redirect and S256 verifier enforced\", \"single-use code replay revokes issued family\", \"explicit synthetic consent denial produces no usable grant\"], \"mode\": \"code\", \"phase\": \"recovered\", \"status\": \"passed\", \"tokens_logged\": false}\nroot@CLIENT:~# "
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "AUTH": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "AUTH": "net-tools-2-10-1-3",
+        "CLIENT": "net-tools-2-10-1-3"
+      },
+      "plan_sha256": "8ca7249f95739a4038c2702bfa43e32034d057012697cd29c57b4099407e712f",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T11:24:02Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/apis/033-oauth2-token-refresh-flow.yaml",
+      "sha256": "6a5ee5871e6587fd67e95324fba0c84eec178bb537fb075f1df000e815c7759a",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T11:25:31Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/oauth.py refresh --phase baseline",
+          "expectation": "Actual remote HTTP responses and local client checks satisfy the baseline refresh contract; fault means the named unsafe behavior is actually observed.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/oauth.py refresh --phase baseline\n{\"backend\": \"offline-fixture\", \"checks\": [\"real access-token expiry\", \"refresh rotation issues a new credential\", \"old refresh replay revokes the entire family\", \"fresh authorization recovers; explicit revocation closes access\"], \"mode\": \"refresh\", \"phase\": \"baseline\", \"status\": \"passed\", \"tokens_logged\": false}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "observe the reusable refresh fault",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/oauth.py configure --mode reusable-refresh",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/oauth.py configure --mode reusable-refresh\n{\"configured\": true, \"mode\": \"reusable-refresh\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "observe the reusable refresh fault",
+          "node": "CLIENT",
+          "command": "python3 /lab/oauth.py refresh --phase fault",
+          "expectation": "Actual remote HTTP responses and local client checks satisfy the fault refresh contract; fault means the named unsafe behavior is actually observed.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/oauth.py refresh --phase fault\n{\"backend\": \"offline-fixture\", \"checks\": [\"controlled rotation fault actually allows replay of the consumed refresh credential\"], \"mode\": \"refresh\", \"phase\": \"fault\", \"status\": \"passed\", \"tokens_logged\": false, \"vulnerability_observed\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore rotation and replay closure",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/oauth.py configure --mode healthy",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/oauth.py configure --mode healthy\n{\"configured\": true, \"mode\": \"healthy\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore rotation and replay closure",
+          "node": "CLIENT",
+          "command": "python3 /lab/oauth.py refresh --phase recovered",
+          "expectation": "Actual remote HTTP responses and local client checks satisfy the recovered refresh contract; fault means the named unsafe behavior is actually observed.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/oauth.py refresh --phase recovered\n{\"backend\": \"offline-fixture\", \"checks\": [\"real access-token expiry\", \"refresh rotation issues a new credential\", \"old refresh replay revokes the entire family\", \"fresh authorization recovers; explicit revocation closes access\"], \"mode\": \"refresh\", \"phase\": \"recovered\", \"status\": \"passed\", \"tokens_logged\": false}\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "040bf1a03f252dddc764e8ca75cc68113a488ec7b08d595875e3c05134963495",
+      "startup_states": {
+        "AUTH": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "AUTH": "net-tools-2-10-1-3",
+        "CLIENT": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T11:26:03Z"
     }
   ]
 }

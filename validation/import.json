@@ -688,11 +688,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/035-macsec-concepts.yaml",
       "sha256": "aa65066bb472a81055185f1b82ee5dedd2003e3649642de84050c14231cafd3f",
       "status": "import-export-pass"
@@ -968,11 +963,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/apis/033-oauth2-token-refresh-flow.yaml",
-      "sha256": "b5ee35617f64551b61ccf9c5dcdd1538520b1a7ac35d99ef446c6efd3dc5b779",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/assessment/038-devcor-practical-checkpoint.yaml",
       "sha256": "9def7d676271592d4bd19fb0177ca6aa310cd15ff415fc4ad7a5187fde2d00c5",
       "status": "import-export-pass"
@@ -1138,11 +1128,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/010-oauth2-three-legged-flow.yaml",
-      "sha256": "29f69f3b3dd63cdbd7bfd5b6195b03a884552c8daf70f260c473b7bdfa38aef3",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml",
       "sha256": "c29646bb75a5ccc05a29006979929ac6b862e6d41e79cd74eae62cdbecaf3825",
       "status": "import-export-pass"
@@ -1181,6 +1166,31 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T11:17:05Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/010-oauth2-three-legged-flow.yaml",
+      "sha256": "893b030916c9b337838cf097c2fa2dc7a9a7b3b7dc69d9c28db33de087152580",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T11:25:27Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T11:25:27Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/apis/033-oauth2-token-refresh-flow.yaml",
+      "sha256": "6a5ee5871e6587fd67e95324fba0c84eec178bb537fb075f1df000e815c7759a",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T11:25:29Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T11:25:29Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
     }
   ]
 }

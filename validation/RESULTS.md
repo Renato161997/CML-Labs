@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **163**.
+Import/export passes: **233/233**. Functional passes: **165**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -154,6 +154,7 @@ Import/export passes: **233/233**. Functional passes: **163**.
 | [Independent Packet and Flow Triage](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility/042-span-netflow-siem-triage.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, ioll2-xe-17-18-02, iosv-159-3-m12, net-tools-2-10-1-3 | 31 | 22 | 2026-10-30T20:53:11Z |
 | [Site To Site VPN Security Baseline](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/vpn/039-site-to-site-vpn-security-baseline.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 16 | 21 | 2026-10-30T15:21:13Z |
 | [REST Pagination And Error Handling](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/apis/032-rest-pagination-and-error-handling.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 24 | 6 | 2026-10-30T21:01:26Z |
+| [OAuth2 Expiry, Refresh Rotation and Replay Recovery](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/apis/033-oauth2-token-refresh-flow.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 3 | 2 | 2026-10-31T11:26:03Z |
 | [DEVCOR Practical Checkpoint](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/assessment/038-devcor-practical-checkpoint.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 25 | 6 | 2026-10-30T21:01:52Z |
 | [GitOps Network Change Pipeline](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/gitops/031-gitops-network-change-pipeline.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 13 | 33 | 2026-10-28T16:29:07Z |
 | [Ansible Inventory Network](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/025-ansible-inventory-network.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-28T16:08:45Z |
@@ -168,6 +169,7 @@ Import/export passes: **233/233**. Functional passes: **163**.
 | [REST Error Handling](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/007-rest-error-handling.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 3 | 2 | 2026-10-27T17:42:56Z |
 | [API Pagination](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/008-api-pagination.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 3 | 2 | 2026-10-27T17:43:03Z |
 | [HTTP Cache Controls](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/009-http-cache-controls.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 3 | 2 | 2026-10-27T17:45:38Z |
+| [Authorization Code and PKCE with Synthetic Consent](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/010-oauth2-three-legged-flow.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 3 | 2 | 2026-10-31T11:24:02Z |
 | [Webhook Receiver](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:46:46Z |
 | [pyATS Genie Style Validation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/validation/036-pyats-genie-style-validation.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 4 | 30 | 2026-10-27T18:57:24Z |
 | [Webhook Receiver Config Validation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/webhooks/035-webhook-receiver-config-validation.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:37:45Z |
