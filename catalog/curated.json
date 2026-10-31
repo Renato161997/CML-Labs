@@ -1095,5 +1095,40 @@
     "kind": "practice",
     "workbook": "docs/workbooks/200-301-014-wlan-client-vlan-mapping.md",
     "example_profile": "wireless-vlan"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/039-controller-based-networking.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-039-controller-based-networking.md",
+    "example_profile": "native-iosxe-controller"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/036-dna-center-assurance-routing.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-036-dna-center-assurance-routing.md",
+    "example_profile": "native-iosxe-controller"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/027-dna-center-assurance-concepts.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-027-dna-center-assurance-concepts.md",
+    "example_profile": "native-iosxe-controller"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/039-devcor-capstone-controller-integration.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-039-devcor-capstone-controller-integration.md",
+    "example_profile": "native-iosxe-controller"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/040-devcor-capstone-network-automation-app.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-040-devcor-capstone-network-automation-app.md",
+    "example_profile": "native-iosxe-controller"
   }
 }

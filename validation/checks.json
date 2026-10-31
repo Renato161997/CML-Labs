@@ -20738,5 +20738,626 @@
         ]
       }
     ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/039-controller-based-networking.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The real northbound HTTP client verifies baseline against the durable controller and its actual device adapter.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "API",
+        "command": "show ip route 192.0.2.42",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+        "expectation": "The independent IOS RIB contains the intended installed static route."
+      },
+      {
+        "node": "API",
+        "command": "ping 192.0.2.42 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three real requests reach the Linux loopback through the installed route."
+      },
+      {
+        "node": "API",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The connected device-management path remains healthy."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "stop only the controller application",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/c.py stop"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"(?:started|stopped|fault_enabled)\": (?:true|false)",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py down",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real northbound HTTP client verifies down against the durable controller and its actual device adapter.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "restart the controller with durable state",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/c.py start"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"(?:started|stopped|fault_enabled)\": (?:true|false)",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py persistence",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real northbound HTTP client verifies persistence against the durable controller and its actual device adapter.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/036-dna-center-assurance-routing.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The real northbound HTTP client verifies baseline against the durable controller and its actual device adapter.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "API",
+        "command": "show ip route 192.0.2.42",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+        "expectation": "The independent IOS RIB contains the intended installed static route."
+      },
+      {
+        "node": "API",
+        "command": "ping 192.0.2.42 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three real requests reach the Linux loopback through the installed route."
+      },
+      {
+        "node": "API",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The connected device-management path remains healthy."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "introduce an off-link next hop outside the controller",
+        "node": "API",
+        "commands": [
+          "configure terminal",
+          "ip route 192.0.2.42 255.255.255.255 198.18.0.99",
+          "no ip route 192.0.2.42 255.255.255.255 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py offlink",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real northbound HTTP client verifies offlink against the durable controller and its actual device adapter.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Three real requests cannot reach the loopback while its usable route is absent."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "reconcile the actual off-link route",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py repair"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real northbound HTTP client verifies healthy against the durable controller and its actual device adapter.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/027-dna-center-assurance-concepts.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The real northbound HTTP client verifies baseline against the durable controller and its actual device adapter.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "API",
+        "command": "show ip route 192.0.2.42",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+        "expectation": "The independent IOS RIB contains the intended installed static route."
+      },
+      {
+        "node": "API",
+        "command": "ping 192.0.2.42 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three real requests reach the Linux loopback through the installed route."
+      },
+      {
+        "node": "API",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The connected device-management path remains healthy."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw only backend HTTPS",
+        "node": "API",
+        "commands": [
+          "configure terminal",
+          "no ip http secure-server",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py backend-down",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real northbound HTTP client verifies backend-down against the durable controller and its actual device adapter.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "restore backend HTTPS evidence",
+        "node": "API",
+        "commands": [
+          "configure terminal",
+          "ip http secure-server",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real northbound HTTP client verifies healthy against the durable controller and its actual device adapter.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/039-devcor-capstone-controller-integration.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The real northbound HTTP client verifies baseline against the durable controller and its actual device adapter.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "API",
+        "command": "show ip route 192.0.2.42",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+        "expectation": "The independent IOS RIB contains the intended installed static route."
+      },
+      {
+        "node": "API",
+        "command": "ping 192.0.2.42 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three real requests reach the Linux loopback through the installed route."
+      },
+      {
+        "node": "API",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The connected device-management path remains healthy."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw the route outside the application",
+        "node": "API",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.42 255.255.255.255 198.18.0.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py drift",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real northbound HTTP client verifies drift against the durable controller and its actual device adapter.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Three real requests cannot reach the loopback while its usable route is absent."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "apply a new approved reconciliation request",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py repair"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real northbound HTTP client verifies healthy against the durable controller and its actual device adapter.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/040-devcor-capstone-network-automation-app.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The real northbound HTTP client verifies baseline against the durable controller and its actual device adapter.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "API",
+        "command": "show ip route 192.0.2.42",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+        "expectation": "The independent IOS RIB contains the intended installed static route."
+      },
+      {
+        "node": "API",
+        "command": "ping 192.0.2.42 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three real requests reach the Linux loopback through the installed route."
+      },
+      {
+        "node": "API",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The connected device-management path remains healthy."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "inject a post-write application confirmation failure",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/c.py fault-on"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"(?:started|stopped|fault_enabled)\": (?:true|false)",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py rollback",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real northbound HTTP client verifies rollback against the durable controller and its actual device adapter.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "clear the fault and restart with durable history",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/c.py fault-off",
+          "python3 /lab/c.py stop",
+          "python3 /lab/c.py start"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"(?:started|stopped|fault_enabled)\": (?:true|false)",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py persistence",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real northbound HTTP client verifies persistence against the durable controller and its actual device adapter.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "submit concurrent duplicate withdrawal requests",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py concurrent"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Three real requests cannot reach the loopback while its usable route is absent."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "restore the route through a new approved request",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py repair"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The real northbound HTTP client verifies healthy against the durable controller and its actual device adapter.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
   }
 }

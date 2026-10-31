@@ -34,7 +34,7 @@ IOSvL2 does not implement SPAN or private VLANs. IOSv does not implement BFD.
 These are feature constraints, not errors to hide with a successful YAML import.
 Exercises needing those features require another verified platform or remain
 unverified.
-[IOSvL2 documentation](https://developer.cisco.com/docs/modeling-labs/iosvl2/) Ãƒâ€šÃ‚Â·
+[IOSvL2 documentation](https://developer.cisco.com/docs/modeling-labs/iosvl2/) |
 [IOSv documentation](https://developer.cisco.com/docs/modeling-labs/iosv/).
 
 The harness requires a running node process and checks a privileged, responsive

@@ -28,11 +28,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/039-controller-based-networking.yaml",
-      "sha256": "a45e8add4b55805c2c88c354c7bda44a6e92cbea586d98e8e567a5468c98fa4f",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/040-python-api-inventory.yaml",
       "sha256": "0899a03a4b0008eb9f367257c244920154204e0fb115f6d3379b59d57ebf132a",
       "status": "import-export-pass"
@@ -260,11 +255,6 @@
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/035-ansible-routing-baseline.yaml",
       "sha256": "ce7f2a9e72b5608685b3824b73ed62778cfa96206fb2757c9c0c13464f7b7d7a",
-      "status": "import-export-pass"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/036-dna-center-assurance-routing.yaml",
-      "sha256": "9c6d157f0bb44bea53b572ca61173dac66ee2e58efe823617e54fed37307cb84",
       "status": "import-export-pass"
     },
     {
@@ -608,11 +598,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/027-dna-center-assurance-concepts.yaml",
-      "sha256": "5fce7f1a7653159ee4c623d1726ad6a6cd9faf9d54a80ccb7d9cb97cb6d7ebb1",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/028-troubleshooting-path.yaml",
       "sha256": "9887e54f2adfc91c1854ea3135156acce50b9269c03542d28fa3562664a2dc88",
       "status": "import-export-pass"
@@ -928,16 +913,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/039-devcor-capstone-controller-integration.yaml",
-      "sha256": "18471567b877e24813262b2e0358d4eee6ddf926ccfb1d23997963d2ffb0af93",
-      "status": "import-export-pass"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/040-devcor-capstone-network-automation-app.yaml",
-      "sha256": "f66f7562cd118d07bce97ce579eaf9f7c6470564c452486762c0dfc38530864e",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/cisco-platforms/013-dna-center-inventory-api.yaml",
       "sha256": "ff30dfff70baf9b07f3abcdfbf18e7dce6efdc444812ca3198116bf7d0a61a29",
       "status": "import-export-pass"
@@ -1218,11 +1193,6 @@
       "completed_utc": "2026-10-31T16:46:37Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/014-wlan-client-vlan-mapping.yaml",
       "sha256": "c5d286325a3a857ac5753c38f4ef728c6e7f5545488c2784726ae3165e37565d",
       "cml_version": "2.10.1+build.21",
@@ -1231,6 +1201,61 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T16:56:54Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/039-controller-based-networking.yaml",
+      "sha256": "40c349d4c913a9d0f83ddfbe669bafb37ddcf000632f7f043cba7eac76fa8469",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T17:21:41Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T17:21:41Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/036-dna-center-assurance-routing.yaml",
+      "sha256": "64b5bfbbb6c737fdc68bc0453329c5391972e215949d0f00f2adfe3c959c1f47",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T17:21:43Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T17:21:43Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/027-dna-center-assurance-concepts.yaml",
+      "sha256": "d91a6ef8b0f8b398c0923ffed4a067625c2ed4bdfbf0fd4803eab50067258c7f",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T17:21:45Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T17:21:45Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/039-devcor-capstone-controller-integration.yaml",
+      "sha256": "0ab409e03d0bef1246fe98c990e1d4bea45658337f7cefd8e66d7aa476054831",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T17:21:46Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T17:21:47Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/040-devcor-capstone-network-automation-app.yaml",
+      "sha256": "2330c8aaa732b63d83656bdc493d3ab3a8f08537071fb21e6ef56d4459eef0aa",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T17:21:48Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T17:21:49Z"
     }
   ]
 }

@@ -38,6 +38,19 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-iosxe-controller": {
+        "TOOLS": {
+            "/lab/api_probe.py": "examples/automation/api_probe.py",
+            "/lab/inventory_probe.py": "examples/automation/inventory_probe.py",
+            "/lab/route_probe.py": "examples/automation/route_probe.py",
+            "/lab/controller_contract.py": "examples/automation/controller_contract.py",
+            "/lab/c.py": "examples/automation/controller.py",
+        },
+        "CLIENT": {
+            "/lab/controller_contract.py": "examples/automation/controller_contract.py",
+            "/lab/client.py": "examples/automation/controller_client.py",
+        },
+    },
     "switch-management-source": {
         "UNTRUST": {
             "/opt/cml-management/ssh_probe.py": "examples/management/ssh_probe.py",
