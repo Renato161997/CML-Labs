@@ -38,6 +38,8 @@ For these stock wireless definitions, the editable seed files are `user-data`, f
 
 The WLAN/VLAN exercise additionally bridges the AP radio to a real Linux 802.1Q uplink connected to an IOL-L2 trunk. Actual switch learning and client-to-SVI traffic must follow VLAN10; moving only the uplink to VLAN20 must break that traffic while radio association and the independent untagged control path survive. Repair must recover forwarding. This tests a transparent bridge/trunk teaching model; it does not certify Cisco wireless-controller VLAN policy or CAPWAP.
 
+The guest WLAN exercise instead uses an exact IPv4 ingress routing-policy prohibition for one forwarded internal service. Three fresh guest connections must receive explicit network-policy rejection while WPA2/CCMP, the shared HTTP endpoint and independent internal-server controls remain healthy. A refused connection, timeout or authentication failure does not count as isolation. Withdrawing only the rule must permit actual HTTP and ICMP; restoring it must recover denial. The earlier local-table lookup leaves AP-local input outside this forwarded-service policy, as described in the [ip-rule manual](https://man7.org/linux/man-pages/man8/ip-rule.8.html).
+
 [Cisco's wireless release notes](https://developer.cisco.com/docs/modeling-labs/cml-release-notes/) describe the virtual radio support as beta. Displayed bitrate, signal and packet timing are simulated observations. The tests do not establish RF coverage, physical performance, EAP/RADIUS, WPA3, PMF, the separate vAP image or Catalyst 9800 integration.
 
 ## Device-backed teaching controller

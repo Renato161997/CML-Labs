@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **178**.
+Import/export passes: **233/233**. Functional passes: **179**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -16,6 +16,7 @@ Import/export passes: **233/233**. Functional passes: **178**.
 | [Python API Inventory](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/040-python-api-inventory.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-27T18:57:28Z |
 | [CCNA Capstone Branch Office](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/049-ccna-capstone-branch-office.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, iosvl2-2020 | 17 | 8 | 2026-10-28T18:06:10Z |
 | [CCNA Capstone Campus Access](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/050-ccna-capstone-campus-access.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 21 | 14 | 2026-10-30T13:55:27Z |
+| [Guest WLAN: Service Segmentation and Recovery](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/design/045-guest-wireless-isolation-concept.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3, wireless-ap-24-04-20260409, wireless-client-24-04-20260409 | 9 | 2 | 2026-10-31T18:07:54Z |
 | [Static And Default Routes](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/015-static-default-routes.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 4 | 6 | 2026-10-25T11:36:06Z |
 | [Floating Static Routes](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/016-floating-static-routes.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 9 | 16 | 2026-10-25T12:02:44Z |
 | [Single Area OSPFv2](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/017-single-area-ospfv2.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 2 | 0 | 2026-10-24T18:23:04Z |

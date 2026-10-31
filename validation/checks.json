@@ -21359,5 +21359,100 @@
         "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
       }
     ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/design/045-guest-wireless-isolation-concept.yaml": {
+    "checks": [
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/g.py check",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"endpoint_healthy\": true)",
+        "expectation": "The protected server independently answers a fresh nonce request.",
+        "command_timeout": 15
+      },
+      {
+        "node": "AP",
+        "command": "python3 /lab/g.py check",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"policy_enabled\": true)(?=.*\"inside_control_received\": 3)",
+        "expectation": "Actual AP state and exact kernel ingress rule agree; independent AP-to-internal HTTP and packet controls stay healthy.",
+        "command_timeout": 35,
+        "attempts": 2
+      },
+      {
+        "node": "GUEST",
+        "command": "python3 /lab/g.py check",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"associated\": true)(?=.*\"shared_endpoint\": \"healthy\")(?=.*\"inside_access\": \"deny\")",
+        "expectation": "Actual completed WPA2/CCMP and a fresh shared HTTP endpoint stay healthy, while internal service access is explicitly rejected at the network layer in three fresh connections and receives no ping replies.",
+        "command_timeout": 90,
+        "attempts": 1
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw only guest-to-internal forwarding policy",
+        "node": "AP",
+        "commands": [
+          "python3 /lab/g.py policy-off"
+        ],
+        "command_pattern": "\"policy_enabled\": false",
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/g.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"endpoint_healthy\": true)",
+            "expectation": "The protected server independently answers a fresh nonce request.",
+            "command_timeout": 15
+          },
+          {
+            "node": "AP",
+            "command": "python3 /lab/g.py check --policy off",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"policy_enabled\": false)(?=.*\"inside_control_received\": 3)",
+            "expectation": "Actual AP state and exact kernel ingress rule agree; independent AP-to-internal HTTP and packet controls stay healthy.",
+            "command_timeout": 35,
+            "attempts": 2
+          },
+          {
+            "node": "GUEST",
+            "command": "python3 /lab/g.py check --expect allow",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"associated\": true)(?=.*\"shared_endpoint\": \"healthy\")(?=.*\"inside_access\": \"allow\")",
+            "expectation": "Actual completed WPA2/CCMP and a fresh shared HTTP endpoint stay healthy, while internal service access is allowed with real HTTP and three packets.",
+            "command_timeout": 90,
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "restore explicit guest forwarding prohibition",
+        "node": "AP",
+        "commands": [
+          "python3 /lab/g.py policy-on"
+        ],
+        "command_pattern": "\"policy_enabled\": true",
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/g.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"endpoint_healthy\": true)",
+            "expectation": "The protected server independently answers a fresh nonce request.",
+            "command_timeout": 15
+          },
+          {
+            "node": "AP",
+            "command": "python3 /lab/g.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"policy_enabled\": true)(?=.*\"inside_control_received\": 3)",
+            "expectation": "Actual AP state and exact kernel ingress rule agree; independent AP-to-internal HTTP and packet controls stay healthy.",
+            "command_timeout": 35,
+            "attempts": 2
+          },
+          {
+            "node": "GUEST",
+            "command": "python3 /lab/g.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"associated\": true)(?=.*\"shared_endpoint\": \"healthy\")(?=.*\"inside_access\": \"deny\")",
+            "expectation": "Actual completed WPA2/CCMP and a fresh shared HTTP endpoint stay healthy, while internal service access is explicitly rejected at the network layer in three fresh connections and receives no ping replies.",
+            "command_timeout": 90,
+            "attempts": 1
+          }
+        ]
+      }
+    ]
   }
 }
