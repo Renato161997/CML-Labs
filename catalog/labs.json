@@ -3159,26 +3159,24 @@
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/011-virtual-switching-paths.yaml",
-      "title": "Virtual Switching Paths",
+      "title": "Virtual Switching: VLAN Isolation and Dynamic MAC Learning",
       "track": "350-401",
       "topic": "virtualization",
-      "nodes": 5,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "net-tools"
       ],
-      "nominal_ram_mib": 3072,
+      "nominal_ram_mib": 1536,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 70,
+      "workbook": "docs/workbooks/350-401-011-virtual-switching-paths.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "5c9f76916ed19c24026810490b598a3e951d2d8b0d4cefb8bc4ce38c11ff4782"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T23:04:07Z",
+      "sha256": "21e8b59276eed013a10112c502c59d5a637d2248b7fb8618770db0b63df648fe"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/assessment/044-scor-practical-checkpoint.yaml",

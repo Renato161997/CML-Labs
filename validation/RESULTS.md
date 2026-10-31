@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **185**.
+Import/export passes: **233/233**. Functional passes: **186**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -147,6 +147,7 @@ Import/export passes: **233/233**. Functional passes: **185**.
 | [VRF Lite Route Leaking](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/007-vrf-lite-route-leaking.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 16 | 2026-10-28T18:46:40Z |
 | [GRE Overlay Underlay](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 22 | 16 | 2026-10-26T19:54:02Z |
 | [IPsec GRE Design](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 23 | 20 | 2026-10-30T15:00:07Z |
+| [Virtual Switching: VLAN Isolation and Dynamic MAC Learning](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/011-virtual-switching-paths.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 11 | 2 | 2026-10-31T23:04:07Z |
 | [Security API Python](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/031-security-api-python.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 16 | 5 | 2026-10-30T15:16:18Z |
 | [SCOR Capstone Secure Edge](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/045-scor-capstone-secure-edge.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 23 | 18 | 2026-10-30T16:02:32Z |
 | [Suspicious Host Containment](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/incident-response/041-suspicious-host-containment.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 15 | 16 | 2026-10-30T15:35:00Z |

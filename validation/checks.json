@@ -22819,5 +22819,122 @@
         "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
       }
     ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/011-virtual-switching-paths.yaml": {
+    "checks": [
+      {
+        "node": "LEFT",
+        "command": "python3 /lab/b.py good",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"control_replies\": 3)(?=.*\"data_replies\": 3)",
+        "expectation": "Three actual interface-bound tagged-VLAN99 control replies coexist with three actual untagged data replies. Both interface addresses must remain configured.",
+        "command_timeout": 30,
+        "attempts": 2,
+        "interval_seconds": 1
+      },
+      {
+        "node": "RIGHT",
+        "command": "python3 /lab/b.py good",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"control_replies\": 3)(?=.*\"data_replies\": 3)",
+        "expectation": "Three actual interface-bound tagged-VLAN99 control replies coexist with three actual untagged data replies. Both interface addresses must remain configured.",
+        "command_timeout": 30,
+        "attempts": 2,
+        "interval_seconds": 1
+      },
+      {
+        "node": "SW",
+        "command": "python3 /lab/b.py check",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vlan_split\": false)(?=.*\"tagged_control_vlan\": 99)",
+        "expectation": "Actual kernel VLAN filtering, both forwarding bridge ports, exact untagged data/PVID membership and retained tagged control membership agree. The observed execution kernel release is reported.",
+        "attempts": 1
+      },
+      {
+        "node": "SW",
+        "command": "python3 /lab/b.py fdb",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"dynamic_data_mac_entries\": 2)(?=.*\"data_vlan\": 10)",
+        "expectation": "Both actual peer MACs, independently observed through control-VLAN neighbors, are dynamically learned on the correct data VLAN and bridge ports; static/self/imported entries do not count.",
+        "attempts": 2,
+        "interval_seconds": 1
+      }
+    ],
+    "transitions": [
+      {
+        "name": "move only RIGHT untagged traffic into VLAN20",
+        "node": "SW",
+        "commands": [
+          "python3 /lab/b.py split"
+        ],
+        "command_pattern": "\"vlan_split\": true",
+        "checks": [
+          {
+            "node": "LEFT",
+            "command": "python3 /lab/b.py isolated",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"control_replies\": 3)(?=.*\"data_replies\": 0)",
+            "expectation": "Three actual interface-bound tagged-VLAN99 control replies coexist with zero actual untagged data replies. Both interface addresses must remain configured.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "RIGHT",
+            "command": "python3 /lab/b.py isolated",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"control_replies\": 3)(?=.*\"data_replies\": 0)",
+            "expectation": "Three actual interface-bound tagged-VLAN99 control replies coexist with zero actual untagged data replies. Both interface addresses must remain configured.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "SW",
+            "command": "python3 /lab/b.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vlan_split\": true)(?=.*\"tagged_control_vlan\": 99)",
+            "expectation": "Actual kernel VLAN filtering, both forwarding bridge ports, exact untagged data/PVID membership and retained tagged control membership agree. The observed execution kernel release is reported.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "restore common data membership and dynamic forwarding",
+        "node": "SW",
+        "commands": [
+          "python3 /lab/b.py restore"
+        ],
+        "command_pattern": "\"vlan_split\": false",
+        "checks": [
+          {
+            "node": "LEFT",
+            "command": "python3 /lab/b.py good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"control_replies\": 3)(?=.*\"data_replies\": 3)",
+            "expectation": "Three actual interface-bound tagged-VLAN99 control replies coexist with three actual untagged data replies. Both interface addresses must remain configured.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "RIGHT",
+            "command": "python3 /lab/b.py good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"control_replies\": 3)(?=.*\"data_replies\": 3)",
+            "expectation": "Three actual interface-bound tagged-VLAN99 control replies coexist with three actual untagged data replies. Both interface addresses must remain configured.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "SW",
+            "command": "python3 /lab/b.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vlan_split\": false)(?=.*\"tagged_control_vlan\": 99)",
+            "expectation": "Actual kernel VLAN filtering, both forwarding bridge ports, exact untagged data/PVID membership and retained tagged control membership agree. The observed execution kernel release is reported.",
+            "attempts": 1
+          },
+          {
+            "node": "SW",
+            "command": "python3 /lab/b.py fdb",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"dynamic_data_mac_entries\": 2)(?=.*\"data_vlan\": 10)",
+            "expectation": "Both actual peer MACs, independently observed through control-VLAN neighbors, are dynamically learned on the correct data VLAN and bridge ports; static/self/imported entries do not count.",
+            "attempts": 2,
+            "interval_seconds": 1
+          }
+        ]
+      }
+    ]
   }
 }
