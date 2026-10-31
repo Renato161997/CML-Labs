@@ -4228,26 +4228,24 @@
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/apis/033-oauth2-token-refresh-flow.yaml",
-      "title": "OAuth2 Token Refresh Flow",
+      "title": "OAuth2 Expiry, Refresh Rotation and Replay Recovery",
       "track": "350-901",
       "topic": "apis",
-      "nodes": 5,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "net-tools"
       ],
-      "nominal_ram_mib": 2816,
+      "nominal_ram_mib": 1024,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 105,
+      "workbook": "docs/workbooks/350-901-033-oauth2-token-refresh-flow.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "b5ee35617f64551b61ccf9c5dcdd1538520b1a7ac35d99ef446c6efd3dc5b779"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T11:26:03Z",
+      "sha256": "6a5ee5871e6587fd67e95324fba0c84eec178bb537fb075f1df000e815c7759a"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/assessment/038-devcor-practical-checkpoint.yaml",
@@ -4974,25 +4972,24 @@
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/010-oauth2-three-legged-flow.yaml",
-      "title": "OAuth2 Three Legged Flow",
+      "title": "Authorization Code and PKCE with Synthetic Consent",
       "track": "350-901",
       "topic": "using-apis",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "net-tools"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 1024,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 95,
+      "workbook": "docs/workbooks/350-901-010-oauth2-three-legged-flow.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "29f69f3b3dd63cdbd7bfd5b6195b03a884552c8daf70f260c473b7bdfa38aef3"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T11:24:02Z",
+      "sha256": "893b030916c9b337838cf097c2fa2dc7a9a7b3b7dc69d9c28db33de087152580"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml",

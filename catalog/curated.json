@@ -1029,5 +1029,19 @@
     "duration_minutes": 155,
     "kind": "scenario",
     "workbook": "docs/workbooks/350-401-051-encor-capstone-campus-core.md"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/010-oauth2-three-legged-flow.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 95,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-010-oauth2-three-legged-flow.md",
+    "example_profile": "native-oauth"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/apis/033-oauth2-token-refresh-flow.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 105,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-033-oauth2-token-refresh-flow.md",
+    "example_profile": "native-oauth"
   }
 }

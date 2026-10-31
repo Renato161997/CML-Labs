@@ -19149,5 +19149,111 @@
         ]
       }
     ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/010-oauth2-three-legged-flow.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/oauth.py code --phase baseline",
+        "pattern": "(?s)(?=.*\"backend\": \"offline-fixture\")(?=.*\"status\": \"passed\")(?=.*\"mode\": \"code\")(?=.*\"phase\": \"baseline\")",
+        "expectation": "Actual remote HTTP responses and local client checks satisfy the baseline code contract; fault means the named unsafe behavior is actually observed.",
+        "attempts": 3,
+        "interval_seconds": 2,
+        "command_timeout": 30
+      }
+    ],
+    "transitions": [
+      {
+        "name": "observe a weak verifier binding",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/oauth.py configure --mode weak-pkce"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/oauth.py code --phase fault",
+            "pattern": "(?s)(?=.*\"backend\": \"offline-fixture\")(?=.*\"status\": \"passed\")(?=.*\"mode\": \"code\")(?=.*\"phase\": \"fault\")(?=.*\"vulnerability_observed\": true)",
+            "expectation": "Actual remote HTTP responses and local client checks satisfy the fault code contract; fault means the named unsafe behavior is actually observed.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ]
+      },
+      {
+        "name": "restore code and verifier binding",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/oauth.py configure --mode healthy"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/oauth.py code --phase recovered",
+            "pattern": "(?s)(?=.*\"backend\": \"offline-fixture\")(?=.*\"status\": \"passed\")(?=.*\"mode\": \"code\")(?=.*\"phase\": \"recovered\")",
+            "expectation": "Actual remote HTTP responses and local client checks satisfy the recovered code contract; fault means the named unsafe behavior is actually observed.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/apis/033-oauth2-token-refresh-flow.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/oauth.py refresh --phase baseline",
+        "pattern": "(?s)(?=.*\"backend\": \"offline-fixture\")(?=.*\"status\": \"passed\")(?=.*\"mode\": \"refresh\")(?=.*\"phase\": \"baseline\")",
+        "expectation": "Actual remote HTTP responses and local client checks satisfy the baseline refresh contract; fault means the named unsafe behavior is actually observed.",
+        "attempts": 3,
+        "interval_seconds": 2,
+        "command_timeout": 30
+      }
+    ],
+    "transitions": [
+      {
+        "name": "observe the reusable refresh fault",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/oauth.py configure --mode reusable-refresh"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/oauth.py refresh --phase fault",
+            "pattern": "(?s)(?=.*\"backend\": \"offline-fixture\")(?=.*\"status\": \"passed\")(?=.*\"mode\": \"refresh\")(?=.*\"phase\": \"fault\")(?=.*\"vulnerability_observed\": true)",
+            "expectation": "Actual remote HTTP responses and local client checks satisfy the fault refresh contract; fault means the named unsafe behavior is actually observed.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ]
+      },
+      {
+        "name": "restore rotation and replay closure",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/oauth.py configure --mode healthy"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/oauth.py refresh --phase recovered",
+            "pattern": "(?s)(?=.*\"backend\": \"offline-fixture\")(?=.*\"status\": \"passed\")(?=.*\"mode\": \"refresh\")(?=.*\"phase\": \"recovered\")",
+            "expectation": "Actual remote HTTP responses and local client checks satisfy the recovered refresh contract; fault means the named unsafe behavior is actually observed.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 30
+          }
+        ]
+      }
+    ]
   }
 }

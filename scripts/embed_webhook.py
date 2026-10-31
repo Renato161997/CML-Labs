@@ -29,6 +29,10 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-oauth": {
+        "AUTH": {"/lab/oauth.py": "examples/api-core/oauth_fixture.py"},
+        "CLIENT": {"/lab/oauth.py": "examples/api-core/oauth_fixture.py"},
+    },
     "native-packet-mirror": {
         "INSIDE": {"/lab/t.py": "examples/security/traffic_fixture.py"},
         "OUTSIDE": {"/lab/t.py": "examples/security/traffic_fixture.py"},
