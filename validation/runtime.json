@@ -39698,6 +39698,128 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T17:41:46Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/design/045-guest-wireless-isolation-concept.yaml",
+      "sha256": "1adc67a5c33b90d5d823ced5a1609c7d46dea49fa76fbe53ee89ac9e72fdfd59",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T18:06:03Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/g.py check",
+          "expectation": "The protected server independently answers a fresh nonce request.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/g.py check\n{\"endpoint_healthy\": true, \"role\": \"inside\", \"status\": \"passed\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "AP",
+          "command": "python3 /lab/g.py check",
+          "expectation": "Actual AP state and exact kernel ingress rule agree; independent AP-to-internal HTTP and packet controls stay healthy.",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/g.py check\n{\"inside_control_received\": 3, \"policy_enabled\": true, \"role\": \"ap\", \"status\": \"passed\"}\nroot@AP:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "GUEST",
+          "command": "python3 /lab/g.py check",
+          "expectation": "Actual completed WPA2/CCMP and a fresh shared HTTP endpoint stay healthy, while internal service access is explicitly rejected at the network layer in three fresh connections and receives no ping replies.",
+          "passed": true,
+          "output": "\nroot@GUEST:~# python3 /lab/g.py check\n{\"associated\": true, \"inside_access\": \"deny\", \"role\": \"client\", \"shared_endpoint\": \"healthy\", \"status\": \"passed\"}\nroot@GUEST:~# "
+        },
+        {
+          "phase": "withdraw only guest-to-internal forwarding policy",
+          "kind": "configuration",
+          "node": "AP",
+          "command": "python3 /lab/g.py policy-off",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/g.py policy-off\n{\"policy_enabled\": false}\nroot@AP:~# "
+        },
+        {
+          "phase": "withdraw only guest-to-internal forwarding policy",
+          "node": "INSIDE",
+          "command": "python3 /lab/g.py check",
+          "expectation": "The protected server independently answers a fresh nonce request.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/g.py check\n{\"endpoint_healthy\": true, \"role\": \"inside\", \"status\": \"passed\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "withdraw only guest-to-internal forwarding policy",
+          "node": "AP",
+          "command": "python3 /lab/g.py check --policy off",
+          "expectation": "Actual AP state and exact kernel ingress rule agree; independent AP-to-internal HTTP and packet controls stay healthy.",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/g.py check --policy off\n{\"inside_control_received\": 3, \"policy_enabled\": false, \"role\": \"ap\", \"status\": \"passed\"}\nroot@AP:~# "
+        },
+        {
+          "phase": "withdraw only guest-to-internal forwarding policy",
+          "node": "GUEST",
+          "command": "python3 /lab/g.py check --expect allow",
+          "expectation": "Actual completed WPA2/CCMP and a fresh shared HTTP endpoint stay healthy, while internal service access is allowed with real HTTP and three packets.",
+          "passed": true,
+          "output": "\nroot@GUEST:~# python3 /lab/g.py check --expect allow\n{\"associated\": true, \"inside_access\": \"allow\", \"role\": \"client\", \"shared_endpoint\": \"healthy\", \"status\": \"passed\"}\nroot@GUEST:~# "
+        },
+        {
+          "phase": "restore explicit guest forwarding prohibition",
+          "kind": "configuration",
+          "node": "AP",
+          "command": "python3 /lab/g.py policy-on",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/g.py policy-on\n{\"policy_enabled\": true}\nroot@AP:~# "
+        },
+        {
+          "phase": "restore explicit guest forwarding prohibition",
+          "node": "INSIDE",
+          "command": "python3 /lab/g.py check",
+          "expectation": "The protected server independently answers a fresh nonce request.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/g.py check\n{\"endpoint_healthy\": true, \"role\": \"inside\", \"status\": \"passed\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore explicit guest forwarding prohibition",
+          "node": "AP",
+          "command": "python3 /lab/g.py check",
+          "expectation": "Actual AP state and exact kernel ingress rule agree; independent AP-to-internal HTTP and packet controls stay healthy.",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/g.py check\n{\"inside_control_received\": 3, \"policy_enabled\": true, \"role\": \"ap\", \"status\": \"passed\"}\nroot@AP:~# "
+        },
+        {
+          "phase": "restore explicit guest forwarding prohibition",
+          "node": "GUEST",
+          "command": "python3 /lab/g.py check",
+          "expectation": "Actual completed WPA2/CCMP and a fresh shared HTTP endpoint stay healthy, while internal service access is explicitly rejected at the network layer in three fresh connections and receives no ping replies.",
+          "passed": true,
+          "output": "\nroot@GUEST:~# python3 /lab/g.py check\n{\"associated\": true, \"inside_access\": \"deny\", \"role\": \"client\", \"shared_endpoint\": \"healthy\", \"status\": \"passed\"}\nroot@GUEST:~# "
+        }
+      ],
+      "plan_sha256": "24172321a5055b8ccfb0d6a9e59abb22977a29132e095696082876e1b3e338c1",
+      "startup_states": {
+        "AP": "STARTED",
+        "GUEST": "STARTED",
+        "INSIDE": "BOOTED"
+      },
+      "images": {
+        "AP": "wireless-ap-24-04-20260409",
+        "GUEST": "wireless-client-24-04-20260409",
+        "INSIDE": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "AP",
+        "GUEST"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T18:07:54Z"
     }
   ]
 }

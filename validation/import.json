@@ -43,11 +43,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/design/045-guest-wireless-isolation-concept.yaml",
-      "sha256": "b63072f65a6bed00a3980935dbfd37638f3193231490c04797a0126b5834297d",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/015-static-default-routes.yaml",
       "sha256": "8e248967bdba7bccdb65bb999573c85454f965bc1b71323ba1556906355871b2",
       "status": "import-export-pass"
@@ -1203,11 +1198,6 @@
       "completed_utc": "2026-10-31T16:56:54Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/039-controller-based-networking.yaml",
       "sha256": "40c349d4c913a9d0f83ddfbe669bafb37ddcf000632f7f043cba7eac76fa8469",
       "cml_version": "2.10.1+build.21",
@@ -1256,6 +1246,21 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T17:21:49Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/design/045-guest-wireless-isolation-concept.yaml",
+      "sha256": "1adc67a5c33b90d5d823ced5a1609c7d46dea49fa76fbe53ee89ac9e72fdfd59",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T17:54:41Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T17:54:41Z"
     }
   ]
 }

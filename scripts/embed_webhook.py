@@ -11,6 +11,10 @@ import yaml
 from labtools import ROOT, load
 
 PROFILES = {
+    "wireless-guest": {
+        "/lab/radio_probe.py": "examples/wireless/radio_probe.py",
+        "/lab/g.py": "examples/wireless/guest_probe.py",
+    },
     "wireless-vlan": {
         "/lab/radio_probe.py": "examples/wireless/radio_probe.py",
         "/lab/v.py": "examples/wireless/vlan_probe.py",
@@ -38,6 +42,12 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "wireless-guest": {
+        "INSIDE": {
+            "/lab/radio_probe.py": "examples/wireless/radio_probe.py",
+            "/lab/g.py": "examples/wireless/guest_probe.py",
+        },
+    },
     "native-iosxe-controller": {
         "TOOLS": {
             "/lab/api_probe.py": "examples/automation/api_probe.py",

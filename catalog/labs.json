@@ -180,26 +180,26 @@
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/design/045-guest-wireless-isolation-concept.yaml",
-      "title": "Guest Wireless Isolation Concept",
+      "title": "Guest WLAN: Service Segmentation and Recovery",
       "track": "200-301",
       "topic": "design",
-      "nodes": 6,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "net-tools",
+        "wireless-ap",
+        "wireless-client"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 4608,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 95,
+      "workbook": "docs/workbooks/200-301-045-guest-wireless-isolation-concept.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "b63072f65a6bed00a3980935dbfd37638f3193231490c04797a0126b5834297d"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T18:07:54Z",
+      "sha256": "1adc67a5c33b90d5d823ced5a1609c7d46dea49fa76fbe53ee89ac9e72fdfd59"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/015-static-default-routes.yaml",

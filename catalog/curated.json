@@ -1130,5 +1130,12 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-901-040-devcor-capstone-network-automation-app.md",
     "example_profile": "native-iosxe-controller"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/design/045-guest-wireless-isolation-concept.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 95,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-045-guest-wireless-isolation-concept.md",
+    "example_profile": "wireless-guest"
   }
 }
