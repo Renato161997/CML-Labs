@@ -36,4 +36,6 @@ These fixtures use root-owned cloud-init files and verify successful initializat
 
 For these stock wireless definitions, the editable seed files are `user-data`, followed by `network-config`. The controller generates read-only `meta-data`; providing that file in a topology does not preserve it through export. Validation rejects that ignored file and reordered seeds so an imported topology must retain the configuration actually reviewed and tested.
 
+The WLAN/VLAN exercise additionally bridges the AP radio to a real Linux 802.1Q uplink connected to an IOL-L2 trunk. Actual switch learning and client-to-SVI traffic must follow VLAN10; moving only the uplink to VLAN20 must break that traffic while radio association and the independent untagged control path survive. Repair must recover forwarding. This tests a transparent bridge/trunk teaching model; it does not certify Cisco wireless-controller VLAN policy or CAPWAP.
+
 [Cisco's wireless release notes](https://developer.cisco.com/docs/modeling-labs/cml-release-notes/) describe the virtual radio support as beta. Displayed bitrate, signal and packet timing are simulated observations. The tests do not establish RF coverage, physical performance, EAP/RADIUS, WPA3, PMF, the separate vAP image or Catalyst 9800 integration.

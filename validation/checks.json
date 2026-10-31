@@ -20646,5 +20646,97 @@
         ]
       }
     ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/014-wlan-client-vlan-mapping.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/v.py check",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"associated\": true)(?=.*\"received\": 3\\b)",
+        "expectation": "Actual WLAN association stays completed; three fresh interface-bound requests receive all replies from the switch VLAN10 SVI.",
+        "command_timeout": 90,
+        "attempts": 2
+      },
+      {
+        "node": "AP",
+        "command": "python3 /lab/v.py check --vlan 10",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"control_received\": 3)(?=.*\"uplink_vlan\": 10\\b)",
+        "expectation": "Actual AP state, bridge port/tag selection and three independent untagged uplink replies agree.",
+        "command_timeout": 35
+      },
+      {
+        "node": "SW",
+        "command": "show mac address-table dynamic vlan 10",
+        "pattern": "(?im)^\\s*10\\s+[0-9a-f.]+\\s+DYNAMIC\\s+Et0/0\\s*$",
+        "expectation": "The switch actually learns a dynamic source in the selected tagged VLAN on the AP trunk.",
+        "attempts": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "map the WLAN to the wrong tagged VLAN",
+        "node": "AP",
+        "commands": [
+          "python3 /lab/v.py map --vlan 20"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "AP",
+            "command": "python3 /lab/v.py check --vlan 20",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"control_received\": 3)(?=.*\"uplink_vlan\": 20\\b)",
+            "expectation": "Actual AP state, bridge port/tag selection and three independent untagged uplink replies agree.",
+            "command_timeout": 35
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/v.py check --expect down",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"associated\": true)(?=.*\"received\": 0\\b)",
+            "expectation": "Actual WLAN association stays completed; three fresh interface-bound requests receive zero replies after neighbor-cache flushing.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "SW",
+            "command": "show mac address-table dynamic vlan 20",
+            "pattern": "(?im)^\\s*20\\s+[0-9a-f.]+\\s+DYNAMIC\\s+Et0/0\\s*$",
+            "expectation": "The switch actually learns a dynamic source in the selected tagged VLAN on the AP trunk.",
+            "attempts": 3
+          }
+        ]
+      },
+      {
+        "name": "restore the WLAN VLAN10 uplink",
+        "node": "AP",
+        "commands": [
+          "python3 /lab/v.py map --vlan 10"
+        ],
+        "command_pattern": "\"configured\": true",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/v.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"associated\": true)(?=.*\"received\": 3\\b)",
+            "expectation": "Actual WLAN association stays completed; three fresh interface-bound requests receive all replies from the switch VLAN10 SVI.",
+            "command_timeout": 90,
+            "attempts": 2
+          },
+          {
+            "node": "AP",
+            "command": "python3 /lab/v.py check --vlan 10",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"control_received\": 3)(?=.*\"uplink_vlan\": 10\\b)",
+            "expectation": "Actual AP state, bridge port/tag selection and three independent untagged uplink replies agree.",
+            "command_timeout": 35
+          },
+          {
+            "node": "SW",
+            "command": "show mac address-table dynamic vlan 10",
+            "pattern": "(?im)^\\s*10\\s+[0-9a-f.]+\\s+DYNAMIC\\s+Et0/0\\s*$",
+            "expectation": "The switch actually learns a dynamic source in the selected tagged VLAN on the AP trunk.",
+            "attempts": 3
+          }
+        ]
+      }
+    ]
   }
 }
