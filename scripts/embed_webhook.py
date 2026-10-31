@@ -244,6 +244,12 @@ NATIVE_PROFILES = {
 }
 
 
+NATIVE_PROFILES["native-iosxe-api-security"] = {
+    label: {**sources, "/lab/s.py": "examples/automation/api_security.py"}
+    for label, sources in NATIVE_PROFILES["native-iosxe-controller"].items()
+}
+
+
 def native_sources(data, metadata):
     """Validate registered source payloads without executing a shell or guest code."""
     profile = NATIVE_PROFILES.get(metadata.get("example_profile"))

@@ -1165,5 +1165,19 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-401-033-infrastructure-device-hardening.md",
     "example_profile": "aaa-sessions-sources"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/005-sdn-api-security.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-005-sdn-api-security.md",
+    "example_profile": "native-iosxe-api-security"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/023-application-threat-model.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-023-application-threat-model.md",
+    "example_profile": "native-iosxe-api-security"
   }
 }

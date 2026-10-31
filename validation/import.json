@@ -838,11 +838,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/005-sdn-api-security.yaml",
-      "sha256": "808f65f6526a677b14e9dd649055b482e51aab207f02953a47892cd59faf1ad6",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility/042-span-netflow-siem-triage.yaml",
       "sha256": "5110c61e5e8f3ee774f7ca23fd305db43ddd0380ebddcd9b541a350c18e6c9ea",
       "status": "import-export-pass"
@@ -940,11 +935,6 @@
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/022-secure-api-client.yaml",
       "sha256": "4425988fa64785f7755d6f4290ad8d40139c594a654bbb36967a14b929e91901",
-      "status": "import-export-pass"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/023-application-threat-model.yaml",
-      "sha256": "cae46b2485dc07ee3e777c0752e3558d5c33538f04f86fd2d4487a847acfa0ed",
       "status": "import-export-pass"
     },
     {
@@ -1258,11 +1248,6 @@
       "completed_utc": "2026-10-31T21:43:55Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/011-aaa-ise-radius-tacacs.yaml",
       "sha256": "591eb80492b29004b9696cc750aacec3a4d132698a65747cc47c01600f04b867",
       "cml_version": "2.10.1+build.21",
@@ -1281,6 +1266,31 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T22:05:31Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/005-sdn-api-security.yaml",
+      "sha256": "d2ea208d84618fbc25444836b7658e63c00ee2fba8aec67934ba8443ed7678e8",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T22:38:51Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T22:38:52Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/023-application-threat-model.yaml",
+      "sha256": "6c067dbf7f4dd2a2cb0b547032b3d8cee1721552d3af48c07c6b05ef5036b7f9",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T22:38:54Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T22:38:54Z"
     }
   ]
 }
