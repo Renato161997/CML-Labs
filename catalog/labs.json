@@ -3645,26 +3645,26 @@
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/007-router-switch-hardening.yaml",
-      "title": "Router Switch Hardening",
+      "title": "Switch Management: Source Admission and Least Privilege",
       "track": "350-701",
       "topic": "network-security",
-      "nodes": 5,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "cml-labs-toolbox",
+        "ioll2-xe",
+        "ubuntu"
       ],
-      "nominal_ram_mib": 3072,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 95,
+      "workbook": "docs/workbooks/350-701-007-router-switch-hardening.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "c3b5c71040d8d0c5941784ae056380c8959c402a101126c9de31d2b913d9508a"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T16:03:16Z",
+      "sha256": "379f0c359adb9fa7456d3fb1ad43e05871b3ccd8ffd67f701e7ea787071f8fb4"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/008-acl-nat-inspection.yaml",

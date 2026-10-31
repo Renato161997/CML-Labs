@@ -26,9 +26,19 @@ PROFILES = {
         "/opt/cml-management/ssh_probe.py": "examples/management/ssh_probe.py",
         "/opt/cml-management/ssh_policy_probe.py": "examples/management/ssh_policy_probe.py",
     },
+    "switch-management-source": {
+        "/opt/cml-management/ssh_probe.py": "examples/management/ssh_probe.py",
+        "/opt/cml-management/ssh_policy_probe.py": "examples/management/ssh_policy_probe.py",
+    },
 }
 
 NATIVE_PROFILES = {
+    "switch-management-source": {
+        "UNTRUST": {
+            "/opt/cml-management/ssh_probe.py": "examples/management/ssh_probe.py",
+            "/opt/cml-management/ssh_policy_probe.py": "examples/management/ssh_policy_probe.py",
+        },
+    },
     "native-oauth": {
         "AUTH": {"/lab/oauth.py": "examples/api-core/oauth_fixture.py"},
         "CLIENT": {"/lab/oauth.py": "examples/api-core/oauth_fixture.py"},

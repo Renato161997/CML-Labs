@@ -38,7 +38,12 @@ from labtools import (
     require_resource_budget,
     validate,
 )
-from linux_console import NATIVE_CONSOLE_PORT, NATIVE_LINUX, establish_linux_shell
+from linux_console import (
+    NATIVE_CONSOLE_PORT,
+    NATIVE_LINUX,
+    establish_linux_shell,
+    establish_ubuntu_shell,
+)
 from readiness import (
     establish_ios_privilege,
     establish_ios_prompt,
@@ -109,14 +114,7 @@ class WebConsole:
             elif node.node_definition in NATIVE_LINUX:
                 establish_linux_shell(self.label, self.socket.send, self.read)
             elif node.node_definition == "ubuntu":
-                deadline = time.monotonic() + 120
-                while not re.search(r"root@DEVBOX", prompt) and time.monotonic() < deadline:
-                    self.socket.send("\r")
-                    prompt += self.read(5)
-                if not re.search(r"root@DEVBOX", prompt):
-                    raise RuntimeError(
-                        "Ubuntu serial console did not reach its isolated root shell"
-                    )
+                establish_ubuntu_shell(self.label, prompt, self.socket.send, self.read)
         except BaseException:
             self.socket.close()
             raise
@@ -208,14 +206,7 @@ class SSHConsole:
             elif node.node_definition in NATIVE_LINUX:
                 establish_linux_shell(self.label, self.channel.send, self.read)
             elif node.node_definition == "ubuntu":
-                deadline = time.monotonic() + 120
-                while not re.search(r"root@DEVBOX", prompt) and time.monotonic() < deadline:
-                    self.channel.send("\r")
-                    prompt += self.read(5)
-                if not re.search(r"root@DEVBOX", prompt):
-                    raise RuntimeError(
-                        "Ubuntu serial console did not reach its isolated root shell"
-                    )
+                establish_ubuntu_shell(self.label, prompt, self.channel.send, self.read)
         except BaseException:
             self.ssh.close()
             raise

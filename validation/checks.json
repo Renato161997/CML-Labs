@@ -20339,5 +20339,148 @@
         ]
       }
     ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/007-router-switch-hardening.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show running-config | section line vty",
+        "pattern": "(?s)line vty 0 4(?=.*login local)(?=.*transport input ssh)(?=.*access-class MGMT in)",
+        "expectation": "The actual configured VTY range uses local SSH and the intended source ACL."
+      },
+      {
+        "node": "R1",
+        "command": "show interfaces Vlan10",
+        "pattern": "Vlan10 is up, line protocol is up",
+        "expectation": "The management SVI is operational.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "UNTRUST",
+        "command": "ping -c 3 -W 2 198.18.0.1",
+        "pattern": "3 (?:packets )?transmitted, 3 received",
+        "expectation": "The independent source retains real IP connectivity to the management SVI.",
+        "attempts": 10,
+        "interval_seconds": 2
+      }
+    ],
+    "transitions": [
+      {
+        "name": "generate the disposable SSH host identity",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "crypto key generate rsa general-keys label CML-LAB-SSH modulus 2048",
+          "ip ssh rsa keypair-name CML-LAB-SSH",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "The authorized management VLAN proves actual SSH login, viewer privilege1, denied configuration, banner, wrong-password rejection and closed legacy/web listeners.",
+            "command_timeout": 45
+          },
+          {
+            "node": "UNTRUST",
+            "command": "python3 /opt/cml-management/ssh_policy_probe.py denied",
+            "pattern": "\"passed\": true",
+            "expectation": "The independently sourced client is rejected by transport policy, not a bad password or a host-key error.",
+            "command_timeout": 30
+          },
+          {
+            "node": "R1",
+            "command": "show access-lists MGMT",
+            "pattern": "deny\\s+any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The actual source-deny rule counts attempts from the untrusted VLAN."
+          },
+          {
+            "node": "UNTRUST",
+            "command": "ping -c 3 -W 2 198.18.0.1",
+            "pattern": "3 (?:packets )?transmitted, 3 received",
+            "expectation": "The independent source retains real IP connectivity to the management SVI.",
+            "attempts": 10,
+            "interval_seconds": 2
+          }
+        ],
+        "command_timeout": 40
+      },
+      {
+        "name": "bypass only management source admission",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "line vty 0 4",
+          "no access-class MGMT in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "UNTRUST",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "The same untrusted source actually authenticates and obtains a privilege1 SSH session when the source allowlist is bypassed; password and privilege restrictions remain effective.",
+            "command_timeout": 45
+          },
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "The authorized management VLAN proves actual SSH login, viewer privilege1, denied configuration, banner, wrong-password rejection and closed legacy/web listeners.",
+            "command_timeout": 45
+          },
+          {
+            "node": "UNTRUST",
+            "command": "ping -c 3 -W 2 198.18.0.1",
+            "pattern": "3 (?:packets )?transmitted, 3 received",
+            "expectation": "The independent source retains real IP connectivity to the management SVI.",
+            "attempts": 10,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "remove the source-admission bypass",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "line vty 0 4",
+          "access-class MGMT in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "UNTRUST",
+            "command": "python3 /opt/cml-management/ssh_policy_probe.py denied",
+            "pattern": "\"passed\": true",
+            "expectation": "The independently sourced client is rejected by transport policy, not a bad password or a host-key error.",
+            "command_timeout": 30
+          },
+          {
+            "node": "R1",
+            "command": "show access-lists MGMT",
+            "pattern": "deny\\s+any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The actual source-deny rule counts attempts from the untrusted VLAN."
+          },
+          {
+            "node": "DEVBOX",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "The authorized management VLAN proves actual SSH login, viewer privilege1, denied configuration, banner, wrong-password rejection and closed legacy/web listeners.",
+            "command_timeout": 45
+          },
+          {
+            "node": "UNTRUST",
+            "command": "ping -c 3 -W 2 198.18.0.1",
+            "pattern": "3 (?:packets )?transmitted, 3 received",
+            "expectation": "The independent source retains real IP connectivity to the management SVI.",
+            "attempts": 10,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
   }
 }
