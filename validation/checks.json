@@ -19255,5 +19255,1089 @@
         ]
       }
     ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/037-redistribution-nightmare.yaml": {
+    "checks": [
+      {
+        "node": "RIGHT",
+        "command": "show ip route 203.0.113.100",
+        "pattern": "(?s)Known via \"eigrp 100\".*Route tag 100",
+        "expectation": "The service is a real tagged external EIGRP route.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "B3",
+        "command": "show ip route 203.0.113.100",
+        "pattern": "Known via \"ospf 1\"",
+        "expectation": "Normal administrative distance selects the native OSPF route.",
+        "attempts": 30,
+        "interval_seconds": 2
+      },
+      {
+        "node": "RIGHT",
+        "command": "ping 203.0.113.100 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual endpoint traffic succeeds.",
+        "attempts": 20,
+        "interval_seconds": 2
+      },
+      {
+        "node": "RIGHT",
+        "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Actual endpoint traffic succeeds.",
+        "attempts": 20,
+        "interval_seconds": 2
+      }
+    ],
+    "transitions": [
+      {
+        "name": "prefer the returned external route but retain its export guard",
+        "node": "B3",
+        "commands": [
+          "configure terminal",
+          "router eigrp 100",
+          "distance eigrp 90 90",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "B3",
+            "command": "show ip route 203.0.113.100",
+            "pattern": "(?s)Known via \"eigrp 100\", distance 90.*Route tag 100",
+            "expectation": "The changed external distance actually selects the returned tagged EIGRP route.",
+            "attempts": 30,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RIGHT",
+            "command": "ping 203.0.113.100 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual endpoint traffic succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RIGHT",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual endpoint traffic succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "remove the origin-tag export guard",
+        "node": "B3",
+        "commands": [
+          "configure terminal",
+          "no route-map E2O deny 10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "B3",
+            "command": "show ip route 203.0.113.100",
+            "pattern": "(?s)Known via \"eigrp 100\", distance 90.*Route tag 100",
+            "expectation": "The changed external distance actually selects the returned tagged EIGRP route.",
+            "attempts": 30,
+            "interval_seconds": 2
+          },
+          {
+            "node": "B2",
+            "command": "show ip ospf database external 203.0.113.100",
+            "pattern": "(?is)^(?!.*(?:Delete flag|MAXAGE|Metric:\\s*16777215\\b)).*Advertising Router: 192\\.0\\.2\\.3.*External Route Tag: 200",
+            "expectation": "The second boundary has actually reflected the OSPF-origin prefix into an external OSPF LSA.",
+            "attempts": 30,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RIGHT",
+            "command": "ping 203.0.113.100 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual endpoint traffic succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RIGHT",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual endpoint traffic succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "remove the second returned-origin guard",
+        "node": "B2",
+        "commands": [
+          "configure terminal",
+          "no route-map O2E deny 10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "B2",
+            "command": "show ip ospf database external 203.0.113.100",
+            "pattern": "(?is)^(?!.*(?:Delete flag|MAXAGE|Metric:\\s*16777215\\b)).*Advertising Router: 192\\.0\\.2\\.3.*External Route Tag: 200",
+            "expectation": "The second boundary has actually reflected the OSPF-origin prefix into an external OSPF LSA.",
+            "attempts": 30,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RIGHT",
+            "command": "show ip route 203.0.113.100",
+            "pattern": "(?s)Known via \"eigrp 100\".*Route tag 100",
+            "expectation": "The service is a real tagged external EIGRP route.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "RIGHT",
+            "command": "ping 203.0.113.100 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual endpoint traffic succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RIGHT",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual endpoint traffic succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "withdraw the real service and observe persistent feedback",
+        "node": "LEFT",
+        "commands": [
+          "configure terminal",
+          "interface Loopback100",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "B2",
+            "command": "show ip ospf database external 203.0.113.100",
+            "pattern": "(?is)^(?!.*(?:Delete flag|MAXAGE|Metric:\\s*16777215\\b)).*Advertising Router: 192\\.0\\.2\\.3.*External Route Tag: 200",
+            "expectation": "The second boundary has actually reflected the OSPF-origin prefix into an external OSPF LSA.",
+            "attempts": 30,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RIGHT",
+            "command": "show ip route 203.0.113.100",
+            "pattern": "(?s)Known via \"eigrp 100\".*Route tag 100",
+            "expectation": "The service is a real tagged external EIGRP route.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "RIGHT",
+            "command": "ping 203.0.113.100 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual endpoint traffic cannot reach the withdrawn service.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RIGHT",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual endpoint traffic succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RIGHT",
+            "command": "show ip route 203.0.113.100",
+            "pattern": "Known via \"eigrp 100\"",
+            "expectation": "The ghost route remains after the failed data-plane probes.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "repair origin rejection and normal external distance",
+        "node": "B3",
+        "commands": [
+          "configure terminal",
+          "route-map E2O deny 10",
+          "match tag 100",
+          "exit",
+          "router eigrp 100",
+          "distance eigrp 90 170",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "RIGHT",
+            "command": "show ip route 203.0.113.100",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "After the return-export guard is repaired the withdrawn service route disappears.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "RIGHT",
+            "command": "ping 203.0.113.100 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Actual endpoint traffic cannot reach the withdrawn service.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RIGHT",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual endpoint traffic succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "restore the second returned-origin guard",
+        "node": "B2",
+        "commands": [
+          "configure terminal",
+          "route-map O2E deny 10",
+          "match tag 200",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "RIGHT",
+            "command": "show ip route 203.0.113.100",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "After the return-export guard is repaired the withdrawn service route disappears.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "RIGHT",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual endpoint traffic succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "restore the actual service",
+        "node": "LEFT",
+        "commands": [
+          "configure terminal",
+          "interface Loopback100",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "RIGHT",
+            "command": "show ip route 203.0.113.100",
+            "pattern": "(?s)Known via \"eigrp 100\".*Route tag 100",
+            "expectation": "The service is a real tagged external EIGRP route.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "B3",
+            "command": "show ip route 203.0.113.100",
+            "pattern": "Known via \"ospf 1\"",
+            "expectation": "Normal administrative distance selects the native OSPF route.",
+            "attempts": 30,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RIGHT",
+            "command": "ping 203.0.113.100 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual endpoint traffic succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RIGHT",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Actual endpoint traffic succeeds.",
+            "attempts": 20,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/assessment/044-enarsi-practical-checkpoint.yaml": {
+    "checks": [
+      {
+        "node": "ABR",
+        "command": "ping 198.18.23.2 source Ethernet0/1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Direct IP connectivity works despite the OSPF area mismatch.",
+        "attempts": 20,
+        "interval_seconds": 2
+      },
+      {
+        "node": "CLIENT",
+        "command": "show ip route 192.0.2.3",
+        "pattern": "(?i)(not in table|not in routing table)",
+        "expectation": "The remote service route is absent.",
+        "attempts": 8
+      },
+      {
+        "node": "SERVICE",
+        "command": "show ip ospf interface Ethernet0/0",
+        "pattern": "Area 20",
+        "expectation": "The service-side link has the deliberately wrong area."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "repair the mismatched OSPF area",
+        "node": "SERVICE",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ip ospf 1 area 10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?s)Known via \"ospf 1\".*type inter area",
+            "expectation": "The service actually appears as an inter-area OSPF route.",
+            "attempts": 30,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping service.example.test source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The DNS-named service does not reply to the policy-selected source.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "show hosts",
+            "pattern": "service\\.example\\.test[^\\n]*192\\.0\\.2\\.3",
+            "expectation": "The actual lab DNS lookup resolves the service address."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.3 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "A separate transit source proves that the same service and return path remain healthy.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "ABR",
+            "command": "show access-lists EXAM",
+            "pattern": "deny icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.3 echo[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The exact selected source rule counts real denied requests."
+          }
+        ]
+      },
+      {
+        "name": "correct the authorized-source policy selector",
+        "node": "ABR",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended EXAM",
+          "no 10",
+          "10 deny icmp host 192.0.2.66 host 192.0.2.3 echo",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "show ip route 192.0.2.3",
+            "pattern": "(?s)Known via \"ospf 1\".*type inter area",
+            "expectation": "The service actually appears as an inter-area OSPF route.",
+            "attempts": 30,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping service.example.test source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The DNS-named service replies to the authorized source.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "show hosts",
+            "pattern": "service\\.example\\.test[^\\n]*192\\.0\\.2\\.3",
+            "expectation": "The actual lab DNS lookup resolves the service address."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.3 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "A separate transit source proves that the same service and return path remain healthy.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping service.example.test source Loopback66 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The DNS-named service does not reply to the policy-selected source.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "ABR",
+            "command": "show access-lists EXAM",
+            "pattern": "deny icmp host 192\\.0\\.2\\.66 host 192\\.0\\.2\\.3 echo[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The exact selected source rule counts real denied requests."
+          },
+          {
+            "node": "ABR",
+            "command": "ping 198.18.23.2 source Ethernet0/1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Direct IP connectivity works despite the OSPF area mismatch.",
+            "attempts": 20,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/046-enarsi-capstone-vpn-services.yaml": {
+    "checks": [
+      {
+        "node": "PE1",
+        "command": "show mpls ldp neighbor",
+        "pattern": "(?s)Peer LDP Ident:\\s*192\\.0\\.2\\.2:0.*State:\\s*Oper",
+        "expectation": "The actual LDP transport neighbor is operational.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "PE1",
+        "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Provider transport remains healthy independently of tenant import policy.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "PE1",
+        "command": "show ip bgp vpnv4 all summary",
+        "pattern": "(?m)^192\\.0\\.2\\.3\\s+4\\s+65000\\s+(?:\\S+\\s+){6}[2-9][0-9]*\\s*$",
+        "expectation": "VPNv4 is established and has received both tenant routes.",
+        "attempts": 45,
+        "interval_seconds": 4
+      },
+      {
+        "node": "PE1",
+        "command": "show ip route vrf BLUE 192.0.2.12",
+        "pattern": "Known via \"bgp 65000\"",
+        "expectation": "The exact BLUE VRF imports the actual VPNv4 route.",
+        "attempts": 35,
+        "interval_seconds": 3
+      },
+      {
+        "node": "PE1",
+        "command": "show ip route vrf RED 192.0.2.22",
+        "pattern": "Known via \"bgp 65000\"",
+        "expectation": "The exact RED VRF imports the actual VPNv4 route.",
+        "attempts": 35,
+        "interval_seconds": 3
+      },
+      {
+        "node": "PE2",
+        "command": "show ip route vrf BLUE 192.0.2.11",
+        "pattern": "Known via \"bgp 65000\"",
+        "expectation": "The exact BLUE VRF imports the actual VPNv4 route.",
+        "attempts": 35,
+        "interval_seconds": 3
+      },
+      {
+        "node": "PE2",
+        "command": "show ip route vrf RED 192.0.2.21",
+        "pattern": "Known via \"bgp 65000\"",
+        "expectation": "The exact RED VRF imports the actual VPNv4 route.",
+        "attempts": 35,
+        "interval_seconds": 3
+      },
+      {
+        "node": "PE1",
+        "command": "show ip route vrf BLUE 192.0.2.22",
+        "pattern": "(?i)(not in table|not in routing table)",
+        "expectation": "The exact BLUE VRF has no route for the other tenant destination.",
+        "attempts": 35,
+        "interval_seconds": 3
+      },
+      {
+        "node": "PE2",
+        "command": "show ip route vrf RED 192.0.2.11",
+        "pattern": "(?i)(not in table|not in routing table)",
+        "expectation": "The exact RED VRF has no route for the other tenant destination.",
+        "attempts": 35,
+        "interval_seconds": 3
+      },
+      {
+        "node": "BLUE1",
+        "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Real BLUE1 traffic reaches the selected customer loopback.",
+        "attempts": 15,
+        "interval_seconds": 2
+      },
+      {
+        "node": "RED1",
+        "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Real RED1 traffic reaches the selected customer loopback.",
+        "attempts": 15,
+        "interval_seconds": 2
+      },
+      {
+        "node": "PE1",
+        "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Provider transport remains healthy independently of tenant import policy.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "PE1",
+        "command": "show mpls ldp neighbor",
+        "pattern": "(?s)Peer LDP Ident:\\s*192\\.0\\.2\\.2:0.*State:\\s*Oper",
+        "expectation": "The actual LDP transport neighbor is operational.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "BLUE1",
+        "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "Real BLUE1 traffic does not complete across the selected tenant boundary.",
+        "attempts": 1,
+        "interval_seconds": 2
+      },
+      {
+        "node": "P",
+        "command": "show ip route 192.0.2.22",
+        "pattern": "(?i)(not in table|not in routing table)",
+        "expectation": "The transit provider has no global customer-destination route."
+      },
+      {
+        "node": "P",
+        "command": "show mpls forwarding-table",
+        "pattern": "192\\.0\\.2\\.3/32\\s+[1-9][0-9]*",
+        "expectation": "The provider core actually switches labeled payload bytes toward PE2."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "leak only the forward tenant import",
+        "node": "PE1",
+        "commands": [
+          "configure terminal",
+          "ip vrf BLUE",
+          "route-target import 65000:20",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "PE1",
+            "command": "show ip route vrf BLUE 192.0.2.22",
+            "pattern": "Known via \"bgp 65000\"",
+            "expectation": "The exact BLUE VRF imports the actual VPNv4 route.",
+            "attempts": 35,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PE2",
+            "command": "show ip route vrf RED 192.0.2.11",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "The exact RED VRF has no route for the other tenant destination.",
+            "attempts": 35,
+            "interval_seconds": 3
+          },
+          {
+            "node": "BLUE1",
+            "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Real BLUE1 traffic does not complete across the selected tenant boundary.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "BLUE1",
+            "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Real BLUE1 traffic reaches the selected customer loopback.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RED1",
+            "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Real RED1 traffic reaches the selected customer loopback.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "PE1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Provider transport remains healthy independently of tenant import policy.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PE1",
+            "command": "show mpls ldp neighbor",
+            "pattern": "(?s)Peer LDP Ident:\\s*192\\.0\\.2\\.2:0.*State:\\s*Oper",
+            "expectation": "The actual LDP transport neighbor is operational.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "leak the return tenant import",
+        "node": "PE2",
+        "commands": [
+          "configure terminal",
+          "ip vrf RED",
+          "route-target import 65000:10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "PE2",
+            "command": "show ip route vrf RED 192.0.2.11",
+            "pattern": "Known via \"bgp 65000\"",
+            "expectation": "The exact RED VRF imports the actual VPNv4 route.",
+            "attempts": 35,
+            "interval_seconds": 3
+          },
+          {
+            "node": "BLUE1",
+            "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Real BLUE1 traffic reaches the selected customer loopback.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "BLUE1",
+            "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Real BLUE1 traffic reaches the selected customer loopback.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RED1",
+            "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Real RED1 traffic reaches the selected customer loopback.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "PE1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Provider transport remains healthy independently of tenant import policy.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PE1",
+            "command": "show mpls ldp neighbor",
+            "pattern": "(?s)Peer LDP Ident:\\s*192\\.0\\.2\\.2:0.*State:\\s*Oper",
+            "expectation": "The actual LDP transport neighbor is operational.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "P",
+            "command": "show ip route 192.0.2.22",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "The transit provider has no global customer-destination route."
+          },
+          {
+            "node": "P",
+            "command": "show mpls forwarding-table",
+            "pattern": "192\\.0\\.2\\.3/32\\s+[1-9][0-9]*",
+            "expectation": "The provider core actually switches labeled payload bytes toward PE2."
+          }
+        ]
+      },
+      {
+        "name": "remove the forward leak",
+        "node": "PE1",
+        "commands": [
+          "configure terminal",
+          "ip vrf BLUE",
+          "no route-target import 65000:20",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "PE1",
+            "command": "show ip route vrf BLUE 192.0.2.22",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "The exact BLUE VRF has no route for the other tenant destination.",
+            "attempts": 35,
+            "interval_seconds": 3
+          },
+          {
+            "node": "BLUE1",
+            "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Real BLUE1 traffic does not complete across the selected tenant boundary.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "BLUE1",
+            "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Real BLUE1 traffic reaches the selected customer loopback.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RED1",
+            "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Real RED1 traffic reaches the selected customer loopback.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "PE1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Provider transport remains healthy independently of tenant import policy.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PE1",
+            "command": "show mpls ldp neighbor",
+            "pattern": "(?s)Peer LDP Ident:\\s*192\\.0\\.2\\.2:0.*State:\\s*Oper",
+            "expectation": "The actual LDP transport neighbor is operational.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "remove the return leak and verify full isolation",
+        "node": "PE2",
+        "commands": [
+          "configure terminal",
+          "ip vrf RED",
+          "no route-target import 65000:10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "PE1",
+            "command": "show ip route vrf BLUE 192.0.2.12",
+            "pattern": "Known via \"bgp 65000\"",
+            "expectation": "The exact BLUE VRF imports the actual VPNv4 route.",
+            "attempts": 35,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PE1",
+            "command": "show ip route vrf RED 192.0.2.22",
+            "pattern": "Known via \"bgp 65000\"",
+            "expectation": "The exact RED VRF imports the actual VPNv4 route.",
+            "attempts": 35,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PE2",
+            "command": "show ip route vrf BLUE 192.0.2.11",
+            "pattern": "Known via \"bgp 65000\"",
+            "expectation": "The exact BLUE VRF imports the actual VPNv4 route.",
+            "attempts": 35,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PE2",
+            "command": "show ip route vrf RED 192.0.2.21",
+            "pattern": "Known via \"bgp 65000\"",
+            "expectation": "The exact RED VRF imports the actual VPNv4 route.",
+            "attempts": 35,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PE1",
+            "command": "show ip route vrf BLUE 192.0.2.22",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "The exact BLUE VRF has no route for the other tenant destination.",
+            "attempts": 35,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PE2",
+            "command": "show ip route vrf RED 192.0.2.11",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "The exact RED VRF has no route for the other tenant destination.",
+            "attempts": 35,
+            "interval_seconds": 3
+          },
+          {
+            "node": "BLUE1",
+            "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Real BLUE1 traffic does not complete across the selected tenant boundary.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "BLUE1",
+            "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Real BLUE1 traffic reaches the selected customer loopback.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "RED1",
+            "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Real RED1 traffic reaches the selected customer loopback.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "PE1",
+            "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Provider transport remains healthy independently of tenant import policy.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PE1",
+            "command": "show mpls ldp neighbor",
+            "pattern": "(?s)Peer LDP Ident:\\s*192\\.0\\.2\\.2:0.*State:\\s*Oper",
+            "expectation": "The actual LDP transport neighbor is operational.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "P",
+            "command": "show ip route 192.0.2.22",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "The transit provider has no global customer-destination route."
+          },
+          {
+            "node": "P",
+            "command": "show mpls forwarding-table",
+            "pattern": "192\\.0\\.2\\.3/32\\s+[1-9][0-9]*",
+            "expectation": "The provider core actually switches labeled payload bytes toward PE2."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/045-enarsi-capstone-advanced-routing.yaml": {
+    "checks": [
+      {
+        "node": "BORDER",
+        "command": "show ip route 192.0.2.1",
+        "pattern": "(?s)Known via \"ospf 1\".*type inter area",
+        "expectation": "The customer prefix crosses the real area10/area0 boundary.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CUSTOMER",
+        "command": "show ip route 198.19.0.80",
+        "pattern": "(?s)Known via \"ospf 1\".*type extern 1.*Route tag 65001",
+        "expectation": "Only the provider service is actually redistributed into OSPF as a tagged E1.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "PROVIDER",
+        "command": "show ip route 192.0.2.1",
+        "pattern": "Known via \"bgp 65001\"",
+        "expectation": "The provider actually installs the permitted return prefix.",
+        "attempts": 35,
+        "interval_seconds": 3
+      },
+      {
+        "node": "PROVIDER",
+        "command": "show ip route 203.0.113.66",
+        "pattern": "(?i)(not in table|not in routing table)",
+        "expectation": "The provider has no return route for the unapproved prefix.",
+        "attempts": 35,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CUSTOMER",
+        "command": "ping 198.19.0.80 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The independent Loopback0 source completes real service round trips.",
+        "attempts": 15,
+        "interval_seconds": 2
+      },
+      {
+        "node": "CUSTOMER",
+        "command": "ping 198.19.0.80 source Loopback66 repeat 3",
+        "pattern": "Success rate is 0 percent",
+        "expectation": "The independent Loopback66 source cannot complete round trips without the provider return route.",
+        "attempts": 1,
+        "interval_seconds": 2
+      },
+      {
+        "node": "PROVIDER",
+        "command": "show access-lists OBSERVE",
+        "pattern": "permit icmp host 203\\.0\\.113\\.66 host 198\\.19\\.0\\.80 echo[^\\n]*\\([1-9][0-9]* match",
+        "expectation": "The alternate-source request actually reaches the service link: return-route admission is not an ingress packet firewall."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "broaden the customer export allowlist",
+        "node": "BORDER",
+        "commands": [
+          "configure terminal",
+          "ip prefix-list CUSTOMERS seq 20 permit 203.0.113.66/32",
+          "router bgp 65000",
+          "no redistribute ospf 1",
+          "redistribute ospf 1 match internal external 1 external 2 route-map IGP-TO-BGP",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "PROVIDER",
+            "command": "show ip route 203.0.113.66",
+            "pattern": "Known via \"bgp 65001\"",
+            "expectation": "The provider actually installs the permitted return prefix.",
+            "attempts": 35,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CUSTOMER",
+            "command": "ping 198.19.0.80 source Loopback66 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent Loopback66 source completes real service round trips.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CUSTOMER",
+            "command": "ping 198.19.0.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent Loopback0 source completes real service round trips.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CUSTOMER",
+            "command": "show ip route 198.19.0.80",
+            "pattern": "(?s)Known via \"ospf 1\".*type extern 1.*Route tag 65001",
+            "expectation": "Only the provider service is actually redistributed into OSPF as a tagged E1.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PROVIDER",
+            "command": "show access-lists OBSERVE",
+            "pattern": "permit icmp host 203\\.0\\.113\\.66 host 198\\.19\\.0\\.80 echo[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The alternate-source request actually reaches the service link: return-route admission is not an ingress packet firewall."
+          }
+        ]
+      },
+      {
+        "name": "restore the exact allowed customer prefix",
+        "node": "BORDER",
+        "commands": [
+          "configure terminal",
+          "no ip prefix-list CUSTOMERS seq 20 permit 203.0.113.66/32",
+          "router bgp 65000",
+          "no redistribute ospf 1",
+          "redistribute ospf 1 match internal external 1 external 2 route-map IGP-TO-BGP",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "BORDER",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)Known via \"ospf 1\".*type inter area",
+            "expectation": "The customer prefix crosses the real area10/area0 boundary.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CUSTOMER",
+            "command": "show ip route 198.19.0.80",
+            "pattern": "(?s)Known via \"ospf 1\".*type extern 1.*Route tag 65001",
+            "expectation": "Only the provider service is actually redistributed into OSPF as a tagged E1.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PROVIDER",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "Known via \"bgp 65001\"",
+            "expectation": "The provider actually installs the permitted return prefix.",
+            "attempts": 35,
+            "interval_seconds": 3
+          },
+          {
+            "node": "PROVIDER",
+            "command": "show ip route 203.0.113.66",
+            "pattern": "(?i)(not in table|not in routing table)",
+            "expectation": "The provider has no return route for the unapproved prefix.",
+            "attempts": 35,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CUSTOMER",
+            "command": "ping 198.19.0.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent Loopback0 source completes real service round trips.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CUSTOMER",
+            "command": "ping 198.19.0.80 source Loopback66 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The independent Loopback66 source cannot complete round trips without the provider return route.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "PROVIDER",
+            "command": "show access-lists OBSERVE",
+            "pattern": "permit icmp host 203\\.0\\.113\\.66 host 198\\.19\\.0\\.80 echo[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The alternate-source request actually reaches the service link: return-route admission is not an ingress packet firewall."
+          }
+        ]
+      }
+    ]
   }
 }

@@ -1,273 +1,239 @@
 lab:
   title: Redistribution Nightmare
-  description: 300-410 ENARSI - Implementing Cisco Enterprise Advanced Routing and Services scenario-based
-    CML lab.
-  notes: '300-410 ENARSI scenario lab: Redistribution Nightmare
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# Redistribution Nightmare
 
 
-    Lab type: break/fix
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Scenario:
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/300-410-037-redistribution-nightmare.md
 
-    You are taking over a partially built network. Use the topology, startup configs, and this note as
-    the work order.
+
+    Four IOL-XE routers form two routing domains with two ASBRs. The live service is LEFT Loopback100203.0.113.100/32;
+    LEFT Loopback0192.0.2.1/32 is an independent healthy control. Explicit prefix lists limit redistribution
+    to the exercise endpoints. OSPF-origin routes receive tag100 in EIGRP; EIGRP-origin routes receive
+    tag200 in OSPF. Both boundaries initially reject returned-origin tags. B3 external EIGRP distance
+    is deliberately lowered to90 before removing its E2O tag100 rejection and B2 O2E tag200 rejection.
+    Both sides of the returned-origin protection must be disabled to sustain feedback. Acceptance requires
+    the changed route selection and an actual external LSA advertised by B3, not just configuration presence.
+    With the original service interface shut down, a route must persist through redistribution feedback
+    while the real service fails and the independent endpoint remains healthy. Restoring the tag guard
+    and normal distance must withdraw that ghost route before the service is restored. This is a bounded
+    four-router control-plane feedback exercise, not a production convergence or general loop-freedom
+    proof. Nominal RAM is4GiB.
 
 
     Objectives:
 
-    - Stabilize OSPF, EIGRP, and BGP redistribution.
+    - Trace a real OSPF-origin service through two independent OSPF/EIGRP redistribution boundaries.
 
-    - Use tags or route maps to prevent loops.
+    - Change the second boundary external administrative distance, then remove its origin-tag export guard
+    and observe an actual reflected external LSA.
 
-    - Verify all loopbacks are reachable through the intended domain.
+    - Withdraw the original service and distinguish a persistent feedback route from real reachability;
+    repair origin filtering and distance before restoring service.
 
-
-    Known or suspected faults:
-
-    - A redistribution policy may be missing a tag.
-
-    - One prefix may be reintroduced into the wrong protocol.
-
-
-    Suggested verification:
-
-    - show ip interface brief
-
-    - show ip route
-
-    - show running-config
-
-
-    Stretch goals:
-
-    - Document the final design.
-
-    - Add one extra validation command for each requirement.
-
-    - Make one controlled change and prove that the network still works.'
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: HQ-R1
-  node_definition: iosv
+  label: LEFT
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.10.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.10.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.1.1\
-      \ 255.255.255.255\n"
+    content: "hostname LEFT\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Loopback100\n ip address 203.0.113.100 255.255.255.255\n no shutdown\n exit\ninterface Ethernet0/0\n\
+      \ ip address 198.18.12.1 255.255.255.252\n no shutdown\n exit\ninterface Ethernet0/1\n ip address\
+      \ 198.18.13.1 255.255.255.252\n no shutdown\n exit\nrouter ospf 1\n router-id 192.0.2.1\n passive-interface\
+      \ default\n no passive-interface Ethernet0/0\n no passive-interface Ethernet0/1\n no passive-interface\
+      \ Loopback0\n no passive-interface Loopback100\n exit\ninterface Ethernet0/0\n ip ospf 1 area 0\n\
+      \ ip ospf network point-to-point\n exit\ninterface Ethernet0/1\n ip ospf 1 area 0\n ip ospf network\
+      \ point-to-point\n exit\ninterface Loopback0\n ip ospf 1 area 0\n ip ospf network point-to-point\n\
+      \ exit\ninterface Loopback100\n ip ospf 1 area 0\n ip ospf network point-to-point\n exit\nend\n"
+  cpu_limit: 100
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 0
-  y: 0
-  priority: 100
   tags: []
 - id: n1
-  label: ISP-R2
-  node_definition: iosv
+  label: B2
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.11.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.11.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.2.1\
-      \ 255.255.255.255\n"
+    content: "hostname B2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.2 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.12.2 255.255.255.252\n no shutdown\n exit\ninterface Ethernet0/1\n\
+      \ ip address 198.18.24.1 255.255.255.252\n no shutdown\n exit\nip prefix-list OSPF-ENDPOINTS permit\
+      \ 192.0.2.1/32\nip prefix-list OSPF-ENDPOINTS permit 203.0.113.100/32\nip prefix-list ALL-ENDPOINTS\
+      \ permit 192.0.2.1/32\nip prefix-list ALL-ENDPOINTS permit 192.0.2.4/32\nip prefix-list ALL-ENDPOINTS\
+      \ permit 203.0.113.100/32\nroute-map O2E deny 10\n match tag 200\n exit\nroute-map O2E permit 20\n\
+      \ match ip address prefix-list OSPF-ENDPOINTS\n set tag 100\n exit\nroute-map E2O deny 10\n match\
+      \ tag 100\n exit\nroute-map E2O permit 20\n match ip address prefix-list ALL-ENDPOINTS\n set tag\
+      \ 200\n exit\nrouter ospf 1\n router-id 192.0.2.2\n passive-interface default\n no passive-interface\
+      \ Ethernet0/0\n no passive-interface Loopback0\n exit\ninterface Ethernet0/0\n ip ospf 1 area 0\n\
+      \ ip ospf network point-to-point\n exit\ninterface Loopback0\n ip ospf 1 area 0\n ip ospf network\
+      \ point-to-point\n exit\nrouter ospf 1\n redistribute eigrp 100 subnets route-map E2O\n exit\nrouter\
+      \ eigrp 100\n eigrp router-id 192.0.2.2\n no auto-summary\n network 198.18.24.0 0.0.0.3\n default-metric\
+      \ 10000 100 255 1 1500\n redistribute ospf 1 match internal external 1 external 2 route-map O2E\n\
+      \ exit\nend\n"
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 240
-  y: 0
-  priority: 99
   tags: []
 - id: n2
-  label: BRANCH-R3
-  node_definition: iosv
+  label: B3
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R3\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.12.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.12.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.3.1\
-      \ 255.255.255.255\n"
+    content: "hostname B3\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.3 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.13.2 255.255.255.252\n no shutdown\n exit\ninterface Ethernet0/1\n\
+      \ ip address 198.18.34.1 255.255.255.252\n no shutdown\n exit\nip prefix-list OSPF-ENDPOINTS permit\
+      \ 192.0.2.1/32\nip prefix-list OSPF-ENDPOINTS permit 203.0.113.100/32\nip prefix-list ALL-ENDPOINTS\
+      \ permit 192.0.2.1/32\nip prefix-list ALL-ENDPOINTS permit 192.0.2.4/32\nip prefix-list ALL-ENDPOINTS\
+      \ permit 203.0.113.100/32\nroute-map O2E deny 10\n match tag 200\n exit\nroute-map O2E permit 20\n\
+      \ match ip address prefix-list OSPF-ENDPOINTS\n set tag 100\n exit\nroute-map E2O deny 10\n match\
+      \ tag 100\n exit\nroute-map E2O permit 20\n match ip address prefix-list ALL-ENDPOINTS\n set tag\
+      \ 200\n exit\nrouter ospf 1\n router-id 192.0.2.3\n passive-interface default\n no passive-interface\
+      \ Ethernet0/0\n no passive-interface Loopback0\n exit\ninterface Ethernet0/0\n ip ospf 1 area 0\n\
+      \ ip ospf network point-to-point\n exit\ninterface Loopback0\n ip ospf 1 area 0\n ip ospf network\
+      \ point-to-point\n exit\nrouter ospf 1\n redistribute eigrp 100 subnets route-map E2O\n exit\nrouter\
+      \ eigrp 100\n eigrp router-id 192.0.2.3\n no auto-summary\n network 198.18.34.0 0.0.0.3\n default-metric\
+      \ 10000 100 255 1 1500\n redistribute ospf 1 match internal external 1 external 2 route-map O2E\n\
+      \ exit\nend\n"
+  cpu_limit: 100
+  priority: 98
+  x: 520
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 480
-  y: 0
-  priority: 98
   tags: []
 - id: n3
-  label: EDGE-R4
-  node_definition: iosv
+  label: RIGHT
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R4\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.13.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.13.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.4.1\
-      \ 255.255.255.255\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 720
-  y: 0
+    content: "hostname RIGHT\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.4 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.24.2 255.255.255.252\n no shutdown\n exit\ninterface Ethernet0/1\n\
+      \ ip address 198.18.34.2 255.255.255.252\n no shutdown\n exit\nrouter eigrp 100\n eigrp router-id\
+      \ 192.0.2.4\n no auto-summary\n network 198.18.24.0 0.0.0.3\n network 198.18.34.0 0.0.0.3\n network\
+      \ 192.0.2.4 0.0.0.0\n exit\nend\n"
+  cpu_limit: 100
   priority: 97
-  tags: []
-- id: n4
-  label: HQ-SW
-  node_definition: iosvl2
-  configuration:
-  - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nvlan 20\n name USERS_20\nvlan 30\n name SERVICES_30\n\
-      interface range GigabitEthernet0/0-3\n switchport mode access\n spanning-tree portfast\n"
+  x: 780
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 0
-  y: 200
-  priority: 96
-  tags: []
-- id: n5
-  label: BRANCH-PC
-  node_definition: desktop
-  configuration:
-  - name: node.cfg
-    content: '# BRANCH-PC
-
-      # Use this node as a lightweight endpoint or API/mock server.
-
-      '
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  x: 240
-  y: 200
-  priority: 95
   tags: []
 links:
-- n1: n0
+- id: l0
+  n1: n0
   i1: i1
   n2: n1
   i2: i1
-  id: l0
-- n1: n1
+- id: l1
+  n1: n0
   i1: i2
   n2: n2
   i2: i1
-  id: l1
-- n1: n0
+- id: l2
+  n1: n1
   i1: i2
   n2: n3
   i2: i1
-  id: l2
-- n1: n3
+- id: l3
+  n1: n2
   i1: i2
-  n2: n2
+  n2: n3
   i2: i2
-  id: l3
-- n1: n0
-  i1: i3
-  n2: n4
-  i2: i1
-  id: l4
-- n1: n2
-  i1: i3
-  n2: n5
-  i2: i0
-  id: l5
 annotations: []
 smart_annotations: []

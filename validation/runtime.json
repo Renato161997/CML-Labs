@@ -35554,6 +35554,1583 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T11:26:03Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/assessment/044-enarsi-practical-checkpoint.yaml",
+      "sha256": "bed197152c7dcc47a041c950e277864d70e5bc6dbf7af5202b497ecce642d9d4",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T11:52:01Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "ABR",
+          "command": "ping 198.18.23.2 source Ethernet0/1 repeat 3",
+          "expectation": "Direct IP connectivity works despite the OSPF area mismatch.",
+          "passed": true,
+          "output": "\nABR#ping 198.18.23.2 source Ethernet0/1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.23.2, timeout is 2 seconds:\nPacket sent with a source address of 198.18.23.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nABR#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The remote service route is absent.",
+          "passed": true,
+          "output": "\nCLIENT#show ip route 192.0.2.3\n% Subnet not in table\nCLIENT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "SERVICE",
+          "command": "show ip ospf interface Ethernet0/0",
+          "expectation": "The service-side link has the deliberately wrong area.",
+          "passed": true,
+          "output": "\nSERVICE#show ip ospf interface Ethernet0/0\nEthernet0/0 is up, line protocol is up \n  Internet Address 198.18.23.2/30, Interface ID 2, Area 20\n  Attached via Interface Enable\n  Process ID 1, Router ID 192.0.2.3, Network Type POINT_TO_POINT, Cost: 10\n  Topology-MTID    Cost    Disabled    Shutdown      Topology Name\n        0           10        no          no            Base\n  Enabled by interface config, including secondary ip addresses\n  Transmit Delay is 1 sec, State POINT_TO_POINT\n  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5\n    oob-resync timeout 40\n    Hello due in 00:00:06\n  Supports Link-local Signaling (LLS)\n  Cisco NSF helper support enabled\n  IETF NSF helper support enabled\n  Can be protected by per-prefix Loop-Free FastReroute\n  Can be used for per-prefix Loop-Free FastReroute repair paths\n  Not Protected by per-prefix TI-LFA\n  Index 1/1/1, flood queue length 0\n  Next 0x0(0)/0x0(0)/0x0(0)\n  Last flood scan length is 0, maximum is 0\n  Last flood scan time is 0 msec, maximum is 0 msec\n  Neighbor Count is 0, Adjacent neighbor count is 0 \n  Suppress hello for 0 neighbor(s)\nSERVICE#"
+        },
+        {
+          "phase": "repair the mismatched OSPF area",
+          "kind": "configuration",
+          "node": "SERVICE",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nSERVICE#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nSERVICE(config)#"
+        },
+        {
+          "phase": "repair the mismatched OSPF area",
+          "kind": "configuration",
+          "node": "SERVICE",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nSERVICE(config)#interface Ethernet0/0\nSERVICE(config-if)#"
+        },
+        {
+          "phase": "repair the mismatched OSPF area",
+          "kind": "configuration",
+          "node": "SERVICE",
+          "command": "ip ospf 1 area 10",
+          "passed": true,
+          "output": "\nSERVICE(config-if)#ip ospf 1 area 10\nSERVICE(config-if)#"
+        },
+        {
+          "phase": "repair the mismatched OSPF area",
+          "kind": "configuration",
+          "node": "SERVICE",
+          "command": "end",
+          "passed": true,
+          "output": "\nSERVICE(config-if)#end\nSERVICE#"
+        },
+        {
+          "phase": "repair the mismatched OSPF area",
+          "node": "CLIENT",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The service actually appears as an inter-area OSPF route.",
+          "passed": true,
+          "output": "\nCLIENT#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"ospf 1\", distance 110, metric 21, type inter area\n  Last update from 198.18.12.2 on Ethernet0/0, 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 192.0.2.2, 00:00:01 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nCLIENT#"
+        },
+        {
+          "phase": "repair the mismatched OSPF area",
+          "node": "CLIENT",
+          "command": "ping service.example.test source Loopback0 repeat 3",
+          "expectation": "The DNS-named service does not reply to the policy-selected source.",
+          "passed": true,
+          "output": "\nCLIENT#ping service.example.test source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \nU.U\nSuccess rate is 0 percent (0/3)\nCLIENT#"
+        },
+        {
+          "phase": "repair the mismatched OSPF area",
+          "node": "CLIENT",
+          "command": "show hosts",
+          "expectation": "The actual lab DNS lookup resolves the service address.",
+          "passed": true,
+          "output": "\nCLIENT#show hosts\nDefault domain is not set\nName servers are 198.18.23.2\nNAME  TTL  CLASS   TYPE      DATA/ADDRESS\n-----------------------------------------\n service.example.test\t8\tIN\tA\t192.0.2.3\n\nCLIENT#"
+        },
+        {
+          "phase": "repair the mismatched OSPF area",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.3 source Ethernet0/0 repeat 3",
+          "expectation": "A separate transit source proves that the same service and return path remain healthy.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.3 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 198.18.12.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "repair the mismatched OSPF area",
+          "node": "ABR",
+          "command": "show access-lists EXAM",
+          "expectation": "The exact selected source rule counts real denied requests.",
+          "passed": true,
+          "output": "\nABR#show access-lists EXAM\nExtended IP access list EXAM\n    10 deny icmp host 192.0.2.1 host 192.0.2.3 echo (3 matches)\n    20 permit ip any any (42 matches)\nABR#"
+        },
+        {
+          "phase": "correct the authorized-source policy selector",
+          "kind": "configuration",
+          "node": "ABR",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nABR#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nABR(config)#"
+        },
+        {
+          "phase": "correct the authorized-source policy selector",
+          "kind": "configuration",
+          "node": "ABR",
+          "command": "ip access-list extended EXAM",
+          "passed": true,
+          "output": "\nABR(config)#ip access-list extended EXAM\nABR(config-ext-nacl)#"
+        },
+        {
+          "phase": "correct the authorized-source policy selector",
+          "kind": "configuration",
+          "node": "ABR",
+          "command": "no 10",
+          "passed": true,
+          "output": "\nABR(config-ext-nacl)#no 10\nABR(config-ext-nacl)#"
+        },
+        {
+          "phase": "correct the authorized-source policy selector",
+          "kind": "configuration",
+          "node": "ABR",
+          "command": "10 deny icmp host 192.0.2.66 host 192.0.2.3 echo",
+          "passed": true,
+          "output": "\nABR(config-ext-nacl)#10 deny icmp host 192.0.2.66 host 192.0.2.3 echo\nABR(config-ext-nacl)#"
+        },
+        {
+          "phase": "correct the authorized-source policy selector",
+          "kind": "configuration",
+          "node": "ABR",
+          "command": "end",
+          "passed": true,
+          "output": "\nABR(config-ext-nacl)#end\nABR#"
+        },
+        {
+          "phase": "correct the authorized-source policy selector",
+          "node": "CLIENT",
+          "command": "show ip route 192.0.2.3",
+          "expectation": "The service actually appears as an inter-area OSPF route.",
+          "passed": true,
+          "output": "\nCLIENT#show ip route 192.0.2.3\nRouting entry for 192.0.2.3/32\n  Known via \"ospf 1\", distance 110, metric 21, type inter area\n  Last update from 198.18.12.2 on Ethernet0/0, 00:00:08 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 192.0.2.2, 00:00:08 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nCLIENT#"
+        },
+        {
+          "phase": "correct the authorized-source policy selector",
+          "node": "CLIENT",
+          "command": "ping service.example.test source Loopback0 repeat 3",
+          "expectation": "The DNS-named service replies to the authorized source.",
+          "passed": true,
+          "output": "\nCLIENT#ping service.example.test source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "correct the authorized-source policy selector",
+          "node": "CLIENT",
+          "command": "show hosts",
+          "expectation": "The actual lab DNS lookup resolves the service address.",
+          "passed": true,
+          "output": "\nCLIENT#show hosts\nDefault domain is not set\nName servers are 198.18.23.2\nNAME  TTL  CLASS   TYPE      DATA/ADDRESS\n-----------------------------------------\n service.example.test\t3\tIN\tA\t192.0.2.3\n\nCLIENT#"
+        },
+        {
+          "phase": "correct the authorized-source policy selector",
+          "node": "CLIENT",
+          "command": "ping 192.0.2.3 source Ethernet0/0 repeat 3",
+          "expectation": "A separate transit source proves that the same service and return path remain healthy.",
+          "passed": true,
+          "output": "\nCLIENT#ping 192.0.2.3 source Ethernet0/0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 198.18.12.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nCLIENT#"
+        },
+        {
+          "phase": "correct the authorized-source policy selector",
+          "node": "CLIENT",
+          "command": "ping service.example.test source Loopback66 repeat 3",
+          "expectation": "The DNS-named service does not reply to the policy-selected source.",
+          "passed": true,
+          "output": "\nCLIENT#ping service.example.test source Loopback66 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.66 \nU.U\nSuccess rate is 0 percent (0/3)\nCLIENT#"
+        },
+        {
+          "phase": "correct the authorized-source policy selector",
+          "node": "ABR",
+          "command": "show access-lists EXAM",
+          "expectation": "The exact selected source rule counts real denied requests.",
+          "passed": true,
+          "output": "\nABR#show access-lists EXAM\nExtended IP access list EXAM\n    10 deny icmp host 192.0.2.66 host 192.0.2.3 echo (3 matches)\n    20 permit ip any any (50 matches)\nABR#"
+        },
+        {
+          "phase": "correct the authorized-source policy selector",
+          "node": "ABR",
+          "command": "ping 198.18.23.2 source Ethernet0/1 repeat 3",
+          "expectation": "Direct IP connectivity works despite the OSPF area mismatch.",
+          "passed": true,
+          "output": "\nABR#ping 198.18.23.2 source Ethernet0/1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.23.2, timeout is 2 seconds:\nPacket sent with a source address of 198.18.23.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nABR#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "CLIENT": "STARTED",
+        "ABR": "BOOTED",
+        "SERVICE": "STARTED"
+      },
+      "images": {
+        "CLIENT": "iol-xe-17-18-02",
+        "ABR": "iol-xe-17-18-02",
+        "SERVICE": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "6e18d297950fa72101a82fc369f8af8d17f3d905ccbccd99f01c925cfeca94eb",
+      "console_boot_fallback": [
+        "CLIENT",
+        "SERVICE"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T11:53:30Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/045-enarsi-capstone-advanced-routing.yaml",
+      "sha256": "5d301e9d23562546e89dec77acc55e97f4200c04657cdb58c3908c01e39355a8",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T11:53:30Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "BORDER",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The customer prefix crosses the real area10/area0 boundary.",
+          "passed": true,
+          "output": "\nBORDER#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"ospf 1\", distance 110, metric 21, type inter area\n  Redistributing via bgp 65000\n  Advertised by bgp 65000 match internal external 1 & 2 route-map IGP-TO-BGP\n  Last update from 198.18.23.1 on Ethernet0/0, 00:00:15 ago\n  Routing Descriptor Blocks:\n  * 198.18.23.1, from 192.0.2.2, 00:00:15 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nBORDER#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CUSTOMER",
+          "command": "show ip route 198.19.0.80",
+          "expectation": "Only the provider service is actually redistributed into OSPF as a tagged E1.",
+          "passed": true,
+          "output": "\nCUSTOMER#show ip route 198.19.0.80\nRouting entry for 198.19.0.80/32\n  Known via \"ospf 1\", distance 110, metric 40\n  Tag 65001, type extern 1\n  Last update from 198.18.12.2 on Ethernet0/0, 00:00:13 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 192.0.2.3, 00:00:13 ago, via Ethernet0/0\n      Route metric is 40, traffic share count is 1\n      Route tag 65001\nCUSTOMER#"
+        },
+        {
+          "phase": "baseline",
+          "node": "PROVIDER",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The provider actually installs the permitted return prefix.",
+          "passed": true,
+          "output": "\nPROVIDER#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"bgp 65001\", distance 20, metric 21\n  Tag 65000, type external\n  Last update from 198.18.34.1 00:00:14 ago\n  Routing Descriptor Blocks:\n  * 198.18.34.1, from 198.18.34.1, 00:00:14 ago\n      opaque_ptr 0x7B250148CC10 \n      Route metric is 21, traffic share count is 1\n      AS Hops 1\n      Route tag 65000\n      MPLS label: none\nPROVIDER#"
+        },
+        {
+          "phase": "baseline",
+          "node": "PROVIDER",
+          "command": "show ip route 203.0.113.66",
+          "expectation": "The provider has no return route for the unapproved prefix.",
+          "passed": true,
+          "output": "\nPROVIDER#show ip route 203.0.113.66\n% Network not in table\nPROVIDER#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CUSTOMER",
+          "command": "ping 198.19.0.80 source Loopback0 repeat 3",
+          "expectation": "The independent Loopback0 source completes real service round trips.",
+          "passed": true,
+          "output": "\nCUSTOMER#ping 198.19.0.80 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.19.0.80, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCUSTOMER#"
+        },
+        {
+          "phase": "baseline",
+          "node": "CUSTOMER",
+          "command": "ping 198.19.0.80 source Loopback66 repeat 3",
+          "expectation": "The independent Loopback66 source cannot complete round trips without the provider return route.",
+          "passed": true,
+          "output": "\nCUSTOMER#ping 198.19.0.80 source Loopback66 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.19.0.80, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.66 \n\n*Oct 31 11:54:00.139: %PNP-6-PNP_SAVING_TECH_SUMMARY: Saving PnP tech summary (/pnp-tech/pnp-tech-discovery-summary)... Please wait. Do not interrupt..\n*Oct 31 11:54:00.242: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 31 11:54:00.243: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 31 11:54:00.349: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 31 11:54:00.449: %PNP-6-PNP_TECH_SUMMARY_SAVED_OK: PnP tech summary (/pnp-tech/pnp-tech-discovery-summary) saved successfully (elapsed time: 0 seconds).\n*Oct 31 11:54:00.449: %PNP-6-PNP_DISCOVERY_STOPPED: PnP Discovery stopped (Config Wizard)..\nSuccess rate is 0 percent (0/3)\nCUSTOMER#"
+        },
+        {
+          "phase": "baseline",
+          "node": "PROVIDER",
+          "command": "show access-lists OBSERVE",
+          "expectation": "The alternate-source request actually reaches the service link: return-route admission is not an ingress packet firewall.",
+          "passed": true,
+          "output": "\nPROVIDER#show access-lists OBSERVE\nExtended IP access list OBSERVE\n    10 permit icmp host 203.0.113.66 host 198.19.0.80 echo (6 matches)\n    20 permit ip any any (28 matches)\nPROVIDER#"
+        },
+        {
+          "phase": "broaden the customer export allowlist",
+          "kind": "configuration",
+          "node": "BORDER",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nBORDER#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nBORDER(config)#"
+        },
+        {
+          "phase": "broaden the customer export allowlist",
+          "kind": "configuration",
+          "node": "BORDER",
+          "command": "ip prefix-list CUSTOMERS seq 20 permit 203.0.113.66/32",
+          "passed": true,
+          "output": "\nBORDER(config)#ip prefix-list CUSTOMERS seq 20 permit 203.0.113.66/32\nBORDER(config)#"
+        },
+        {
+          "phase": "broaden the customer export allowlist",
+          "kind": "configuration",
+          "node": "BORDER",
+          "command": "router bgp 65000",
+          "passed": true,
+          "output": "\nBORDER(config)#router bgp 65000\nBORDER(config-router)#"
+        },
+        {
+          "phase": "broaden the customer export allowlist",
+          "kind": "configuration",
+          "node": "BORDER",
+          "command": "no redistribute ospf 1",
+          "passed": true,
+          "output": "\nBORDER(config-router)#no redistribute ospf 1\nBORDER(config-router)#"
+        },
+        {
+          "phase": "broaden the customer export allowlist",
+          "kind": "configuration",
+          "node": "BORDER",
+          "command": "redistribute ospf 1 match internal external 1 external 2 route-map IGP-TO-BGP",
+          "passed": true,
+          "output": "\nBORDER(config-router)#redistribute ospf 1 match internal external 1 external 2 route-map IGP-TO-BGP\nBORDER(config-router)#"
+        },
+        {
+          "phase": "broaden the customer export allowlist",
+          "kind": "configuration",
+          "node": "BORDER",
+          "command": "end",
+          "passed": true,
+          "output": "\nBORDER(config-router)#end\nBORDER#"
+        },
+        {
+          "phase": "broaden the customer export allowlist",
+          "node": "PROVIDER",
+          "command": "show ip route 203.0.113.66",
+          "expectation": "The provider actually installs the permitted return prefix.",
+          "passed": true,
+          "output": "\nPROVIDER#show ip route 203.0.113.66\nRouting entry for 203.0.113.66/32\n  Known via \"bgp 65001\", distance 20, metric 21\n  Tag 65000, type external\n  Last update from 198.18.34.1 00:00:03 ago\n  Routing Descriptor Blocks:\n  * 198.18.34.1, from 198.18.34.1, 00:00:03 ago\n      opaque_ptr 0x7B250148CC10 \n      Route metric is 21, traffic share count is 1\n      AS Hops 1\n      Route tag 65000\n      MPLS label: none\nPROVIDER#"
+        },
+        {
+          "phase": "broaden the customer export allowlist",
+          "node": "CUSTOMER",
+          "command": "ping 198.19.0.80 source Loopback66 repeat 3",
+          "expectation": "The independent Loopback66 source completes real service round trips.",
+          "passed": true,
+          "output": "\nCUSTOMER#ping 198.19.0.80 source Loopback66 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.19.0.80, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.66 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCUSTOMER#"
+        },
+        {
+          "phase": "broaden the customer export allowlist",
+          "node": "CUSTOMER",
+          "command": "ping 198.19.0.80 source Loopback0 repeat 3",
+          "expectation": "The independent Loopback0 source completes real service round trips.",
+          "passed": true,
+          "output": "\nCUSTOMER#ping 198.19.0.80 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.19.0.80, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCUSTOMER#"
+        },
+        {
+          "phase": "broaden the customer export allowlist",
+          "node": "CUSTOMER",
+          "command": "show ip route 198.19.0.80",
+          "expectation": "Only the provider service is actually redistributed into OSPF as a tagged E1.",
+          "passed": true,
+          "output": "\nCUSTOMER#show ip route 198.19.0.80\nRouting entry for 198.19.0.80/32\n  Known via \"ospf 1\", distance 110, metric 40\n  Tag 65001, type extern 1\n  Last update from 198.18.12.2 on Ethernet0/0, 00:01:05 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 192.0.2.3, 00:01:05 ago, via Ethernet0/0\n      Route metric is 40, traffic share count is 1\n      Route tag 65001\nCUSTOMER#"
+        },
+        {
+          "phase": "broaden the customer export allowlist",
+          "node": "PROVIDER",
+          "command": "show access-lists OBSERVE",
+          "expectation": "The alternate-source request actually reaches the service link: return-route admission is not an ingress packet firewall.",
+          "passed": true,
+          "output": "\nPROVIDER#show access-lists OBSERVE\nExtended IP access list OBSERVE\n    10 permit icmp host 203.0.113.66 host 198.19.0.80 echo (12 matches)\n    20 permit ip any any (64 matches)\nPROVIDER#"
+        },
+        {
+          "phase": "restore the exact allowed customer prefix",
+          "kind": "configuration",
+          "node": "BORDER",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nBORDER#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nBORDER(config)#"
+        },
+        {
+          "phase": "restore the exact allowed customer prefix",
+          "kind": "configuration",
+          "node": "BORDER",
+          "command": "no ip prefix-list CUSTOMERS seq 20 permit 203.0.113.66/32",
+          "passed": true,
+          "output": "\nBORDER(config)#no ip prefix-list CUSTOMERS seq 20 permit 203.0.113.66/32\nBORDER(config)#"
+        },
+        {
+          "phase": "restore the exact allowed customer prefix",
+          "kind": "configuration",
+          "node": "BORDER",
+          "command": "router bgp 65000",
+          "passed": true,
+          "output": "\nBORDER(config)#router bgp 65000\nBORDER(config-router)#"
+        },
+        {
+          "phase": "restore the exact allowed customer prefix",
+          "kind": "configuration",
+          "node": "BORDER",
+          "command": "no redistribute ospf 1",
+          "passed": true,
+          "output": "\nBORDER(config-router)#no redistribute ospf 1\nBORDER(config-router)#"
+        },
+        {
+          "phase": "restore the exact allowed customer prefix",
+          "kind": "configuration",
+          "node": "BORDER",
+          "command": "redistribute ospf 1 match internal external 1 external 2 route-map IGP-TO-BGP",
+          "passed": true,
+          "output": "\nBORDER(config-router)#redistribute ospf 1 match internal external 1 external 2 route-map IGP-TO-BGP\nBORDER(config-router)#"
+        },
+        {
+          "phase": "restore the exact allowed customer prefix",
+          "kind": "configuration",
+          "node": "BORDER",
+          "command": "end",
+          "passed": true,
+          "output": "\nBORDER(config-router)#end\nBORDER#"
+        },
+        {
+          "phase": "restore the exact allowed customer prefix",
+          "node": "BORDER",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The customer prefix crosses the real area10/area0 boundary.",
+          "passed": true,
+          "output": "\nBORDER#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"ospf 1\", distance 110, metric 21, type inter area\n  Redistributing via bgp 65000\n  Advertised by bgp 65000 match internal external 1 & 2 route-map IGP-TO-BGP\n  Last update from 198.18.23.1 on Ethernet0/0, 00:01:17 ago\n  Routing Descriptor Blocks:\n  * 198.18.23.1, from 192.0.2.2, 00:01:17 ago, via Ethernet0/0\n      Route metric is 21, traffic share count is 1\nBORDER#"
+        },
+        {
+          "phase": "restore the exact allowed customer prefix",
+          "node": "CUSTOMER",
+          "command": "show ip route 198.19.0.80",
+          "expectation": "Only the provider service is actually redistributed into OSPF as a tagged E1.",
+          "passed": true,
+          "output": "\nCUSTOMER#show ip route 198.19.0.80\nRouting entry for 198.19.0.80/32\n  Known via \"ospf 1\", distance 110, metric 40\n  Tag 65001, type extern 1\n  Last update from 198.18.12.2 on Ethernet0/0, 00:01:09 ago\n  Routing Descriptor Blocks:\n  * 198.18.12.2, from 192.0.2.3, 00:01:09 ago, via Ethernet0/0\n      Route metric is 40, traffic share count is 1\n      Route tag 65001\nCUSTOMER#"
+        },
+        {
+          "phase": "restore the exact allowed customer prefix",
+          "node": "PROVIDER",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The provider actually installs the permitted return prefix.",
+          "passed": true,
+          "output": "\nPROVIDER#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"bgp 65001\", distance 20, metric 21\n  Tag 65000, type external\n  Last update from 198.18.34.1 00:01:10 ago\n  Routing Descriptor Blocks:\n  * 198.18.34.1, from 198.18.34.1, 00:01:10 ago\n      opaque_ptr 0x7B250148CC10 \n      Route metric is 21, traffic share count is 1\n      AS Hops 1\n      Route tag 65000\n      MPLS label: none\nPROVIDER#"
+        },
+        {
+          "phase": "restore the exact allowed customer prefix",
+          "node": "PROVIDER",
+          "command": "show ip route 203.0.113.66",
+          "expectation": "The provider has no return route for the unapproved prefix.",
+          "passed": true,
+          "output": "\nPROVIDER#show ip route 203.0.113.66\n% Network not in table\nPROVIDER#"
+        },
+        {
+          "phase": "restore the exact allowed customer prefix",
+          "node": "CUSTOMER",
+          "command": "ping 198.19.0.80 source Loopback0 repeat 3",
+          "expectation": "The independent Loopback0 source completes real service round trips.",
+          "passed": true,
+          "output": "\nCUSTOMER#ping 198.19.0.80 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.19.0.80, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nCUSTOMER#"
+        },
+        {
+          "phase": "restore the exact allowed customer prefix",
+          "node": "CUSTOMER",
+          "command": "ping 198.19.0.80 source Loopback66 repeat 3",
+          "expectation": "The independent Loopback66 source cannot complete round trips without the provider return route.",
+          "passed": true,
+          "output": "\nCUSTOMER#ping 198.19.0.80 source Loopback66 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.19.0.80, timeout is 2 seconds:\nPacket sent with a source address of 203.0.113.66 \n...\nSuccess rate is 0 percent (0/3)\nCUSTOMER#"
+        },
+        {
+          "phase": "restore the exact allowed customer prefix",
+          "node": "PROVIDER",
+          "command": "show access-lists OBSERVE",
+          "expectation": "The alternate-source request actually reaches the service link: return-route admission is not an ingress packet firewall.",
+          "passed": true,
+          "output": "\nPROVIDER#show access-lists OBSERVE\nExtended IP access list OBSERVE\n    10 permit icmp host 203.0.113.66 host 198.19.0.80 echo (18 matches)\n    20 permit ip any any (111 matches)\nPROVIDER#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "CUSTOMER": "BOOTED",
+        "ABR": "BOOTED",
+        "BORDER": "BOOTED",
+        "PROVIDER": "STARTED"
+      },
+      "images": {
+        "CUSTOMER": "iol-xe-17-18-02",
+        "ABR": "iol-xe-17-18-02",
+        "BORDER": "iol-xe-17-18-02",
+        "PROVIDER": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "1f21017c9d825ef97aa5e524cfd1f60278e1432ee9f84b8f5057bd5e403c83fd",
+      "console_boot_fallback": [
+        "PROVIDER"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T11:56:00Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/046-enarsi-capstone-vpn-services.yaml",
+      "sha256": "74294e7678fa00fa16dd22ab5ecccd7b460997c8f5c52c5f90c4eb45a7606540",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T11:52:01Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "PE1",
+          "command": "show mpls ldp neighbor",
+          "expectation": "The actual LDP transport neighbor is operational.",
+          "passed": true,
+          "output": "\nPE1#show mpls ldp neighbor\n    Peer LDP Ident: 192.0.2.2:0; Local LDP Ident 192.0.2.1:0\n\tTCP connection: 192.0.2.2.64335 - 192.0.2.1.646\n\tState: Oper; Msgs sent/rcvd: 8/8; Downstream\n\tUp time: 00:00:30\n\tLDP discovery sources:\n\t  GigabitEthernet0/0, Src IP addr: 198.18.0.2\n        Addresses bound to peer LDP Ident:\n          198.18.0.2      192.0.2.2       198.18.1.1      \nPE1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "PE1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "Provider transport remains healthy independently of tenant import policy.",
+          "passed": true,
+          "output": "\nPE1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 5/5/6 ms\nPE1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "PE1",
+          "command": "show ip bgp vpnv4 all summary",
+          "expectation": "VPNv4 is established and has received both tenant routes.",
+          "passed": true,
+          "output": "\nPE1#show ip bgp vpnv4 all summary\nBGP router identifier 192.0.2.1, local AS number 65000\nBGP table version is 7, main routing table version 7\n6 network entries using 936 bytes of memory\n6 path entries using 504 bytes of memory\n4/4 BGP path/bestpath attribute entries using 672 bytes of memory\n2 BGP extended community entries using 48 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 2160 total bytes of memory\nBGP activity 6/0 prefixes, 6/0 paths, scan interval 60 secs\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n192.0.2.3       4        65000       5       4        7    0    0 00:01:11        2\nPE1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "PE1",
+          "command": "show ip route vrf BLUE 192.0.2.12",
+          "expectation": "The exact BLUE VRF imports the actual VPNv4 route.",
+          "passed": true,
+          "output": "\nPE1#show ip route vrf BLUE 192.0.2.12\n\nRouting Table: BLUE\nRouting entry for 192.0.2.12/32\n  Known via \"bgp 65000\", distance 200, metric 0, type internal\n  Last update from 192.0.2.3 00:00:03 ago\n  Routing Descriptor Blocks:\n  * 192.0.2.3 (default), from 192.0.2.3, 00:00:03 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 0\n      MPLS label: 19\n      MPLS Flags: MPLS Required\nPE1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "PE1",
+          "command": "show ip route vrf RED 192.0.2.22",
+          "expectation": "The exact RED VRF imports the actual VPNv4 route.",
+          "passed": true,
+          "output": "\nPE1#show ip route vrf RED 192.0.2.22\n\nRouting Table: RED\nRouting entry for 192.0.2.22/32\n  Known via \"bgp 65000\", distance 200, metric 0, type internal\n  Last update from 192.0.2.3 00:00:04 ago\n  Routing Descriptor Blocks:\n  * 192.0.2.3 (default), from 192.0.2.3, 00:00:04 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 0\n      MPLS label: 20\n      MPLS Flags: MPLS Required\nPE1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "PE2",
+          "command": "show ip route vrf BLUE 192.0.2.11",
+          "expectation": "The exact BLUE VRF imports the actual VPNv4 route.",
+          "passed": true,
+          "output": "\nPE2#show ip route vrf BLUE 192.0.2.11\n\nRouting Table: BLUE\nRouting entry for 192.0.2.11/32\n  Known via \"bgp 65000\", distance 200, metric 0, type internal\n  Last update from 192.0.2.1 00:00:05 ago\n  Routing Descriptor Blocks:\n  * 192.0.2.1 (default), from 192.0.2.1, 00:00:05 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 0\n      MPLS label: 19\n      MPLS Flags: MPLS Required\nPE2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "PE2",
+          "command": "show ip route vrf RED 192.0.2.21",
+          "expectation": "The exact RED VRF imports the actual VPNv4 route.",
+          "passed": true,
+          "output": "\nPE2#show ip route vrf RED 192.0.2.21\n\nRouting Table: RED\nRouting entry for 192.0.2.21/32\n  Known via \"bgp 65000\", distance 200, metric 0, type internal\n  Last update from 192.0.2.1 00:00:06 ago\n  Routing Descriptor Blocks:\n  * 192.0.2.1 (default), from 192.0.2.1, 00:00:06 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 0\n      MPLS label: 20\n      MPLS Flags: MPLS Required\nPE2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "PE1",
+          "command": "show ip route vrf BLUE 192.0.2.22",
+          "expectation": "The exact BLUE VRF has no route for the other tenant destination.",
+          "passed": true,
+          "output": "\nPE1#show ip route vrf BLUE 192.0.2.22\n\nRouting Table: BLUE\n% Subnet not in table\nPE1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "PE2",
+          "command": "show ip route vrf RED 192.0.2.11",
+          "expectation": "The exact RED VRF has no route for the other tenant destination.",
+          "passed": true,
+          "output": "\nPE2#show ip route vrf RED 192.0.2.11\n\nRouting Table: RED\n% Subnet not in table\nPE2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "BLUE1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "Real BLUE1 traffic reaches the selected customer loopback.",
+          "passed": true,
+          "output": "\nBLUE1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 8/8/9 ms\nBLUE1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "RED1",
+          "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+          "expectation": "Real RED1 traffic reaches the selected customer loopback.",
+          "passed": true,
+          "output": "\nRED1#ping 192.0.2.22 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.22, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.21 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 7/7/8 ms\nRED1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "PE1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "Provider transport remains healthy independently of tenant import policy.",
+          "passed": true,
+          "output": "\nPE1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 5/5/7 ms\nPE1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "PE1",
+          "command": "show mpls ldp neighbor",
+          "expectation": "The actual LDP transport neighbor is operational.",
+          "passed": true,
+          "output": "\nPE1#show mpls ldp neighbor\n    Peer LDP Ident: 192.0.2.2:0; Local LDP Ident 192.0.2.1:0\n\tTCP connection: 192.0.2.2.64335 - 192.0.2.1.646\n\tState: Oper; Msgs sent/rcvd: 9/9; Downstream\n\tUp time: 00:01:32\n\tLDP discovery sources:\n\t  GigabitEthernet0/0, Src IP addr: 198.18.0.2\n        Addresses bound to peer LDP Ident:\n          198.18.0.2      192.0.2.2       198.18.1.1      \nPE1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "BLUE1",
+          "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+          "expectation": "Real BLUE1 traffic does not complete across the selected tenant boundary.",
+          "passed": true,
+          "output": "\nBLUE1#ping 192.0.2.22 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.22, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \nU.U\nSuccess rate is 0 percent (0/3)\nBLUE1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "P",
+          "command": "show ip route 192.0.2.22",
+          "expectation": "The transit provider has no global customer-destination route.",
+          "passed": true,
+          "output": "\nP#show ip route 192.0.2.22\n% Subnet not in table\nP#"
+        },
+        {
+          "phase": "baseline",
+          "node": "P",
+          "command": "show mpls forwarding-table",
+          "expectation": "The provider core actually switches labeled payload bytes toward PE2.",
+          "passed": true,
+          "output": "\nP#show mpls forwarding-table\nLocal      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop    \nLabel      Label      or Tunnel Id     Switched      interface              \n16         Pop Label  192.0.2.1/32     2105          Gi0/0      198.18.0.1  \n17         Pop Label  192.0.2.3/32     2086          Gi0/1      198.18.1.2  \nP#"
+        },
+        {
+          "phase": "leak only the forward tenant import",
+          "kind": "configuration",
+          "node": "PE1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nPE1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nPE1(config)#"
+        },
+        {
+          "phase": "leak only the forward tenant import",
+          "kind": "configuration",
+          "node": "PE1",
+          "command": "ip vrf BLUE",
+          "passed": true,
+          "output": "\nPE1(config)#ip vrf BLUE\nPE1(config-vrf)#"
+        },
+        {
+          "phase": "leak only the forward tenant import",
+          "kind": "configuration",
+          "node": "PE1",
+          "command": "route-target import 65000:20",
+          "passed": true,
+          "output": "\nPE1(config-vrf)#route-target import 65000:20\nPE1(config-vrf)#"
+        },
+        {
+          "phase": "leak only the forward tenant import",
+          "kind": "configuration",
+          "node": "PE1",
+          "command": "end",
+          "passed": true,
+          "output": "\nPE1(config-vrf)#end\nPE1#"
+        },
+        {
+          "phase": "leak only the forward tenant import",
+          "node": "PE1",
+          "command": "show ip route vrf BLUE 192.0.2.22",
+          "expectation": "The exact BLUE VRF imports the actual VPNv4 route.",
+          "passed": true,
+          "output": "\nPE1#show ip route vrf BLUE 192.0.2.22\n\nRouting Table: BLUE\nRouting entry for 192.0.2.22/32\n  Known via \"bgp 65000\", distance 200, metric 0, type internal\n  Last update from 192.0.2.3 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 192.0.2.3 (default), from 192.0.2.3, 00:00:01 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 0\n      MPLS label: 20\n      MPLS Flags: MPLS Required\nPE1#"
+        },
+        {
+          "phase": "leak only the forward tenant import",
+          "node": "PE2",
+          "command": "show ip route vrf RED 192.0.2.11",
+          "expectation": "The exact RED VRF has no route for the other tenant destination.",
+          "passed": true,
+          "output": "\nPE2#show ip route vrf RED 192.0.2.11\n\nRouting Table: RED\n% Subnet not in table\nPE2#"
+        },
+        {
+          "phase": "leak only the forward tenant import",
+          "node": "BLUE1",
+          "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+          "expectation": "Real BLUE1 traffic does not complete across the selected tenant boundary.",
+          "passed": true,
+          "output": "\nBLUE1#ping 192.0.2.22 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.22, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n...\nSuccess rate is 0 percent (0/3)\nBLUE1#"
+        },
+        {
+          "phase": "leak only the forward tenant import",
+          "node": "BLUE1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "Real BLUE1 traffic reaches the selected customer loopback.",
+          "passed": true,
+          "output": "\nBLUE1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 8/9/11 ms\nBLUE1#"
+        },
+        {
+          "phase": "leak only the forward tenant import",
+          "node": "RED1",
+          "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+          "expectation": "Real RED1 traffic reaches the selected customer loopback.",
+          "passed": true,
+          "output": "\nRED1#ping 192.0.2.22 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.22, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.21 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 7/7/8 ms\nRED1#"
+        },
+        {
+          "phase": "leak only the forward tenant import",
+          "node": "PE1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "Provider transport remains healthy independently of tenant import policy.",
+          "passed": true,
+          "output": "\nPE1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/6/10 ms\nPE1#"
+        },
+        {
+          "phase": "leak only the forward tenant import",
+          "node": "PE1",
+          "command": "show mpls ldp neighbor",
+          "expectation": "The actual LDP transport neighbor is operational.",
+          "passed": true,
+          "output": "\nPE1#show mpls ldp neighbor\n    Peer LDP Ident: 192.0.2.2:0; Local LDP Ident 192.0.2.1:0\n\tTCP connection: 192.0.2.2.64335 - 192.0.2.1.646\n\tState: Oper; Msgs sent/rcvd: 10/10; Downstream\n\tUp time: 00:02:16\n\tLDP discovery sources:\n\t  GigabitEthernet0/0, Src IP addr: 198.18.0.2\n        Addresses bound to peer LDP Ident:\n          198.18.0.2      192.0.2.2       198.18.1.1      \nPE1#"
+        },
+        {
+          "phase": "leak the return tenant import",
+          "kind": "configuration",
+          "node": "PE2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nPE2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nPE2(config)#"
+        },
+        {
+          "phase": "leak the return tenant import",
+          "kind": "configuration",
+          "node": "PE2",
+          "command": "ip vrf RED",
+          "passed": true,
+          "output": "\nPE2(config)#ip vrf RED\nPE2(config-vrf)#"
+        },
+        {
+          "phase": "leak the return tenant import",
+          "kind": "configuration",
+          "node": "PE2",
+          "command": "route-target import 65000:10",
+          "passed": true,
+          "output": "\nPE2(config-vrf)#route-target import 65000:10\nPE2(config-vrf)#"
+        },
+        {
+          "phase": "leak the return tenant import",
+          "kind": "configuration",
+          "node": "PE2",
+          "command": "end",
+          "passed": true,
+          "output": "\nPE2(config-vrf)#end\nPE2#"
+        },
+        {
+          "phase": "leak the return tenant import",
+          "node": "PE2",
+          "command": "show ip route vrf RED 192.0.2.11",
+          "expectation": "The exact RED VRF imports the actual VPNv4 route.",
+          "passed": true,
+          "output": "\nPE2#show ip route vrf RED 192.0.2.11\n\nRouting Table: RED\nRouting entry for 192.0.2.11/32\n  Known via \"bgp 65000\", distance 200, metric 0, type internal\n  Last update from 192.0.2.1 00:00:02 ago\n  Routing Descriptor Blocks:\n  * 192.0.2.1 (default), from 192.0.2.1, 00:00:02 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 0\n      MPLS label: 19\n      MPLS Flags: MPLS Required\nPE2#"
+        },
+        {
+          "phase": "leak the return tenant import",
+          "node": "BLUE1",
+          "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+          "expectation": "Real BLUE1 traffic reaches the selected customer loopback.",
+          "passed": true,
+          "output": "\nBLUE1#ping 192.0.2.22 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.22, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 7/7/8 ms\nBLUE1#"
+        },
+        {
+          "phase": "leak the return tenant import",
+          "node": "BLUE1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "Real BLUE1 traffic reaches the selected customer loopback.",
+          "passed": true,
+          "output": "\nBLUE1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 7/7/8 ms\nBLUE1#"
+        },
+        {
+          "phase": "leak the return tenant import",
+          "node": "RED1",
+          "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+          "expectation": "Real RED1 traffic reaches the selected customer loopback.",
+          "passed": true,
+          "output": "\nRED1#ping 192.0.2.22 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.22, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.21 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 7/8/9 ms\nRED1#"
+        },
+        {
+          "phase": "leak the return tenant import",
+          "node": "PE1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "Provider transport remains healthy independently of tenant import policy.",
+          "passed": true,
+          "output": "\nPE1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 6/6/8 ms\nPE1#"
+        },
+        {
+          "phase": "leak the return tenant import",
+          "node": "PE1",
+          "command": "show mpls ldp neighbor",
+          "expectation": "The actual LDP transport neighbor is operational.",
+          "passed": true,
+          "output": "\nPE1#show mpls ldp neighbor\n    Peer LDP Ident: 192.0.2.2:0; Local LDP Ident 192.0.2.1:0\n\tTCP connection: 192.0.2.2.64335 - 192.0.2.1.646\n\tState: Oper; Msgs sent/rcvd: 11/11; Downstream\n\tUp time: 00:03:22\n\tLDP discovery sources:\n\t  GigabitEthernet0/0, Src IP addr: 198.18.0.2\n        Addresses bound to peer LDP Ident:\n          198.18.0.2      192.0.2.2       198.18.1.1      \nPE1#"
+        },
+        {
+          "phase": "leak the return tenant import",
+          "node": "P",
+          "command": "show ip route 192.0.2.22",
+          "expectation": "The transit provider has no global customer-destination route.",
+          "passed": true,
+          "output": "\nP#show ip route 192.0.2.22\n% Subnet not in table\nP#"
+        },
+        {
+          "phase": "leak the return tenant import",
+          "node": "P",
+          "command": "show mpls forwarding-table",
+          "expectation": "The provider core actually switches labeled payload bytes toward PE2.",
+          "passed": true,
+          "output": "\nP#show mpls forwarding-table\nLocal      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop    \nLabel      Label      or Tunnel Id     Switched      interface              \n16         Pop Label  192.0.2.1/32     4950          Gi0/0      198.18.0.1  \n17         Pop Label  192.0.2.3/32     5285          Gi0/1      198.18.1.2  \nP#"
+        },
+        {
+          "phase": "remove the forward leak",
+          "kind": "configuration",
+          "node": "PE1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nPE1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nPE1(config)#"
+        },
+        {
+          "phase": "remove the forward leak",
+          "kind": "configuration",
+          "node": "PE1",
+          "command": "ip vrf BLUE",
+          "passed": true,
+          "output": "\nPE1(config)#ip vrf BLUE\nPE1(config-vrf)#"
+        },
+        {
+          "phase": "remove the forward leak",
+          "kind": "configuration",
+          "node": "PE1",
+          "command": "no route-target import 65000:20",
+          "passed": true,
+          "output": "\nPE1(config-vrf)#no route-target import 65000:20\nPE1(config-vrf)#"
+        },
+        {
+          "phase": "remove the forward leak",
+          "kind": "configuration",
+          "node": "PE1",
+          "command": "end",
+          "passed": true,
+          "output": "\nPE1(config-vrf)#end\nPE1#"
+        },
+        {
+          "phase": "remove the forward leak",
+          "node": "PE1",
+          "command": "show ip route vrf BLUE 192.0.2.22",
+          "expectation": "The exact BLUE VRF has no route for the other tenant destination.",
+          "passed": true,
+          "output": "\nPE1#show ip route vrf BLUE 192.0.2.22\n\nRouting Table: BLUE\n% Subnet not in table\nPE1#"
+        },
+        {
+          "phase": "remove the forward leak",
+          "node": "BLUE1",
+          "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+          "expectation": "Real BLUE1 traffic does not complete across the selected tenant boundary.",
+          "passed": true,
+          "output": "\nBLUE1#ping 192.0.2.22 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.22, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \nU.U\nSuccess rate is 0 percent (0/3)\nBLUE1#"
+        },
+        {
+          "phase": "remove the forward leak",
+          "node": "BLUE1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "Real BLUE1 traffic reaches the selected customer loopback.",
+          "passed": true,
+          "output": "\nBLUE1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 7/7/8 ms\nBLUE1#"
+        },
+        {
+          "phase": "remove the forward leak",
+          "node": "RED1",
+          "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+          "expectation": "Real RED1 traffic reaches the selected customer loopback.",
+          "passed": true,
+          "output": "\nRED1#ping 192.0.2.22 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.22, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.21 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 8/8/9 ms\nRED1#"
+        },
+        {
+          "phase": "remove the forward leak",
+          "node": "PE1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "Provider transport remains healthy independently of tenant import policy.",
+          "passed": true,
+          "output": "\nPE1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 5/6/8 ms\nPE1#"
+        },
+        {
+          "phase": "remove the forward leak",
+          "node": "PE1",
+          "command": "show mpls ldp neighbor",
+          "expectation": "The actual LDP transport neighbor is operational.",
+          "passed": true,
+          "output": "\nPE1#show mpls ldp neighbor\n    Peer LDP Ident: 192.0.2.2:0; Local LDP Ident 192.0.2.1:0\n\tTCP connection: 192.0.2.2.64335 - 192.0.2.1.646\n\tState: Oper; Msgs sent/rcvd: 12/12; Downstream\n\tUp time: 00:04:10\n\tLDP discovery sources:\n\t  GigabitEthernet0/0, Src IP addr: 198.18.0.2\n        Addresses bound to peer LDP Ident:\n          198.18.0.2      192.0.2.2       198.18.1.1      \nPE1#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "kind": "configuration",
+          "node": "PE2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nPE2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nPE2(config)#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "kind": "configuration",
+          "node": "PE2",
+          "command": "ip vrf RED",
+          "passed": true,
+          "output": "\nPE2(config)#ip vrf RED\nPE2(config-vrf)#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "kind": "configuration",
+          "node": "PE2",
+          "command": "no route-target import 65000:10",
+          "passed": true,
+          "output": "\nPE2(config-vrf)#no route-target import 65000:10\nPE2(config-vrf)#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "kind": "configuration",
+          "node": "PE2",
+          "command": "end",
+          "passed": true,
+          "output": "\nPE2(config-vrf)#end\nPE2#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "node": "PE1",
+          "command": "show ip route vrf BLUE 192.0.2.12",
+          "expectation": "The exact BLUE VRF imports the actual VPNv4 route.",
+          "passed": true,
+          "output": "\nPE1#show ip route vrf BLUE 192.0.2.12\n\nRouting Table: BLUE\nRouting entry for 192.0.2.12/32\n  Known via \"bgp 65000\", distance 200, metric 0, type internal\n  Last update from 192.0.2.3 00:02:53 ago\n  Routing Descriptor Blocks:\n  * 192.0.2.3 (default), from 192.0.2.3, 00:02:53 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 0\n      MPLS label: 19\n      MPLS Flags: MPLS Required\nPE1#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "node": "PE1",
+          "command": "show ip route vrf RED 192.0.2.22",
+          "expectation": "The exact RED VRF imports the actual VPNv4 route.",
+          "passed": true,
+          "output": "\nPE1#show ip route vrf RED 192.0.2.22\n\nRouting Table: RED\nRouting entry for 192.0.2.22/32\n  Known via \"bgp 65000\", distance 200, metric 0, type internal\n  Last update from 192.0.2.3 00:02:54 ago\n  Routing Descriptor Blocks:\n  * 192.0.2.3 (default), from 192.0.2.3, 00:02:54 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 0\n      MPLS label: 20\n      MPLS Flags: MPLS Required\nPE1#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "node": "PE2",
+          "command": "show ip route vrf BLUE 192.0.2.11",
+          "expectation": "The exact BLUE VRF imports the actual VPNv4 route.",
+          "passed": true,
+          "output": "\nPE2#show ip route vrf BLUE 192.0.2.11\n\nRouting Table: BLUE\nRouting entry for 192.0.2.11/32\n  Known via \"bgp 65000\", distance 200, metric 0, type internal\n  Last update from 192.0.2.1 00:02:55 ago\n  Routing Descriptor Blocks:\n  * 192.0.2.1 (default), from 192.0.2.1, 00:02:55 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 0\n      MPLS label: 19\n      MPLS Flags: MPLS Required\nPE2#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "node": "PE2",
+          "command": "show ip route vrf RED 192.0.2.21",
+          "expectation": "The exact RED VRF imports the actual VPNv4 route.",
+          "passed": true,
+          "output": "\nPE2#show ip route vrf RED 192.0.2.21\n\nRouting Table: RED\nRouting entry for 192.0.2.21/32\n  Known via \"bgp 65000\", distance 200, metric 0, type internal\n  Last update from 192.0.2.1 00:02:56 ago\n  Routing Descriptor Blocks:\n  * 192.0.2.1 (default), from 192.0.2.1, 00:02:56 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 0\n      MPLS label: 20\n      MPLS Flags: MPLS Required\nPE2#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "node": "PE1",
+          "command": "show ip route vrf BLUE 192.0.2.22",
+          "expectation": "The exact BLUE VRF has no route for the other tenant destination.",
+          "passed": true,
+          "output": "\nPE1#show ip route vrf BLUE 192.0.2.22\n\nRouting Table: BLUE\n% Subnet not in table\nPE1#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "node": "PE2",
+          "command": "show ip route vrf RED 192.0.2.11",
+          "expectation": "The exact RED VRF has no route for the other tenant destination.",
+          "passed": true,
+          "output": "\nPE2#show ip route vrf RED 192.0.2.11\n\nRouting Table: RED\n% Subnet not in table\nPE2#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "node": "BLUE1",
+          "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+          "expectation": "Real BLUE1 traffic does not complete across the selected tenant boundary.",
+          "passed": true,
+          "output": "\nBLUE1#ping 192.0.2.22 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.22, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \nU.U\nSuccess rate is 0 percent (0/3)\nBLUE1#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "node": "BLUE1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "Real BLUE1 traffic reaches the selected customer loopback.",
+          "passed": true,
+          "output": "\nBLUE1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 7/7/8 ms\nBLUE1#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "node": "RED1",
+          "command": "ping 192.0.2.22 source Loopback0 repeat 3",
+          "expectation": "Real RED1 traffic reaches the selected customer loopback.",
+          "passed": true,
+          "output": "\nRED1#ping 192.0.2.22 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.22, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.21 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 7/7/8 ms\nRED1#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "node": "PE1",
+          "command": "ping 192.0.2.3 source Loopback0 repeat 3",
+          "expectation": "Provider transport remains healthy independently of tenant import policy.",
+          "passed": true,
+          "output": "\nPE1#ping 192.0.2.3 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.3, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 5/6/8 ms\nPE1#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "node": "PE1",
+          "command": "show mpls ldp neighbor",
+          "expectation": "The actual LDP transport neighbor is operational.",
+          "passed": true,
+          "output": "\nPE1#show mpls ldp neighbor\n    Peer LDP Ident: 192.0.2.2:0; Local LDP Ident 192.0.2.1:0\n\tTCP connection: 192.0.2.2.64335 - 192.0.2.1.646\n\tState: Oper; Msgs sent/rcvd: 12/12; Downstream\n\tUp time: 00:04:25\n\tLDP discovery sources:\n\t  GigabitEthernet0/0, Src IP addr: 198.18.0.2\n        Addresses bound to peer LDP Ident:\n          198.18.0.2      192.0.2.2       198.18.1.1      \nPE1#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "node": "P",
+          "command": "show ip route 192.0.2.22",
+          "expectation": "The transit provider has no global customer-destination route.",
+          "passed": true,
+          "output": "\nP#show ip route 192.0.2.22\n% Subnet not in table\nP#"
+        },
+        {
+          "phase": "remove the return leak and verify full isolation",
+          "node": "P",
+          "command": "show mpls forwarding-table",
+          "expectation": "The provider core actually switches labeled payload bytes toward PE2.",
+          "passed": true,
+          "output": "\nP#show mpls forwarding-table\nLocal      Outgoing   Prefix           Bytes Label   Outgoing   Next Hop    \nLabel      Label      or Tunnel Id     Switched      interface              \n16         Pop Label  192.0.2.1/32     7177          Gi0/0      198.18.0.1  \n17         Pop Label  192.0.2.3/32     7512          Gi0/1      198.18.1.2  \nP#"
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "PE1": "STARTED",
+        "P": "STARTED",
+        "PE2": "STARTED",
+        "BLUE1": "STARTED",
+        "RED1": "STARTED",
+        "BLUE2": "STARTED",
+        "RED2": "STARTED"
+      },
+      "images": {
+        "PE1": "iosv-159-3-m12",
+        "P": "iosv-159-3-m12",
+        "PE2": "iosv-159-3-m12",
+        "BLUE1": "iosv-159-3-m12",
+        "RED1": "iosv-159-3-m12",
+        "BLUE2": "iosv-159-3-m12",
+        "RED2": "iosv-159-3-m12"
+      },
+      "plan_sha256": "a7d1bd9be1f8326474c86549e781ba8334e7dfe0b7cce7cd6651467c4a16b0de",
+      "console_boot_fallback": [
+        "PE1",
+        "P",
+        "PE2",
+        "BLUE1",
+        "RED1",
+        "BLUE2",
+        "RED2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T12:01:36Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/037-redistribution-nightmare.yaml",
+      "sha256": "a5a219008a26cf6d71a0d145a2c0b81adedfc9405ba957eb57c27c3fc1b9d169",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T12:01:47Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "RIGHT",
+          "command": "show ip route 203.0.113.100",
+          "expectation": "The service is a real tagged external EIGRP route.",
+          "passed": true,
+          "output": "\nRIGHT#show ip route 203.0.113.100\nRouting entry for 203.0.113.100/32\n  Known via \"eigrp 100\", distance 170, metric 307200\n  Tag 100, precedence routine (0), type external\n  Redistributing via eigrp 100\n  Last update from 198.18.24.1 on Ethernet0/0, 00:00:02 ago\n  Routing Descriptor Blocks:\n  * 198.18.34.1, from 198.18.34.1, 00:00:02 ago, via Ethernet0/1\n      Route metric is 307200, traffic share count is 1\n      Total delay is 2000 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\n      Route tag 100\n    198.18.24.1, from 198.18.24.1, 00:00:02 ago, via Ethernet0/0\n      Route metric is 307200, traffic share count is 1\n      Total delay is 2000 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\n      Route tag 100\nRIGHT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "B3",
+          "command": "show ip route 203.0.113.100",
+          "expectation": "Normal administrative distance selects the native OSPF route.",
+          "passed": true,
+          "output": "\nB3#show ip route 203.0.113.100\nRouting entry for 203.0.113.100/32\n  Known via \"ospf 1\", distance 110, metric 11, type intra area\n  Redistributing via eigrp 100\n  Advertised by eigrp 100 match internal external 1 & 2 route-map O2E\n  Last update from 198.18.13.1 on Ethernet0/0, 00:00:22 ago\n  Routing Descriptor Blocks:\n  * 198.18.13.1, from 192.0.2.1, 00:00:22 ago, via Ethernet0/0\n      Route metric is 11, traffic share count is 1\nB3#"
+        },
+        {
+          "phase": "baseline",
+          "node": "RIGHT",
+          "command": "ping 203.0.113.100 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic succeeds.",
+          "passed": true,
+          "output": "\nRIGHT#ping 203.0.113.100 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 203.0.113.100, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nRIGHT#"
+        },
+        {
+          "phase": "baseline",
+          "node": "RIGHT",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic succeeds.",
+          "passed": true,
+          "output": "\nRIGHT#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nRIGHT#"
+        },
+        {
+          "phase": "prefer the returned external route but retain its export guard",
+          "kind": "configuration",
+          "node": "B3",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nB3#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nB3(config)#"
+        },
+        {
+          "phase": "prefer the returned external route but retain its export guard",
+          "kind": "configuration",
+          "node": "B3",
+          "command": "router eigrp 100",
+          "passed": true,
+          "output": "\nB3(config)#router eigrp 100\nB3(config-router)#"
+        },
+        {
+          "phase": "prefer the returned external route but retain its export guard",
+          "kind": "configuration",
+          "node": "B3",
+          "command": "distance eigrp 90 90",
+          "passed": true,
+          "output": "\nB3(config-router)#distance eigrp 90 90\nB3(config-router)#"
+        },
+        {
+          "phase": "prefer the returned external route but retain its export guard",
+          "kind": "configuration",
+          "node": "B3",
+          "command": "end",
+          "passed": true,
+          "output": "\n*Oct 31 12:02:18.115: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 31 12:02:18.115: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 31 12:02:18.222: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\nB3(config-router)#\nB3(config-router)#end\nB3#"
+        },
+        {
+          "phase": "prefer the returned external route but retain its export guard",
+          "node": "B3",
+          "command": "show ip route 203.0.113.100",
+          "expectation": "The changed external distance actually selects the returned tagged EIGRP route.",
+          "passed": true,
+          "output": "\nB3#show ip route 203.0.113.100\nRouting entry for 203.0.113.100/32\n  Known via \"eigrp 100\", distance 90, metric 332800\n  Tag 100, precedence routine (0), type external\n  Redistributing via ospf 1, eigrp 100\n  Last update from 198.18.34.2 on Ethernet0/1, 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.34.2, from 198.18.34.2, 00:00:01 ago, via Ethernet0/1\n      Route metric is 332800, traffic share count is 1\n      Total delay is 3000 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 2\n      Route tag 100\nB3#"
+        },
+        {
+          "phase": "prefer the returned external route but retain its export guard",
+          "node": "RIGHT",
+          "command": "ping 203.0.113.100 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic succeeds.",
+          "passed": true,
+          "output": "\nRIGHT#ping 203.0.113.100 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 203.0.113.100, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nRIGHT#"
+        },
+        {
+          "phase": "prefer the returned external route but retain its export guard",
+          "node": "RIGHT",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic succeeds.",
+          "passed": true,
+          "output": "\nRIGHT#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nRIGHT#"
+        },
+        {
+          "phase": "remove the origin-tag export guard",
+          "kind": "configuration",
+          "node": "B3",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nB3#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nB3(config)#"
+        },
+        {
+          "phase": "remove the origin-tag export guard",
+          "kind": "configuration",
+          "node": "B3",
+          "command": "no route-map E2O deny 10",
+          "passed": true,
+          "output": "\nB3(config)#no route-map E2O deny 10\nB3(config)#"
+        },
+        {
+          "phase": "remove the origin-tag export guard",
+          "kind": "configuration",
+          "node": "B3",
+          "command": "end",
+          "passed": true,
+          "output": "\nB3(config)#end\nB3#"
+        },
+        {
+          "phase": "remove the origin-tag export guard",
+          "node": "B3",
+          "command": "show ip route 203.0.113.100",
+          "expectation": "The changed external distance actually selects the returned tagged EIGRP route.",
+          "passed": true,
+          "output": "\nB3#show ip route 203.0.113.100\nRouting entry for 203.0.113.100/32\n  Known via \"eigrp 100\", distance 90, metric 332800\n  Tag 100, precedence routine (0), type external\n  Redistributing via ospf 1, eigrp 100\n  Advertised by ospf 1 subnets route-map E2O\n  Last update from 198.18.34.2 on Ethernet0/1, 00:00:05 ago\n  Routing Descriptor Blocks:\n  * 198.18.34.2, from 198.18.34.2, 00:00:05 ago, via Ethernet0/1\n      Route metric is 332800, traffic share count is 1\n      Total delay is 3000 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 2\n      Route tag 100\nB3#"
+        },
+        {
+          "phase": "remove the origin-tag export guard",
+          "node": "B2",
+          "command": "show ip ospf database external 203.0.113.100",
+          "expectation": "The second boundary has actually reflected the OSPF-origin prefix into an external OSPF LSA.",
+          "passed": true,
+          "output": "\nB2#show ip ospf database external 203.0.113.100\n\n            OSPF Router with ID (192.0.2.2) (Process ID 1)\n\n\t\tType-5 AS External Link States\n\n  LS age: 19\n  Options: (No TOS-capability, DC, Upward)\n  LS Type: AS External Link\n  Link State ID: 203.0.113.100 (External Network Number )\n  Advertising Router: 192.0.2.3\n  LS Seq Number: 80000001\n  Checksum: 0xF976\n  Length: 36\n  Network Mask: /32\n\tMetric Type: 2 (Larger than any link state path)\n\tMTID: 0 \n\tMetric: 20 \n\tForward Address: 0.0.0.0\n\tExternal Route Tag: 200\n\nB2#"
+        },
+        {
+          "phase": "remove the origin-tag export guard",
+          "node": "RIGHT",
+          "command": "ping 203.0.113.100 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic succeeds.",
+          "passed": true,
+          "output": "\nRIGHT#ping 203.0.113.100 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 203.0.113.100, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nRIGHT#"
+        },
+        {
+          "phase": "remove the origin-tag export guard",
+          "node": "RIGHT",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic succeeds.",
+          "passed": true,
+          "output": "\nRIGHT#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nRIGHT#"
+        },
+        {
+          "phase": "remove the second returned-origin guard",
+          "kind": "configuration",
+          "node": "B2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nB2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nB2(config)#"
+        },
+        {
+          "phase": "remove the second returned-origin guard",
+          "kind": "configuration",
+          "node": "B2",
+          "command": "no route-map O2E deny 10",
+          "passed": true,
+          "output": "\nB2(config)#no route-map O2E deny 10\nB2(config)#"
+        },
+        {
+          "phase": "remove the second returned-origin guard",
+          "kind": "configuration",
+          "node": "B2",
+          "command": "end",
+          "passed": true,
+          "output": "\nB2(config)#end\nB2#"
+        },
+        {
+          "phase": "remove the second returned-origin guard",
+          "node": "B2",
+          "command": "show ip ospf database external 203.0.113.100",
+          "expectation": "The second boundary has actually reflected the OSPF-origin prefix into an external OSPF LSA.",
+          "passed": true,
+          "output": "\n*Oct 31 12:02:54.677: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 31 12:02:54.678: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 31 12:02:54.785: %SYS-5-CONFIG_P: Configured programmatically by process PnP Agent Discovery from console as vty0\n*Oct 31 12:02:54.885: %PNP-6-PNP_TECH_SUMMARY_SAVED_OK: PnP tech summary (/pnp-tech/pnp-tech-discovery-summary) saved successfully (elapsed time: 0 seconds).\n*Oct 31 12:02:54.885: %PNP-6-PNP_DISCOVERY_STOPPED: PnP Discovery stopped (Config Wizard)\nB2#\nB2#show ip ospf database external 203.0.113.100\n\n            OSPF Router with ID (192.0.2.2) (Process ID 1)\n\n\t\tType-5 AS External Link States\n\n  LS age: 23\n  Options: (No TOS-capability, DC, Upward)\n  LS Type: AS External Link\n  Link State ID: 203.0.113.100 (External Network Number )\n  Advertising Router: 192.0.2.3\n  LS Seq Number: 80000001\n  Checksum: 0xF976\n  Length: 36\n  Network Mask: /32\n\tMetric Type: 2 (Larger than any link state path)\n\tMTID: 0 \n\tMetric: 20 \n\tForward Address: 0.0.0.0\n\tExternal Route Tag: 200\n\nB2#"
+        },
+        {
+          "phase": "remove the second returned-origin guard",
+          "node": "RIGHT",
+          "command": "show ip route 203.0.113.100",
+          "expectation": "The service is a real tagged external EIGRP route.",
+          "passed": true,
+          "output": "\nRIGHT#show ip route 203.0.113.100\nRouting entry for 203.0.113.100/32\n  Known via \"eigrp 100\", distance 170, metric 307200\n  Tag 100, precedence routine (0), type external\n  Redistributing via eigrp 100\n  Last update from 198.18.24.1 on Ethernet0/0, 00:00:28 ago\n  Routing Descriptor Blocks:\n  * 198.18.24.1, from 198.18.24.1, 00:00:28 ago, via Ethernet0/0\n      Route metric is 307200, traffic share count is 1\n      Total delay is 2000 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\n      Route tag 100\nRIGHT#"
+        },
+        {
+          "phase": "remove the second returned-origin guard",
+          "node": "RIGHT",
+          "command": "ping 203.0.113.100 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic succeeds.",
+          "passed": true,
+          "output": "\nRIGHT#ping 203.0.113.100 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 203.0.113.100, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nRIGHT#"
+        },
+        {
+          "phase": "remove the second returned-origin guard",
+          "node": "RIGHT",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic succeeds.",
+          "passed": true,
+          "output": "\nRIGHT#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nRIGHT#"
+        },
+        {
+          "phase": "withdraw the real service and observe persistent feedback",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nLEFT#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nLEFT(config)#"
+        },
+        {
+          "phase": "withdraw the real service and observe persistent feedback",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "interface Loopback100",
+          "passed": true,
+          "output": "\nLEFT(config)#interface Loopback100\nLEFT(config-if)#"
+        },
+        {
+          "phase": "withdraw the real service and observe persistent feedback",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "shutdown",
+          "passed": true,
+          "output": "\nLEFT(config-if)#shutdown\nLEFT(config-if)#"
+        },
+        {
+          "phase": "withdraw the real service and observe persistent feedback",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "end",
+          "passed": true,
+          "output": "\nLEFT(config-if)#end\nLEFT#"
+        },
+        {
+          "phase": "withdraw the real service and observe persistent feedback",
+          "node": "B2",
+          "command": "show ip ospf database external 203.0.113.100",
+          "expectation": "The second boundary has actually reflected the OSPF-origin prefix into an external OSPF LSA.",
+          "passed": true,
+          "output": "\nB2#show ip ospf database external 203.0.113.100\n\n            OSPF Router with ID (192.0.2.2) (Process ID 1)\n\n\t\tType-5 AS External Link States\n\n  LS age: 45\n  Options: (No TOS-capability, DC, Upward)\n  LS Type: AS External Link\n  Link State ID: 203.0.113.100 (External Network Number )\n  Advertising Router: 192.0.2.3\n  LS Seq Number: 80000001\n  Checksum: 0xF976\n  Length: 36\n  Network Mask: /32\n\tMetric Type: 2 (Larger than any link state path)\n\tMTID: 0 \n\tMetric: 20 \n\tForward Address: 0.0.0.0\n\tExternal Route Tag: 200\n\nB2#"
+        },
+        {
+          "phase": "withdraw the real service and observe persistent feedback",
+          "node": "RIGHT",
+          "command": "show ip route 203.0.113.100",
+          "expectation": "The service is a real tagged external EIGRP route.",
+          "passed": true,
+          "output": "\nRIGHT#show ip route 203.0.113.100\nRouting entry for 203.0.113.100/32\n  Known via \"eigrp 100\", distance 170, metric 307200\n  Tag 100, precedence routine (0), type external\n  Redistributing via eigrp 100\n  Last update from 198.18.24.1 on Ethernet0/0, 00:00:01 ago\n  Routing Descriptor Blocks:\n  * 198.18.24.1, from 198.18.24.1, 00:00:01 ago, via Ethernet0/0\n      Route metric is 307200, traffic share count is 1\n      Total delay is 2000 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\n      Route tag 100\nRIGHT#"
+        },
+        {
+          "phase": "withdraw the real service and observe persistent feedback",
+          "node": "RIGHT",
+          "command": "ping 203.0.113.100 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic cannot reach the withdrawn service.",
+          "passed": true,
+          "output": "\nRIGHT#ping 203.0.113.100 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 203.0.113.100, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n...\nSuccess rate is 0 percent (0/3)\nRIGHT#"
+        },
+        {
+          "phase": "withdraw the real service and observe persistent feedback",
+          "node": "RIGHT",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic succeeds.",
+          "passed": true,
+          "output": "\nRIGHT#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nRIGHT#"
+        },
+        {
+          "phase": "withdraw the real service and observe persistent feedback",
+          "node": "RIGHT",
+          "command": "show ip route 203.0.113.100",
+          "expectation": "The ghost route remains after the failed data-plane probes.",
+          "passed": true,
+          "output": "\nRIGHT#show ip route 203.0.113.100\nRouting entry for 203.0.113.100/32\n  Known via \"eigrp 100\", distance 170, metric 307200\n  Tag 100, precedence routine (0), type external\n  Redistributing via eigrp 100\n  Last update from 198.18.24.1 on Ethernet0/0, 00:00:09 ago\n  Routing Descriptor Blocks:\n  * 198.18.24.1, from 198.18.24.1, 00:00:09 ago, via Ethernet0/0\n      Route metric is 307200, traffic share count is 1\n      Total delay is 2000 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\n      Route tag 100\nRIGHT#"
+        },
+        {
+          "phase": "repair origin rejection and normal external distance",
+          "kind": "configuration",
+          "node": "B3",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nB3#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nB3(config)#"
+        },
+        {
+          "phase": "repair origin rejection and normal external distance",
+          "kind": "configuration",
+          "node": "B3",
+          "command": "route-map E2O deny 10",
+          "passed": true,
+          "output": "\nB3(config)#route-map E2O deny 10\nB3(config-route-map)#"
+        },
+        {
+          "phase": "repair origin rejection and normal external distance",
+          "kind": "configuration",
+          "node": "B3",
+          "command": "match tag 100",
+          "passed": true,
+          "output": "\nB3(config-route-map)#match tag 100\nB3(config-route-map)#"
+        },
+        {
+          "phase": "repair origin rejection and normal external distance",
+          "kind": "configuration",
+          "node": "B3",
+          "command": "exit",
+          "passed": true,
+          "output": "\nB3(config-route-map)#exit\nB3(config)#"
+        },
+        {
+          "phase": "repair origin rejection and normal external distance",
+          "kind": "configuration",
+          "node": "B3",
+          "command": "router eigrp 100",
+          "passed": true,
+          "output": "\nB3(config)#router eigrp 100\nB3(config-router)#"
+        },
+        {
+          "phase": "repair origin rejection and normal external distance",
+          "kind": "configuration",
+          "node": "B3",
+          "command": "distance eigrp 90 170",
+          "passed": true,
+          "output": "\nB3(config-router)#distance eigrp 90 170\nB3(config-router)#"
+        },
+        {
+          "phase": "repair origin rejection and normal external distance",
+          "kind": "configuration",
+          "node": "B3",
+          "command": "end",
+          "passed": true,
+          "output": "\nB3(config-router)#end\nB3#"
+        },
+        {
+          "phase": "repair origin rejection and normal external distance",
+          "node": "RIGHT",
+          "command": "show ip route 203.0.113.100",
+          "expectation": "After the return-export guard is repaired the withdrawn service route disappears.",
+          "passed": true,
+          "output": "\nRIGHT#show ip route 203.0.113.100\n% Network not in table\nRIGHT#"
+        },
+        {
+          "phase": "repair origin rejection and normal external distance",
+          "node": "RIGHT",
+          "command": "ping 203.0.113.100 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic cannot reach the withdrawn service.",
+          "passed": true,
+          "output": "\nRIGHT#ping 203.0.113.100 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 203.0.113.100, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n...\nSuccess rate is 0 percent (0/3)\nRIGHT#"
+        },
+        {
+          "phase": "repair origin rejection and normal external distance",
+          "node": "RIGHT",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic succeeds.",
+          "passed": true,
+          "output": "\nRIGHT#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nRIGHT#"
+        },
+        {
+          "phase": "restore the second returned-origin guard",
+          "kind": "configuration",
+          "node": "B2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nB2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nB2(config)#"
+        },
+        {
+          "phase": "restore the second returned-origin guard",
+          "kind": "configuration",
+          "node": "B2",
+          "command": "route-map O2E deny 10",
+          "passed": true,
+          "output": "\nB2(config)#route-map O2E deny 10\nB2(config-route-map)#"
+        },
+        {
+          "phase": "restore the second returned-origin guard",
+          "kind": "configuration",
+          "node": "B2",
+          "command": "match tag 200",
+          "passed": true,
+          "output": "\nB2(config-route-map)#match tag 200\nB2(config-route-map)#"
+        },
+        {
+          "phase": "restore the second returned-origin guard",
+          "kind": "configuration",
+          "node": "B2",
+          "command": "end",
+          "passed": true,
+          "output": "\nB2(config-route-map)#end\nB2#"
+        },
+        {
+          "phase": "restore the second returned-origin guard",
+          "node": "RIGHT",
+          "command": "show ip route 203.0.113.100",
+          "expectation": "After the return-export guard is repaired the withdrawn service route disappears.",
+          "passed": true,
+          "output": "\nRIGHT#show ip route 203.0.113.100\n% Network not in table\nRIGHT#"
+        },
+        {
+          "phase": "restore the second returned-origin guard",
+          "node": "RIGHT",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic succeeds.",
+          "passed": true,
+          "output": "\nRIGHT#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nRIGHT#"
+        },
+        {
+          "phase": "restore the actual service",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nLEFT#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nLEFT(config)#"
+        },
+        {
+          "phase": "restore the actual service",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "interface Loopback100",
+          "passed": true,
+          "output": "\nLEFT(config)#interface Loopback100\nLEFT(config-if)#"
+        },
+        {
+          "phase": "restore the actual service",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "no shutdown",
+          "passed": true,
+          "output": "\nLEFT(config-if)#no shutdown\nLEFT(config-if)#"
+        },
+        {
+          "phase": "restore the actual service",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "end",
+          "passed": true,
+          "output": "\nLEFT(config-if)#end\nLEFT#"
+        },
+        {
+          "phase": "restore the actual service",
+          "node": "RIGHT",
+          "command": "show ip route 203.0.113.100",
+          "expectation": "The service is a real tagged external EIGRP route.",
+          "passed": true,
+          "output": "\nRIGHT#show ip route 203.0.113.100\nRouting entry for 203.0.113.100/32\n  Known via \"eigrp 100\", distance 170, metric 307200\n  Tag 100, precedence routine (0), type external\n  Redistributing via eigrp 100\n  Last update from 198.18.34.1 on Ethernet0/1, 00:00:03 ago\n  Routing Descriptor Blocks:\n    198.18.34.1, from 198.18.34.1, 00:00:03 ago, via Ethernet0/1\n      Route metric is 307200, traffic share count is 1\n      Total delay is 2000 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\n      Route tag 100\n  * 198.18.24.1, from 198.18.24.1, 00:00:03 ago, via Ethernet0/0\n      Route metric is 307200, traffic share count is 1\n      Total delay is 2000 microseconds, minimum bandwidth is 10000 Kbit\n      Reliability 255/255, minimum MTU 1500 bytes\n      Loading 1/255, Hops 1\n      Route tag 100\nRIGHT#"
+        },
+        {
+          "phase": "restore the actual service",
+          "node": "B3",
+          "command": "show ip route 203.0.113.100",
+          "expectation": "Normal administrative distance selects the native OSPF route.",
+          "passed": true,
+          "output": "\nB3#show ip route 203.0.113.100\nRouting entry for 203.0.113.100/32\n  Known via \"ospf 1\", distance 110, metric 11, type intra area\n  Redistributing via eigrp 100\n  Advertised by eigrp 100 match internal external 1 & 2 route-map O2E\n  Last update from 198.18.13.1 on Ethernet0/0, 00:00:04 ago\n  Routing Descriptor Blocks:\n  * 198.18.13.1, from 192.0.2.1, 00:00:04 ago, via Ethernet0/0\n      Route metric is 11, traffic share count is 1\nB3#"
+        },
+        {
+          "phase": "restore the actual service",
+          "node": "RIGHT",
+          "command": "ping 203.0.113.100 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic succeeds.",
+          "passed": true,
+          "output": "\nRIGHT#ping 203.0.113.100 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 203.0.113.100, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nRIGHT#"
+        },
+        {
+          "phase": "restore the actual service",
+          "node": "RIGHT",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "Actual endpoint traffic succeeds.",
+          "passed": true,
+          "output": "\nRIGHT#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.4 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nRIGHT#"
+        }
+      ],
+      "plan_sha256": "0e00f0d3c31e6e23b1cf72bda5c898d2f0a71e211dc28b70f04a1a89c2e736dc",
+      "startup_states": {
+        "LEFT": "BOOTED",
+        "B2": "BOOTED",
+        "B3": "BOOTED",
+        "RIGHT": "STARTED"
+      },
+      "images": {
+        "LEFT": "iol-xe-17-18-02",
+        "B2": "iol-xe-17-18-02",
+        "B3": "iol-xe-17-18-02",
+        "RIGHT": "iol-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "RIGHT"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T12:04:05Z"
     }
   ]
 }

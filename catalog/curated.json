@@ -1043,5 +1043,29 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-901-033-oauth2-token-refresh-flow.md",
     "example_profile": "native-oauth"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/037-redistribution-nightmare.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 120,
+    "kind": "troubleshooting",
+    "workbook": "docs/workbooks/300-410-037-redistribution-nightmare.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/assessment/044-enarsi-practical-checkpoint.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "assessment",
+    "workbook": "docs/workbooks/300-410-044-enarsi-practical-checkpoint.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/046-enarsi-capstone-vpn-services.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 165,
+    "kind": "capstone",
+    "workbook": "docs/workbooks/300-410-046-enarsi-capstone-vpn-services.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/045-enarsi-capstone-advanced-routing.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 135,
+    "kind": "capstone",
+    "workbook": "docs/workbooks/300-410-045-enarsi-capstone-advanced-routing.md"
   }
 }

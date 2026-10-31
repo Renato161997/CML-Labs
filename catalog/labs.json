@@ -1083,26 +1083,24 @@
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/assessment/044-enarsi-practical-checkpoint.yaml",
-      "title": "ENARSI Practical Checkpoint",
+      "title": "ENARSI Practical: Routing, DNS and Source Policy",
       "track": "300-410",
       "topic": "assessment",
-      "nodes": 6,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 110,
+      "workbook": "docs/workbooks/300-410-044-enarsi-practical-checkpoint.md",
+      "kind": "assessment",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "b0bbbbbeb75fdee98a734ba87382e2f55c088ef81d97d7ae2a46c3249fa7d4b6"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T11:53:30Z",
+      "sha256": "bed197152c7dcc47a041c950e277864d70e5bc6dbf7af5202b497ecce642d9d4"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/033-netconf-restconf-routing.yaml",
@@ -1362,49 +1360,45 @@
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/045-enarsi-capstone-advanced-routing.yaml",
-      "title": "ENARSI Capstone Advanced Routing",
+      "title": "ENARSI Capstone: Inter-Area Routing and Selective BGP Export",
       "track": "300-410",
       "topic": "capstone",
-      "nodes": 6,
+      "nodes": 4,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 135,
+      "workbook": "docs/workbooks/300-410-045-enarsi-capstone-advanced-routing.md",
+      "kind": "capstone",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "707e4cd82580c7ec968f809510fccbbee57982e307efc8f98844641d58fcc933"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T11:56:00Z",
+      "sha256": "5d301e9d23562546e89dec77acc55e97f4200c04657cdb58c3908c01e39355a8"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/046-enarsi-capstone-vpn-services.yaml",
-      "title": "ENARSI Capstone VPN Services",
+      "title": "ENARSI Capstone: Dual-Tenant MPLS VPN Isolation",
       "track": "300-410",
       "topic": "capstone",
-      "nodes": 6,
+      "nodes": 7,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iosv"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 3584,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 165,
+      "workbook": "docs/workbooks/300-410-046-enarsi-capstone-vpn-services.md",
+      "kind": "capstone",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "bc6a839ddd58ee71cd8ee462cb3cca4563a43bbaf5f7ebace859eb88073f4f6b"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T12:01:36Z",
+      "sha256": "74294e7678fa00fa16dd22ab5ecccd7b460997c8f5c52c5f90c4eb45a7606540"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/029-router-hardening.yaml",
@@ -1883,23 +1877,21 @@
       "title": "Redistribution Nightmare",
       "track": "300-410",
       "topic": "troubleshooting",
-      "nodes": 6,
+      "nodes": 4,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 120,
+      "workbook": "docs/workbooks/300-410-037-redistribution-nightmare.md",
+      "kind": "troubleshooting",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "4c43a4a747e3cfb5fb9c5e999e41692551dbd77808e8ee0c237c945bc3debb64"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T12:04:05Z",
+      "sha256": "a5a219008a26cf6d71a0d145a2c0b81adedfc9405ba957eb57c27c3fc1b9d169"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/041-summarization-and-filtering-faults.yaml",
