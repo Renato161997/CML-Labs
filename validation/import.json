@@ -313,11 +313,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/026-ipv6-first-hop-security.yaml",
-      "sha256": "e82e03ae1a9557b4095d9f652b351b150cea3c0820288125ee6c42b3f5a2f199",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/027-ntp-syslog-snmp.yaml",
       "sha256": "fd7f3e6fb527ce35dd9243b2f695282f776bb929e4b1e7b5887fd7a35683f3c4",
       "status": "import-export-pass"
@@ -633,11 +628,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/033-infrastructure-device-hardening.yaml",
-      "sha256": "a0b427471ec5fcc12e6e5bfdf632013ef1a41e6670750ffdaafc5450084114f7",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/036-secure-management-plane.yaml",
       "sha256": "e364fac744ef8238f84891d94630caa1112f09cb5acedf3d30fce8b944a73d6c",
       "status": "import-export-pass"
@@ -790,11 +780,6 @@
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/010-remote-access-vpn-concepts.yaml",
       "sha256": "3bd96f1d66ca4a73e966648c9a607152669579f5971582a38407c8396f998853",
-      "status": "import-export-pass"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/011-aaa-ise-radius-tacacs.yaml",
-      "sha256": "d19aa268221f5c74a2ae5b4b8f86aa350cc1db4f4bc51b94c371a3da71eb2199",
       "status": "import-export-pass"
     },
     {
@@ -1253,11 +1238,6 @@
       "completed_utc": "2026-10-31T17:54:41Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/035-macsec-concepts.yaml",
       "sha256": "86bb60b988b90a5fe8b7bdc2a5cbf9fa90ca04493e9fc82a5e0256f514fcffe3",
       "cml_version": "2.10.1+build.21",
@@ -1266,6 +1246,41 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T21:13:40Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/026-ipv6-first-hop-security.yaml",
+      "sha256": "d593b1615820014948ff55eff754c9f57ad28b197a55c564d6fba19dc68017f5",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T21:43:54Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T21:43:55Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/011-aaa-ise-radius-tacacs.yaml",
+      "sha256": "591eb80492b29004b9696cc750aacec3a4d132698a65747cc47c01600f04b867",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T22:05:29Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T22:05:29Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/033-infrastructure-device-hardening.yaml",
+      "sha256": "a5c57780fb137d47bc5afda39d6f4f9392627918ceb271303a5f8d953211b2cc",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T22:05:31Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T22:05:31Z"
     }
   ]
 }

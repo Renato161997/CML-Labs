@@ -39937,6 +39937,1333 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T21:19:07Z"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/026-ipv6-first-hop-security.yaml",
+      "sha256": "d593b1615820014948ff55eff754c9f57ad28b197a55c564d6fba19dc68017f5",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T21:46:54Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py health",
+          "expectation": "Actual IPv6 echo traffic reaches both the trusted advertiser and untrusted advertiser; the guard must not simply disable the untrusted data port.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py health\n{\"ipv6_data_replies\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "advertise the trusted default router",
+          "kind": "configuration",
+          "node": "ROUTER",
+          "command": "python3 /lab/f.py advertise",
+          "passed": true,
+          "output": "\nroot@ROUTER:~# python3 /lab/f.py advertise\n{\"advertised\": 5, \"extension\": false, \"role\": \"ROUTER\"}\nroot@ROUTER:~# "
+        },
+        {
+          "phase": "advertise the trusted default router",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py trusted",
+          "expectation": "An actual Linux IPv6 route lookup outside the connected prefix selects the trusted gateway. Trusted acceptance also requires no retained rogue default route.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py trusted\n{\"actual_kernel_routes\": true, \"selected_gateway\": \"fe80::1\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "advertise the trusted default router",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py health",
+          "expectation": "Actual IPv6 echo traffic reaches both the trusted advertiser and untrusted advertiser; the guard must not simply disable the untrusted data port.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py health\n{\"ipv6_data_replies\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "start a fresh guard evidence window",
+          "kind": "configuration",
+          "node": "GUARD",
+          "command": "python3 /lab/f.py reset",
+          "passed": true,
+          "output": "\nroot@GUARD:~# python3 /lab/f.py reset\n{\"counters_reset\": true, \"policy_enabled\": true}\nroot@GUARD:~# "
+        },
+        {
+          "phase": "start a fresh guard evidence window",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py trusted",
+          "expectation": "An actual Linux IPv6 route lookup outside the connected prefix selects the trusted gateway. Trusted acceptance also requires no retained rogue default route.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py trusted\n{\"actual_kernel_routes\": true, \"selected_gateway\": \"fe80::1\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "send the untrusted RA behind a Hop-by-Hop header",
+          "kind": "configuration",
+          "node": "ROGUE",
+          "command": "python3 /lab/f.py advertise --extension",
+          "passed": true,
+          "output": "\nroot@ROGUE:~# python3 /lab/f.py advertise --extension\n{\"advertised\": 5, \"extension\": true, \"role\": \"ROGUE\"}\nroot@ROGUE:~# "
+        },
+        {
+          "phase": "send the untrusted RA behind a Hop-by-Hop header",
+          "node": "GUARD",
+          "command": "python3 /lab/f.py blocked",
+          "expectation": "Fresh-generation guard counters observe at least five actual extension-bearing RAs and the declared block/forward decision.",
+          "passed": true,
+          "output": "\nroot@GUARD:~# python3 /lab/f.py blocked\n{\"blocked\": true, \"extension_packets\": 5, \"ra_packets\": 5, \"status\": \"passed\"}\nroot@GUARD:~# "
+        },
+        {
+          "phase": "send the untrusted RA behind a Hop-by-Hop header",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py trusted",
+          "expectation": "An actual Linux IPv6 route lookup outside the connected prefix selects the trusted gateway. Trusted acceptance also requires no retained rogue default route.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py trusted\n{\"actual_kernel_routes\": true, \"selected_gateway\": \"fe80::1\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "send the untrusted RA behind a Hop-by-Hop header",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py health",
+          "expectation": "Actual IPv6 echo traffic reaches both the trusted advertiser and untrusted advertiser; the guard must not simply disable the untrusted data port.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py health\n{\"ipv6_data_replies\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "withdraw only RA filtering",
+          "kind": "configuration",
+          "node": "GUARD",
+          "command": "python3 /lab/f.py policy-off",
+          "passed": true,
+          "output": "\nroot@GUARD:~# python3 /lab/f.py policy-off\n{\"counters_reset\": true, \"policy_enabled\": false}\nroot@GUARD:~# "
+        },
+        {
+          "phase": "withdraw only RA filtering",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py trusted",
+          "expectation": "An actual Linux IPv6 route lookup outside the connected prefix selects the trusted gateway. Trusted acceptance also requires no retained rogue default route.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py trusted\n{\"actual_kernel_routes\": true, \"selected_gateway\": \"fe80::1\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "observe actual rogue-route installation and selection",
+          "kind": "configuration",
+          "node": "ROGUE",
+          "command": "python3 /lab/f.py advertise --extension",
+          "passed": true,
+          "output": "\nroot@ROGUE:~# python3 /lab/f.py advertise --extension\n{\"advertised\": 5, \"extension\": true, \"role\": \"ROGUE\"}\nroot@ROGUE:~# "
+        },
+        {
+          "phase": "observe actual rogue-route installation and selection",
+          "node": "GUARD",
+          "command": "python3 /lab/f.py forwarded",
+          "expectation": "Fresh-generation guard counters observe at least five actual extension-bearing RAs and the declared block/forward decision.",
+          "passed": true,
+          "output": "\nroot@GUARD:~# python3 /lab/f.py forwarded\n{\"blocked\": false, \"extension_packets\": 5, \"ra_packets\": 5, \"status\": \"passed\"}\nroot@GUARD:~# "
+        },
+        {
+          "phase": "observe actual rogue-route installation and selection",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py rogue",
+          "expectation": "An actual Linux IPv6 route lookup outside the connected prefix selects the rogue gateway. Trusted acceptance also requires no retained rogue default route.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py rogue\n{\"actual_kernel_routes\": true, \"selected_gateway\": \"fe80::66\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "observe actual rogue-route installation and selection",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py health",
+          "expectation": "Actual IPv6 echo traffic reaches both the trusted advertiser and untrusted advertiser; the guard must not simply disable the untrusted data port.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py health\n{\"ipv6_data_replies\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore filtering before clearing learned state",
+          "kind": "configuration",
+          "node": "GUARD",
+          "command": "python3 /lab/f.py policy-on",
+          "passed": true,
+          "output": "\nroot@GUARD:~# python3 /lab/f.py policy-on\n{\"counters_reset\": true, \"policy_enabled\": true}\nroot@GUARD:~# "
+        },
+        {
+          "phase": "restore filtering before clearing learned state",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py health",
+          "expectation": "Actual IPv6 echo traffic reaches both the trusted advertiser and untrusted advertiser; the guard must not simply disable the untrusted data port.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py health\n{\"ipv6_data_replies\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "remove only the previously learned rogue RA route",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py recover",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py recover\n{\"actual_kernel_routes\": true, \"rogue_removed\": 1, \"selected_gateway\": \"fe80::1\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "remove only the previously learned rogue RA route",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py trusted",
+          "expectation": "An actual Linux IPv6 route lookup outside the connected prefix selects the trusted gateway. Trusted acceptance also requires no retained rogue default route.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py trusted\n{\"actual_kernel_routes\": true, \"selected_gateway\": \"fe80::1\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "remove only the previously learned rogue RA route",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py health",
+          "expectation": "Actual IPv6 echo traffic reaches both the trusted advertiser and untrusted advertiser; the guard must not simply disable the untrusted data port.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py health\n{\"ipv6_data_replies\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "prove fresh untrusted advertisements stay blocked",
+          "kind": "configuration",
+          "node": "ROGUE",
+          "command": "python3 /lab/f.py advertise --extension",
+          "passed": true,
+          "output": "\nroot@ROGUE:~# python3 /lab/f.py advertise --extension\n{\"advertised\": 5, \"extension\": true, \"role\": \"ROGUE\"}\nroot@ROGUE:~# "
+        },
+        {
+          "phase": "prove fresh untrusted advertisements stay blocked",
+          "node": "GUARD",
+          "command": "python3 /lab/f.py blocked",
+          "expectation": "Fresh-generation guard counters observe at least five actual extension-bearing RAs and the declared block/forward decision.",
+          "passed": true,
+          "output": "\nroot@GUARD:~# python3 /lab/f.py blocked\n{\"blocked\": true, \"extension_packets\": 5, \"ra_packets\": 5, \"status\": \"passed\"}\nroot@GUARD:~# "
+        },
+        {
+          "phase": "prove fresh untrusted advertisements stay blocked",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py trusted",
+          "expectation": "An actual Linux IPv6 route lookup outside the connected prefix selects the trusted gateway. Trusted acceptance also requires no retained rogue default route.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py trusted\n{\"actual_kernel_routes\": true, \"selected_gateway\": \"fe80::1\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "prove fresh untrusted advertisements stay blocked",
+          "node": "CLIENT",
+          "command": "python3 /lab/f.py health",
+          "expectation": "Actual IPv6 echo traffic reaches both the trusted advertiser and untrusted advertiser; the guard must not simply disable the untrusted data port.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/f.py health\n{\"ipv6_data_replies\": 6, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "81e67a9f2af9af8c54764ef0e66761f850ec6790246f130f8809b444c0b0465f",
+      "startup_states": {
+        "GUARD": "BOOTED",
+        "ROUTER": "STARTED",
+        "ROGUE": "STARTED",
+        "CLIENT": "STARTED"
+      },
+      "images": {
+        "GUARD": "net-tools-2-10-1-3",
+        "ROUTER": "ubuntu-24-04-20260307",
+        "ROGUE": "ubuntu-24-04-20260307",
+        "CLIENT": "ubuntu-24-04-20260307"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "ROUTER",
+        "ROGUE",
+        "CLIENT"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T21:49:21Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/011-aaa-ise-radius-tacacs.yaml",
+      "sha256": "591eb80492b29004b9696cc750aacec3a4d132698a65747cc47c01600f04b867",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T22:05:33Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.1.2 repeat 3",
+          "expectation": "The RADIUS path is healthy.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.1.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.1.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.2.2 repeat 3",
+          "expectation": "The independent TACACS+ path is healthy.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.2.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.2.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show running-config | section aaa group server radius",
+          "expectation": "The NAS requests and validates the RADIUS Message-Authenticator.",
+          "passed": true,
+          "output": "\nR1#show running-config | section aaa group server radius\naaa group server radius RAD-GROUP\n server name LAB-RADIUS\n validate-ma\n send-ma\naaa group server radius RAD-ACCT\n server name LAB-RADIUS\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show running-config | include aaa accounting exec VTY-RAD",
+          "expectation": "Actual exec accounting selects its separate legacy accounting group.",
+          "passed": true,
+          "output": "\nR1#show running-config | include aaa accounting exec VTY-RAD\naaa accounting exec VTY-RAD start-stop group RAD-ACCT\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show running-config | section line vty",
+          "expectation": "The actual supported VTY0-4 lines bind login, exec authorization, accounting and the source filter before any network session.",
+          "passed": true,
+          "output": "\nR1#show running-config | section line vty\nline vty 0 4\n access-class MGMT in\n activation-character 13\n authorization exec VTY-RAD\n accounting exec VTY-RAD\n login authentication VTY-RAD\n transport input ssh\nR1#"
+        },
+        {
+          "phase": "generate the disposable SSH identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "generate the disposable SSH identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "crypto key generate rsa general-keys label CML-LAB-SSH modulus 3072",
+          "passed": true,
+          "output": "\nR1(config)#crypto key generate rsa general-keys label CML-LAB-SSH modulus 3072\n%This command is deprecated.  Use the command in exec mode insteadThe name for the keys will be: CML-LAB-SSH\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\n[OK] (elapsed time was 2 seconds)\n\nR1(config)#"
+        },
+        {
+          "phase": "generate the disposable SSH identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip ssh rsa keypair-name CML-LAB-SSH",
+          "passed": true,
+          "output": "\nR1(config)#ip ssh rsa keypair-name CML-LAB-SSH\nR1(config)#"
+        },
+        {
+          "phase": "generate the disposable SSH identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "generate the disposable SSH identity",
+          "node": "R1",
+          "command": "show ip ssh",
+          "expectation": "The fresh host identity enables actual SSHv2.",
+          "passed": true,
+          "output": "\nR1#show ip ssh\nSSH Enabled - version 2.0\nAuthentication methods:publickey,keyboard-interactive,password\nAuthentication Publickey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-ed25519,x509v3-ecdsa-sha2-nistp256,x509v3-ecdsa-sha2-nistp384,x509v3-ecdsa-sha2-nistp521,rsa-sha2-256,rsa-sha2-512,x509v3-rsa2048-sha256\nHostkey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256\nEncryption Algorithms:chacha20-poly1305@openssh.com,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-gcm,aes256-gcm,aes128-ctr,aes192-ctr,aes256-ctr\nMAC Algorithms:hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2-256,hmac-sha2-512\nKEX Algorithms:curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512\nAuthentication timeout: 5 secs; Authentication retries: 1\nMinimum expected Diffie Hellman key size : 2048 bits\nIOS Keys in SECSH format(ssh-rsa, base64 encoded): CML-LAB-SSH\nModulus Size : 3072 bits\nssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCmx/eLprojqrkX9Dcm/aVXaJxmPvjHlLGYxhCfaRBn\neLkusfRhEpK3xPTVYMZT+aO+xT/W86LVTxCYRG3ZtPIvigLiut90sa17edREbEINou2paEhmtFLVTzvx\nqZmdLafsfPuufc5m/bfbOZ9E6lWdtizHqqXXSKtVFGJXeaoGDR1qYpWgiR7nbw/WKgk8suaCaGa+uRMq\nR37m1NB/iwaNFp/urAf8Nz5c7QytrNPIDv3RflwcWLxlzkDdpIMWhcR7i3Vh8dje28w+p2q/EXGkF8Yu\nfFN3fekXhtc/Nf6QhIlex2nJUbs0kaoiYHSa/BCGkNSZBobzRhWud0VhpKV2FLkADmwjPiWjDWVYCpWZ\nVw0Kaq1TH8FRJZJGkJlTZD8Yw5jsE8HONKKJIG5PN+YYN9Apo+zQUI6YQPfz92ik2MzN2ufIwPX0a4/6\nLEIqjbaUgKdi3/1nXqLgEXPUAhCODisgpdAllHou/YlfQrXdvupYqNgKHoMHOpLVNv3rZj8=        \nIOS Keys in SECSH format(ssh-ec, base64 encoded): NONE\nR1#"
+        },
+        {
+          "phase": "clear RADIUS accounting window 1",
+          "kind": "configuration",
+          "node": "RADIUS",
+          "command": "bash /lab/a.sh clear",
+          "passed": true,
+          "output": "\nroot@RADIUS:~# bash /lab/a.sh clear\n{\"cleared\":true,\"backend\":\"RADIUS\"}\nroot@RADIUS:~# "
+        },
+        {
+          "phase": "clear RADIUS accounting window 1",
+          "node": "RADIUS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+          "passed": true,
+          "output": "\nroot@RADIUS:~# bash /lab/a.sh check\n{\"passed\":false,\"backend\":\"RADIUS\",\"completed_sessions\":0}\nroot@RADIUS:~# "
+        },
+        {
+          "phase": "authenticate and account an actual RADIUS viewer session",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "authenticate and account an actual RADIUS viewer session",
+          "node": "RADIUS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+          "passed": true,
+          "output": "\nroot@RADIUS:~# bash /lab/a.sh check\n{\"passed\":true,\"backend\":\"RADIUS\",\"completed_sessions\":1}\nroot@RADIUS:~# "
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "line vty 0 4",
+          "passed": true,
+          "output": "\nR1(config)#line vty 0 4\nR1(config-line)#"
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "login authentication VTY-TAC",
+          "passed": true,
+          "output": "\nR1(config-line)#login authentication VTY-TAC\nR1(config-line)#"
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "authorization exec VTY-TAC",
+          "passed": true,
+          "output": "\nR1(config-line)#authorization exec VTY-TAC\nR1(config-line)#"
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "accounting exec VTY-TAC",
+          "passed": true,
+          "output": "\nR1(config-line)#accounting exec VTY-TAC\nR1(config-line)#"
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-line)#exit\nR1(config)#"
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "node": "R1",
+          "command": "show running-config | section line vty",
+          "expectation": "All three VTY methods select the TACACS+ backend.",
+          "passed": true,
+          "output": "\nR1#show running-config | section line vty\nline vty 0 4\n access-class MGMT in\n activation-character 13\n authorization exec VTY-TAC\n accounting exec VTY-TAC\n login authentication VTY-TAC\n transport input ssh\nR1#"
+        },
+        {
+          "phase": "clear TACACS accounting window 1",
+          "kind": "configuration",
+          "node": "TACACS",
+          "command": "bash /lab/a.sh clear",
+          "passed": true,
+          "output": "\nroot@TACACS:~# bash /lab/a.sh clear\n{\"cleared\":true,\"backend\":\"TACACS\"}\nroot@TACACS:~# "
+        },
+        {
+          "phase": "clear TACACS accounting window 1",
+          "node": "TACACS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+          "passed": true,
+          "output": "\nroot@TACACS:~# bash /lab/a.sh check\n{\"passed\":false,\"backend\":\"TACACS\",\"completed_sessions\":0}\nroot@TACACS:~# "
+        },
+        {
+          "phase": "authenticate and account an actual TACACS+ viewer session",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "authenticate and account an actual TACACS+ viewer session",
+          "node": "TACACS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+          "passed": true,
+          "output": "\nroot@TACACS:~# bash /lab/a.sh check\n{\"passed\":true,\"backend\":\"TACACS\",\"completed_sessions\":1}\nroot@TACACS:~# "
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "tacacs server LAB-TACACS",
+          "passed": true,
+          "output": "\nR1(config)#tacacs server LAB-TACACS\nR1(config-server-tacacs)#"
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "key 0 Wrong-tacacs-only-999",
+          "passed": true,
+          "output": "\nR1(config-server-tacacs)#key 0 Wrong-tacacs-only-999\nR1(config-server-tacacs)#"
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-server-tacacs)#end\n SECURITY WARNING - Module: AAA, Command: tacacs server LAB-TACACS, Reason: TLS is not configured, exposing traffic to potential eavesdropping, Description: Tacacs without TLS, Remediation: Configure secure options under server to enhance security\nR1#"
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "node": "CLIENT",
+          "command": "python3 /opt/cml-management/aaa_client.py",
+          "expectation": "SSH remains reachable, but the same correct public fixture credential receives an actual authentication denial; a timeout, transport failure or changed host key cannot pass.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /opt/cml-management/aaa_client.py\n{\"checks\": {\"correct_fixture_password_rejected\": true, \"ssh_transport_available\": true}, \"passed\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "node": "R1",
+          "command": "ping 198.18.1.2 repeat 3",
+          "expectation": "The RADIUS path is healthy.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.1.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.1.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "node": "R1",
+          "command": "ping 198.18.2.2 repeat 3",
+          "expectation": "The independent TACACS+ path is healthy.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.2.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.2.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "node": "R1",
+          "command": "test aaa group RAD-GROUP viewer CML-LAB-ONLY new-code",
+          "expectation": "Independent RADIUS authentication still succeeds during the isolated TACACS+ key fault.",
+          "passed": true,
+          "output": "\nR1#test aaa group RAD-GROUP viewer CML-LAB-ONLY new-code\nUser successfully authenticated\n\nUSER ATTRIBUTES\n\nMessage-Authenticato 0   <hidden>\nservice-type         0   7 [NAS Prompt]\npriv-lvl             0   1 (0x1)\nR1#"
+        },
+        {
+          "phase": "restore the original TACACS+ shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore the original TACACS+ shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "tacacs server LAB-TACACS",
+          "passed": true,
+          "output": "\nR1(config)#tacacs server LAB-TACACS\nR1(config-server-tacacs)#"
+        },
+        {
+          "phase": "restore the original TACACS+ shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "key 0 Cml-Tacacs-Lab-Only-983",
+          "passed": true,
+          "output": "\nR1(config-server-tacacs)#key 0 Cml-Tacacs-Lab-Only-983\nR1(config-server-tacacs)#"
+        },
+        {
+          "phase": "restore the original TACACS+ shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-server-tacacs)#end\n SECURITY WARNING - Module: AAA, Command: tacacs server LAB-TACACS, Reason: TLS is not configured, exposing traffic to potential eavesdropping, Description: Tacacs without TLS, Remediation: Configure secure options under server to enhance security\nR1#"
+        },
+        {
+          "phase": "restore the original TACACS+ shared key",
+          "node": "R1",
+          "command": "test aaa group TAC-GROUP viewer CML-LAB-ONLY legacy",
+          "expectation": "The restored TACACS+ relationship accepts a fresh actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group TAC-GROUP viewer CML-LAB-ONLY legacy\nAttempting authentication test to server-group TAC-GROUP using tacacs+\nUser was successfully authenticated.\n\nR1#"
+        },
+        {
+          "phase": "clear TACACS accounting window 2",
+          "kind": "configuration",
+          "node": "TACACS",
+          "command": "bash /lab/a.sh clear",
+          "passed": true,
+          "output": "\nroot@TACACS:~# bash /lab/a.sh clear\n{\"cleared\":true,\"backend\":\"TACACS\"}\nroot@TACACS:~# "
+        },
+        {
+          "phase": "clear TACACS accounting window 2",
+          "node": "TACACS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+          "passed": true,
+          "output": "\nroot@TACACS:~# bash /lab/a.sh check\n{\"passed\":false,\"backend\":\"TACACS\",\"completed_sessions\":0}\nroot@TACACS:~# "
+        },
+        {
+          "phase": "verify recovered TACACS+ session accounting",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "verify recovered TACACS+ session accounting",
+          "node": "TACACS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+          "passed": true,
+          "output": "\nroot@TACACS:~# bash /lab/a.sh check\n{\"passed\":true,\"backend\":\"TACACS\",\"completed_sessions\":1}\nroot@TACACS:~# "
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "line vty 0 4",
+          "passed": true,
+          "output": "\nR1(config)#line vty 0 4\nR1(config-line)#"
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "login authentication VTY-RAD",
+          "passed": true,
+          "output": "\nR1(config-line)#login authentication VTY-RAD\nR1(config-line)#"
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "authorization exec VTY-RAD",
+          "passed": true,
+          "output": "\nR1(config-line)#authorization exec VTY-RAD\nR1(config-line)#"
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "accounting exec VTY-RAD",
+          "passed": true,
+          "output": "\nR1(config-line)#accounting exec VTY-RAD\nR1(config-line)#"
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-line)#exit\nR1(config)#"
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "node": "R1",
+          "command": "show running-config | section line vty",
+          "expectation": "All three VTY methods again select RADIUS.",
+          "passed": true,
+          "output": "\nR1#show running-config | section line vty\nline vty 0 4\n access-class MGMT in\n activation-character 13\n authorization exec VTY-RAD\n accounting exec VTY-RAD\n login authentication VTY-RAD\n transport input ssh\nR1#"
+        },
+        {
+          "phase": "clear RADIUS accounting window 2",
+          "kind": "configuration",
+          "node": "RADIUS",
+          "command": "bash /lab/a.sh clear",
+          "passed": true,
+          "output": "\nroot@RADIUS:~# bash /lab/a.sh clear\n{\"cleared\":true,\"backend\":\"RADIUS\"}\nroot@RADIUS:~# "
+        },
+        {
+          "phase": "clear RADIUS accounting window 2",
+          "node": "RADIUS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+          "passed": true,
+          "output": "\nroot@RADIUS:~# bash /lab/a.sh check\n{\"passed\":false,\"backend\":\"RADIUS\",\"completed_sessions\":0}\nroot@RADIUS:~# "
+        },
+        {
+          "phase": "verify restored RADIUS session accounting",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "verify restored RADIUS session accounting",
+          "node": "RADIUS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+          "passed": true,
+          "output": "\nroot@RADIUS:~# bash /lab/a.sh check\n{\"passed\":true,\"backend\":\"RADIUS\",\"completed_sessions\":1}\nroot@RADIUS:~# "
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "R1": "BOOTED",
+        "RADIUS": "BOOTED",
+        "TACACS": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "RADIUS": "radius-3-2-7-dfsg-1-deb13u2",
+        "TACACS": "tacplus-f4-0-4-28",
+        "CLIENT": "cml-labs-toolbox-9f43df961cbe"
+      },
+      "plan_sha256": "e096aa372fa16e61ba1f6ab8b71a2293639309c5f13c828ce49adc19120374ed",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T22:07:13Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/033-infrastructure-device-hardening.yaml",
+      "sha256": "a5c57780fb137d47bc5afda39d6f4f9392627918ceb271303a5f8d953211b2cc",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T22:08:45Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.1.2 repeat 3",
+          "expectation": "The RADIUS path is healthy.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.1.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.1.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.2.2 repeat 3",
+          "expectation": "The independent TACACS+ path is healthy.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.2.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.2.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show running-config | section aaa group server radius",
+          "expectation": "The NAS requests and validates the RADIUS Message-Authenticator.",
+          "passed": true,
+          "output": "\nR1#show running-config | section aaa group server radius\naaa group server radius RAD-GROUP\n server name LAB-RADIUS\n validate-ma\n send-ma\naaa group server radius RAD-ACCT\n server name LAB-RADIUS\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show running-config | include aaa accounting exec VTY-RAD",
+          "expectation": "Actual exec accounting selects its separate legacy accounting group.",
+          "passed": true,
+          "output": "\nR1#show running-config | include aaa accounting exec VTY-RAD\naaa accounting exec VTY-RAD start-stop group RAD-ACCT\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show running-config | section line vty",
+          "expectation": "The actual supported VTY0-4 lines bind login, exec authorization, accounting and the source filter before any network session.",
+          "passed": true,
+          "output": "\nR1#show running-config | section line vty\nline vty 0 4\n access-class MGMT in\n activation-character 13\n authorization exec VTY-RAD\n accounting exec VTY-RAD\n login authentication VTY-RAD\n transport input ssh\nR1#"
+        },
+        {
+          "phase": "generate the disposable SSH identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "generate the disposable SSH identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "crypto key generate rsa general-keys label CML-LAB-SSH modulus 3072",
+          "passed": true,
+          "output": "\nR1(config)#crypto key generate rsa general-keys label CML-LAB-SSH modulus 3072\n%This command is deprecated.  Use the command in exec mode insteadThe name for the keys will be: CML-LAB-SSH\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\n[OK] (elapsed time was 0 seconds)\n\nR1(config)#"
+        },
+        {
+          "phase": "generate the disposable SSH identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip ssh rsa keypair-name CML-LAB-SSH",
+          "passed": true,
+          "output": "\nR1(config)#ip ssh rsa keypair-name CML-LAB-SSH\nR1(config)#"
+        },
+        {
+          "phase": "generate the disposable SSH identity",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "generate the disposable SSH identity",
+          "node": "R1",
+          "command": "show ip ssh",
+          "expectation": "The fresh host identity enables actual SSHv2.",
+          "passed": true,
+          "output": "\nR1#show ip ssh\nSSH Enabled - version 2.0\nAuthentication methods:publickey,keyboard-interactive,password\nAuthentication Publickey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-ed25519,x509v3-ecdsa-sha2-nistp256,x509v3-ecdsa-sha2-nistp384,x509v3-ecdsa-sha2-nistp521,rsa-sha2-256,rsa-sha2-512,x509v3-rsa2048-sha256\nHostkey Algorithms:ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-512,rsa-sha2-256\nEncryption Algorithms:chacha20-poly1305@openssh.com,aes128-gcm@openssh.com,aes256-gcm@openssh.com,aes128-gcm,aes256-gcm,aes128-ctr,aes192-ctr,aes256-ctr\nMAC Algorithms:hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2-256,hmac-sha2-512\nKEX Algorithms:curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512\nAuthentication timeout: 5 secs; Authentication retries: 1\nMinimum expected Diffie Hellman key size : 2048 bits\nIOS Keys in SECSH format(ssh-rsa, base64 encoded): CML-LAB-SSH\nModulus Size : 3072 bits\nssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDBXSEkiPrQ3G07z4j9Etsu52n8qt6Ep0QXvoqftoJm\nQ+oXSoAYU4utNqw6ULmPC9BDmkDgyAinjYlnq1HcjI9mRp7P/oqETRducO6MhZvJfH2ILsN6Apn59WaZ\ndYH7PmKjV2s3yrB96UH77ymK9mSqcQLTO55uH90LURr7s/OSLCIRK/wX3vtEW9jbWGMAnOHVFDcSNPyH\nSmKnoh6oclngPA+IUyjMn20cfg6wqAbls6iKPpKRcyfVhaOvEF6Iz8F29sbHPpOABsmrh6wCJYNG0jzA\nFRm+Oa7hxkIn2FIxIjp1CWlXTSrW8EQcViSfdOgUvsAMijByHFyTifHzKcdYJBEgNwGU7EDCVWGQZo05\nLfEDLFmhevo0T4PIAAyJQJwrdiZj8hdTVFmg8KreYKuo1+WSz+hy/767TPywKLK+tj30pHJW8XiM01JV\nU5ZTwtzIhta0AhV6ivgK/yLbjggtP600iI2XFjaY1gh+HEWWJQdRsp3QxCo5Xo+Fc2xYESM=        \nIOS Keys in SECSH format(ssh-ec, base64 encoded): NONE\nR1#"
+        },
+        {
+          "phase": "clear RADIUS accounting window 1",
+          "kind": "configuration",
+          "node": "RADIUS",
+          "command": "bash /lab/a.sh clear",
+          "passed": true,
+          "output": "\nroot@RADIUS:~# bash /lab/a.sh clear\n{\"cleared\":true,\"backend\":\"RADIUS\"}\nroot@RADIUS:~# "
+        },
+        {
+          "phase": "clear RADIUS accounting window 1",
+          "node": "RADIUS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+          "passed": true,
+          "output": "\nroot@RADIUS:~# bash /lab/a.sh check\n{\"passed\":false,\"backend\":\"RADIUS\",\"completed_sessions\":0}\nroot@RADIUS:~# "
+        },
+        {
+          "phase": "authenticate and account an actual RADIUS viewer session",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "authenticate and account an actual RADIUS viewer session",
+          "node": "RADIUS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+          "passed": true,
+          "output": "\nroot@RADIUS:~# bash /lab/a.sh check\n{\"passed\":true,\"backend\":\"RADIUS\",\"completed_sessions\":1}\nroot@RADIUS:~# "
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "line vty 0 4",
+          "passed": true,
+          "output": "\nR1(config)#line vty 0 4\nR1(config-line)#"
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "login authentication VTY-TAC",
+          "passed": true,
+          "output": "\nR1(config-line)#login authentication VTY-TAC\nR1(config-line)#"
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "authorization exec VTY-TAC",
+          "passed": true,
+          "output": "\nR1(config-line)#authorization exec VTY-TAC\nR1(config-line)#"
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "accounting exec VTY-TAC",
+          "passed": true,
+          "output": "\nR1(config-line)#accounting exec VTY-TAC\nR1(config-line)#"
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-line)#exit\nR1(config)#"
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "switch network sessions to TACACS+",
+          "node": "R1",
+          "command": "show running-config | section line vty",
+          "expectation": "All three VTY methods select the TACACS+ backend.",
+          "passed": true,
+          "output": "\nR1#show running-config | section line vty\nline vty 0 4\n access-class MGMT in\n activation-character 13\n authorization exec VTY-TAC\n accounting exec VTY-TAC\n login authentication VTY-TAC\n transport input ssh\nR1#"
+        },
+        {
+          "phase": "clear TACACS accounting window 1",
+          "kind": "configuration",
+          "node": "TACACS",
+          "command": "bash /lab/a.sh clear",
+          "passed": true,
+          "output": "\nroot@TACACS:~# bash /lab/a.sh clear\n{\"cleared\":true,\"backend\":\"TACACS\"}\nroot@TACACS:~# "
+        },
+        {
+          "phase": "clear TACACS accounting window 1",
+          "node": "TACACS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+          "passed": true,
+          "output": "\nroot@TACACS:~# bash /lab/a.sh check\n{\"passed\":false,\"backend\":\"TACACS\",\"completed_sessions\":0}\nroot@TACACS:~# "
+        },
+        {
+          "phase": "authenticate and account an actual TACACS+ viewer session",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "authenticate and account an actual TACACS+ viewer session",
+          "node": "TACACS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+          "passed": true,
+          "output": "\nroot@TACACS:~# bash /lab/a.sh check\n{\"passed\":true,\"backend\":\"TACACS\",\"completed_sessions\":1}\nroot@TACACS:~# "
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "tacacs server LAB-TACACS",
+          "passed": true,
+          "output": "\nR1(config)#tacacs server LAB-TACACS\nR1(config-server-tacacs)#"
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "key 0 Wrong-tacacs-only-999",
+          "passed": true,
+          "output": "\nR1(config-server-tacacs)#key 0 Wrong-tacacs-only-999\nR1(config-server-tacacs)#"
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-server-tacacs)#end\n SECURITY WARNING - Module: AAA, Command: tacacs server LAB-TACACS, Reason: TLS is not configured, exposing traffic to potential eavesdropping, Description: Tacacs without TLS, Remediation: Configure secure options under server to enhance security\nR1#"
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "node": "CLIENT",
+          "command": "python3 /opt/cml-management/aaa_client.py",
+          "expectation": "SSH remains reachable, but the same correct public fixture credential receives an actual authentication denial; a timeout, transport failure or changed host key cannot pass.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /opt/cml-management/aaa_client.py\n{\"checks\": {\"correct_fixture_password_rejected\": true, \"ssh_transport_available\": true}, \"passed\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "node": "R1",
+          "command": "ping 198.18.1.2 repeat 3",
+          "expectation": "The RADIUS path is healthy.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.1.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.1.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "node": "R1",
+          "command": "ping 198.18.2.2 repeat 3",
+          "expectation": "The independent TACACS+ path is healthy.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.2.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.2.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "break only the TACACS+ shared-key relationship",
+          "node": "R1",
+          "command": "test aaa group RAD-GROUP viewer CML-LAB-ONLY new-code",
+          "expectation": "Independent RADIUS authentication still succeeds during the isolated TACACS+ key fault.",
+          "passed": true,
+          "output": "\nR1#test aaa group RAD-GROUP viewer CML-LAB-ONLY new-code\nUser successfully authenticated\n\nUSER ATTRIBUTES\n\nMessage-Authenticato 0   <hidden>\nservice-type         0   7 [NAS Prompt]\npriv-lvl             0   1 (0x1)\nR1#"
+        },
+        {
+          "phase": "restore the original TACACS+ shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore the original TACACS+ shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "tacacs server LAB-TACACS",
+          "passed": true,
+          "output": "\nR1(config)#tacacs server LAB-TACACS\nR1(config-server-tacacs)#"
+        },
+        {
+          "phase": "restore the original TACACS+ shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "key 0 Cml-Tacacs-Lab-Only-983",
+          "passed": true,
+          "output": "\nR1(config-server-tacacs)#key 0 Cml-Tacacs-Lab-Only-983\nR1(config-server-tacacs)#"
+        },
+        {
+          "phase": "restore the original TACACS+ shared key",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-server-tacacs)#end\n SECURITY WARNING - Module: AAA, Command: tacacs server LAB-TACACS, Reason: TLS is not configured, exposing traffic to potential eavesdropping, Description: Tacacs without TLS, Remediation: Configure secure options under server to enhance security\nR1#"
+        },
+        {
+          "phase": "restore the original TACACS+ shared key",
+          "node": "R1",
+          "command": "test aaa group TAC-GROUP viewer CML-LAB-ONLY legacy",
+          "expectation": "The restored TACACS+ relationship accepts a fresh actual authentication request.",
+          "passed": true,
+          "output": "\nR1#test aaa group TAC-GROUP viewer CML-LAB-ONLY legacy\nAttempting authentication test to server-group TAC-GROUP using tacacs+\nUser was successfully authenticated.\n\nR1#"
+        },
+        {
+          "phase": "clear TACACS accounting window 2",
+          "kind": "configuration",
+          "node": "TACACS",
+          "command": "bash /lab/a.sh clear",
+          "passed": true,
+          "output": "\nroot@TACACS:~# bash /lab/a.sh clear\n{\"cleared\":true,\"backend\":\"TACACS\"}\nroot@TACACS:~# "
+        },
+        {
+          "phase": "clear TACACS accounting window 2",
+          "node": "TACACS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+          "passed": true,
+          "output": "\nroot@TACACS:~# bash /lab/a.sh check\n{\"passed\":false,\"backend\":\"TACACS\",\"completed_sessions\":0}\nroot@TACACS:~# "
+        },
+        {
+          "phase": "verify recovered TACACS+ session accounting",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "verify recovered TACACS+ session accounting",
+          "node": "TACACS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+          "passed": true,
+          "output": "\nroot@TACACS:~# bash /lab/a.sh check\n{\"passed\":true,\"backend\":\"TACACS\",\"completed_sessions\":1}\nroot@TACACS:~# "
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "line vty 0 4",
+          "passed": true,
+          "output": "\nR1(config)#line vty 0 4\nR1(config-line)#"
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "login authentication VTY-RAD",
+          "passed": true,
+          "output": "\nR1(config-line)#login authentication VTY-RAD\nR1(config-line)#"
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "authorization exec VTY-RAD",
+          "passed": true,
+          "output": "\nR1(config-line)#authorization exec VTY-RAD\nR1(config-line)#"
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "accounting exec VTY-RAD",
+          "passed": true,
+          "output": "\nR1(config-line)#accounting exec VTY-RAD\nR1(config-line)#"
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-line)#exit\nR1(config)#"
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "restore RADIUS as the original VTY backend",
+          "node": "R1",
+          "command": "show running-config | section line vty",
+          "expectation": "All three VTY methods again select RADIUS.",
+          "passed": true,
+          "output": "\nR1#show running-config | section line vty\nline vty 0 4\n access-class MGMT in\n activation-character 13\n authorization exec VTY-RAD\n accounting exec VTY-RAD\n login authentication VTY-RAD\n transport input ssh\nR1#"
+        },
+        {
+          "phase": "clear RADIUS accounting window 2",
+          "kind": "configuration",
+          "node": "RADIUS",
+          "command": "bash /lab/a.sh clear",
+          "passed": true,
+          "output": "\nroot@RADIUS:~# bash /lab/a.sh clear\n{\"cleared\":true,\"backend\":\"RADIUS\"}\nroot@RADIUS:~# "
+        },
+        {
+          "phase": "clear RADIUS accounting window 2",
+          "node": "RADIUS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+          "passed": true,
+          "output": "\nroot@RADIUS:~# bash /lab/a.sh check\n{\"passed\":false,\"backend\":\"RADIUS\",\"completed_sessions\":0}\nroot@RADIUS:~# "
+        },
+        {
+          "phase": "verify restored RADIUS session accounting",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "verify restored RADIUS session accounting",
+          "node": "RADIUS",
+          "command": "bash /lab/a.sh check",
+          "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+          "passed": true,
+          "output": "\nroot@RADIUS:~# bash /lab/a.sh check\n{\"passed\":true,\"backend\":\"RADIUS\",\"completed_sessions\":1}\nroot@RADIUS:~# "
+        },
+        {
+          "phase": "observe the rejected independent management source",
+          "kind": "configuration",
+          "node": "UNTRUST",
+          "command": "python3 /opt/cml-management/ssh_policy_probe.py denied",
+          "passed": true,
+          "output": "\nroot@UNTRUST:~# python3 /opt/cml-management/ssh_policy_probe.py denied\n{\"checks\": {\"not_an_authentication_or_host_key_failure\": true, \"session_rejected\": true, \"transport_policy_rejection\": true}, \"mode\": \"denied\", \"passed\": true}\nroot@UNTRUST:~# "
+        },
+        {
+          "phase": "observe the rejected independent management source",
+          "node": "R1",
+          "command": "ping 198.18.3.2 repeat 3",
+          "expectation": "The untrusted data link is reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.3.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.3.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "observe the rejected independent management source",
+          "node": "CLIENT",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "expectation": "Actual OpenSSH verifies central login, privilege1, denied configuration, banner, wrong-password rejection and closed web/Telnet ports.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "withdraw only the VTY source filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "withdraw only the VTY source filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "line vty 0 4",
+          "passed": true,
+          "output": "\nR1(config)#line vty 0 4\nR1(config-line)#"
+        },
+        {
+          "phase": "withdraw only the VTY source filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no access-class MGMT in",
+          "passed": true,
+          "output": "\nR1(config-line)#no access-class MGMT in\nR1(config-line)#"
+        },
+        {
+          "phase": "withdraw only the VTY source filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-line)#exit\nR1(config)#"
+        },
+        {
+          "phase": "withdraw only the VTY source filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "withdraw only the VTY source filter",
+          "node": "UNTRUST",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "expectation": "Actual OpenSSH verifies central login, privilege1, denied configuration, banner, wrong-password rejection and closed web/Telnet ports.",
+          "passed": true,
+          "output": "\nroot@UNTRUST:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@UNTRUST:~# "
+        },
+        {
+          "phase": "withdraw only the VTY source filter",
+          "node": "CLIENT",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "expectation": "Actual OpenSSH verifies central login, privilege1, denied configuration, banner, wrong-password rejection and closed web/Telnet ports.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the VTY source filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore the VTY source filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "line vty 0 4",
+          "passed": true,
+          "output": "\nR1(config)#line vty 0 4\nR1(config-line)#"
+        },
+        {
+          "phase": "restore the VTY source filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "access-class MGMT in",
+          "passed": true,
+          "output": "\nR1(config-line)#access-class MGMT in\nR1(config-line)#"
+        },
+        {
+          "phase": "restore the VTY source filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR1(config-line)#exit\nR1(config)#"
+        },
+        {
+          "phase": "restore the VTY source filter",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "restore the VTY source filter",
+          "node": "UNTRUST",
+          "command": "python3 /opt/cml-management/ssh_policy_probe.py denied",
+          "expectation": "An independently routed source cannot enter SSH despite the same valid public user credential.",
+          "passed": true,
+          "output": "\nroot@UNTRUST:~# python3 /opt/cml-management/ssh_policy_probe.py denied\n{\"checks\": {\"not_an_authentication_or_host_key_failure\": true, \"session_rejected\": true, \"transport_policy_rejection\": true}, \"mode\": \"denied\", \"passed\": true}\nroot@UNTRUST:~# "
+        },
+        {
+          "phase": "restore the VTY source filter",
+          "node": "R1",
+          "command": "ping 198.18.3.2 repeat 3",
+          "expectation": "The untrusted data link is reachable.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.3.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.3.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nR1#"
+        },
+        {
+          "phase": "restore the VTY source filter",
+          "node": "CLIENT",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "expectation": "Actual OpenSSH verifies central login, privilege1, denied configuration, banner, wrong-password rejection and closed web/Telnet ports.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "7f82c83ae53e575b48c47d0495c8f8efeccb075cb3c1cfde0918964354e0884e",
+      "startup_states": {
+        "R1": "BOOTED",
+        "RADIUS": "BOOTED",
+        "TACACS": "BOOTED",
+        "CLIENT": "BOOTED",
+        "UNTRUST": "BOOTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "RADIUS": "radius-3-2-7-dfsg-1-deb13u2",
+        "TACACS": "tacplus-f4-0-4-28",
+        "CLIENT": "cml-labs-toolbox-9f43df961cbe",
+        "UNTRUST": "cml-labs-toolbox-9f43df961cbe"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T22:11:46Z"
     }
   ]
 }

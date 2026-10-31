@@ -21552,5 +21552,928 @@
         ]
       }
     ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/026-ipv6-first-hop-security.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/f.py health",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"ipv6_data_replies\": 6)",
+        "expectation": "Actual IPv6 echo traffic reaches both the trusted advertiser and untrusted advertiser; the guard must not simply disable the untrusted data port.",
+        "command_timeout": 35,
+        "attempts": 3,
+        "interval_seconds": 2
+      }
+    ],
+    "transitions": [
+      {
+        "name": "advertise the trusted default router",
+        "node": "ROUTER",
+        "commands": [
+          "python3 /lab/f.py advertise"
+        ],
+        "command_pattern": "\"advertised\": 5",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/f.py trusted",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"actual_kernel_routes\": true)(?=.*\"selected_gateway\": \"fe80::1\")",
+            "expectation": "An actual Linux IPv6 route lookup outside the connected prefix selects the trusted gateway. Trusted acceptance also requires no retained rogue default route.",
+            "command_timeout": 30,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/f.py health",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"ipv6_data_replies\": 6)",
+            "expectation": "Actual IPv6 echo traffic reaches both the trusted advertiser and untrusted advertiser; the guard must not simply disable the untrusted data port.",
+            "command_timeout": 35,
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "start a fresh guard evidence window",
+        "node": "GUARD",
+        "commands": [
+          "python3 /lab/f.py reset"
+        ],
+        "command_pattern": "\"counters_reset\": true",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/f.py trusted",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"actual_kernel_routes\": true)(?=.*\"selected_gateway\": \"fe80::1\")",
+            "expectation": "An actual Linux IPv6 route lookup outside the connected prefix selects the trusted gateway. Trusted acceptance also requires no retained rogue default route.",
+            "command_timeout": 30,
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "send the untrusted RA behind a Hop-by-Hop header",
+        "node": "ROGUE",
+        "commands": [
+          "python3 /lab/f.py advertise --extension"
+        ],
+        "command_pattern": "\"advertised\": 5",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "GUARD",
+            "command": "python3 /lab/f.py blocked",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"blocked\": true)",
+            "expectation": "Fresh-generation guard counters observe at least five actual extension-bearing RAs and the declared block/forward decision.",
+            "command_timeout": 10,
+            "attempts": 3,
+            "interval_seconds": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/f.py trusted",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"actual_kernel_routes\": true)(?=.*\"selected_gateway\": \"fe80::1\")",
+            "expectation": "An actual Linux IPv6 route lookup outside the connected prefix selects the trusted gateway. Trusted acceptance also requires no retained rogue default route.",
+            "command_timeout": 30,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/f.py health",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"ipv6_data_replies\": 6)",
+            "expectation": "Actual IPv6 echo traffic reaches both the trusted advertiser and untrusted advertiser; the guard must not simply disable the untrusted data port.",
+            "command_timeout": 35,
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "withdraw only RA filtering",
+        "node": "GUARD",
+        "commands": [
+          "python3 /lab/f.py policy-off"
+        ],
+        "command_pattern": "\"policy_enabled\": false",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/f.py trusted",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"actual_kernel_routes\": true)(?=.*\"selected_gateway\": \"fe80::1\")",
+            "expectation": "An actual Linux IPv6 route lookup outside the connected prefix selects the trusted gateway. Trusted acceptance also requires no retained rogue default route.",
+            "command_timeout": 30,
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "observe actual rogue-route installation and selection",
+        "node": "ROGUE",
+        "commands": [
+          "python3 /lab/f.py advertise --extension"
+        ],
+        "command_pattern": "\"advertised\": 5",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "GUARD",
+            "command": "python3 /lab/f.py forwarded",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"blocked\": false)",
+            "expectation": "Fresh-generation guard counters observe at least five actual extension-bearing RAs and the declared block/forward decision.",
+            "command_timeout": 10,
+            "attempts": 3,
+            "interval_seconds": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/f.py rogue",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"actual_kernel_routes\": true)(?=.*\"selected_gateway\": \"fe80::66\")",
+            "expectation": "An actual Linux IPv6 route lookup outside the connected prefix selects the rogue gateway. Trusted acceptance also requires no retained rogue default route.",
+            "command_timeout": 30,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/f.py health",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"ipv6_data_replies\": 6)",
+            "expectation": "Actual IPv6 echo traffic reaches both the trusted advertiser and untrusted advertiser; the guard must not simply disable the untrusted data port.",
+            "command_timeout": 35,
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "restore filtering before clearing learned state",
+        "node": "GUARD",
+        "commands": [
+          "python3 /lab/f.py policy-on"
+        ],
+        "command_pattern": "\"policy_enabled\": true",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/f.py health",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"ipv6_data_replies\": 6)",
+            "expectation": "Actual IPv6 echo traffic reaches both the trusted advertiser and untrusted advertiser; the guard must not simply disable the untrusted data port.",
+            "command_timeout": 35,
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "remove only the previously learned rogue RA route",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/f.py recover"
+        ],
+        "command_pattern": "\"rogue_removed\": 1",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/f.py trusted",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"actual_kernel_routes\": true)(?=.*\"selected_gateway\": \"fe80::1\")",
+            "expectation": "An actual Linux IPv6 route lookup outside the connected prefix selects the trusted gateway. Trusted acceptance also requires no retained rogue default route.",
+            "command_timeout": 30,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/f.py health",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"ipv6_data_replies\": 6)",
+            "expectation": "Actual IPv6 echo traffic reaches both the trusted advertiser and untrusted advertiser; the guard must not simply disable the untrusted data port.",
+            "command_timeout": 35,
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "prove fresh untrusted advertisements stay blocked",
+        "node": "ROGUE",
+        "commands": [
+          "python3 /lab/f.py advertise --extension"
+        ],
+        "command_pattern": "\"advertised\": 5",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "GUARD",
+            "command": "python3 /lab/f.py blocked",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"blocked\": true)",
+            "expectation": "Fresh-generation guard counters observe at least five actual extension-bearing RAs and the declared block/forward decision.",
+            "command_timeout": 10,
+            "attempts": 3,
+            "interval_seconds": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/f.py trusted",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"actual_kernel_routes\": true)(?=.*\"selected_gateway\": \"fe80::1\")",
+            "expectation": "An actual Linux IPv6 route lookup outside the connected prefix selects the trusted gateway. Trusted acceptance also requires no retained rogue default route.",
+            "command_timeout": 30,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/f.py health",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"ipv6_data_replies\": 6)",
+            "expectation": "Actual IPv6 echo traffic reaches both the trusted advertiser and untrusted advertiser; the guard must not simply disable the untrusted data port.",
+            "command_timeout": 35,
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/011-aaa-ise-radius-tacacs.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.1.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The RADIUS path is healthy."
+      },
+      {
+        "node": "R1",
+        "command": "ping 198.18.2.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The independent TACACS+ path is healthy."
+      },
+      {
+        "node": "R1",
+        "command": "show running-config | section aaa group server radius",
+        "pattern": "(?ms)RAD-GROUP(?=.*^\\s+send-ma\\s*$)(?=.*^\\s+validate-ma\\s*$)",
+        "expectation": "The NAS requests and validates the RADIUS Message-Authenticator."
+      },
+      {
+        "node": "R1",
+        "command": "show running-config | include aaa accounting exec VTY-RAD",
+        "pattern": "aaa accounting exec VTY-RAD start-stop group RAD-ACCT",
+        "expectation": "Actual exec accounting selects its separate legacy accounting group."
+      },
+      {
+        "node": "R1",
+        "command": "show running-config | section line vty",
+        "pattern": "(?s)(?=.*login authentication VTY-RAD)(?=.*authorization exec VTY-RAD)(?=.*accounting exec VTY-RAD)(?=.*access-class MGMT in)",
+        "expectation": "The actual supported VTY0-4 lines bind login, exec authorization, accounting and the source filter before any network session."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "generate the disposable SSH identity",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "crypto key generate rsa general-keys label CML-LAB-SSH modulus 3072",
+          "ip ssh rsa keypair-name CML-LAB-SSH",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ssh",
+            "pattern": "SSH Enabled - version 2",
+            "expectation": "The fresh host identity enables actual SSHv2."
+          }
+        ],
+        "command_timeout": 35
+      },
+      {
+        "name": "clear RADIUS accounting window 1",
+        "node": "RADIUS",
+        "commands": [
+          "bash /lab/a.sh clear"
+        ],
+        "command_pattern": "\"cleared\":true",
+        "checks": [
+          {
+            "node": "RADIUS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":false)(?=.*\"completed_sessions\":0)",
+            "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "authenticate and account an actual RADIUS viewer session",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /opt/cml-management/ssh_probe.py"
+        ],
+        "command_pattern": "\"passed\": true",
+        "command_timeout": 45,
+        "checks": [
+          {
+            "node": "RADIUS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":true)(?=.*\"completed_sessions\":[1-9])",
+            "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+            "attempts": 8,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "switch network sessions to TACACS+",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "line vty 0 4",
+          "login authentication VTY-TAC",
+          "authorization exec VTY-TAC",
+          "accounting exec VTY-TAC",
+          "exit",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show running-config | section line vty",
+            "pattern": "(?s)(?=.*login authentication VTY-TAC)(?=.*authorization exec VTY-TAC)(?=.*accounting exec VTY-TAC)",
+            "expectation": "All three VTY methods select the TACACS+ backend."
+          }
+        ]
+      },
+      {
+        "name": "clear TACACS accounting window 1",
+        "node": "TACACS",
+        "commands": [
+          "bash /lab/a.sh clear"
+        ],
+        "command_pattern": "\"cleared\":true",
+        "checks": [
+          {
+            "node": "TACACS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":false)(?=.*\"completed_sessions\":0)",
+            "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "authenticate and account an actual TACACS+ viewer session",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /opt/cml-management/ssh_probe.py"
+        ],
+        "command_pattern": "\"passed\": true",
+        "command_timeout": 45,
+        "checks": [
+          {
+            "node": "TACACS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":true)(?=.*\"completed_sessions\":[1-9])",
+            "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+            "attempts": 8,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "break only the TACACS+ shared-key relationship",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "tacacs server LAB-TACACS",
+          "key 0 Wrong-tacacs-only-999",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /opt/cml-management/aaa_client.py",
+            "pattern": "\"passed\": true",
+            "expectation": "SSH remains reachable, but the same correct public fixture credential receives an actual authentication denial; a timeout, transport failure or changed host key cannot pass.",
+            "command_timeout": 30,
+            "attempts": 1
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.1.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The RADIUS path is healthy."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.2.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent TACACS+ path is healthy."
+          },
+          {
+            "node": "R1",
+            "command": "test aaa group RAD-GROUP viewer CML-LAB-ONLY new-code",
+            "pattern": "User (?:was )?successfully authenticated",
+            "expectation": "Independent RADIUS authentication still succeeds during the isolated TACACS+ key fault."
+          }
+        ]
+      },
+      {
+        "name": "restore the original TACACS+ shared key",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "tacacs server LAB-TACACS",
+          "key 0 Cml-Tacacs-Lab-Only-983",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "test aaa group TAC-GROUP viewer CML-LAB-ONLY legacy",
+            "pattern": "User (?:was )?successfully authenticated",
+            "expectation": "The restored TACACS+ relationship accepts a fresh actual authentication request."
+          }
+        ]
+      },
+      {
+        "name": "clear TACACS accounting window 2",
+        "node": "TACACS",
+        "commands": [
+          "bash /lab/a.sh clear"
+        ],
+        "command_pattern": "\"cleared\":true",
+        "checks": [
+          {
+            "node": "TACACS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":false)(?=.*\"completed_sessions\":0)",
+            "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "verify recovered TACACS+ session accounting",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /opt/cml-management/ssh_probe.py"
+        ],
+        "command_pattern": "\"passed\": true",
+        "command_timeout": 45,
+        "checks": [
+          {
+            "node": "TACACS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":true)(?=.*\"completed_sessions\":[1-9])",
+            "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+            "attempts": 8,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "restore RADIUS as the original VTY backend",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "line vty 0 4",
+          "login authentication VTY-RAD",
+          "authorization exec VTY-RAD",
+          "accounting exec VTY-RAD",
+          "exit",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show running-config | section line vty",
+            "pattern": "(?s)(?=.*login authentication VTY-RAD)(?=.*authorization exec VTY-RAD)(?=.*accounting exec VTY-RAD)",
+            "expectation": "All three VTY methods again select RADIUS."
+          }
+        ]
+      },
+      {
+        "name": "clear RADIUS accounting window 2",
+        "node": "RADIUS",
+        "commands": [
+          "bash /lab/a.sh clear"
+        ],
+        "command_pattern": "\"cleared\":true",
+        "checks": [
+          {
+            "node": "RADIUS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":false)(?=.*\"completed_sessions\":0)",
+            "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "verify restored RADIUS session accounting",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /opt/cml-management/ssh_probe.py"
+        ],
+        "command_pattern": "\"passed\": true",
+        "command_timeout": 45,
+        "checks": [
+          {
+            "node": "RADIUS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":true)(?=.*\"completed_sessions\":[1-9])",
+            "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+            "attempts": 8,
+            "interval_seconds": 1
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/033-infrastructure-device-hardening.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.1.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The RADIUS path is healthy."
+      },
+      {
+        "node": "R1",
+        "command": "ping 198.18.2.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The independent TACACS+ path is healthy."
+      },
+      {
+        "node": "R1",
+        "command": "show running-config | section aaa group server radius",
+        "pattern": "(?ms)RAD-GROUP(?=.*^\\s+send-ma\\s*$)(?=.*^\\s+validate-ma\\s*$)",
+        "expectation": "The NAS requests and validates the RADIUS Message-Authenticator."
+      },
+      {
+        "node": "R1",
+        "command": "show running-config | include aaa accounting exec VTY-RAD",
+        "pattern": "aaa accounting exec VTY-RAD start-stop group RAD-ACCT",
+        "expectation": "Actual exec accounting selects its separate legacy accounting group."
+      },
+      {
+        "node": "R1",
+        "command": "show running-config | section line vty",
+        "pattern": "(?s)(?=.*login authentication VTY-RAD)(?=.*authorization exec VTY-RAD)(?=.*accounting exec VTY-RAD)(?=.*access-class MGMT in)",
+        "expectation": "The actual supported VTY0-4 lines bind login, exec authorization, accounting and the source filter before any network session."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "generate the disposable SSH identity",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "crypto key generate rsa general-keys label CML-LAB-SSH modulus 3072",
+          "ip ssh rsa keypair-name CML-LAB-SSH",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ssh",
+            "pattern": "SSH Enabled - version 2",
+            "expectation": "The fresh host identity enables actual SSHv2."
+          }
+        ],
+        "command_timeout": 35
+      },
+      {
+        "name": "clear RADIUS accounting window 1",
+        "node": "RADIUS",
+        "commands": [
+          "bash /lab/a.sh clear"
+        ],
+        "command_pattern": "\"cleared\":true",
+        "checks": [
+          {
+            "node": "RADIUS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":false)(?=.*\"completed_sessions\":0)",
+            "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "authenticate and account an actual RADIUS viewer session",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /opt/cml-management/ssh_probe.py"
+        ],
+        "command_pattern": "\"passed\": true",
+        "command_timeout": 45,
+        "checks": [
+          {
+            "node": "RADIUS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":true)(?=.*\"completed_sessions\":[1-9])",
+            "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+            "attempts": 8,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "switch network sessions to TACACS+",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "line vty 0 4",
+          "login authentication VTY-TAC",
+          "authorization exec VTY-TAC",
+          "accounting exec VTY-TAC",
+          "exit",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show running-config | section line vty",
+            "pattern": "(?s)(?=.*login authentication VTY-TAC)(?=.*authorization exec VTY-TAC)(?=.*accounting exec VTY-TAC)",
+            "expectation": "All three VTY methods select the TACACS+ backend."
+          }
+        ]
+      },
+      {
+        "name": "clear TACACS accounting window 1",
+        "node": "TACACS",
+        "commands": [
+          "bash /lab/a.sh clear"
+        ],
+        "command_pattern": "\"cleared\":true",
+        "checks": [
+          {
+            "node": "TACACS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":false)(?=.*\"completed_sessions\":0)",
+            "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "authenticate and account an actual TACACS+ viewer session",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /opt/cml-management/ssh_probe.py"
+        ],
+        "command_pattern": "\"passed\": true",
+        "command_timeout": 45,
+        "checks": [
+          {
+            "node": "TACACS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":true)(?=.*\"completed_sessions\":[1-9])",
+            "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+            "attempts": 8,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "break only the TACACS+ shared-key relationship",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "tacacs server LAB-TACACS",
+          "key 0 Wrong-tacacs-only-999",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /opt/cml-management/aaa_client.py",
+            "pattern": "\"passed\": true",
+            "expectation": "SSH remains reachable, but the same correct public fixture credential receives an actual authentication denial; a timeout, transport failure or changed host key cannot pass.",
+            "command_timeout": 30,
+            "attempts": 1
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.1.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The RADIUS path is healthy."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.2.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent TACACS+ path is healthy."
+          },
+          {
+            "node": "R1",
+            "command": "test aaa group RAD-GROUP viewer CML-LAB-ONLY new-code",
+            "pattern": "User (?:was )?successfully authenticated",
+            "expectation": "Independent RADIUS authentication still succeeds during the isolated TACACS+ key fault."
+          }
+        ]
+      },
+      {
+        "name": "restore the original TACACS+ shared key",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "tacacs server LAB-TACACS",
+          "key 0 Cml-Tacacs-Lab-Only-983",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "test aaa group TAC-GROUP viewer CML-LAB-ONLY legacy",
+            "pattern": "User (?:was )?successfully authenticated",
+            "expectation": "The restored TACACS+ relationship accepts a fresh actual authentication request."
+          }
+        ]
+      },
+      {
+        "name": "clear TACACS accounting window 2",
+        "node": "TACACS",
+        "commands": [
+          "bash /lab/a.sh clear"
+        ],
+        "command_pattern": "\"cleared\":true",
+        "checks": [
+          {
+            "node": "TACACS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":false)(?=.*\"completed_sessions\":0)",
+            "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "verify recovered TACACS+ session accounting",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /opt/cml-management/ssh_probe.py"
+        ],
+        "command_pattern": "\"passed\": true",
+        "command_timeout": 45,
+        "checks": [
+          {
+            "node": "TACACS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":true)(?=.*\"completed_sessions\":[1-9])",
+            "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+            "attempts": 8,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "restore RADIUS as the original VTY backend",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "line vty 0 4",
+          "login authentication VTY-RAD",
+          "authorization exec VTY-RAD",
+          "accounting exec VTY-RAD",
+          "exit",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show running-config | section line vty",
+            "pattern": "(?s)(?=.*login authentication VTY-RAD)(?=.*authorization exec VTY-RAD)(?=.*accounting exec VTY-RAD)",
+            "expectation": "All three VTY methods again select RADIUS."
+          }
+        ]
+      },
+      {
+        "name": "clear RADIUS accounting window 2",
+        "node": "RADIUS",
+        "commands": [
+          "bash /lab/a.sh clear"
+        ],
+        "command_pattern": "\"cleared\":true",
+        "checks": [
+          {
+            "node": "RADIUS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":false)(?=.*\"completed_sessions\":0)",
+            "expectation": "The owned backend has no completed viewer session left in the fresh evidence window.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "verify restored RADIUS session accounting",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /opt/cml-management/ssh_probe.py"
+        ],
+        "command_pattern": "\"passed\": true",
+        "command_timeout": 45,
+        "checks": [
+          {
+            "node": "RADIUS",
+            "command": "bash /lab/a.sh check",
+            "pattern": "(?s)(?=.*\"passed\":true)(?=.*\"completed_sessions\":[1-9])",
+            "expectation": "Fresh viewer Start and Stop records have the same actual session identifier; historical records were cleared immediately before this session.",
+            "attempts": 8,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "observe the rejected independent management source",
+        "node": "UNTRUST",
+        "commands": [
+          "python3 /opt/cml-management/ssh_policy_probe.py denied"
+        ],
+        "command_pattern": "\"passed\": true",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 198.18.3.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The untrusted data link is reachable."
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "Actual OpenSSH verifies central login, privilege1, denied configuration, banner, wrong-password rejection and closed web/Telnet ports.",
+            "command_timeout": 45,
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "withdraw only the VTY source filter",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "line vty 0 4",
+          "no access-class MGMT in",
+          "exit",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "UNTRUST",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "Actual OpenSSH verifies central login, privilege1, denied configuration, banner, wrong-password rejection and closed web/Telnet ports.",
+            "command_timeout": 45,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "Actual OpenSSH verifies central login, privilege1, denied configuration, banner, wrong-password rejection and closed web/Telnet ports.",
+            "command_timeout": 45,
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "restore the VTY source filter",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "line vty 0 4",
+          "access-class MGMT in",
+          "exit",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "UNTRUST",
+            "command": "python3 /opt/cml-management/ssh_policy_probe.py denied",
+            "pattern": "\"passed\": true",
+            "expectation": "An independently routed source cannot enter SSH despite the same valid public user credential.",
+            "command_timeout": 30,
+            "attempts": 1
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.3.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The untrusted data link is reachable."
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /opt/cml-management/ssh_probe.py",
+            "pattern": "\"passed\": true",
+            "expectation": "Actual OpenSSH verifies central login, privilege1, denied configuration, banner, wrong-password rejection and closed web/Telnet ports.",
+            "command_timeout": 45,
+            "attempts": 1
+          }
+        ]
+      }
+    ]
   }
 }

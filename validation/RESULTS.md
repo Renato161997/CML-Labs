@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **180**.
+Import/export passes: **233/233**. Functional passes: **183**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -78,6 +78,7 @@ Import/export passes: **233/233**. Functional passes: **180**.
 | [ACL And uRPF](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/031-acl-uRPF.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 18 | 25 | 2026-10-30T16:19:20Z |
 | [CoPP Control Plane](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/032-copp-control-plane.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 16 | 17 | 2026-10-30T18:52:17Z |
 | [DHCP Relay Snooping](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/025-dhcp-relay-snooping.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, iosvl2-2020 | 18 | 19 | 2026-10-31T11:11:52Z |
+| [IPv6 First-Hop Security: RA Guard and Recovery](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/026-ipv6-first-hop-security.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3, ubuntu-24-04-20260307 | 17 | 8 | 2026-10-31T21:49:21Z |
 | [NTP Syslog SNMP](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/027-ntp-syslog-snmp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3, syslog-4-8-1-5-deb13u1 | 14 | 8 | 2026-10-28T18:42:51Z |
 | [NetFlow IP SLA](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/028-netflow-ip-sla.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 11 | 12 | 2026-10-30T16:19:11Z |
 | [EIGRP Classic Named IPv4 IPv6](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/001-eigrp-classic-named-ipv4-ipv6.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 5 | 0 | 2026-10-25T12:42:12Z |
@@ -139,6 +140,7 @@ Import/export passes: **233/233**. Functional passes: **180**.
 | [ENCOR 029 - RADIUS and TACACS+ authentication](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 13 | 8 | 2026-10-26T21:19:56Z |
 | [Control Plane Policing](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/031-control-plane-policing.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 12 | 8 | 2026-10-30T18:52:17Z |
 | [ACL VACL PACL](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/032-acl-vacl-pacl.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 26 | 14 | 2026-10-30T20:47:49Z |
+| [Infrastructure Hardening: AAA, Accounting and VTY Policy](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/033-infrastructure-device-hardening.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 28 | 45 | 2026-10-31T22:07:56Z |
 | [MACsec: Kernel Encryption, Wrong-Key Drops and Recovery](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/035-macsec-concepts.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 9 | 2 | 2026-10-31T21:19:07Z |
 | [Secure Management Plane](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/036-secure-management-plane.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3, ubuntu-24-04-20260307 | 17 | 18 | 2026-10-30T13:42:50Z |
 | [Campus Routing Blackhole](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/troubleshooting/047-campus-routing-blackhole.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 18 | 18 | 2026-10-30T14:25:45Z |
@@ -154,6 +156,7 @@ Import/export passes: **233/233**. Functional passes: **180**.
 | [Switch Management: Source Admission and Least Privilege](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/007-router-switch-hardening.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, ioll2-xe-17-18-02, ubuntu-24-04-20260307 | 14 | 12 | 2026-10-31T16:03:16Z |
 | [ACL NAT Inspection](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/008-acl-nat-inspection.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 16 | 10 | 2026-10-30T15:55:15Z |
 | [Site To Site IPsec IOS](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/009-site-to-site-ipsec-ios.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 14 | 12 | 2026-10-28T17:12:27Z |
+| [AAA: RADIUS, TACACS+ SSH Sessions and Accounting](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/011-aaa-ise-radius-tacacs.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 21 | 34 | 2026-10-31T22:07:13Z |
 | [Segmentation VRF ACL](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/013-segmentation-vrf-acl.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 18 | 8 | 2026-10-28T18:38:49Z |
 | [WPA2-PSK: Authentication, CCMP and Recovery](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/014-secure-wireless-architecture.yaml) | passed | 2.10.1+build.21 | wireless-ap-24-04-20260409, wireless-client-24-04-20260409 | 6 | 2 | 2026-10-31T16:50:44Z |
 | [Intrusion Policy Concepts](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/015-intrusion-policy-concepts.yaml) | passed | 2.10.1+build.21 | cml-labs-inspection-cdecd8f68cdd, net-tools-2-10-1-3 | 33 | 3 | 2026-10-30T20:10:39Z |
