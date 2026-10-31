@@ -1137,5 +1137,12 @@
     "kind": "practice",
     "workbook": "docs/workbooks/200-301-045-guest-wireless-isolation-concept.md",
     "example_profile": "wireless-guest"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/035-macsec-concepts.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 95,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-035-macsec-concepts.md",
+    "example_profile": "native-macsec"
   }
 }

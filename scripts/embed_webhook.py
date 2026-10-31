@@ -42,6 +42,10 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-macsec": {
+        "LEFT": {"/lab/m.py": "examples/security/macsec_probe.py"},
+        "RIGHT": {"/lab/m.py": "examples/security/macsec_probe.py"},
+    },
     "wireless-guest": {
         "INSIDE": {
             "/lab/radio_probe.py": "examples/wireless/radio_probe.py",

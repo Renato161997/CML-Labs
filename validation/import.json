@@ -638,11 +638,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/035-macsec-concepts.yaml",
-      "sha256": "aa65066bb472a81055185f1b82ee5dedd2003e3649642de84050c14231cafd3f",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/036-secure-management-plane.yaml",
       "sha256": "e364fac744ef8238f84891d94630caa1112f09cb5acedf3d30fce8b944a73d6c",
       "status": "import-export-pass"
@@ -1248,11 +1243,6 @@
       "completed_utc": "2026-10-31T17:21:49Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/design/045-guest-wireless-isolation-concept.yaml",
       "sha256": "1adc67a5c33b90d5d823ced5a1609c7d46dea49fa76fbe53ee89ac9e72fdfd59",
       "cml_version": "2.10.1+build.21",
@@ -1261,6 +1251,21 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T17:54:41Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/035-macsec-concepts.yaml",
+      "sha256": "86bb60b988b90a5fe8b7bdc2a5cbf9fa90ca04493e9fc82a5e0256f514fcffe3",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T21:13:40Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T21:13:40Z"
     }
   ]
 }
