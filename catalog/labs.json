@@ -713,26 +713,26 @@
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/014-wlan-client-vlan-mapping.yaml",
-      "title": "WLAN Client VLAN Mapping",
+      "title": "WLAN Client Mapping: Radio, Bridge and Tagged VLAN",
       "track": "200-301",
       "topic": "network-access",
       "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "ioll2-xe",
+        "wireless-ap",
+        "wireless-client"
       ],
-      "nominal_ram_mib": 1792,
+      "nominal_ram_mib": 5120,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 85,
+      "workbook": "docs/workbooks/200-301-014-wlan-client-vlan-mapping.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "b4ab92ce8d74e1704c07626c7a73c930e9e987340785ed8d3c8884665d7480dd"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T17:02:10Z",
+      "sha256": "c5d286325a3a857ac5753c38f4ef728c6e7f5545488c2784726ae3165e37565d"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/001-osi-tcpip-traffic-path.yaml",

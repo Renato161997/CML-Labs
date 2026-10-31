@@ -173,11 +173,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/014-wlan-client-vlan-mapping.yaml",
-      "sha256": "b4ab92ce8d74e1704c07626c7a73c930e9e987340785ed8d3c8884665d7480dd",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/001-osi-tcpip-traffic-path.yaml",
       "sha256": "2e73866e55579bf50faf00cfe585af53116e33fb785907efc7a3c0756e611aca",
       "status": "import-export-pass"
@@ -1203,11 +1198,6 @@
       "completed_utc": "2026-10-31T16:01:08Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/006-wireless-architecture-cml.yaml",
       "sha256": "2a47c9ca3d09b59fbdb4d931ef56717bb48834007745cd2c4a1f71a3f98c86ab",
       "cml_version": "2.10.1+build.21",
@@ -1226,6 +1216,21 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T16:46:37Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/014-wlan-client-vlan-mapping.yaml",
+      "sha256": "c5d286325a3a857ac5753c38f4ef728c6e7f5545488c2784726ae3165e37565d",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T16:56:54Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T16:56:54Z"
     }
   ]
 }

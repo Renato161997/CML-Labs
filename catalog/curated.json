@@ -1088,5 +1088,12 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-701-014-secure-wireless-architecture.md",
     "example_profile": "wireless-radio"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/014-wlan-client-vlan-mapping.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 85,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-014-wlan-client-vlan-mapping.md",
+    "example_profile": "wireless-vlan"
   }
 }

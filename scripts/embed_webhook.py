@@ -11,6 +11,10 @@ import yaml
 from labtools import ROOT, load
 
 PROFILES = {
+    "wireless-vlan": {
+        "/lab/radio_probe.py": "examples/wireless/radio_probe.py",
+        "/lab/v.py": "examples/wireless/vlan_probe.py",
+    },
     "wireless-radio": {"/lab/w.py": "examples/wireless/radio_probe.py"},
     "webhook": {
         "/opt/cml-webhook/receiver.py": "examples/webhook/receiver.py",

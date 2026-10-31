@@ -37562,6 +37562,129 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T16:50:44Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/014-wlan-client-vlan-mapping.yaml",
+      "sha256": "c5d286325a3a857ac5753c38f4ef728c6e7f5545488c2784726ae3165e37565d",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T17:00:15Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/v.py check",
+          "expectation": "Actual WLAN association stays completed; three fresh interface-bound requests receive all replies from the switch VLAN10 SVI.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/v.py check\n{\"associated\": true, \"received\": 3, \"role\": \"client\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "AP",
+          "command": "python3 /lab/v.py check --vlan 10",
+          "expectation": "Actual AP state, bridge port/tag selection and three independent untagged uplink replies agree.",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/v.py check --vlan 10\n{\"control_received\": 3, \"radio_bridge\": \"br0\", \"role\": \"ap\", \"status\": \"passed\", \"uplink_vlan\": 10}\nroot@AP:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "SW",
+          "command": "show mac address-table dynamic vlan 10",
+          "expectation": "The switch actually learns a dynamic source in the selected tagged VLAN on the AP trunk.",
+          "passed": true,
+          "output": "\nSW#show mac address-table dynamic vlan 10\n          Mac Address Table\n-------------------------------------------\n\nVlan    Mac Address       Type        Ports\n----    -----------       --------    -----\n  10    5254.00b3.bc5c    DYNAMIC     Et0/0\n  10    762d.fd6d.0529    DYNAMIC     Et0/0\n  10    aa92.3c00.0000    DYNAMIC     Et0/0\nTotal Mac Addresses for this criterion: 3\nSW#"
+        },
+        {
+          "phase": "map the WLAN to the wrong tagged VLAN",
+          "kind": "configuration",
+          "node": "AP",
+          "command": "python3 /lab/v.py map --vlan 20",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/v.py map --vlan 20\n{\"configured\": true, \"radio_bridge\": \"br0\", \"uplink_vlan\": 20}\nroot@AP:~# "
+        },
+        {
+          "phase": "map the WLAN to the wrong tagged VLAN",
+          "node": "AP",
+          "command": "python3 /lab/v.py check --vlan 20",
+          "expectation": "Actual AP state, bridge port/tag selection and three independent untagged uplink replies agree.",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/v.py check --vlan 20\n{\"control_received\": 3, \"radio_bridge\": \"br0\", \"role\": \"ap\", \"status\": \"passed\", \"uplink_vlan\": 20}\nroot@AP:~# "
+        },
+        {
+          "phase": "map the WLAN to the wrong tagged VLAN",
+          "node": "CLIENT",
+          "command": "python3 /lab/v.py check --expect down",
+          "expectation": "Actual WLAN association stays completed; three fresh interface-bound requests receive zero replies after neighbor-cache flushing.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/v.py check --expect down\n{\"associated\": true, \"received\": 0, \"role\": \"client\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "map the WLAN to the wrong tagged VLAN",
+          "node": "SW",
+          "command": "show mac address-table dynamic vlan 20",
+          "expectation": "The switch actually learns a dynamic source in the selected tagged VLAN on the AP trunk.",
+          "passed": true,
+          "output": "\nSW#show mac address-table dynamic vlan 20\n          Mac Address Table\n-------------------------------------------\n\nVlan    Mac Address       Type        Ports\n----    -----------       --------    -----\n  20    5254.00b3.bc5c    DYNAMIC     Et0/0\n  20    aa92.3c00.0000    DYNAMIC     Et0/0\nTotal Mac Addresses for this criterion: 2\nSW#"
+        },
+        {
+          "phase": "restore the WLAN VLAN10 uplink",
+          "kind": "configuration",
+          "node": "AP",
+          "command": "python3 /lab/v.py map --vlan 10",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/v.py map --vlan 10\n{\"configured\": true, \"radio_bridge\": \"br0\", \"uplink_vlan\": 10}\nroot@AP:~# "
+        },
+        {
+          "phase": "restore the WLAN VLAN10 uplink",
+          "node": "CLIENT",
+          "command": "python3 /lab/v.py check",
+          "expectation": "Actual WLAN association stays completed; three fresh interface-bound requests receive all replies from the switch VLAN10 SVI.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/v.py check\n{\"associated\": true, \"received\": 3, \"role\": \"client\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the WLAN VLAN10 uplink",
+          "node": "AP",
+          "command": "python3 /lab/v.py check --vlan 10",
+          "expectation": "Actual AP state, bridge port/tag selection and three independent untagged uplink replies agree.",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/v.py check --vlan 10\n{\"control_received\": 3, \"radio_bridge\": \"br0\", \"role\": \"ap\", \"status\": \"passed\", \"uplink_vlan\": 10}\nroot@AP:~# "
+        },
+        {
+          "phase": "restore the WLAN VLAN10 uplink",
+          "node": "SW",
+          "command": "show mac address-table dynamic vlan 10",
+          "expectation": "The switch actually learns a dynamic source in the selected tagged VLAN on the AP trunk.",
+          "passed": true,
+          "output": "\nSW#show mac address-table dynamic vlan 10\n          Mac Address Table\n-------------------------------------------\n\nVlan    Mac Address       Type        Ports\n----    -----------       --------    -----\n  10    5254.00b3.bc5c    DYNAMIC     Et0/0\n  10    762d.fd6d.0529    DYNAMIC     Et0/0\n  10    aa92.3c00.0000    DYNAMIC     Et0/0\nTotal Mac Addresses for this criterion: 3\nSW#"
+        }
+      ],
+      "plan_sha256": "4c83d3770a70631206a18c339fb361a67834bfdd58fdda9e5e5df0066e8dceb2",
+      "startup_states": {
+        "AP": "STARTED",
+        "CLIENT": "STARTED",
+        "SW": "STARTED"
+      },
+      "images": {
+        "AP": "wireless-ap-24-04-20260409",
+        "CLIENT": "wireless-client-24-04-20260409",
+        "SW": "ioll2-xe-17-18-02"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "AP",
+        "CLIENT",
+        "SW"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T17:02:10Z"
     }
   ]
 }

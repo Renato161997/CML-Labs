@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **172**.
+Import/export passes: **233/233**. Functional passes: **173**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -39,6 +39,7 @@ Import/export passes: **233/233**. Functional passes: **172**.
 | [Rapid PVST Troubleshooting](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/011-rapid-pvst-troubleshooting.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 9 | 6 | 2026-10-25T18:06:22Z |
 | [EtherChannel LACP](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/012-etherchannel-lacp.yaml) | passed | 2.10.1+build.21 | iosvl2-2020 | 6 | 8 | 2026-10-25T12:59:31Z |
 | [Layer 2 Security Basics](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/013-layer2-security.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 11 | 6 | 2026-10-25T18:13:11Z |
+| [WLAN Client Mapping: Radio, Bridge and Tagged VLAN](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/014-wlan-client-vlan-mapping.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02, wireless-ap-24-04-20260409, wireless-client-24-04-20260409 | 9 | 2 | 2026-10-31T17:02:10Z |
 | [OSI TCP/IP Traffic Path](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/001-osi-tcpip-traffic-path.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 4 | 0 | 2026-10-25T17:11:52Z |
 | [IPv4 Subnetting And VLSM](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/002-ipv4-subnetting-vlsm.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 3 | 0 | 2026-10-25T12:08:17Z |
 | [IPv6 Addressing Static](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/003-ipv6-addressing-static.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 6 | 8 | 2026-10-25T17:11:33Z |
