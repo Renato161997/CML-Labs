@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **183**.
+Import/export passes: **233/233**. Functional passes: **185**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -163,6 +163,7 @@ Import/export passes: **233/233**. Functional passes: **183**.
 | [Guest Access Isolation](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/025-guest-access-isolation.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 18 | 16 | 2026-10-30T15:44:57Z |
 | [Cryptography PKI and VPN Trust Boundaries](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/002-cryptography-pki-ipsec.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 9 | 8 | 2026-10-30T15:27:44Z |
 | [Security Intelligence Sharing](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/004-security-intelligence-sharing.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 10 | 4 | 2026-10-30T15:15:54Z |
+| [SDN API Security: Wire Rejections and Scoped Approvals](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/005-sdn-api-security.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 22 | 33 | 2026-10-31T22:50:59Z |
 | [NetFlow Security Analytics and Triage](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/026-netflow-stealthwatch.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 8 | 2 | 2026-10-30T16:18:15Z |
 | [Syslog SIEM Correlation](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/027-syslog-siem-correlation.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3 | 12 | 19 | 2026-10-26T20:42:59Z |
 | [Packet Capture SPAN](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/028-packet-capture-span.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, ioll2-xe-17-18-02, net-tools-2-10-1-3 | 15 | 10 | 2026-10-31T11:16:43Z |
@@ -174,6 +175,7 @@ Import/export passes: **233/233**. Functional passes: **183**.
 | [DEVCOR Practical Checkpoint](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/assessment/038-devcor-practical-checkpoint.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 25 | 6 | 2026-10-30T21:01:52Z |
 | [Capstone: Device-Backed Controller Reconciliation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/039-devcor-capstone-controller-integration.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 12 | 32 | 2026-10-31T17:38:27Z |
 | [Capstone: Durable Jobs, Compensation and Concurrent Replay](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/040-devcor-capstone-network-automation-app.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 19 | 34 | 2026-10-31T17:41:46Z |
+| [Application Threat Model: API Denial and Backend Failure](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/023-application-threat-model.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 16 | 35 | 2026-10-31T22:46:21Z |
 | [GitOps Network Change Pipeline](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/gitops/031-gitops-network-change-pipeline.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 13 | 33 | 2026-10-28T16:29:07Z |
 | [Ansible Inventory Network](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/025-ansible-inventory-network.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-28T16:08:45Z |
 | [YANG Model Interface Change](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/027-yang-model-interface-change.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-27T19:45:41Z |
