@@ -3007,25 +3007,24 @@
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/035-macsec-concepts.yaml",
-      "title": "MACsec Concepts",
+      "title": "MACsec: Kernel Encryption, Wrong-Key Drops and Recovery",
       "track": "350-401",
       "topic": "security",
-      "nodes": 4,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "net-tools"
       ],
-      "nominal_ram_mib": 2048,
+      "nominal_ram_mib": 1024,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 95,
+      "workbook": "docs/workbooks/350-401-035-macsec-concepts.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "aa65066bb472a81055185f1b82ee5dedd2003e3649642de84050c14231cafd3f"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T21:19:07Z",
+      "sha256": "86bb60b988b90a5fe8b7bdc2a5cbf9fa90ca04493e9fc82a5e0256f514fcffe3"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/036-secure-management-plane.yaml",

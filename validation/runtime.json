@@ -39820,6 +39820,123 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T18:07:54Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/035-macsec-concepts.yaml",
+      "sha256": "86bb60b988b90a5fe8b7bdc2a5cbf9fa90ca04493e9fc82a5e0256f514fcffe3",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T21:17:59Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "LEFT",
+          "command": "python3 /lab/m.py check",
+          "expectation": "Actual software SecY configuration, endpoint addresses, selected encoding association, monotonic SA0 packet number and three plain underlay control replies agree.",
+          "passed": true,
+          "output": "\nroot@LEFT:~# python3 /lab/m.py check\n{\"encoding_sa\": 0, \"kernel\": \"6.8.0-147-generic\", \"role\": \"LEFT\", \"sa0_next_pn\": 16, \"status\": \"passed\", \"underlay_received\": 3}\nroot@LEFT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "RIGHT",
+          "command": "python3 /lab/m.py check",
+          "expectation": "Actual software SecY configuration, endpoint addresses, selected encoding association, monotonic SA0 packet number and three plain underlay control replies agree.",
+          "passed": true,
+          "output": "\nroot@RIGHT:~# python3 /lab/m.py check\n{\"encoding_sa\": 0, \"kernel\": \"6.8.0-147-generic\", \"role\": \"RIGHT\", \"sa0_next_pn\": 14, \"status\": \"passed\", \"underlay_received\": 3}\nroot@RIGHT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "RIGHT",
+          "command": "python3 /lab/m.py measure",
+          "expectation": "Fresh expected-peer EtherType88e5 encrypted frames and receive-association counter deltas must accompany three actual protected replies.",
+          "passed": true,
+          "output": "\nroot@RIGHT:~# python3 /lab/m.py measure\n{\"counter\": \"InPktsOK\", \"counter_delta\": 3, \"encrypted_frames\": 3, \"kernel\": \"6.8.0-147-generic\", \"received\": 3, \"status\": \"passed\", \"underlay_received\": 3, \"wire_an\": 0}\nroot@RIGHT:~# "
+        },
+        {
+          "phase": "select the deliberately incorrect transmit key association",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "python3 /lab/m.py select --encoding 1",
+          "passed": true,
+          "output": "\nroot@LEFT:~# python3 /lab/m.py select --encoding 1\n{\"encoding_sa\": 1, \"sa0_not_reset\": true, \"selected\": true}\nroot@LEFT:~# "
+        },
+        {
+          "phase": "select the deliberately incorrect transmit key association",
+          "node": "LEFT",
+          "command": "python3 /lab/m.py check --encoding 1",
+          "expectation": "Actual software SecY configuration, endpoint addresses, selected encoding association, monotonic SA0 packet number and three plain underlay control replies agree.",
+          "passed": true,
+          "output": "\nroot@LEFT:~# python3 /lab/m.py check --encoding 1\n{\"encoding_sa\": 1, \"kernel\": \"6.8.0-147-generic\", \"role\": \"LEFT\", \"sa0_next_pn\": 20, \"status\": \"passed\", \"underlay_received\": 3}\nroot@LEFT:~# "
+        },
+        {
+          "phase": "select the deliberately incorrect transmit key association",
+          "node": "RIGHT",
+          "command": "python3 /lab/m.py check",
+          "expectation": "Actual software SecY configuration, endpoint addresses, selected encoding association, monotonic SA0 packet number and three plain underlay control replies agree.",
+          "passed": true,
+          "output": "\nroot@RIGHT:~# python3 /lab/m.py check\n{\"encoding_sa\": 0, \"kernel\": \"6.8.0-147-generic\", \"role\": \"RIGHT\", \"sa0_next_pn\": 20, \"status\": \"passed\", \"underlay_received\": 3}\nroot@RIGHT:~# "
+        },
+        {
+          "phase": "select the deliberately incorrect transmit key association",
+          "node": "RIGHT",
+          "command": "python3 /lab/m.py measure --expect down",
+          "expectation": "Fresh expected-peer EtherType88e5 encrypted frames and receive-association counter deltas must accompany zero protected replies under the deliberately incorrect transmit key.",
+          "passed": true,
+          "output": "\nroot@RIGHT:~# python3 /lab/m.py measure --expect down\n{\"counter\": \"InPktsNotValid\", \"counter_delta\": 3, \"encrypted_frames\": 3, \"kernel\": \"6.8.0-147-generic\", \"received\": 0, \"status\": \"passed\", \"underlay_received\": 3, \"wire_an\": 1}\nroot@RIGHT:~# "
+        },
+        {
+          "phase": "restore retained valid SA0 without resetting packet numbers",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "python3 /lab/m.py select --encoding 0",
+          "passed": true,
+          "output": "\nroot@LEFT:~# python3 /lab/m.py select --encoding 0\n{\"encoding_sa\": 0, \"sa0_not_reset\": true, \"selected\": true}\nroot@LEFT:~# "
+        },
+        {
+          "phase": "restore retained valid SA0 without resetting packet numbers",
+          "node": "LEFT",
+          "command": "python3 /lab/m.py check",
+          "expectation": "Actual software SecY configuration, endpoint addresses, selected encoding association, monotonic SA0 packet number and three plain underlay control replies agree.",
+          "passed": true,
+          "output": "\nroot@LEFT:~# python3 /lab/m.py check\n{\"encoding_sa\": 0, \"kernel\": \"6.8.0-147-generic\", \"role\": \"LEFT\", \"sa0_next_pn\": 22, \"status\": \"passed\", \"underlay_received\": 3}\nroot@LEFT:~# "
+        },
+        {
+          "phase": "restore retained valid SA0 without resetting packet numbers",
+          "node": "RIGHT",
+          "command": "python3 /lab/m.py check",
+          "expectation": "Actual software SecY configuration, endpoint addresses, selected encoding association, monotonic SA0 packet number and three plain underlay control replies agree.",
+          "passed": true,
+          "output": "\nroot@RIGHT:~# python3 /lab/m.py check\n{\"encoding_sa\": 0, \"kernel\": \"6.8.0-147-generic\", \"role\": \"RIGHT\", \"sa0_next_pn\": 24, \"status\": \"passed\", \"underlay_received\": 3}\nroot@RIGHT:~# "
+        },
+        {
+          "phase": "restore retained valid SA0 without resetting packet numbers",
+          "node": "RIGHT",
+          "command": "python3 /lab/m.py measure",
+          "expectation": "Fresh expected-peer EtherType88e5 encrypted frames and receive-association counter deltas must accompany three actual protected replies.",
+          "passed": true,
+          "output": "\nroot@RIGHT:~# python3 /lab/m.py measure\n{\"counter\": \"InPktsOK\", \"counter_delta\": 4, \"encrypted_frames\": 4, \"kernel\": \"6.8.0-147-generic\", \"received\": 3, \"status\": \"passed\", \"underlay_received\": 3, \"wire_an\": 0}\nroot@RIGHT:~# "
+        }
+      ],
+      "plan_sha256": "f923b95adbf5575808cbf7e519deb000d4ef06ae0b1494828d5e348637f839aa",
+      "startup_states": {
+        "LEFT": "BOOTED",
+        "RIGHT": "BOOTED"
+      },
+      "images": {
+        "LEFT": "net-tools-2-10-1-3",
+        "RIGHT": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T21:19:07Z"
     }
   ]
 }

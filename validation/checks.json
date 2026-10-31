@@ -21454,5 +21454,103 @@
         ]
       }
     ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/035-macsec-concepts.yaml": {
+    "checks": [
+      {
+        "node": "LEFT",
+        "command": "python3 /lab/m.py check",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_received\": 3)(?=.*\"encoding_sa\": 0\\b)",
+        "expectation": "Actual software SecY configuration, endpoint addresses, selected encoding association, monotonic SA0 packet number and three plain underlay control replies agree.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "RIGHT",
+        "command": "python3 /lab/m.py check",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_received\": 3)(?=.*\"encoding_sa\": 0\\b)",
+        "expectation": "Actual software SecY configuration, endpoint addresses, selected encoding association, monotonic SA0 packet number and three plain underlay control replies agree.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "RIGHT",
+        "command": "python3 /lab/m.py measure",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"received\": 3\\b)(?=.*\"wire_an\": 0\\b)(?=.*\"counter\": \"InPktsOK\")(?=.*\"underlay_received\": 3)",
+        "expectation": "Fresh expected-peer EtherType88e5 encrypted frames and receive-association counter deltas must accompany three actual protected replies.",
+        "command_timeout": 45,
+        "attempts": 1
+      }
+    ],
+    "transitions": [
+      {
+        "name": "select the deliberately incorrect transmit key association",
+        "node": "LEFT",
+        "commands": [
+          "python3 /lab/m.py select --encoding 1"
+        ],
+        "command_pattern": "\"selected\": true",
+        "checks": [
+          {
+            "node": "LEFT",
+            "command": "python3 /lab/m.py check --encoding 1",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_received\": 3)(?=.*\"encoding_sa\": 1\\b)",
+            "expectation": "Actual software SecY configuration, endpoint addresses, selected encoding association, monotonic SA0 packet number and three plain underlay control replies agree.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "RIGHT",
+            "command": "python3 /lab/m.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_received\": 3)(?=.*\"encoding_sa\": 0\\b)",
+            "expectation": "Actual software SecY configuration, endpoint addresses, selected encoding association, monotonic SA0 packet number and three plain underlay control replies agree.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "RIGHT",
+            "command": "python3 /lab/m.py measure --expect down",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"received\": 0\\b)(?=.*\"wire_an\": 1\\b)(?=.*\"counter\": \"InPktsNotValid\")(?=.*\"underlay_received\": 3)",
+            "expectation": "Fresh expected-peer EtherType88e5 encrypted frames and receive-association counter deltas must accompany zero protected replies under the deliberately incorrect transmit key.",
+            "command_timeout": 45,
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "restore retained valid SA0 without resetting packet numbers",
+        "node": "LEFT",
+        "commands": [
+          "python3 /lab/m.py select --encoding 0"
+        ],
+        "command_pattern": "\"selected\": true",
+        "checks": [
+          {
+            "node": "LEFT",
+            "command": "python3 /lab/m.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_received\": 3)(?=.*\"encoding_sa\": 0\\b)",
+            "expectation": "Actual software SecY configuration, endpoint addresses, selected encoding association, monotonic SA0 packet number and three plain underlay control replies agree.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "RIGHT",
+            "command": "python3 /lab/m.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_received\": 3)(?=.*\"encoding_sa\": 0\\b)",
+            "expectation": "Actual software SecY configuration, endpoint addresses, selected encoding association, monotonic SA0 packet number and three plain underlay control replies agree.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "RIGHT",
+            "command": "python3 /lab/m.py measure",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"received\": 3\\b)(?=.*\"wire_an\": 0\\b)(?=.*\"counter\": \"InPktsOK\")(?=.*\"underlay_received\": 3)",
+            "expectation": "Fresh expected-peer EtherType88e5 encrypted frames and receive-association counter deltas must accompany three actual protected replies.",
+            "command_timeout": 45,
+            "attempts": 1
+          }
+        ]
+      }
+    ]
   }
 }
