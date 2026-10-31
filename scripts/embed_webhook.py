@@ -11,6 +11,7 @@ import yaml
 from labtools import ROOT, load
 
 PROFILES = {
+    "ra-guard": {"/lab/f.py": "examples/security/ra_guard.py"},
     "wireless-guest": {
         "/lab/radio_probe.py": "examples/wireless/radio_probe.py",
         "/lab/g.py": "examples/wireless/guest_probe.py",
@@ -42,6 +43,35 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "aaa-sessions": {
+        "RADIUS": {"/lab/a.sh": "examples/management/aaa_accounting.sh"},
+        "TACACS": {"/lab/a.sh": "examples/management/aaa_accounting.sh"},
+        "CLIENT": {
+            "/opt/cml-management/askpass.sh": "examples/management/askpass.sh",
+            "/opt/cml-management/ssh_probe.py": "examples/management/ssh_probe.py",
+            "/opt/cml-management/ssh_policy_probe.py": "examples/management/ssh_policy_probe.py",
+            "/opt/cml-management/aaa_client.py": "examples/management/aaa_client.py",
+        },
+    },
+    "aaa-sessions-sources": {
+        "RADIUS": {"/lab/a.sh": "examples/management/aaa_accounting.sh"},
+        "TACACS": {"/lab/a.sh": "examples/management/aaa_accounting.sh"},
+        "CLIENT": {
+            "/opt/cml-management/askpass.sh": "examples/management/askpass.sh",
+            "/opt/cml-management/ssh_probe.py": "examples/management/ssh_probe.py",
+            "/opt/cml-management/ssh_policy_probe.py": "examples/management/ssh_policy_probe.py",
+            "/opt/cml-management/aaa_client.py": "examples/management/aaa_client.py",
+        },
+        "UNTRUST": {
+            "/opt/cml-management/askpass.sh": "examples/management/askpass.sh",
+            "/opt/cml-management/ssh_probe.py": "examples/management/ssh_probe.py",
+            "/opt/cml-management/ssh_policy_probe.py": "examples/management/ssh_policy_probe.py",
+            "/opt/cml-management/aaa_client.py": "examples/management/aaa_client.py",
+        },
+    },
+    "ra-guard": {
+        "GUARD": {"/lab/f.py": "examples/security/ra_guard.py"},
+    },
     "native-macsec": {
         "LEFT": {"/lab/m.py": "examples/security/macsec_probe.py"},
         "RIGHT": {"/lab/m.py": "examples/security/macsec_probe.py"},

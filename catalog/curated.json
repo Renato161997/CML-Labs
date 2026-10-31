@@ -1144,5 +1144,26 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-401-035-macsec-concepts.md",
     "example_profile": "native-macsec"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/026-ipv6-first-hop-security.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-026-ipv6-first-hop-security.md",
+    "example_profile": "ra-guard"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/011-aaa-ise-radius-tacacs.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-011-aaa-ise-radius-tacacs.md",
+    "example_profile": "aaa-sessions"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/033-infrastructure-device-hardening.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-033-infrastructure-device-hardening.md",
+    "example_profile": "aaa-sessions-sources"
   }
 }

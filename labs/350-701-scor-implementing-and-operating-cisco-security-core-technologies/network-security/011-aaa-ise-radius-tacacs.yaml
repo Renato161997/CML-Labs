@@ -1,131 +1,797 @@
 lab:
-  title: AAA ISE RADIUS TACACS
-  description: 350-701 SCOR - Implementing and Operating Cisco Security Core Technologies importable CML
-    topology.
-  notes: '350-701 SCOR blueprint lab: AAA ISE RADIUS TACACS
+  title: 'AAA: RADIUS, TACACS+ SSH Sessions and Accounting'
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# AAA: RADIUS, TACACS+ SSH Sessions and Accounting
 
 
-    Topics:
-
-    - AAA
-
-    - ISE
-
-    - RADIUS
-
-    - TACACS+
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Tasks:
-
-    1. Configure method lists
-
-    2. Model identity source
-
-    3. Test fallback
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-701-011-aaa-ise-radius-tacacs.md
 
 
-    Useful checks:
+    A real IOL-XE SSH server authenticates viewer sessions against separate native FreeRADIUS and tac_plus
+    services. CLIENT uses actual OpenSSH, not a mocked authentication API. The public viewer credential
+    starts at privilege1 and cannot enter configuration mode. There is no local viewer account and no
+    local/if-authenticated fallback in the network method lists. The serial console deliberately remains
+    unauthenticated and privileged so the owner can repair the disposable exercise. Both services emit
+    actual exec accounting: evidence requires fresh viewer Start/Stop records sharing a session ID, with
+    owned logs truncated immediately before each test session. Truncation preserves existing ownership/mode
+    and never creates a substitute file. Repeated log copies are not extra sessions. Shell command accounting
+    and commercial Cisco ISE are not claimed.
 
-    - show ip interface brief
 
-    - show running-config
+    NAS front Ethernet0/0 is 198.18.0.1, RADIUS Ethernet0/1 is 198.18.1.1 and TACACS+ Ethernet0/2 is 198.18.2.1.
+    Only declared data links are wired; native eth0 management is unwired. FreeRADIUS allowlists the single
+    NAS source and requires Message-Authenticator for Access-Request authentication. The RAD-GROUP authentication
+    method retains send-ma and validate-ma; a separate RAD-ACCT group sends legacy accounting with its
+    normal Request Authenticator. Sending MA from the initial combined IOL group caused accounting packets
+    to be rejected with an invalid-Message-Authenticator diagnostic in this tested image combination.
+    The accepted separation must produce actual correlated Start/Stop records; authentication password
+    logging is disabled. Teaching shared keys and passwords are public isolated fixtures. RADIUS is not
+    RadSec, and this legacy TACACS+ interoperability fixture is not a modern secure transport recommendation.
+    Ephemeral RSA3072 identity and accept-new per-instance client trust are classroom initialization only;
+    changed host identities are rejected. No external credentials or Internet connection is used. A wrong
+    TACACS+ key must cause actual SSH authentication denial while TCP22 and independent IP paths remain
+    healthy, followed by recovered sessions and fresh accounting. Stop/wipe only this imported copy to
+    reset.
 
-    - show ip route
 
-    - show ip protocols
+    Objectives:
 
-    - ping and traceroute between endpoints'
+    - Use real centrally authenticated SSH sessions with least-privilege checks.
+
+    - Correlate fresh exec accounting Start/Stop by session identifier for both server types.
+
+    - Break one shared-key relationship, observe correct-credential rejection and recover.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
-  node_definition: iosv
-  x: -180
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR AAA ISE RADIUS TACACS ^C\n\
-      interface GigabitEthernet0/0\n description SECCORE-SCOR AAA ISE RADIUS TACACS\n ip address 10.255.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface Loopback0\n description SECCORE-SCOR AAA ISE RADIUS TACACS\n\
-      \ ip address 10.255.255.1 255.255.255.255\n no shutdown\nend"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Ethernet0/0\n ip address 198.18.0.1 255.255.255.252\n no shutdown\n exit\ninterface\
+      \ Ethernet0/1\n ip address 198.18.1.1 255.255.255.252\n no shutdown\n exit\ninterface Ethernet0/2\n\
+      \ ip address 198.18.2.1 255.255.255.252\n no shutdown\n exit\naaa new-model\naaa authentication\
+      \ login CONSOLE none\nline console 0\n login authentication CONSOLE\n privilege level 15\n exit\n\
+      ip radius source-interface Ethernet0/1\nip tacacs source-interface Ethernet0/2\nradius server LAB-RADIUS\n\
+      \ address ipv4 198.18.1.2 auth-port 1812 acct-port 1813\n timeout 2\n retransmit 0\n key 0 Cml-Radius-Lab-Only-983\n\
+      \ exit\ntacacs server LAB-TACACS\n address ipv4 198.18.2.2\n timeout 2\n key 0 Cml-Tacacs-Lab-Only-983\n\
+      \ exit\naaa group server radius RAD-GROUP\n server name LAB-RADIUS\n send-ma\n validate-ma\n exit\n\
+      aaa group server tacacs+ TAC-GROUP\n server name LAB-TACACS\n exit\naaa group server radius RAD-ACCT\n\
+      \ server name LAB-RADIUS\n no send-ma\n exit\naaa authentication login VTY-RAD group RAD-GROUP\n\
+      aaa authorization exec VTY-RAD group RAD-GROUP\naaa accounting exec VTY-RAD start-stop group RAD-ACCT\n\
+      aaa authentication login VTY-TAC group TAC-GROUP\naaa authorization exec VTY-TAC group TAC-GROUP\n\
+      aaa accounting exec VTY-TAC start-stop group TAC-GROUP\nno logging console\nip domain name lab.example\n\
+      ip ssh version 2\nip ssh time-out 5\nip ssh authentication-retries 1\nno ip http server\nno ip http\
+      \ secure-server\nbanner motd ^CML-SSH-LAB^\nip access-list standard MGMT\n permit host 198.18.0.2\n\
+      \ deny any\n exit\nline vty 0 4\n transport input ssh\n login authentication VTY-RAD\n authorization\
+      \ exec VTY-RAD\n accounting exec VTY-RAD\n access-class MGMT in\n exit\nend\n"
+  cpu_limit: 100
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
+  ram: 1024
+  cpus: 1
 - id: n1
-  label: DEVBOX
-  node_definition: desktop
-  x: 180
-  y: 0
+  label: RADIUS
+  node_definition: radius
+  configuration:
+  - name: radiusd.conf
+    content: "# Basic freeRADIUS onfiguration\n\nprefix = /usr\nexec_prefix = /usr\nsysconfdir = /etc\n\
+      localstatedir = /var\nsbindir = ${exec_prefix}/sbin\nlogdir = /var/log/freeradius\nraddbdir = /etc/freeradius/3.0\n\
+      radacctdir = ${logdir}/radacct\nname = freeradius\nconfdir = ${raddbdir}\nmodconfdir = ${confdir}/mods-config\n\
+      certdir = ${confdir}/certs\ncadir   = ${confdir}/certs\nrun_dir = ${localstatedir}/run/${name}\n\
+      db_dir = ${raddbdir}\nlibdir = /usr/lib/freeradius\npidfile = ${run_dir}/${name}.pid\nmax_request_time\
+      \ = 30\ncleanup_delay = 5\nmax_requests = 16384\nhostname_lookups = no\n\nlog {\n    destination\
+      \ = syslog\n    colourise = no\n    file = ${logdir}/radius.log\n    syslog_facility = daemon\n\
+      \    stripped_names = no\n    auth = yes\n    auth_reject = yes\n    auth_badpass = no\n    auth_goodpass\
+      \ = no\n    msg_denied = \"You are already logged in - access denied\"\n}\n\ncheckrad = ${sbindir}/checkrad\n\
+      \n#ENV {\n#}\n\nsecurity {\n    user = freerad\n    group = freerad\n    allow_core_dumps = no\n\
+      \    max_attributes = 200\n    reject_delay = 1\n    status_server = yes\n}\n\nproxy_requests =\
+      \ no\n#$INCLUDE proxy.conf\n\n#$INCLUDE clients.conf\nclient all-devices {\n    ipaddr = 198.18.1.1/32\n\
+      \    secret = Cml-Radius-Lab-Only-983\n    require_message_authenticator = yes\n    nas_type = cisco\n\
+      }\n\nthread pool {\n    start_servers = 5\n    max_servers = 32\n    min_spare_servers = 3\n   \
+      \ max_spare_servers = 10\n    max_requests_per_server = 0\n    auto_limit_acct = no\n}\n\nmodules\
+      \ {\n    $INCLUDE mods-enabled/\n}\n\n#instantiate {\n#}\n\npolicy {\n    $INCLUDE policy.d/\n}\n\
+      \n$INCLUDE sites-enabled/"
+  - name: users
+    content: "viewer Cleartext-Password := \"CML-LAB-ONLY\"\n    Service-Type = NAS-Prompt-User,\n   \
+      \ Cisco-AVPair = \"shell:priv-lvl=1\"\n"
+  - name: environment
+    content: 'ARGS=-f -lstdout
+
+      '
+  - name: boot.sh
+    content: '#!/bin/bash
+
+      set -eu
+
+      ip address add 198.18.1.2/30 dev eth1
+
+      ip link set eth1 up
+
+      mkdir -p /lab
+
+      echo CML-AAA-SESSIONS-V1 > /lab/CML-AAA-FIXTURE
+
+      echo RADIUS > /lab/aaa-role
+
+      base64 -d > /lab/a.sh <<''CML_EMBED_EXAMPLES_MANAGEMENT_AAA_ACCOUNTING_SH''
+
+      IyEvYmluL2Jhc2gKIyBGcmVzaCBhY2NvdW50aW5nIGV2aWRlbmNlIGZvciBkaXNwb3NhYmxlLCBw
+
+      aHlzaWNhbGx5IGlzb2xhdGVkIENNTCBndWVzdHMuCgphZGRfcmVjb3JkKCkgewogICAgbG9jYWwg
+
+      dXNlcj0kMSBzdGF0dXM9JDIgaWRlbnRpZmllcj0kMwogICAgW1sgJHVzZXIgPT0gdmlld2VyICYm
+
+      ICRpZGVudGlmaWVyID1+IF5bYS16QS1aMC05Xy46LV17MSw4MH0kIF1dIHx8IHJldHVybiAwCiAg
+
+      ICBjYXNlICR7c3RhdHVzLCx9IGluCiAgICAgICAgc3RhcnQpIHN0YXJ0c1siJGlkZW50aWZpZXIi
+
+      XT0xIDs7CiAgICAgICAgc3RvcCkgc3RvcHNbIiRpZGVudGlmaWVyIl09MSA7OwogICAgZXNhYwp9
+
+      CgplbWl0X3BhaXJzKCkgewogICAgbG9jYWwgYmFja2VuZD0kMSBpZGVudGlmaWVyIGNvdW50PTAg
+
+      cGFzc2VkPWZhbHNlCiAgICBmb3IgaWRlbnRpZmllciBpbiAiJHshc3RhcnRzW0BdfSI7IGRvCiAg
+
+      ICAgICAgW1sgJHtzdG9wc1skaWRlbnRpZmllcl0rcHJlc2VudH0gXV0gJiYgY291bnQ9JCgoY291
+
+      bnQgKyAxKSkKICAgIGRvbmUKICAgICgoY291bnQgPiAwKSkgJiYgcGFzc2VkPXRydWUKICAgIHBy
+
+      aW50ZiAneyJwYXNzZWQiOiVzLCJiYWNrZW5kIjoiJXMiLCJjb21wbGV0ZWRfc2Vzc2lvbnMiOiVz
+
+      fVxuJyAiJHBhc3NlZCIgIiRiYWNrZW5kIiAiJGNvdW50IgogICAgKChjb3VudCA+IDApKQp9Cgpy
+
+      YWRpdXNfcmVjb3JkcygpIHsKICAgIGxvY2FsIGxpbmUgdXNlcj0nJyBzdGF0dXM9JycgaWRlbnRp
+
+      Zmllcj0nJyBrZXkgdmFsdWUKICAgIGxvY2FsIC1BIHN0YXJ0cz0oKSBzdG9wcz0oKQogICAgd2hp
+
+      bGUgSUZTPSByZWFkIC1yIGxpbmUgfHwgW1sgLW4gJGxpbmUgXV07IGRvCiAgICAgICAgaWYgW1sg
+
+      ISAkbGluZSA9fiBbXls6c3BhY2U6XV0gXV07IHRoZW4KICAgICAgICAgICAgYWRkX3JlY29yZCAi
+
+      JHVzZXIiICIkc3RhdHVzIiAiJGlkZW50aWZpZXIiCiAgICAgICAgICAgIHVzZXI9Jycgc3RhdHVz
+
+      PScnIGlkZW50aWZpZXI9JycKICAgICAgICBlbGlmIFtbICRsaW5lID1+IF5bWzpzcGFjZTpdXSoo
+
+      VXNlci1OYW1lfEFjY3QtU3RhdHVzLVR5cGV8QWNjdC1TZXNzaW9uLUlkKVtbOnNwYWNlOl1dKj1b
+
+      WzpzcGFjZTpdXSpcIj8oW15cIls6c3BhY2U6XV0rKSBdXTsgdGhlbgogICAgICAgICAgICBrZXk9
+
+      JHtCQVNIX1JFTUFUQ0hbMV19IHZhbHVlPSR7QkFTSF9SRU1BVENIWzJdfQogICAgICAgICAgICBj
+
+      YXNlICRrZXkgaW4KICAgICAgICAgICAgICAgIFVzZXItTmFtZSkgdXNlcj0kdmFsdWUgOzsKICAg
+
+      ICAgICAgICAgICAgIEFjY3QtU3RhdHVzLVR5cGUpIHN0YXR1cz0kdmFsdWUgOzsKICAgICAgICAg
+
+      ICAgICAgIEFjY3QtU2Vzc2lvbi1JZCkgaWRlbnRpZmllcj0kdmFsdWUgOzsKICAgICAgICAgICAg
+
+      ZXNhYwogICAgICAgIGZpCiAgICBkb25lCiAgICBhZGRfcmVjb3JkICIkdXNlciIgIiRzdGF0dXMi
+
+      ICIkaWRlbnRpZmllciIKICAgIGVtaXRfcGFpcnMgUkFESVVTCn0KCnRhY2Fjc19yZWNvcmRzKCkg
+
+      ewogICAgbG9jYWwgbGluZSB1c2VyIHN0YXR1cyBpZGVudGlmaWVyIHRva2VuCiAgICBsb2NhbCAt
+
+      YSB3b3Jkcz0oKQogICAgbG9jYWwgLUEgc3RhcnRzPSgpIHN0b3BzPSgpCiAgICB3aGlsZSBJRlM9
+
+      IHJlYWQgLXIgbGluZSB8fCBbWyAtbiAkbGluZSBdXTsgZG8KICAgICAgICB1c2VyPScnIHN0YXR1
+
+      cz0nJyBpZGVudGlmaWVyPScnCiAgICAgICAgcmVhZCAtciAtYSB3b3JkcyA8PDwgIiRsaW5lIgog
+
+      ICAgICAgIGZvciB0b2tlbiBpbiAiJHt3b3Jkc1tAXX0iOyBkbwogICAgICAgICAgICBjYXNlICR7
+
+      dG9rZW4sLH0gaW4KICAgICAgICAgICAgICAgIHZpZXdlcikgdXNlcj12aWV3ZXIgOzsKICAgICAg
+
+      ICAgICAgICAgIHN0YXJ0fHN0b3ApIHN0YXR1cz0ke3Rva2VuLCx9IDs7CiAgICAgICAgICAgICAg
+
+      ICB0YXNrX2lkPSopIGlkZW50aWZpZXI9JHt0b2tlbiMqPX0gOzsKICAgICAgICAgICAgZXNhYwog
+
+      ICAgICAgIGRvbmUKICAgICAgICBhZGRfcmVjb3JkICIkdXNlciIgIiRzdGF0dXMiICIkaWRlbnRp
+
+      ZmllciIKICAgIGRvbmUKICAgIGVtaXRfcGFpcnMgVEFDQUNTCn0KCm1haW4oKSB7CiAgICBzZXQg
+
+      LWV1byBwaXBlZmFpbAogICAgW1sgJEVVSUQgPT0gMCAmJiAkKGNhdCAvbGFiL0NNTC1BQUEtRklY
+
+      VFVSRSkgPT0gQ01MLUFBQS1TRVNTSU9OUy1WMSBdXQogICAgbG9jYWwgcm9sZSBhY3Rpb249JHsx
+
+      Oi1jaGVja30gZmlsZQogICAgbG9jYWwgLWEgZmlsZXM9KCkKICAgIHJvbGU9JChjYXQgL2xhYi9h
+
+      YWEtcm9sZSkKICAgIGNhc2UgJHJvbGUgaW4KICAgICAgICBSQURJVVMpCiAgICAgICAgICAgIHNo
+
+      b3B0IC1zIG51bGxnbG9iCiAgICAgICAgICAgIGZpbGVzPSgvdmFyL2xvZy9mcmVlcmFkaXVzL3Jh
+
+      ZGFjY3QvMTk4LjE4LjEuMS9kZXRhaWwtKikKICAgICAgICAgICAgOzsKICAgICAgICBUQUNBQ1Mp
+
+      IFtbICEgLWYgL3RtcC9jbWwtYWFhLWFjY291bnRpbmcubG9nIF1dIHx8IGZpbGVzPSgvdG1wL2Nt
+
+      bC1hYWEtYWNjb3VudGluZy5sb2cpIDs7CiAgICAgICAgKikgcmV0dXJuIDEgOzsKICAgIGVzYWMK
+
+      ICAgIGZvciBmaWxlIGluICIke2ZpbGVzW0BdfSI7IGRvIFtbIC1mICRmaWxlICYmICEgLUwgJGZp
+
+      bGUgXV07IGRvbmUKICAgIGNhc2UgJGFjdGlvbiBpbgogICAgICAgIGNsZWFyKQogICAgICAgICAg
+
+      ICBmb3IgZmlsZSBpbiAiJHtmaWxlc1tAXX0iOyBkbyA6ID4gIiRmaWxlIjsgZG9uZQogICAgICAg
+
+      ICAgICBwcmludGYgJ3siY2xlYXJlZCI6dHJ1ZSwiYmFja2VuZCI6IiVzIn1cbicgIiRyb2xlIgog
+
+      ICAgICAgICAgICA7OwogICAgICAgIGNoZWNrKQogICAgICAgICAgICAoZm9yIGZpbGUgaW4gIiR7
+
+      ZmlsZXNbQF19IjsgZG8gY2F0IC0tICIkZmlsZSI7IHByaW50ZiAnXG4nOyBkb25lKSB8CiAgICAg
+
+      ICAgICAgICAgICBpZiBbWyAkcm9sZSA9PSBSQURJVVMgXV07IHRoZW4gcmFkaXVzX3JlY29yZHM7
+
+      IGVsc2UgdGFjYWNzX3JlY29yZHM7IGZpCiAgICAgICAgICAgIDs7CiAgICAgICAgKikgcmV0dXJu
+
+      IDEgOzsKICAgIGVzYWMKfQoKaWYgW1sgJHtCQVNIX1NPVVJDRVswXX0gPT0gIiQwIiBdXTsgdGhl
+
+      biBtYWluICIkQCI7IGZpCg==
+
+      CML_EMBED_EXAMPLES_MANAGEMENT_AAA_ACCOUNTING_SH
+
+      echo READY >/dev/console
+
+      exit 0
+
+      '
+  - name: mounts
+    content: '# Can map a volume with radius server data into the container
+
+      # it. By default, only type=volume is allowed, see
+
+      # /etc/default/docker-shim.env
+
+      # Note: Use source=<name> below; docker-shim scopes volumes to the lab
+
+      # by prefixing the name with the lab ID. Docker creates the volume on
+
+      # first use if it does not already exist. Only type, source, target,
+
+      # readonly, and tmpfs-* options are accepted in this file.
+
+      #
+
+      # type=volume,source=radiusdata,target=/var/somedir'
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
-  - id: i0
+  - id: i1
     label: eth0
     type: physical
     slot: 0
-  configuration: []
-  priority: 99
-  tags: []
-- id: n2
-  label: API-TARGET
-  node_definition: iosv
-  x: 0
-  y: 160
-  configuration:
-  - name: ios_config.txt
-    content: "hostname API-TARGET\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR AAA ISE RADIUS TACACS\
-      \ ^C\ninterface GigabitEthernet0/0\n description SECCORE-SCOR AAA ISE RADIUS TACACS\n ip address\
-      \ 10.255.0.2 255.255.255.0\n no shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: eth1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: eth2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: eth3
     type: physical
     slot: 3
-  priority: 98
   tags: []
+  ram: 512
+  cpus: 1
+- id: n2
+  label: TACACS
+  node_definition: tacplus
+  configuration:
+  - name: tac_plus.conf
+    content: "key = \"Cml-Tacacs-Lab-Only-983\"\naccounting file = /tmp/cml-aaa-accounting.log\ngroup\
+      \ = readonly {\n default service = permit\n service = exec { priv-lvl = 1 }\n}\nuser = viewer {\n\
+      \ login = cleartext \"CML-LAB-ONLY\"\n member = readonly\n}\n"
+  - name: boot.sh
+    content: '#!/bin/bash
+
+      set -eu
+
+      ip address add 198.18.2.2/30 dev eth1
+
+      ip link set eth1 up
+
+      mkdir -p /lab
+
+      echo CML-AAA-SESSIONS-V1 > /lab/CML-AAA-FIXTURE
+
+      echo TACACS > /lab/aaa-role
+
+      base64 -d > /lab/a.sh <<''CML_EMBED_EXAMPLES_MANAGEMENT_AAA_ACCOUNTING_SH''
+
+      IyEvYmluL2Jhc2gKIyBGcmVzaCBhY2NvdW50aW5nIGV2aWRlbmNlIGZvciBkaXNwb3NhYmxlLCBw
+
+      aHlzaWNhbGx5IGlzb2xhdGVkIENNTCBndWVzdHMuCgphZGRfcmVjb3JkKCkgewogICAgbG9jYWwg
+
+      dXNlcj0kMSBzdGF0dXM9JDIgaWRlbnRpZmllcj0kMwogICAgW1sgJHVzZXIgPT0gdmlld2VyICYm
+
+      ICRpZGVudGlmaWVyID1+IF5bYS16QS1aMC05Xy46LV17MSw4MH0kIF1dIHx8IHJldHVybiAwCiAg
+
+      ICBjYXNlICR7c3RhdHVzLCx9IGluCiAgICAgICAgc3RhcnQpIHN0YXJ0c1siJGlkZW50aWZpZXIi
+
+      XT0xIDs7CiAgICAgICAgc3RvcCkgc3RvcHNbIiRpZGVudGlmaWVyIl09MSA7OwogICAgZXNhYwp9
+
+      CgplbWl0X3BhaXJzKCkgewogICAgbG9jYWwgYmFja2VuZD0kMSBpZGVudGlmaWVyIGNvdW50PTAg
+
+      cGFzc2VkPWZhbHNlCiAgICBmb3IgaWRlbnRpZmllciBpbiAiJHshc3RhcnRzW0BdfSI7IGRvCiAg
+
+      ICAgICAgW1sgJHtzdG9wc1skaWRlbnRpZmllcl0rcHJlc2VudH0gXV0gJiYgY291bnQ9JCgoY291
+
+      bnQgKyAxKSkKICAgIGRvbmUKICAgICgoY291bnQgPiAwKSkgJiYgcGFzc2VkPXRydWUKICAgIHBy
+
+      aW50ZiAneyJwYXNzZWQiOiVzLCJiYWNrZW5kIjoiJXMiLCJjb21wbGV0ZWRfc2Vzc2lvbnMiOiVz
+
+      fVxuJyAiJHBhc3NlZCIgIiRiYWNrZW5kIiAiJGNvdW50IgogICAgKChjb3VudCA+IDApKQp9Cgpy
+
+      YWRpdXNfcmVjb3JkcygpIHsKICAgIGxvY2FsIGxpbmUgdXNlcj0nJyBzdGF0dXM9JycgaWRlbnRp
+
+      Zmllcj0nJyBrZXkgdmFsdWUKICAgIGxvY2FsIC1BIHN0YXJ0cz0oKSBzdG9wcz0oKQogICAgd2hp
+
+      bGUgSUZTPSByZWFkIC1yIGxpbmUgfHwgW1sgLW4gJGxpbmUgXV07IGRvCiAgICAgICAgaWYgW1sg
+
+      ISAkbGluZSA9fiBbXls6c3BhY2U6XV0gXV07IHRoZW4KICAgICAgICAgICAgYWRkX3JlY29yZCAi
+
+      JHVzZXIiICIkc3RhdHVzIiAiJGlkZW50aWZpZXIiCiAgICAgICAgICAgIHVzZXI9Jycgc3RhdHVz
+
+      PScnIGlkZW50aWZpZXI9JycKICAgICAgICBlbGlmIFtbICRsaW5lID1+IF5bWzpzcGFjZTpdXSoo
+
+      VXNlci1OYW1lfEFjY3QtU3RhdHVzLVR5cGV8QWNjdC1TZXNzaW9uLUlkKVtbOnNwYWNlOl1dKj1b
+
+      WzpzcGFjZTpdXSpcIj8oW15cIls6c3BhY2U6XV0rKSBdXTsgdGhlbgogICAgICAgICAgICBrZXk9
+
+      JHtCQVNIX1JFTUFUQ0hbMV19IHZhbHVlPSR7QkFTSF9SRU1BVENIWzJdfQogICAgICAgICAgICBj
+
+      YXNlICRrZXkgaW4KICAgICAgICAgICAgICAgIFVzZXItTmFtZSkgdXNlcj0kdmFsdWUgOzsKICAg
+
+      ICAgICAgICAgICAgIEFjY3QtU3RhdHVzLVR5cGUpIHN0YXR1cz0kdmFsdWUgOzsKICAgICAgICAg
+
+      ICAgICAgIEFjY3QtU2Vzc2lvbi1JZCkgaWRlbnRpZmllcj0kdmFsdWUgOzsKICAgICAgICAgICAg
+
+      ZXNhYwogICAgICAgIGZpCiAgICBkb25lCiAgICBhZGRfcmVjb3JkICIkdXNlciIgIiRzdGF0dXMi
+
+      ICIkaWRlbnRpZmllciIKICAgIGVtaXRfcGFpcnMgUkFESVVTCn0KCnRhY2Fjc19yZWNvcmRzKCkg
+
+      ewogICAgbG9jYWwgbGluZSB1c2VyIHN0YXR1cyBpZGVudGlmaWVyIHRva2VuCiAgICBsb2NhbCAt
+
+      YSB3b3Jkcz0oKQogICAgbG9jYWwgLUEgc3RhcnRzPSgpIHN0b3BzPSgpCiAgICB3aGlsZSBJRlM9
+
+      IHJlYWQgLXIgbGluZSB8fCBbWyAtbiAkbGluZSBdXTsgZG8KICAgICAgICB1c2VyPScnIHN0YXR1
+
+      cz0nJyBpZGVudGlmaWVyPScnCiAgICAgICAgcmVhZCAtciAtYSB3b3JkcyA8PDwgIiRsaW5lIgog
+
+      ICAgICAgIGZvciB0b2tlbiBpbiAiJHt3b3Jkc1tAXX0iOyBkbwogICAgICAgICAgICBjYXNlICR7
+
+      dG9rZW4sLH0gaW4KICAgICAgICAgICAgICAgIHZpZXdlcikgdXNlcj12aWV3ZXIgOzsKICAgICAg
+
+      ICAgICAgICAgIHN0YXJ0fHN0b3ApIHN0YXR1cz0ke3Rva2VuLCx9IDs7CiAgICAgICAgICAgICAg
+
+      ICB0YXNrX2lkPSopIGlkZW50aWZpZXI9JHt0b2tlbiMqPX0gOzsKICAgICAgICAgICAgZXNhYwog
+
+      ICAgICAgIGRvbmUKICAgICAgICBhZGRfcmVjb3JkICIkdXNlciIgIiRzdGF0dXMiICIkaWRlbnRp
+
+      ZmllciIKICAgIGRvbmUKICAgIGVtaXRfcGFpcnMgVEFDQUNTCn0KCm1haW4oKSB7CiAgICBzZXQg
+
+      LWV1byBwaXBlZmFpbAogICAgW1sgJEVVSUQgPT0gMCAmJiAkKGNhdCAvbGFiL0NNTC1BQUEtRklY
+
+      VFVSRSkgPT0gQ01MLUFBQS1TRVNTSU9OUy1WMSBdXQogICAgbG9jYWwgcm9sZSBhY3Rpb249JHsx
+
+      Oi1jaGVja30gZmlsZQogICAgbG9jYWwgLWEgZmlsZXM9KCkKICAgIHJvbGU9JChjYXQgL2xhYi9h
+
+      YWEtcm9sZSkKICAgIGNhc2UgJHJvbGUgaW4KICAgICAgICBSQURJVVMpCiAgICAgICAgICAgIHNo
+
+      b3B0IC1zIG51bGxnbG9iCiAgICAgICAgICAgIGZpbGVzPSgvdmFyL2xvZy9mcmVlcmFkaXVzL3Jh
+
+      ZGFjY3QvMTk4LjE4LjEuMS9kZXRhaWwtKikKICAgICAgICAgICAgOzsKICAgICAgICBUQUNBQ1Mp
+
+      IFtbICEgLWYgL3RtcC9jbWwtYWFhLWFjY291bnRpbmcubG9nIF1dIHx8IGZpbGVzPSgvdG1wL2Nt
+
+      bC1hYWEtYWNjb3VudGluZy5sb2cpIDs7CiAgICAgICAgKikgcmV0dXJuIDEgOzsKICAgIGVzYWMK
+
+      ICAgIGZvciBmaWxlIGluICIke2ZpbGVzW0BdfSI7IGRvIFtbIC1mICRmaWxlICYmICEgLUwgJGZp
+
+      bGUgXV07IGRvbmUKICAgIGNhc2UgJGFjdGlvbiBpbgogICAgICAgIGNsZWFyKQogICAgICAgICAg
+
+      ICBmb3IgZmlsZSBpbiAiJHtmaWxlc1tAXX0iOyBkbyA6ID4gIiRmaWxlIjsgZG9uZQogICAgICAg
+
+      ICAgICBwcmludGYgJ3siY2xlYXJlZCI6dHJ1ZSwiYmFja2VuZCI6IiVzIn1cbicgIiRyb2xlIgog
+
+      ICAgICAgICAgICA7OwogICAgICAgIGNoZWNrKQogICAgICAgICAgICAoZm9yIGZpbGUgaW4gIiR7
+
+      ZmlsZXNbQF19IjsgZG8gY2F0IC0tICIkZmlsZSI7IHByaW50ZiAnXG4nOyBkb25lKSB8CiAgICAg
+
+      ICAgICAgICAgICBpZiBbWyAkcm9sZSA9PSBSQURJVVMgXV07IHRoZW4gcmFkaXVzX3JlY29yZHM7
+
+      IGVsc2UgdGFjYWNzX3JlY29yZHM7IGZpCiAgICAgICAgICAgIDs7CiAgICAgICAgKikgcmV0dXJu
+
+      IDEgOzsKICAgIGVzYWMKfQoKaWYgW1sgJHtCQVNIX1NPVVJDRVswXX0gPT0gIiQwIiBdXTsgdGhl
+
+      biBtYWluICIkQCI7IGZpCg==
+
+      CML_EMBED_EXAMPLES_MANAGEMENT_AAA_ACCOUNTING_SH
+
+      echo READY >/dev/console
+
+      exit 0
+
+      '
+  cpu_limit: 100
+  priority: 98
+  x: 520
+  y: 0
+  interfaces:
+  - id: i1
+    label: eth0
+    type: physical
+    slot: 0
+  - id: i2
+    label: eth1
+    type: physical
+    slot: 1
+  - id: i3
+    label: eth2
+    type: physical
+    slot: 2
+  - id: i4
+    label: eth3
+    type: physical
+    slot: 3
+  tags: []
+  ram: 512
+  cpus: 1
+- id: n3
+  label: CLIENT
+  node_definition: cml-labs-toolbox
+  configuration:
+  - name: boot.sh
+    content: '#!/bin/bash
+
+      set -eu
+
+      ip address add 198.18.0.2/30 dev eth1
+
+      ip link set eth1 up
+
+      mkdir -p /lab /opt/cml-management
+
+      base64 -d > /opt/cml-management/askpass.sh <<''CML_EMBED_EXAMPLES_MANAGEMENT_ASKPASS_SH''
+
+      IyEvYmluL3NoCnNldCAtZXUKcHJpbnRmICclc1xuJyAiJENNTF9URVNUX1BBU1NXT1JEIgo=
+
+      CML_EMBED_EXAMPLES_MANAGEMENT_ASKPASS_SH
+
+      base64 -d > /opt/cml-management/ssh_probe.py <<''CML_EMBED_EXAMPLES_MANAGEMENT_SSH_PROBE_PY''
+
+      IiIiRXhlcmNpc2Utb25seSBPcGVuU1NIIHByb2JlOyBubyBwcm9kdWN0aW9uIGNyZWRlbnRpYWxz
+
+      IG9yIHByaXZhdGUga2V5cy4iIiIKCmltcG9ydCBhcmdwYXJzZQppbXBvcnQgaXBhZGRyZXNzCmlt
+
+      cG9ydCBqc29uCmltcG9ydCBvcwppbXBvcnQgcmUKaW1wb3J0IHNvY2tldAppbXBvcnQgc3VicHJv
+
+      Y2Vzcwpmcm9tIHBhdGhsaWIgaW1wb3J0IFBhdGgKCkRFTU9fUEFTU1dPUkQgPSAiQ01MLUxBQi1P
+
+      TkxZIgoKCmRlZiBzZXNzaW9uKGhvc3QsIHBhc3N3b3JkLCBjb21tYW5kcyk6CiAgICBlbnZpcm9u
+
+      bWVudCA9IHsKICAgICAgICAqKm9zLmVudmlyb24sCiAgICAgICAgIlNTSF9BU0tQQVNTX1JFUVVJ
+
+      UkUiOiAiZm9yY2UiLAogICAgICAgICJTU0hfQVNLUEFTUyI6ICIvb3B0L2NtbC1tYW5hZ2VtZW50
+
+      L2Fza3Bhc3Muc2giLAogICAgICAgICJDTUxfVEVTVF9QQVNTV09SRCI6IHBhc3N3b3JkLAogICAg
+
+      fQogICAgYXJncyA9IFsKICAgICAgICAic3NoIiwKICAgICAgICAiLXR0IiwKICAgICAgICAiLUYi
+
+      LAogICAgICAgICJub25lIiwKICAgICAgICAiLW8iLAogICAgICAgICJTdHJpY3RIb3N0S2V5Q2hl
+
+      Y2tpbmc9YWNjZXB0LW5ldyIsCiAgICAgICAgIi1vIiwKICAgICAgICAiVXNlcktub3duSG9zdHNG
+
+      aWxlPS90bXAvY21sLW1hbmFnZW1lbnQta25vd24taG9zdHMiLAogICAgICAgICItbyIsCiAgICAg
+
+      ICAgIlByZWZlcnJlZEF1dGhlbnRpY2F0aW9ucz1wYXNzd29yZCIsCiAgICAgICAgIi1vIiwKICAg
+
+      ICAgICAiUHVia2V5QXV0aGVudGljYXRpb249bm8iLAogICAgICAgICItbyIsCiAgICAgICAgIk51
+
+      bWJlck9mUGFzc3dvcmRQcm9tcHRzPTEiLAogICAgICAgICItbyIsCiAgICAgICAgIkNvbm5lY3RU
+
+      aW1lb3V0PTUiLAogICAgICAgIGYidmlld2VyQHtob3N0fSIsCiAgICBdCiAgICByZXN1bHQgPSBz
+
+      dWJwcm9jZXNzLnJ1bigKICAgICAgICBhcmdzLAogICAgICAgIGlucHV0PSJcciIuam9pbihjb21t
+
+      YW5kcykgKyAiXHIiLAogICAgICAgIGNhcHR1cmVfb3V0cHV0PVRydWUsCiAgICAgICAgdGV4dD1U
+
+      cnVlLAogICAgICAgIHRpbWVvdXQ9MTIsCiAgICAgICAgZW52PWVudmlyb25tZW50LAogICAgICAg
+
+      IHN0YXJ0X25ld19zZXNzaW9uPVRydWUsCiAgICAgICAgY2hlY2s9RmFsc2UsCiAgICApCiAgICBy
+
+      ZXR1cm4gcmVzdWx0LnJldHVybmNvZGUsIHJlc3VsdC5zdGRvdXQgKyByZXN1bHQuc3RkZXJyCgoK
+
+      ZGVmIGNsb3NlZChob3N0LCBwb3J0KToKICAgIHRyeToKICAgICAgICB3aXRoIHNvY2tldC5jcmVh
+
+      dGVfY29ubmVjdGlvbigoaG9zdCwgcG9ydCksIHRpbWVvdXQ9Mik6CiAgICAgICAgICAgIHJldHVy
+
+      biBGYWxzZQogICAgZXhjZXB0IE9TRXJyb3I6CiAgICAgICAgcmV0dXJuIFRydWUKCgpkZWYgbWFp
+
+      bigpOgogICAgcGFyc2VyID0gYXJncGFyc2UuQXJndW1lbnRQYXJzZXIoZGVzY3JpcHRpb249X19k
+
+      b2NfXykKICAgIHBhcnNlci5hZGRfYXJndW1lbnQoIi0taG9zdCIsIGRlZmF1bHQ9IjE5OC4xOC4w
+
+      LjEiKQogICAgcGFyc2VyLmFkZF9hcmd1bWVudCgiLS1iYW5uZXIiLCBkZWZhdWx0PSJDTUwtU1NI
+
+      LUxBQiIpCiAgICBhcmdzID0gcGFyc2VyLnBhcnNlX2FyZ3MoKQogICAgYWRkcmVzcyA9IGlwYWRk
+
+      cmVzcy5pcF9hZGRyZXNzKGFyZ3MuaG9zdCkKICAgIGlmIGFkZHJlc3Mgbm90IGluIGlwYWRkcmVz
+
+      cy5pcF9uZXR3b3JrKCIxOTguMTguMC4wLzE1Iik6CiAgICAgICAgcGFyc2VyLmVycm9yKCJUaGlz
+
+      IGZpeHR1cmUgaXMgcmVzdHJpY3RlZCB0byBpdHMgaXNvbGF0ZWQgYmVuY2htYXJrLWFkZHJlc3Mg
+
+      bGFiIikKICAgIGNvbW1hbmRzID0gWwogICAgICAgICJ0ZXJtaW5hbCBsZW5ndGggMCIsCiAgICAg
+
+      ICAgInNob3cgcHJpdmlsZWdlIiwKICAgICAgICAic2hvdyBjbG9jayIsCiAgICAgICAgImNvbmZp
+
+      Z3VyZSB0ZXJtaW5hbCIsCiAgICAgICAgImV4aXQiLAogICAgICAgICJleGl0IiwKICAgIF0KICAg
+
+      IGdvb2RfY29kZSwgZ29vZF9vdXRwdXQgPSBzZXNzaW9uKHN0cihhZGRyZXNzKSwgREVNT19QQVNT
+
+      V09SRCwgY29tbWFuZHMpCiAgICBiYWRfY29kZSwgYmFkX291dHB1dCA9IHNlc3Npb24oc3RyKGFk
+
+      ZHJlc3MpLCAiSU5DT1JSRUNULUxBQi1QQVNTV09SRCIsIFsiZXhpdCJdKQogICAgY2hlY2tzID0g
+
+      ewogICAgICAgICJ2YWxpZF9wYXNzd29yZF9zZXNzaW9uIjogZ29vZF9jb2RlID09IDAsCiAgICAg
+
+      ICAgInZpZXdlcl9wcml2aWxlZ2Vfb25lIjogYm9vbChyZS5zZWFyY2gociJDdXJyZW50IHByaXZp
+
+      bGVnZSBsZXZlbCBpc1xzKzFcYiIsIGdvb2Rfb3V0cHV0KSksCiAgICAgICAgImV4ZWNfY2xvY2tf
+
+      cmVzcG9uc2UiOiBib29sKHJlLnNlYXJjaChyIlxkezJ9OlxkezJ9OlxkezJ9IiwgZ29vZF9vdXRw
+
+      dXQpKSwKICAgICAgICAiY29uZmlndXJhdGlvbl9kZW5pZWQiOiBib29sKAogICAgICAgICAgICBy
+
+      ZS5zZWFyY2goCiAgICAgICAgICAgICAgICByIkludmFsaWQgaW5wdXR8bm90IGF1dGhvcml6ZWR8
+
+      YXV0aG9yaXphdGlvbiBmYWlsZWQiLCBnb29kX291dHB1dCwgcmUuSUdOT1JFQ0FTRQogICAgICAg
+
+      ICAgICApCiAgICAgICAgKSwKICAgICAgICAibG9naW5fYmFubmVyIjogYXJncy5iYW5uZXIgaW4g
+
+      Z29vZF9vdXRwdXQsCiAgICAgICAgIndyb25nX3Bhc3N3b3JkX3JlamVjdGVkIjogYmFkX2NvZGUg
+
+      IT0gMAogICAgICAgIGFuZCBib29sKHJlLnNlYXJjaChyIlBlcm1pc3Npb24gZGVuaWVkfEF1dGhl
+
+      bnRpY2F0aW9uIGZhaWxlZCIsIGJhZF9vdXRwdXQsIHJlLklHTk9SRUNBU0UpKSwKICAgICAgICAi
+
+      dGVsbmV0X2Nsb3NlZCI6IGNsb3NlZChzdHIoYWRkcmVzcyksIDIzKSwKICAgICAgICAiaHR0cF9j
+
+      bG9zZWQiOiBjbG9zZWQoc3RyKGFkZHJlc3MpLCA4MCksCiAgICAgICAgImh0dHBzX2Nsb3NlZCI6
+
+      IGNsb3NlZChzdHIoYWRkcmVzcyksIDQ0MyksCiAgICB9CiAgICBpZiBub3QgYWxsKGNoZWNrcy52
+
+      YWx1ZXMoKSk6CiAgICAgICAgUGF0aCgiL3RtcC9jbWwtbWFuYWdlbWVudC1kZWJ1Zy5qc29uIiku
+
+      d3JpdGVfdGV4dCgKICAgICAgICAgICAganNvbi5kdW1wcygKICAgICAgICAgICAgICAgIHsKICAg
+
+      ICAgICAgICAgICAgICAgICAiZ29vZF9jb2RlIjogZ29vZF9jb2RlLAogICAgICAgICAgICAgICAg
+
+      ICAgICJnb29kX291dHB1dCI6IGdvb2Rfb3V0cHV0LAogICAgICAgICAgICAgICAgICAgICJiYWRf
+
+      Y29kZSI6IGJhZF9jb2RlLAogICAgICAgICAgICAgICAgICAgICJiYWRfb3V0cHV0IjogYmFkX291
+
+      dHB1dCwKICAgICAgICAgICAgICAgIH0sCiAgICAgICAgICAgICAgICBpbmRlbnQ9MiwKICAgICAg
+
+      ICAgICAgKQogICAgICAgICAgICArICJcbiIsCiAgICAgICAgICAgIGVuY29kaW5nPSJ1dGYtOCIs
+
+      CiAgICAgICAgKQogICAgcHJpbnQoanNvbi5kdW1wcyh7InBhc3NlZCI6IGFsbChjaGVja3MudmFs
+
+      dWVzKCkpLCAiY2hlY2tzIjogY2hlY2tzfSwgc29ydF9rZXlzPVRydWUpKQogICAgcmV0dXJuIDAg
+
+      aWYgYWxsKGNoZWNrcy52YWx1ZXMoKSkgZWxzZSAxCgoKaWYgX19uYW1lX18gPT0gIl9fbWFpbl9f
+
+      IjoKICAgIHJhaXNlIFN5c3RlbUV4aXQobWFpbigpKQo=
+
+      CML_EMBED_EXAMPLES_MANAGEMENT_SSH_PROBE_PY
+
+      base64 -d > /opt/cml-management/ssh_policy_probe.py <<''CML_EMBED_EXAMPLES_MANAGEMENT_SSH_POLICY_PROBE_PY''
+
+      IiIiT2JzZXJ2ZSBkaXNwb3NhYmxlIGxhYiBTU0ggcG9saWN5OyBuZXZlciBwcmludCBzZXNzaW9u
+
+      IG91dHB1dCBvciBjcmVkZW50aWFscy4iIiIKCmltcG9ydCBhcmdwYXJzZQppbXBvcnQgaXBhZGRy
+
+      ZXNzCmltcG9ydCBqc29uCmltcG9ydCByZQppbXBvcnQgc3VicHJvY2VzcwoKZnJvbSBzc2hfcHJv
+
+      YmUgaW1wb3J0IERFTU9fUEFTU1dPUkQsIHNlc3Npb24KCgpkZWYgYXNzZXNzKG1vZGUsIGNvZGUs
+
+      IG91dHB1dCk6CiAgICBpZiBtb2RlID09ICJkZW5pZWQiOgogICAgICAgIHJldHVybiB7CiAgICAg
+
+      ICAgICAgICJzZXNzaW9uX3JlamVjdGVkIjogY29kZSAhPSAwLAogICAgICAgICAgICAidHJhbnNw
+
+      b3J0X3BvbGljeV9yZWplY3Rpb24iOiBib29sKAogICAgICAgICAgICAgICAgcmUuc2VhcmNoKHIi
+
+      Y29ubmVjdGlvbiAoPzpjbG9zZWR8cmVzZXR8cmVmdXNlZHx0aW1lZCBvdXQpIiwgb3V0cHV0LCBy
+
+      ZS5JR05PUkVDQVNFKQogICAgICAgICAgICApLAogICAgICAgICAgICAibm90X2FuX2F1dGhlbnRp
+
+      Y2F0aW9uX29yX2hvc3Rfa2V5X2ZhaWx1cmUiOiBub3QgYm9vbCgKICAgICAgICAgICAgICAgIHJl
+
+      LnNlYXJjaCgKICAgICAgICAgICAgICAgICAgICByInBlcm1pc3Npb24gZGVuaWVkfGF1dGhlbnRp
+
+      Y2F0aW9uIGZhaWxlZHxpZGVudGlmaWNhdGlvbiBoYXMgY2hhbmdlZCIKICAgICAgICAgICAgICAg
+
+      ICAgICByInxob3N0IGtleSB2ZXJpZmljYXRpb24gZmFpbGVkfGN1cnJlbnQgcHJpdmlsZWdlIGxl
+
+      dmVsfFIxWz4jXSIsCiAgICAgICAgICAgICAgICAgICAgb3V0cHV0LAogICAgICAgICAgICAgICAg
+
+      ICAgIHJlLklHTk9SRUNBU0UsCiAgICAgICAgICAgICAgICApCiAgICAgICAgICAgICksCiAgICAg
+
+      ICAgfQogICAgaWYgbW9kZSA9PSAiZWxldmF0ZWQiOgogICAgICAgIHJldHVybiB7CiAgICAgICAg
+
+      ICAgICJhdXRoZW50aWNhdGVkX3Nlc3Npb24iOiBjb2RlID09IDAsCiAgICAgICAgICAgICJwcml2
+
+      aWxlZ2VfZmlmdGVlbiI6IGJvb2wocmUuc2VhcmNoKHIiQ3VycmVudCBwcml2aWxlZ2UgbGV2ZWwg
+
+      aXNccysxNVxiIiwgb3V0cHV0KSksCiAgICAgICAgICAgICJjb25maWd1cmF0aW9uX21vZGVfYWNj
+
+      ZXNzIjogYm9vbChyZS5zZWFyY2gociIoP20pXlIxXChjb25maWdcKSMiLCBvdXRwdXQpKSwKICAg
+
+      ICAgICB9CiAgICByYWlzZSBWYWx1ZUVycm9yKCJVbmtub3duIGV4ZXJjaXNlIHBvbGljeSBtb2Rl
+
+      IikKCgpkZWYgbWFpbigpOgogICAgcGFyc2VyID0gYXJncGFyc2UuQXJndW1lbnRQYXJzZXIoZGVz
+
+      Y3JpcHRpb249X19kb2NfXykKICAgIHBhcnNlci5hZGRfYXJndW1lbnQoIm1vZGUiLCBjaG9pY2Vz
+
+      PSgiZGVuaWVkIiwgImVsZXZhdGVkIikpCiAgICBwYXJzZXIuYWRkX2FyZ3VtZW50KCItLWhvc3Qi
+
+      LCBkZWZhdWx0PSIxOTguMTguMC4xIikKICAgIGFyZ3MgPSBwYXJzZXIucGFyc2VfYXJncygpCiAg
+
+      ICBhZGRyZXNzID0gaXBhZGRyZXNzLmlwX2FkZHJlc3MoYXJncy5ob3N0KQogICAgaWYgYWRkcmVz
+
+      cyBub3QgaW4gaXBhZGRyZXNzLmlwX25ldHdvcmsoIjE5OC4xOC4wLjAvMTUiKToKICAgICAgICBw
+
+      YXJzZXIuZXJyb3IoIk9ubHkgaXNvbGF0ZWQgYmVuY2htYXJrLWFkZHJlc3MgZml4dHVyZXMgYXJl
+
+      IHN1cHBvcnRlZCIpCiAgICBjb21tYW5kcyA9IFsidGVybWluYWwgbGVuZ3RoIDAiLCAic2hvdyBw
+
+      cml2aWxlZ2UiXQogICAgaWYgYXJncy5tb2RlID09ICJlbGV2YXRlZCI6CiAgICAgICAgY29tbWFu
+
+      ZHMgKz0gWyJjb25maWd1cmUgdGVybWluYWwiLCAiZW5kIl0KICAgIGNvbW1hbmRzLmFwcGVuZCgi
+
+      ZXhpdCIpCiAgICB0cnk6CiAgICAgICAgY29kZSwgb3V0cHV0ID0gc2Vzc2lvbihzdHIoYWRkcmVz
+
+      cyksIERFTU9fUEFTU1dPUkQsIGNvbW1hbmRzKQogICAgICAgIGNoZWNrcyA9IGFzc2Vzcyhhcmdz
+
+      Lm1vZGUsIGNvZGUsIG91dHB1dCkKICAgIGV4Y2VwdCBzdWJwcm9jZXNzLlRpbWVvdXRFeHBpcmVk
+
+      OgogICAgICAgIGNoZWNrcyA9IHsicHJvYmVfZmluaXNoZWRfd2l0aF9vYnNlcnZhYmxlX3Jlc3Vs
+
+      dCI6IEZhbHNlfQogICAgcGFzc2VkID0gYWxsKGNoZWNrcy52YWx1ZXMoKSkKICAgIHByaW50KGpz
+
+      b24uZHVtcHMoeyJwYXNzZWQiOiBwYXNzZWQsICJtb2RlIjogYXJncy5tb2RlLCAiY2hlY2tzIjog
+
+      Y2hlY2tzfSwgc29ydF9rZXlzPVRydWUpKQogICAgcmV0dXJuIDAgaWYgcGFzc2VkIGVsc2UgMQoK
+
+      CmlmIF9fbmFtZV9fID09ICJfX21haW5fXyI6CiAgICByYWlzZSBTeXN0ZW1FeGl0KG1haW4oKSkK
+
+      CML_EMBED_EXAMPLES_MANAGEMENT_SSH_POLICY_PROBE_PY
+
+      base64 -d > /opt/cml-management/aaa_client.py <<''CML_EMBED_EXAMPLES_MANAGEMENT_AAA_CLIENT_PY''
+
+      IiIiQ29ycmVjdCBwdWJsaWMgZml4dHVyZSBjcmVkZW50aWFscyBtdXN0IGZhaWwgd2hlbiB0aGUg
+
+      QUFBIHJlbGF0aW9uc2hpcCBicmVha3MuIiIiCgppbXBvcnQganNvbgppbXBvcnQgcmUKaW1wb3J0
+
+      IHN1YnByb2Nlc3MKCmZyb20gc3NoX3Byb2JlIGltcG9ydCBERU1PX1BBU1NXT1JELCBjbG9zZWQs
+
+      IHNlc3Npb24KCgpkZWYgcmVqZWN0ZWQoY29kZSwgb3V0cHV0KToKICAgIHJldHVybiAoCiAgICAg
+
+      ICAgY29kZSAhPSAwCiAgICAgICAgYW5kIGJvb2wocmUuc2VhcmNoKHIicGVybWlzc2lvbiBkZW5p
+
+      ZWR8YXV0aGVudGljYXRpb24gZmFpbGVkIiwgb3V0cHV0LCByZS5JR05PUkVDQVNFKSkKICAgICAg
+
+      ICBhbmQgbm90IHJlLnNlYXJjaCgKICAgICAgICAgICAgciJpZGVudGlmaWNhdGlvbiBoYXMgY2hh
+
+      bmdlZHxob3N0IGtleSB2ZXJpZmljYXRpb24gZmFpbGVkfGN1cnJlbnQgcHJpdmlsZWdlIGxldmVs
+
+      IiwKICAgICAgICAgICAgb3V0cHV0LAogICAgICAgICAgICByZS5JR05PUkVDQVNFLAogICAgICAg
+
+      ICkKICAgICkKCgpkZWYgbWFpbigpOgogICAgaG9zdCA9ICIxOTguMTguMC4xIgogICAgY2hlY2tz
+
+      ID0geyJzc2hfdHJhbnNwb3J0X2F2YWlsYWJsZSI6IG5vdCBjbG9zZWQoaG9zdCwgMjIpfQogICAg
+
+      dHJ5OgogICAgICAgIGNvZGUsIG91dHB1dCA9IHNlc3Npb24oaG9zdCwgREVNT19QQVNTV09SRCwg
+
+      WyJzaG93IHByaXZpbGVnZSIsICJleGl0Il0pCiAgICAgICAgY2hlY2tzWyJjb3JyZWN0X2ZpeHR1
+
+      cmVfcGFzc3dvcmRfcmVqZWN0ZWQiXSA9IHJlamVjdGVkKGNvZGUsIG91dHB1dCkKICAgIGV4Y2Vw
+
+      dCBzdWJwcm9jZXNzLlRpbWVvdXRFeHBpcmVkOgogICAgICAgIGNoZWNrc1sib2JzZXJ2YWJsZV9h
+
+      dXRoZW50aWNhdGlvbl9yZWplY3Rpb24iXSA9IEZhbHNlCiAgICBwYXNzZWQgPSBhbGwoY2hlY2tz
+
+      LnZhbHVlcygpKQogICAgcHJpbnQoanNvbi5kdW1wcyh7InBhc3NlZCI6IHBhc3NlZCwgImNoZWNr
+
+      cyI6IGNoZWNrc30sIHNvcnRfa2V5cz1UcnVlKSkKICAgIHJldHVybiAwIGlmIHBhc3NlZCBlbHNl
+
+      IDEKCgppZiBfX25hbWVfXyA9PSAiX19tYWluX18iOgogICAgcmFpc2UgU3lzdGVtRXhpdChtYWlu
+
+      KCkpCg==
+
+      CML_EMBED_EXAMPLES_MANAGEMENT_AAA_CLIENT_PY
+
+      chmod 700 /opt/cml-management/askpass.sh
+
+      echo READY >/dev/console
+
+      exit 0
+
+      '
+  cpu_limit: 100
+  priority: 97
+  x: 780
+  y: 160
+  interfaces:
+  - id: i1
+    label: eth0
+    type: physical
+    slot: 0
+  - id: i2
+    label: eth1
+    type: physical
+    slot: 1
+  - id: i3
+    label: eth2
+    type: physical
+    slot: 2
+  - id: i4
+    label: eth3
+    type: physical
+    slot: 3
+  tags: []
+  ram: 1024
+  cpus: 1
 links:
 - id: l0
   n1: n0
   i1: i1
-  n2: n1
-  i2: i0
+  n2: n3
+  i2: i2
 - id: l1
   n1: n0
   i1: i2
+  n2: n1
+  i2: i2
+- id: l2
+  n1: n0
+  i1: i3
   n2: n2
-  i2: i1
+  i2: i2
 annotations: []
 smart_annotations: []

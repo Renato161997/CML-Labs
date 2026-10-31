@@ -1512,26 +1512,25 @@
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/026-ipv6-first-hop-security.yaml",
-      "title": "IPv6 First Hop Security",
+      "title": "IPv6 First-Hop Security: RA Guard and Recovery",
       "track": "300-410",
       "topic": "infra-services",
-      "nodes": 5,
+      "nodes": 4,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "net-tools",
+        "ubuntu"
       ],
-      "nominal_ram_mib": 3072,
+      "nominal_ram_mib": 6656,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 110,
+      "workbook": "docs/workbooks/300-410-026-ipv6-first-hop-security.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "e82e03ae1a9557b4095d9f652b351b150cea3c0820288125ee6c42b3f5a2f199"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T21:49:21Z",
+      "sha256": "d593b1615820014948ff55eff754c9f57ad28b197a55c564d6fba19dc68017f5"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/027-ntp-syslog-snmp.yaml",
@@ -2962,25 +2961,27 @@
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/033-infrastructure-device-hardening.yaml",
-      "title": "Infrastructure Device Hardening",
+      "title": "Infrastructure Hardening: AAA, Accounting and VTY Policy",
       "track": "350-401",
       "topic": "security",
-      "nodes": 2,
+      "nodes": 5,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-toolbox",
+        "iol-xe",
+        "radius",
+        "tacplus"
       ],
-      "nominal_ram_mib": 1024,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 110,
+      "workbook": "docs/workbooks/350-401-033-infrastructure-device-hardening.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "a0b427471ec5fcc12e6e5bfdf632013ef1a41e6670750ffdaafc5450084114f7"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T22:11:46Z",
+      "sha256": "a5c57780fb137d47bc5afda39d6f4f9392627918ceb271303a5f8d953211b2cc"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
@@ -3733,25 +3734,27 @@
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/011-aaa-ise-radius-tacacs.yaml",
-      "title": "AAA ISE RADIUS TACACS",
+      "title": "AAA: RADIUS, TACACS+ SSH Sessions and Accounting",
       "track": "350-701",
       "topic": "network-security",
-      "nodes": 3,
+      "nodes": 4,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-toolbox",
+        "iol-xe",
+        "radius",
+        "tacplus"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 110,
+      "workbook": "docs/workbooks/350-701-011-aaa-ise-radius-tacacs.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "d19aa268221f5c74a2ae5b4b8f86aa350cc1db4f4bc51b94c371a3da71eb2199"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T22:07:13Z",
+      "sha256": "591eb80492b29004b9696cc750aacec3a4d132698a65747cc47c01600f04b867"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/012-8021x-mab-nac.yaml",
