@@ -44,6 +44,13 @@ or blindly replace a known key after a mismatch. Unknown/mismatched keys fail
 before credentials are sent. The optional `--console websocket` uses a trusted
 HTTPS certificate and the CML web-console protocol instead.
 
+Ubuntu readiness also requires a complete `cloud-init status --format json`
+response reporting `done` without fatal errors, followed by an actual UID-zero
+check. A root-looking prompt can appear before cloud-final replaces the serial
+getty. Only the read-only initialization status query can be reissued across
+that replacement; functional and configuration commands still require their
+complete echo and subsequent matching prompt.
+
 Use `--image-override TYPE=IMAGE_ID` (repeat for each type) to select an installed
 image privately, without putting appliance-specific pins in the public YAML.
 For example, `--image-override iosv=iosv-159-3-m12` selects that IOSv reference

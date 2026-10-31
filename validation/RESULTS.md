@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **169**.
+Import/export passes: **233/233**. Functional passes: **170**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -144,6 +144,7 @@ Import/export passes: **233/233**. Functional passes: **169**.
 | [Secure Admin Plane](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/management/040-secure-admin-plane.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ubuntu-24-04-20260307 | 7 | 10 | 2026-10-28T18:41:28Z |
 | [NAC Quarantine VLAN Concept](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/nac/043-nac-quarantine-vlan-concept.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 12 | 22 | 2026-10-30T15:35:38Z |
 | [Firewall Zone Policy](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/006-firewall-zone-policy.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 15 | 10 | 2026-10-30T15:54:43Z |
+| [Switch Management: Source Admission and Least Privilege](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/007-router-switch-hardening.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, ioll2-xe-17-18-02, ubuntu-24-04-20260307 | 14 | 12 | 2026-10-31T16:03:16Z |
 | [ACL NAT Inspection](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/008-acl-nat-inspection.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 16 | 10 | 2026-10-30T15:55:15Z |
 | [Site To Site IPsec IOS](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/009-site-to-site-ipsec-ios.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 14 | 12 | 2026-10-28T17:12:27Z |
 | [Segmentation VRF ACL](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/013-segmentation-vrf-acl.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 18 | 8 | 2026-10-28T18:38:49Z |

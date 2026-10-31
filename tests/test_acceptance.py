@@ -280,6 +280,27 @@ class AcceptanceTests(unittest.TestCase):
         self.assertFalse(rows[-1]["passed"])
         self.assertEqual(connection.commands, ["show ip route", address])
 
+    def test_acl_reordering_rejection_stops_the_transition(self):
+        command = "5 permit any"
+        plan = {
+            "checks": [CHECK],
+            "transitions": [
+                {"name": "source policy", "node": "R1", "commands": [command], "checks": [CHECK]}
+            ],
+        }
+        connection = Console(
+            [
+                "show ip route\nvia 198.18.0.2",
+                command
+                + "\n% Access rule can't be configured at lower sequence num as Host at sequence 10 is part of the given address block\nR1(config-std-nacl)#",
+            ]
+        )
+        rows = []
+        with self.assertRaises(AssertionError):
+            execute_plan(plan, lambda _: connection, rows.append)
+        self.assertFalse(rows[-1]["passed"])
+        self.assertEqual(connection.commands, ["show ip route", command])
+
     def test_ordered_failure_recovery_checks_are_actually_executed(self):
         backup = {**CHECK, "pattern": "via 198.18.1.2"}
         plan = {
