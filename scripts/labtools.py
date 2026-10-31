@@ -21,6 +21,8 @@ PHYSICAL = {
     "desktop": [f"eth{i}" for i in range(4)],
     "alpine": [f"eth{i}" for i in range(4)],
     "ubuntu": [f"ens{i}" for i in range(2, 10)],
+    "wireless-ap": [f"ens{i}" for i in range(2, 10)],
+    "wireless-client": [f"ens{i}" for i in range(2, 10)],
     "csr1000v": [f"GigabitEthernet{i}" for i in range(1, 27)],
     "cat9000v-q200": ["GigabitEthernet0/0", *[f"GigabitEthernet1/0/{i}" for i in range(1, 25)]],
 }
@@ -39,6 +41,7 @@ PHYSICAL.update(
     }
 )
 RAM_MIB = {"iosv": 512, "iosvl2": 768, "desktop": 512, "alpine": 512, "ubuntu": 2048}
+RAM_MIB.update({"wireless-ap": 2048, "wireless-client": 2048})
 RAM_MIB.update(
     {"iol-xe": 1024, "ioll2-xe": 1024, "cml-labs-toolbox": 1024, "cml-labs-inspection": 1024}
 )
@@ -123,6 +126,13 @@ def validate(data):
             for x in cfg
         ):
             errors.append(f"configuration must be a list of named files: {nid}")
+        elif definition in ("wireless-ap", "wireless-client"):
+            names = [entry["name"] for entry in cfg]
+            editable = [name for name in ("user-data", "network-config") if name in names]
+            if names != editable:
+                errors.append(
+                    f"wireless seed must contain only editable user-data/network-config in provisioned order: {nid}"
+                )
         ports = n.get("interfaces")
         if not isinstance(ports, list) or not ports:
             errors.append(f"missing interfaces: {nid}")

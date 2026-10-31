@@ -113,7 +113,7 @@ class WebConsole:
                 self.command("terminal width 511", 3)
             elif node.node_definition in NATIVE_LINUX:
                 establish_linux_shell(self.label, self.socket.send, self.read)
-            elif node.node_definition == "ubuntu":
+            elif node.node_definition in ("ubuntu", "wireless-ap", "wireless-client"):
                 establish_ubuntu_shell(self.label, prompt, self.socket.send, self.read)
         except BaseException:
             self.socket.close()
@@ -205,7 +205,7 @@ class SSHConsole:
                 self.command("terminal width 511", 3)
             elif node.node_definition in NATIVE_LINUX:
                 establish_linux_shell(self.label, self.channel.send, self.read)
-            elif node.node_definition == "ubuntu":
+            elif node.node_definition in ("ubuntu", "wireless-ap", "wireless-client"):
                 establish_ubuntu_shell(self.label, prompt, self.channel.send, self.read)
         except BaseException:
             self.ssh.close()

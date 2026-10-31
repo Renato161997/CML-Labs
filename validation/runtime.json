@@ -37372,6 +37372,196 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T16:03:16Z"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/006-wireless-architecture-cml.yaml",
+      "sha256": "2a47c9ca3d09b59fbdb4d931ef56717bb48834007745cd2c4a1f71a3f98c86ab",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T16:47:20Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/w.py check",
+          "expectation": "Actual radio authentication, kernel association and three bound ICMP replies agree.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/w.py check\n{\"auth\": \"open\", \"cipher\": \"NONE\", \"received\": 3, \"role\": \"client\", \"status\": \"passed\", \"wpa_state\": \"COMPLETED\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "AP",
+          "command": "python3 /lab/w.py check",
+          "expectation": "Actual AP operational control remains healthy.",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/w.py check\n{\"role\": \"ap\", \"state\": \"ENABLED\", \"status\": \"passed\"}\nroot@AP:~# "
+        },
+        {
+          "phase": "introduce a nonexistent SSID",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/w.py configure --fault ssid",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/w.py configure --fault ssid\n{\"auth\": \"open\", \"configured\": true, \"fault\": \"ssid\", \"role\": \"client\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "introduce a nonexistent SSID",
+          "node": "CLIENT",
+          "command": "python3 /lab/w.py check --fault ssid --expect down",
+          "expectation": "Actual the controlled fault never completes authentication during the observation window and actual bound traffic fails.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/w.py check --fault ssid --expect down\n{\"fault\": \"ssid\", \"observed_states\": [\"SCANNING\", \"SCANNING\", \"SCANNING\", \"SCANNING\", \"SCANNING\", \"SCANNING\"], \"received\": 0, \"role\": \"client\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "introduce a nonexistent SSID",
+          "node": "AP",
+          "command": "python3 /lab/w.py check",
+          "expectation": "Actual AP operational control remains healthy.",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/w.py check\n{\"role\": \"ap\", \"state\": \"ENABLED\", \"status\": \"passed\"}\nroot@AP:~# "
+        },
+        {
+          "phase": "restore the declared radio profile",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/w.py configure",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/w.py configure\n{\"auth\": \"open\", \"configured\": true, \"fault\": \"none\", \"role\": \"client\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the declared radio profile",
+          "node": "CLIENT",
+          "command": "python3 /lab/w.py check",
+          "expectation": "Actual radio authentication, kernel association and three bound ICMP replies agree.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/w.py check\n{\"auth\": \"open\", \"cipher\": \"NONE\", \"received\": 3, \"role\": \"client\", \"status\": \"passed\", \"wpa_state\": \"COMPLETED\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the declared radio profile",
+          "node": "AP",
+          "command": "python3 /lab/w.py check",
+          "expectation": "Actual AP operational control remains healthy.",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/w.py check\n{\"role\": \"ap\", \"state\": \"ENABLED\", \"status\": \"passed\"}\nroot@AP:~# "
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "AP": "STARTED",
+        "CLIENT": "STARTED"
+      },
+      "images": {
+        "AP": "wireless-ap-24-04-20260409",
+        "CLIENT": "wireless-client-24-04-20260409"
+      },
+      "plan_sha256": "bcc14a58d57c0d29322e9517966abebed4ad0e2d35c3f3eec1aea492a8cb5644",
+      "console_boot_fallback": [
+        "AP",
+        "CLIENT"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T16:49:05Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/014-secure-wireless-architecture.yaml",
+      "sha256": "02fce7fe15d6f7e705950991674d54c44a9c646b61393fb1577c87529131d525",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T16:49:07Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/w.py check",
+          "expectation": "Actual radio authentication, kernel association and three bound ICMP replies agree.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/w.py check\n{\"auth\": \"wpa2\", \"cipher\": \"CCMP\", \"received\": 3, \"role\": \"client\", \"status\": \"passed\", \"wpa_state\": \"COMPLETED\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "AP",
+          "command": "python3 /lab/w.py check",
+          "expectation": "Actual AP operational control remains healthy.",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/w.py check\n{\"role\": \"ap\", \"state\": \"ENABLED\", \"status\": \"passed\"}\nroot@AP:~# "
+        },
+        {
+          "phase": "introduce an incorrect shared key",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/w.py configure --fault key",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/w.py configure --fault key\n{\"auth\": \"wpa2\", \"configured\": true, \"fault\": \"key\", \"role\": \"client\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "introduce an incorrect shared key",
+          "node": "CLIENT",
+          "command": "python3 /lab/w.py check --fault key --expect down",
+          "expectation": "Actual the controlled fault never completes authentication during the observation window and actual bound traffic fails.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/w.py check --fault key --expect down\n{\"fault\": \"key\", \"observed_states\": [\"SCANNING\", \"SCANNING\", \"4WAY_HANDSHAKE\", \"4WAY_HANDSHAKE\", \"SCANNING\", \"SCANNING\"], \"received\": 0, \"role\": \"client\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "introduce an incorrect shared key",
+          "node": "AP",
+          "command": "python3 /lab/w.py check",
+          "expectation": "Actual AP operational control remains healthy.",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/w.py check\n{\"role\": \"ap\", \"state\": \"ENABLED\", \"status\": \"passed\"}\nroot@AP:~# "
+        },
+        {
+          "phase": "restore the declared radio profile",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/w.py configure",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/w.py configure\n{\"auth\": \"wpa2\", \"configured\": true, \"fault\": \"none\", \"role\": \"client\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the declared radio profile",
+          "node": "CLIENT",
+          "command": "python3 /lab/w.py check",
+          "expectation": "Actual radio authentication, kernel association and three bound ICMP replies agree.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/w.py check\n{\"auth\": \"wpa2\", \"cipher\": \"CCMP\", \"received\": 3, \"role\": \"client\", \"status\": \"passed\", \"wpa_state\": \"COMPLETED\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the declared radio profile",
+          "node": "AP",
+          "command": "python3 /lab/w.py check",
+          "expectation": "Actual AP operational control remains healthy.",
+          "passed": true,
+          "output": "\nroot@AP:~# python3 /lab/w.py check\n{\"role\": \"ap\", \"state\": \"ENABLED\", \"status\": \"passed\"}\nroot@AP:~# "
+        }
+      ],
+      "plan_sha256": "7b901a26798690a8e3c33f1d3e266af76e7c11530d15cdb52f6baa6a330bf71f",
+      "startup_states": {
+        "AP": "STARTED",
+        "CLIENT": "STARTED"
+      },
+      "images": {
+        "AP": "wireless-ap-24-04-20260409",
+        "CLIENT": "wireless-client-24-04-20260409"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "AP",
+        "CLIENT"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T16:50:44Z"
     }
   ]
 }

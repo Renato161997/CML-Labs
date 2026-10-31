@@ -25,3 +25,15 @@ The dual-stack campus requires separate IPv4/IPv6 HSRP group observations plus a
 The tracked-campus exercise uses IOSv gateway routers because the tested IOL-L2 image did not expose the route-object tracking operational command. Its access switch SVI is an explicitly modeled traffic source, not a workstation or a physical-radio client. Gateway and route health are tested independently of local LAN availability.
 
 CML virtual images have model-specific feature and resource limits. [Cisco reference-platform guidance](https://developer.cisco.com/docs/modeling-labs/vm-images-for-cml-labs/) explains why configured hardware features and throughput claims require separate care; these exercises assert only their recorded functional behaviors.
+
+## Native simulated Wi-Fi
+
+The recorded April 2026 Ubuntu Wireless AP/client models passed actual hostapd/wpa_supplicant association and interface-bound traffic tests. Both Ethernet ports are unwired. An SSID mismatch must prevent association and traffic through a complete observation window; a wrong WPA2 key must prevent completed authentication and traffic. Repair must recover three actual replies. The WPA2 exercise also requires the reported RSN key management and both CCMP ciphers to match its profile.
+
+An 802.11 association during a failed key handshake does not establish authorized data access. The negative WPA2 check therefore distinguishes the kernel association from completed supplicant authentication. The helper signals only its recorded daemon PID with the expected executable and configuration path, retaining unrelated processes.
+
+These fixtures use root-owned cloud-init files and verify successful initialization before testing. Files owned by a newly created user can instead require [deferred writing](https://docs.cloud-init.io/en/latest/reference/yaml_examples/write_files.html#defer-writing-content). The classroom PSK is public; the exercises cover protocol behavior, with no production key-management claim.
+
+For these stock wireless definitions, the editable seed files are `user-data`, followed by `network-config`. The controller generates read-only `meta-data`; providing that file in a topology does not preserve it through export. Validation rejects that ignored file and reordered seeds so an imported topology must retain the configuration actually reviewed and tested.
+
+[Cisco's wireless release notes](https://developer.cisco.com/docs/modeling-labs/cml-release-notes/) describe the virtual radio support as beta. Displayed bitrate, signal and packet timing are simulated observations. The tests do not establish RF coverage, physical performance, EAP/RADIUS, WPA3, PMF, the separate vAP image or Catalyst 9800 integration.

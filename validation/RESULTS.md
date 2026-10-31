@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **170**.
+Import/export passes: **233/233**. Functional passes: **172**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -44,6 +44,7 @@ Import/export passes: **233/233**. Functional passes: **170**.
 | [IPv6 Addressing Static](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/003-ipv6-addressing-static.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 6 | 8 | 2026-10-25T17:11:33Z |
 | [CDP And LLDP Discovery](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/004-cdp-lldp-discovery.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 3 | 0 | 2026-10-25T12:41:40Z |
 | [Interface Status Duplex Speed](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/005-interface-status-duplex.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 4 | 8 | 2026-10-25T13:06:29Z |
+| [Wireless Association and SSID Recovery](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/006-wireless-architecture-cml.yaml) | passed | 2.10.1+build.21 | wireless-ap-24-04-20260409, wireless-client-24-04-20260409 | 6 | 2 | 2026-10-31T16:49:05Z |
 | [Small Office Full Stack](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/041-small-office-full-stack.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, iosv-159-3-m12, iosvl2-2020 | 25 | 18 | 2026-10-30T21:06:33Z |
 | [IPv6 Only Mini Campus](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/042-ipv6-only-mini-campus.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 19 | 14 | 2026-10-30T14:19:14Z |
 | [SSH Local Users Hardening](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/031-ssh-local-users-hardening.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ubuntu-24-04-20260307 | 4 | 4 | 2026-10-25T17:57:46Z |
@@ -148,6 +149,7 @@ Import/export passes: **233/233**. Functional passes: **170**.
 | [ACL NAT Inspection](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/008-acl-nat-inspection.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 16 | 10 | 2026-10-30T15:55:15Z |
 | [Site To Site IPsec IOS](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/009-site-to-site-ipsec-ios.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 14 | 12 | 2026-10-28T17:12:27Z |
 | [Segmentation VRF ACL](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/013-segmentation-vrf-acl.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 18 | 8 | 2026-10-28T18:38:49Z |
+| [WPA2-PSK: Authentication, CCMP and Recovery](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/014-secure-wireless-architecture.yaml) | passed | 2.10.1+build.21 | wireless-ap-24-04-20260409, wireless-client-24-04-20260409 | 6 | 2 | 2026-10-31T16:50:44Z |
 | [Intrusion Policy Concepts](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/015-intrusion-policy-concepts.yaml) | passed | 2.10.1+build.21 | cml-labs-inspection-cdecd8f68cdd, net-tools-2-10-1-3 | 33 | 3 | 2026-10-30T20:10:39Z |
 | [Guest Access Isolation](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/025-guest-access-isolation.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 18 | 16 | 2026-10-30T15:44:57Z |
 | [Cryptography PKI and VPN Trust Boundaries](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/002-cryptography-pki-ipsec.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 9 | 8 | 2026-10-30T15:27:44Z |

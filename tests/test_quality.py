@@ -108,6 +108,38 @@ class TopologyQuality(unittest.TestCase):
         d["links"][0]["i1"] = 0
         self.assertTrue(validate(d))
 
+    def test_native_radio_models_use_reference_ports_and_ram(self):
+        from labtools import RAM_MIB
+
+        data = copy.deepcopy(self.sample)
+        data["links"] = []
+        for node, kind in zip(data["nodes"], ("wireless-ap", "wireless-client"), strict=True):
+            node["node_definition"] = kind
+            node["interfaces"] = [{"id": "i0", "label": "ens2", "type": "physical", "slot": 0}]
+            node["configuration"] = [{"name": "user-data", "content": "#cloud-config\n"}]
+        self.assertEqual(validate(data), [])
+        self.assertEqual(sum(RAM_MIB[n["node_definition"]] for n in data["nodes"]), 4096)
+        data["nodes"][0]["interfaces"][0]["label"] = "eth0"
+        self.assertTrue(any("label does not match slot" in error for error in validate(data)))
+
+    def test_wireless_seed_cannot_claim_ignored_metadata_or_reordered_files(self):
+        data = copy.deepcopy(self.sample)
+        data["links"] = []
+        node = data["nodes"][0]
+        node["node_definition"] = "wireless-ap"
+        node["interfaces"] = [{"id": "i0", "label": "ens2", "type": "physical", "slot": 0}]
+        user = {"name": "user-data", "content": "#cloud-config\n"}
+        network = {"name": "network-config", "content": "version: 2\n"}
+        for files in [
+            [{"name": "meta-data", "content": "ignored"}, user],
+            [network, user],
+            [user, user],
+        ]:
+            node["configuration"] = files
+            self.assertTrue(any("editable user-data" in error for error in validate(data)))
+        node["configuration"] = [user, network]
+        self.assertEqual(validate(data), [])
+
     def test_reused_interface_is_rejected(self):
         d = copy.deepcopy(self.sample)
         d["links"].append(dict(d["links"][0], id="extra"))
