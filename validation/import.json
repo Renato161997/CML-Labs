@@ -8,2334 +8,1179 @@
   "test_labs_remaining": 0,
   "labs": [
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/003-sdwan-control-data-plane.yaml",
-      "sha256": "6877f6d268258af5f69521456f611bd2b22887bd597d7a6b3dac13fb7baece0c",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:49:57Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:49:57Z"
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/assessment/047-ccna-practical-checkpoint-one.yaml",
+      "sha256": "6933125971585ab8b55c1041b3cf2eb0613b38dfe852dc71aac3dc12a9ab1982",
+      "status": "import-export-pass"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/004-sdaccess-fabric-roles.yaml",
-      "sha256": "d93ea6cd4f1c155e7dbae7032791443741645822aba576a678a4744d996e7d13",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:49:57Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:49:58Z"
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/assessment/048-ccna-practical-checkpoint-two.yaml",
+      "sha256": "2af1f342e8536a8d2518a74c72cd7ca6719f9c0f020b15decdb5618bdf753254",
+      "status": "import-export-pass"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/assessment/049-encor-practical-checkpoint.yaml",
-      "sha256": "72ffceb58e3e614f6d0f1a554bd1449573742475a733fc8a68f2abf704bfdd43",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:49:58Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:49:58Z"
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/037-restconf-netconf-management.yaml",
+      "sha256": "6b199bed56708c92eb3bc51153b224676a8eb7a05b6bec3cfce42219fb547fe0",
+      "status": "import-export-pass"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/capstone/050-encor-capstone-enterprise-edge.yaml",
-      "sha256": "132a57cf04188e1dea4ad6c23dc031d0b9ebded36f4e75cced12ddf0ca0021d3",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:00Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:00Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/capstone/051-encor-capstone-campus-core.yaml",
-      "sha256": "1215b66e1ee8bd1e7222105f02ffd617e50fe4d5c05143819b30677657ff1194",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:00Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:00Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/023-span-rspan-erspan.yaml",
-      "sha256": "f20544af04115871ab0bc189fcea7bad15835b9a0c55e1290aa8cedb5d2e323e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:03Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:03Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/027-dna-center-assurance-concepts.yaml",
-      "sha256": "5fce7f1a7653159ee4c623d1726ad6a6cd9faf9d54a80ccb7d9cb97cb6d7ebb1",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:04Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:04Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/028-troubleshooting-path.yaml",
-      "sha256": "c1b44c67c36801a4bff7158192b7f6a79aacf5093c8cb36d47a9d8218b9cd885",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:04Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:04Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/042-dual-stack-campus-with-fhrp.yaml",
-      "sha256": "3b5efb8b61d9b1a6cdb2946cc9c3d66797357690342a5427c668f42111c7f9f0",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:04Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:04Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/044-qos-marking-and-policing.yaml",
-      "sha256": "b739c3da539e9857da97b14561ace833ed74a7c922a77492dec955c7b6fb0f46",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:05Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:05Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/030-8021x-mab-concepts.yaml",
-      "sha256": "e85e31416873ab748296d402dbbf6e96af1b91bc9c6f98bb64c7e659ac795cb5",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:06Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:06Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/032-acl-vacl-pacl.yaml",
-      "sha256": "d143752c43338409c1c9364f16182f3c13bfffad729fa7566caf1237867b1996",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:06Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:06Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/033-infrastructure-device-hardening.yaml",
-      "sha256": "a0b427471ec5fcc12e6e5bfdf632013ef1a41e6670750ffdaafc5450084114f7",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:06Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:07Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:07Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:07Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/035-macsec-concepts.yaml",
-      "sha256": "aa65066bb472a81055185f1b82ee5dedd2003e3649642de84050c14231cafd3f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:07Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:07Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/010-lisp-vxlan-concepts.yaml",
-      "sha256": "3826ae0bd3256569545c245b4fe1bdba4b399381af5865e99b478aaa53851b9e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:08Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:09Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/011-virtual-switching-paths.yaml",
-      "sha256": "5c9f76916ed19c24026810490b598a3e951d2d8b0d4cefb8bc4ce38c11ff4782",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:09Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:09Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/assessment/044-scor-practical-checkpoint.yaml",
-      "sha256": "34a685e55411ba5ca4d7597e205a1f048bbe04ead642480bec2aa8ca656bea10",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:09Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:09Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/032-firewall-policy-as-code.yaml",
-      "sha256": "ea40b59e52c56138976a13b8c3bc5a66c594d262e084bf05704b3f2143fb3517",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:09Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:10Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/033-soar-webhook-remediation.yaml",
-      "sha256": "aa5f76c8b58e2a41c7860ca2f1c39ce0ea573af11030b88eb1dd4b7faef5dacf",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:10Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:10Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/034-threat-intel-enrichment.yaml",
-      "sha256": "d3418295252500d1fb8a26de2436ff18b9a1c4fbabc5a717e38f8d7ecbbb21e3",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:10Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:10Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/035-secure-access-automation.yaml",
-      "sha256": "e9c9854d5c73e2a720d1681b74bad53c780f3e687025a93584e6fe9ebffe2be8",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:10Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:10Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/036-security-dashboard-telemetry.yaml",
-      "sha256": "a1adbe901b28c5715ae5cffb754b406cf54f2acf744a85b9b862c803592cdad7",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:10Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:10Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/046-scor-capstone-soc-network.yaml",
-      "sha256": "130a520204b1eae732cd66330a4690098f3e1d3f80cafeaac9a3668ef813e4d2",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:11Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:11Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/016-cloud-security-shared-responsibility.yaml",
-      "sha256": "4b09c3fbb445f7452cc0ee4ad1a4c6695c9e5d2311b2402b6176962c79500cfc",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:11Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:11Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/017-secure-email-web-concepts.yaml",
-      "sha256": "e0f76eacbc491e45c5df8a89e1ccf6b4de95aa685d920d5df547dbb57a942ba6",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:11Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:11Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/018-umbrella-dns-security.yaml",
-      "sha256": "868d5bb333a8fb86c1aac0753ec47bd3d47942efa04344ceefb178227648e8ab",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:11Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:11Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/019-casb-sase-concepts.yaml",
-      "sha256": "c8b8cafefdf4675df59bf8fcba03dab97d4d1401ea2954b5505d14be596ec04c",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:11Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:12Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/endpoint/020-endpoint-protection-edr.yaml",
-      "sha256": "4f00084177ef3540103d45c0c284d343c0cc46a746ff5d92a97237026d964b56",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:12Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:12Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/endpoint/021-malware-analysis-flow.yaml",
-      "sha256": "c6be01a9b164a8a23500193612de213c05b97821942218a221df159136dcb25f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:12Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:12Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/endpoint/022-phishing-defense.yaml",
-      "sha256": "29a51b2e09a00b46c302f3808364a2bcd054f815d0b33eeaf2f1e3edc1a991da",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:12Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:12Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/firewall/038-firewall-policy-review-cleanup.yaml",
-      "sha256": "21132bf2c0503ef67a0240dde4861a9fa49213ce2a00147db7c445e451d773a6",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:12Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:12Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/007-router-switch-hardening.yaml",
-      "sha256": "c3b5c71040d8d0c5941784ae056380c8959c402a101126c9de31d2b913d9508a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:14Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:14Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/010-remote-access-vpn-concepts.yaml",
-      "sha256": "3bd96f1d66ca4a73e966648c9a607152669579f5971582a38407c8396f998853",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:14Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:14Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/011-aaa-ise-radius-tacacs.yaml",
-      "sha256": "d19aa268221f5c74a2ae5b4b8f86aa350cc1db4f4bc51b94c371a3da71eb2199",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:14Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:15Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/012-8021x-mab-nac.yaml",
-      "sha256": "cc1e61bde88f835f76772e3de82d2f39ea77344ae18b3e00d127d48f4e1272bc",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:15Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:15Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/014-secure-wireless-architecture.yaml",
-      "sha256": "8fd39f99cdc53f656abbed270a1f56eb17b7d5ca1ed05ed5dc0cc02c140ce3e5",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:15Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:15Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/scenario/037-zero-trust-branch-segmentation.yaml",
-      "sha256": "f0c7a43f4e4a550696b2feb7523611b8786e3813cbbffc38131353c2bdbbfc0c",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:16Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:16Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/023-zero-trust-network-access.yaml",
-      "sha256": "1c63d4bc68bd7c6cc2960598a87e0306bb43127291ce5bdae7afffdf247c4a1a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:16Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:16Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/024-vpn-posture-policy.yaml",
-      "sha256": "43d7cf3122b017bcefcdb8df1127839fa86519fc2ed40d9af6e3974444298c91",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:16Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:17Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/001-threats-vulnerabilities.yaml",
-      "sha256": "f75801686a66d845c342f6857a2085bf75f56ba7e5e25a49b701adb37c943526",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:17Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:17Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/003-site-to-site-vpn-types.yaml",
-      "sha256": "8c9805bd0609ef8e52b1d3ff5729aea61f0572f06b0c7f3765f0f231680152bc",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:17Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:18Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/005-sdn-api-security.yaml",
-      "sha256": "808f65f6526a677b14e9dd649055b482e51aab207f02953a47892cd59faf1ad6",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:18Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:18Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility/042-span-netflow-siem-triage.yaml",
-      "sha256": "436d187b65c6b7f0d9bf47454f8f87bbc09120f3d3ab9b4a18011b21a0a3c984",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:18Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:19Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/028-packet-capture-span.yaml",
-      "sha256": "ecd54c341e818b305f97b81134bd06bb630e939018f2e83e4e6ccda9db701012",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:19Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:19Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/030-incident-response-network.yaml",
-      "sha256": "0c8cd1d5d4b5545d22eec6f97efc81abd9cd5aa80172b32a2459ae40ffb1d2ae",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:19Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:20Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/apis/032-rest-pagination-and-error-handling.yaml",
-      "sha256": "f8ed68e9fbca603cf93bc1343acbd55d8f6131e4d314ea361f7aed3fd3caa286",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:20Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:20Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/apis/033-oauth2-token-refresh-flow.yaml",
-      "sha256": "b5ee35617f64551b61ccf9c5dcdd1538520b1a7ac35d99ef446c6efd3dc5b779",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:20Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:20Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/assessment/038-devcor-practical-checkpoint.yaml",
-      "sha256": "ccaeb503ee84096e163cceda04e89f5a6ff7933b789bd02efb1d109ed98df2c3",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:20Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:21Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/039-devcor-capstone-controller-integration.yaml",
-      "sha256": "18471567b877e24813262b2e0358d4eee6ddf926ccfb1d23997963d2ffb0af93",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:21Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:21Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/040-devcor-capstone-network-automation-app.yaml",
-      "sha256": "f66f7562cd118d07bce97ce579eaf9f7c6470564c452486762c0dfc38530864e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:21Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:21Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/cisco-platforms/013-dna-center-inventory-api.yaml",
-      "sha256": "ff30dfff70baf9b07f3abcdfbf18e7dce6efdc444812ca3198116bf7d0a61a29",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:21Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:21Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/cisco-platforms/014-meraki-dashboard-api.yaml",
-      "sha256": "4ff1a491d0fbea4f0485d4182b5c237530d224fa2df70117cf41a3020b24eeef",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:21Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:22Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/cisco-platforms/015-webex-chatops.yaml",
-      "sha256": "4ee19555cafe2251f95fb6efe4313b6e866f04ada60329be8eebe2fd4346c59e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:22Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:22Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/cisco-platforms/016-aci-api-intent.yaml",
-      "sha256": "23cd9a71177d2f27024c4124b1c1dcda5158dc379106e93766864f25553ebdc1",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:22Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:22Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/cisco-platforms/017-sdwan-api-policy.yaml",
-      "sha256": "eb201b0195dd73d248e40cc5e57a605aec68f0c5abf5018698fb989efc1052db",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:22Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:22Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/cisco-platforms/018-secure-firewall-api.yaml",
-      "sha256": "1d753cba134d71523f384c5fd270fcf8370b64f80f0d60f2d8add4f3c89c1bbb",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:22Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:22Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment/034-dockerized-network-tool.yaml",
-      "sha256": "6086d4b9e0d228ea81395ec480929480d07811fbf4546a5dccd55cb6360f6f8d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:22Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:23Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/019-containerized-network-tool.yaml",
-      "sha256": "5b51b464084968af5db1d865b5ef99f2593e5f8499784242dd064615c9283664",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:23Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:23Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/020-ci-cd-for-network-automation.yaml",
-      "sha256": "2109e7258b8947fb11bbeb047542232763d263376231eaf0ca267255dd360e7d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:23Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:23Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/021-secrets-management.yaml",
-      "sha256": "f4d6c836613221567554049755dd8a097a4638fdb320e76a42f500fdd7b8ce8a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:23Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:23Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/022-secure-api-client.yaml",
-      "sha256": "4425988fa64785f7755d6f4290ad8d40139c594a654bbb36967a14b929e91901",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:23Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:23Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/023-application-threat-model.yaml",
-      "sha256": "cae46b2485dc07ee3e777c0752e3558d5c33538f04f86fd2d4487a847acfa0ed",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:23Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:24Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/024-kubernetes-network-automation.yaml",
-      "sha256": "be39162539e2d4cd8131f461e995322d88ef9c95846068985591165620a747dd",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:24Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:24Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/026-terraform-network-iac.yaml",
-      "sha256": "0579261d8a5f40e3c39cfa428924e79649e9d55eae241aa106e370cad7d54001",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:24Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:24Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/028-event-driven-remediation.yaml",
-      "sha256": "22bf74f2677116b4092270e60c3c6fd23d45309960b8897b5b7519eb4593ee22",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:25Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:25Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/029-ai-assisted-automation-guardrails.yaml",
-      "sha256": "66ea994e5ebc633e1948066a7e274afd5c2519bf6b74dd86bca23b6eb212c54e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:25Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:25Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/security/037-secure-api-client-threat-model.yaml",
-      "sha256": "0da656d3b8085a5b0907b916bb2b1d9c539224d2f141fb0ba6abdb44281da5ad",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:25Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:25Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/010-oauth2-three-legged-flow.yaml",
-      "sha256": "29f69f3b3dd63cdbd7bfd5b6195b03a884552c8daf70f260c473b7bdfa38aef3",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:27Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:27Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml",
-      "sha256": "c29646bb75a5ccc05a29006979929ac6b862e6d41e79cd74eae62cdbecaf3825",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:27Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:27Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/012-api-contract-openapi.yaml",
-      "sha256": "5aea9f20e2367e25ba8b03ddb5f57e9b226b49f6606256b301eb3f2ca4a17408",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:27Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:28Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/webhooks/035-webhook-receiver-config-validation.yaml",
-      "sha256": "1d5a9a5406f3954dfb5c1284327564efb4d676d8c3cf01d4dafa07344e479402",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-24T18:50:28Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-24T18:50:28Z"
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/038-json-yaml-data-models.yaml",
+      "sha256": "0aa7647a181cee7bd6cc3198fa9f5e093cb290c8cb9355fe0452b3921dc553b2",
+      "status": "import-export-pass"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/039-controller-based-networking.yaml",
       "sha256": "a45e8add4b55805c2c88c354c7bda44a6e92cbea586d98e8e567a5468c98fa4f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:55Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:55Z"
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/040-python-api-inventory.yaml",
+      "sha256": "0899a03a4b0008eb9f367257c244920154204e0fb115f6d3379b59d57ebf132a",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/049-ccna-capstone-branch-office.yaml",
+      "sha256": "f0f22cd7cdf105bcd0b8392f3240d318e09d00ad30c2bff6bb0755585db61739",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/050-ccna-capstone-campus-access.yaml",
+      "sha256": "0807c0840c19471a440a2061ed200438660c5b13716692f912bfd7c6d282c4d6",
+      "status": "import-export-pass"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/design/045-guest-wireless-isolation-concept.yaml",
       "sha256": "b63072f65a6bed00a3980935dbfd37638f3193231490c04797a0126b5834297d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:55Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:56Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/017-single-area-ospfv2.yaml",
-      "sha256": "1e17377f70b3fb15ba57fd27012d5a64dc99faf90f92a92a6c4462fd1d1d8825",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:56Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:56Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/018-ospfv2-neighbor-troubleshooting.yaml",
-      "sha256": "b1b1ab33020b2913c93d9cdda58f34ad83fe88d90df9ed728d7b149288f91ce2",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:56Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:56Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/024-nat-pat-edge.yaml",
-      "sha256": "ed4eec5b7b82bce02ef8835d5932317ba84a1600a242737c7052ae6fad87c842",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:57Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:58Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/007-vlan-router-on-a-stick.yaml",
-      "sha256": "dd2892a37bc7ef47429dcaa3aaa84c496d01da463d9bebed5266721a5d8abf03",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:59Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/009-stp-root-selection.yaml",
-      "sha256": "0c3055cca824b0e3027119219510104bad3fe5a770c905bc99c43a18eb3fc727",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:59Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/014-wlan-client-vlan-mapping.yaml",
-      "sha256": "b4ab92ce8d74e1704c07626c7a73c930e9e987340785ed8d3c8884665d7480dd",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:00Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:00Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/006-wireless-architecture-cml.yaml",
-      "sha256": "201f324eda544ba723198cc4dd8e0e19aec67f27331ef2286a102ebd61da530d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:01Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:02Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/041-small-office-full-stack.yaml",
-      "sha256": "1c303c6356786c2e7f5fc1aa22e5f3a95b3fda85e004394a2ee9c87535f794ca",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:02Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:02Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/032-standard-extended-acls.yaml",
-      "sha256": "a7b9d5c74fe4301e1fbbee9ba0f749ba62572c179917ad7f71763f9a51e655fc",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:02Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:02Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/assessment/044-enarsi-practical-checkpoint.yaml",
-      "sha256": "b0bbbbbeb75fdee98a734ba87382e2f55c088ef81d97d7ae2a46c3249fa7d4b6",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:06Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:06Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/036-dna-center-assurance-routing.yaml",
-      "sha256": "9c6d157f0bb44bea53b572ca61173dac66ee2e58efe823617e54fed37307cb84",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:06Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:07Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/013-ibgp-ebgp-neighbors.yaml",
-      "sha256": "f6b517b14228526ecae14101b9b31446c7e597c02f5dcd5c846752f0be079b17",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:07Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:07Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/014-bgp-path-selection-local-pref-med.yaml",
-      "sha256": "fe8c9668318e034c621666aa767fcf3400282b66f83e3cf83fd8d7f33b2f8b0f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:07Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:07Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/045-enarsi-capstone-advanced-routing.yaml",
-      "sha256": "707e4cd82580c7ec968f809510fccbbee57982e307efc8f98844641d58fcc933",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:08Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:09Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/046-enarsi-capstone-vpn-services.yaml",
-      "sha256": "bc6a839ddd58ee71cd8ee462cb3cca4563a43bbaf5f7ebace859eb88073f4f6b",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:09Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:09Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/025-dhcp-relay-snooping.yaml",
-      "sha256": "dde9ba49c878704bc1130a57700ccbfc881c5d283e5224c83a92c22d0db3edd5",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:10Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:10Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/026-ipv6-first-hop-security.yaml",
-      "sha256": "e82e03ae1a9557b4095d9f652b351b150cea3c0820288125ee6c42b3f5a2f199",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:10Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:10Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/037-redistribution-nightmare.yaml",
-      "sha256": "4c43a4a747e3cfb5fb9c5e999e41692551dbd77808e8ee0c237c945bc3debb64",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:13Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:14Z"
+      "status": "import-export-pass"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/015-static-default-routes.yaml",
       "sha256": "8e248967bdba7bccdb65bb999573c85454f965bc1b71323ba1556906355871b2",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:56Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:56Z"
+      "status": "import-export-pass"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/016-floating-static-routes.yaml",
       "sha256": "aa2c58a77e26231ca71ce5920eee1e32c413e8c2d0da3081e56401390ca2d63d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:56Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:56Z"
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/017-single-area-ospfv2.yaml",
+      "sha256": "1e17377f70b3fb15ba57fd27012d5a64dc99faf90f92a92a6c4462fd1d1d8825",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/018-ospfv2-neighbor-troubleshooting.yaml",
+      "sha256": "b1b1ab33020b2913c93d9cdda58f34ad83fe88d90df9ed728d7b149288f91ce2",
+      "status": "import-export-pass"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/019-first-hop-redundancy-hsrp.yaml",
       "sha256": "1a1895e0a0822f63137428a510e050b8c52874387827c44d8b2d3e54c2a36494",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:56Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:57Z"
+      "status": "import-export-pass"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/020-ipv6-static-routing.yaml",
       "sha256": "29d4e1a919b2762ae063e768c6b92f6b32924902ac90ca2446b48e97b300e523",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:57Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:57Z"
+      "status": "import-export-pass"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/021-routing-table-selection.yaml",
       "sha256": "33301eea2832a186dd16cedb777e29183071c657d4e4a8805dd3b32f60bdbdc8",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:57Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:57Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/023-dhcp-server-relay.yaml",
-      "sha256": "3b266f7d1d6155d1b551f32a9140e06b60fc01e39cfd60a74809e4edca9933f0",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:57Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:57Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/026-dns-client-resolution.yaml",
-      "sha256": "7ae788d0441193dbb2bbed8e00dce184c2fd39d9380b2b5b9d45a8b82cf83312",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:58Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:58Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/029-tftp-config-backup.yaml",
-      "sha256": "5c2025d8995249eb3987439ab10430be598d948dbad356fa57944d100742b3c8",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:58Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:59Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/030-sla-tracking-static-route.yaml",
-      "sha256": "c65809cd1b1cbc84741eee1922cb37a29fb76c871ff06634970a2a34e436e70d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:59Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/migration/046-static-routes-to-ospf-migration.yaml",
-      "sha256": "71f38c219bcae860cb27176d0f7f44e5d5a1ef0578d1e8c2e1046df21819e9f8",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:59Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/008-access-trunk-native-vlan.yaml",
-      "sha256": "9821883f46f80deff07b04339e44a57b1d520c5f5f31ef3bb262ad4ead8eb65d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:55:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:55:59Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/012-etherchannel-lacp.yaml",
-      "sha256": "e2b678dded515342017c77dbc8dfa8ba83fa465599aae1168eff4b4d3018f47c",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:00Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:00Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/002-ipv4-subnetting-vlsm.yaml",
-      "sha256": "96bc12f4c49883278aea00edb083e65d5978b5694eb9a7c2b97842af2ea2fa25",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:01Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:01Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/004-cdp-lldp-discovery.yaml",
-      "sha256": "f332821a9c42e23d3e2e705c053b498ebe4f30c5213277bf6a98d6f4c34d6e6d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:01Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:01Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/005-interface-status-duplex.yaml",
-      "sha256": "be216cb222018acfa883a26970d720b30cbe10b941ba5b5bbe1960be77744106",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:01Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:01Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/015-bgp-route-reflector.yaml",
-      "sha256": "b79f4cf409045b0cdd68ee619215c6876f8dc20d8f536e6ff0496a855cadf96e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:07Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:07Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/016-bgp-filtering-prefix-aspath.yaml",
-      "sha256": "126b84e03c034a340a9546a40e33b6073b6ed03d1034b1b027d4ce0e3d37b891",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:07Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:07Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/019-bgp-troubleshooting.yaml",
-      "sha256": "2bcfe60e813b8dcf820cb70f68435ec4f0725dcbf3fa5bfa28c18f29e4bbb3d1",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:08Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:08Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/001-eigrp-classic-named-ipv4-ipv6.yaml",
-      "sha256": "53c0104d05b7c96f83ec785db123d7f6287b0869fe9117b6357c8f5da26b28f9",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:11Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:11Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/002-eigrp-stub-summary-default.yaml",
-      "sha256": "4f7485c2046125b7207b56132dc816c58253fed99d21b392094a4983217c00a8",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:11Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:11Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/003-eigrp-authentication-load-balancing.yaml",
-      "sha256": "41f9c91b7ebfb0a6c24054e9156b68d395189a9a65da26d53913323211f2c7e1",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:11Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:11Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/004-eigrp-troubleshooting.yaml",
-      "sha256": "f9ab639da85c069cf9ded0ec90e148bb0862e6451a5ca1ce6c2480247bfdac01",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:11Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:11Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/005-ospfv2-ospfv3-multiarea.yaml",
-      "sha256": "15ea6be4c5ebcb6e284c5f314bfbc8a1b647300a6c15d1591252a96b87ef009e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:11Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:11Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/008-ospf-troubleshooting.yaml",
-      "sha256": "7d46dada1aaa1762adc03b055ae68c62dbffc7d63938eedc774e50229903431b",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:12Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:12Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/010-route-map-filtering.yaml",
-      "sha256": "478c54bbfd743c8d2f5f52164099336eb4f54f6a1264fd4febcd06a280b8faee",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:12Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:12Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/012-vrf-lite-routing-protocols.yaml",
-      "sha256": "b3c88bb64ab266b9adbc720860f977e994451c3fc462abb3a43174454b4a9d98",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:13Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:13Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/020-gre-tunnel-routing.yaml",
-      "sha256": "e4ad3f7093b030bc4a4910e791ffac4e6c8729e6f6bbbb93d367591132786a7a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T15:56:15Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T15:56:15Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/025-ntp-time-sync.yaml",
-      "sha256": "fc741641093be1e58b71fb2af29b4b5cf01fa61d94ddd6022a9d801e8f2d3161",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T16:32:22Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T16:32:22Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/017-bgp-communities.yaml",
-      "sha256": "a11e26fb309dcf7a02a447e63333f2365a5fb80814a4a7fdc91cdbd0d1f7ef0d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T16:32:24Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T16:32:24Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/034-port-security-sticky.yaml",
-      "sha256": "f28ec5a288e5801144beb55e6f7b2b42aca094cb2e54640fcc5c53c253730337",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T17:18:44Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T17:18:44Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/028-qos-marking-classification.yaml",
-      "sha256": "7d6fa34576a04a4c85a321fd7d8b07a213057b7ee8d80d8cd188c88df88229e8",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T17:18:46Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T17:18:46Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/003-ipv6-addressing-static.yaml",
-      "sha256": "db37a4806ab4773840d5545d766597e378e5d04fc6681c82c7e33c62d75ea56c",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T17:18:48Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T17:18:48Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/001-osi-tcpip-traffic-path.yaml",
-      "sha256": "2e73866e55579bf50faf00cfe585af53116e33fb785907efc7a3c0756e611aca",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T17:18:50Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T17:18:50Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/031-ssh-local-users-hardening.yaml",
-      "sha256": "364dae499eed9ddcdc195d691a0d75500ac77a2c419d9ac88573b5782062418c",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T17:55:57Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T17:55:57Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/036-passwords-banners-secure-management.yaml",
-      "sha256": "310b4ac171f4dad6f10658e5c1bd4b422f0ef052984c0248355b8bd149d136a9",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T17:55:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T17:55:59Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/010-portfast-bpduguard.yaml",
-      "sha256": "d108903d4ce56160d1441a772d9cc8ae7ffc338a6414ef7f245d6c28715a1f1f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T18:11:50Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T18:11:51Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/011-rapid-pvst-troubleshooting.yaml",
-      "sha256": "27e9d31e9997766516817d1db46515e32a97800bc1d20ba5d41f1fd7e033fd1c",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T18:11:52Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T18:11:53Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/013-layer2-security.yaml",
-      "sha256": "a1ef88ef8eade1a80cdb8fcb7ce0c2a60fabf0e4238467b7f98059fe8ba58ee0",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T18:11:54Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T18:11:54Z"
+      "status": "import-export-pass"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-connectivity/022-intervlan-troubleshooting.yaml",
       "sha256": "b7ef603557174ac4c76e361b24bdcb1588a9ede6f3582d03f8d17ad3b47635d5",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T18:30:07Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T18:30:08Z"
+      "status": "import-export-pass"
     },
     {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/033-dhcp-snooping-dai.yaml",
-      "sha256": "b1051bf9a1a72440fca92f83b152b8fc4b924d53c6ff3f488dfa7ce12cf60c55",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-25T18:30:10Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-25T18:30:10Z"
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/023-dhcp-server-relay.yaml",
+      "sha256": "3b266f7d1d6155d1b551f32a9140e06b60fc01e39cfd60a74809e4edca9933f0",
+      "status": "import-export-pass"
     },
     {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/006-ospf-stub-nssa.yaml",
-      "sha256": "f634cebf99ab2c324c79aee1175fc5285b41126350bac291871a3056dc0d922f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T18:45:54Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T18:45:54Z"
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/024-nat-pat-edge.yaml",
+      "sha256": "ed4eec5b7b82bce02ef8835d5932317ba84a1600a242737c7052ae6fad87c842",
+      "status": "import-export-pass"
     },
     {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/007-ospf-authentication-filtering.yaml",
-      "sha256": "ed7148be6510dec2ed993b878c2c29addcf20635271f8fb24dce2894fc89c880",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T18:45:56Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T18:45:56Z"
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/025-ntp-time-sync.yaml",
+      "sha256": "fc741641093be1e58b71fb2af29b4b5cf01fa61d94ddd6022a9d801e8f2d3161",
+      "status": "import-export-pass"
     },
     {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/011-pbr-local-policy.yaml",
-      "sha256": "415bc11677b7ffe0544b8dda883a3f7b1c594a5693a2efeb47091766c1bf55e2",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T18:45:58Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T18:45:58Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/services/040-pbr-with-ip-sla-fallback.yaml",
-      "sha256": "392de954ae2ee68cc89968d81988c74b9c9eb04b7a19df5f90a9eebc82f949e2",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T18:46:00Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T18:46:00Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/041-summarization-and-filtering-faults.yaml",
-      "sha256": "bcae07f4d7813c0d64a66f0335b8aa1b81e75ac914f85d5266ffb2c1e8250fd0",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T18:54:53Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T18:54:54Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/042-wrong-administrative-distance.yaml",
-      "sha256": "9bb4ae347756b6a3cf38f3127a816117b691815e4feef4902c2964f49c70a036",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T18:54:56Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T18:54:56Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/009-route-redistribution-tags.yaml",
-      "sha256": "5e5d8c9f3441720dfff56210b272bc3b4282c7c3d1a2d61900dd18b37a5203c6",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T19:01:45Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T19:01:46Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/migration/043-static-edge-to-dynamic-routing.yaml",
-      "sha256": "05b5ed8f22342817fa535ef4c9ef0c27ea951e9cd353c6fc17222bcfc887acd2",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T19:01:47Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T19:01:48Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/012-dual-stack-campus.yaml",
-      "sha256": "c89cd7de8a81428ec046415f6d12f55da63cc78382ce9cc5156da3fc4d2ecd3e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T19:24:13Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T19:24:13Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/019-multilayer-switching-svi-routing.yaml",
-      "sha256": "118763947207adfd468445dd9ad6db1a37a57d653f59186af6044193a83d0ff3",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T19:24:14Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T19:24:15Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/020-mst-rpvst-stp-tuning.yaml",
-      "sha256": "b23225c284fb6fc8327db581a416a181cef16bdc818083165ec18324a71042be",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T19:24:16Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T19:24:16Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/021-lacp-pagp-etherchannel.yaml",
-      "sha256": "9bf45a88d8f3b9ffa19821e0beb7ceb140a9a99bb5270448a89551e2ae927fa4",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T19:24:18Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T19:24:18Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/013-ospf-network-types.yaml",
-      "sha256": "8a0a2cb9daf4a0b5fc7f6d63459208daae9cf985392ca06145c1b101d0556111",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T19:52:53Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T19:52:53Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/015-eigrp-named-mode.yaml",
-      "sha256": "f597838bb4da123ffb243b6d29158927cfcb0f66887f20c058599392467debee",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T19:52:55Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T19:52:55Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml",
-      "sha256": "f19393f807de2dc123e21e441c9bf613355f728ae548db385695ad53dca1ed1f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T19:52:56Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T19:52:57Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml",
-      "sha256": "5411cbad60f350fc341baa4f34b115ffaea789a7914c12db804329c35c1b7f0a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T19:52:58Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T19:52:58Z"
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/026-dns-client-resolution.yaml",
+      "sha256": "7ae788d0441193dbb2bbed8e00dce184c2fd39d9380b2b5b9d45a8b82cf83312",
+      "status": "import-export-pass"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/027-syslog-snmp.yaml",
       "sha256": "14216f696fc821f6fe2cfdf65c7625bc1cb7b56a10931c921bd54d0147c4f898",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T20:34:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T20:35:00Z"
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/028-qos-marking-classification.yaml",
+      "sha256": "7d6fa34576a04a4c85a321fd7d8b07a213057b7ee8d80d8cd188c88df88229e8",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/029-tftp-config-backup.yaml",
+      "sha256": "5c2025d8995249eb3987439ab10430be598d948dbad356fa57944d100742b3c8",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/ip-services/030-sla-tracking-static-route.yaml",
+      "sha256": "c65809cd1b1cbc84741eee1922cb37a29fb76c871ff06634970a2a34e436e70d",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/migration/046-static-routes-to-ospf-migration.yaml",
+      "sha256": "71f38c219bcae860cb27176d0f7f44e5d5a1ef0578d1e8c2e1046df21819e9f8",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/007-vlan-router-on-a-stick.yaml",
+      "sha256": "dd2892a37bc7ef47429dcaa3aaa84c496d01da463d9bebed5266721a5d8abf03",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/008-access-trunk-native-vlan.yaml",
+      "sha256": "9821883f46f80deff07b04339e44a57b1d520c5f5f31ef3bb262ad4ead8eb65d",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/009-stp-root-selection.yaml",
+      "sha256": "0c3055cca824b0e3027119219510104bad3fe5a770c905bc99c43a18eb3fc727",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/010-portfast-bpduguard.yaml",
+      "sha256": "d108903d4ce56160d1441a772d9cc8ae7ffc338a6414ef7f245d6c28715a1f1f",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/011-rapid-pvst-troubleshooting.yaml",
+      "sha256": "27e9d31e9997766516817d1db46515e32a97800bc1d20ba5d41f1fd7e033fd1c",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/012-etherchannel-lacp.yaml",
+      "sha256": "e2b678dded515342017c77dbc8dfa8ba83fa465599aae1168eff4b4d3018f47c",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/013-layer2-security.yaml",
+      "sha256": "a1ef88ef8eade1a80cdb8fcb7ce0c2a60fabf0e4238467b7f98059fe8ba58ee0",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-access/014-wlan-client-vlan-mapping.yaml",
+      "sha256": "b4ab92ce8d74e1704c07626c7a73c930e9e987340785ed8d3c8884665d7480dd",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/001-osi-tcpip-traffic-path.yaml",
+      "sha256": "2e73866e55579bf50faf00cfe585af53116e33fb785907efc7a3c0756e611aca",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/002-ipv4-subnetting-vlsm.yaml",
+      "sha256": "96bc12f4c49883278aea00edb083e65d5978b5694eb9a7c2b97842af2ea2fa25",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/003-ipv6-addressing-static.yaml",
+      "sha256": "db37a4806ab4773840d5545d766597e378e5d04fc6681c82c7e33c62d75ea56c",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/004-cdp-lldp-discovery.yaml",
+      "sha256": "f332821a9c42e23d3e2e705c053b498ebe4f30c5213277bf6a98d6f4c34d6e6d",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/005-interface-status-duplex.yaml",
+      "sha256": "be216cb222018acfa883a26970d720b30cbe10b941ba5b5bbe1960be77744106",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/006-wireless-architecture-cml.yaml",
+      "sha256": "201f324eda544ba723198cc4dd8e0e19aec67f27331ef2286a102ebd61da530d",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/041-small-office-full-stack.yaml",
+      "sha256": "8461e6d8da3c3938366c5eaaab4be69e4508a4cba7c522bf612579e48def1dce",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/042-ipv6-only-mini-campus.yaml",
+      "sha256": "5cd516e00973bdeeebe18e3fa36eb0e5cc7fb9e615f1da22f23ceec46eedbeb9",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/031-ssh-local-users-hardening.yaml",
+      "sha256": "364dae499eed9ddcdc195d691a0d75500ac77a2c419d9ac88573b5782062418c",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/032-standard-extended-acls.yaml",
+      "sha256": "a7b9d5c74fe4301e1fbbee9ba0f749ba62572c179917ad7f71763f9a51e655fc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/033-dhcp-snooping-dai.yaml",
+      "sha256": "b1051bf9a1a72440fca92f83b152b8fc4b924d53c6ff3f488dfa7ce12cf60c55",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/034-port-security-sticky.yaml",
+      "sha256": "f28ec5a288e5801144beb55e6f7b2b42aca094cb2e54640fcc5c53c253730337",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/035-ipsec-site-to-site-concepts.yaml",
+      "sha256": "e83eb16b032fbe097abf4db956be98f763d2a3d2caa2ab5d898bd2e1cb62508d",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/036-passwords-banners-secure-management.yaml",
+      "sha256": "310b4ac171f4dad6f10658e5c1bd4b422f0ef052984c0248355b8bd149d136a9",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/044-layer-2-security-stack.yaml",
+      "sha256": "c5955ad2c291c0417eeb43adae35452c800eb688d521d078affeef9bf952e7fd",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/troubleshooting/043-etherchannel-stp-failure-recovery.yaml",
+      "sha256": "d945d5f61f2100e38ed210534ac179e85f5fad51755cc53502f2d3219b33b945",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/assessment/044-enarsi-practical-checkpoint.yaml",
+      "sha256": "b0bbbbbeb75fdee98a734ba87382e2f55c088ef81d97d7ae2a46c3249fa7d4b6",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/033-netconf-restconf-routing.yaml",
+      "sha256": "0e5e7a9b5d8c04d9aafac3271ff0471b04b3f79783d9ff05812f1f5e40ba3f2c",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/034-python-routing-troubleshooter.yaml",
+      "sha256": "9ecea969ace369a78bfa6b7f3e4180e3ffbc9bca4d3949616f7feb07bfc99221",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/035-ansible-routing-baseline.yaml",
+      "sha256": "ce7f2a9e72b5608685b3824b73ed62778cfa96206fb2757c9c0c13464f7b7d7a",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/036-dna-center-assurance-routing.yaml",
+      "sha256": "9c6d157f0bb44bea53b572ca61173dac66ee2e58efe823617e54fed37307cb84",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/013-ibgp-ebgp-neighbors.yaml",
+      "sha256": "f6b517b14228526ecae14101b9b31446c7e597c02f5dcd5c846752f0be079b17",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/014-bgp-path-selection-local-pref-med.yaml",
+      "sha256": "fe8c9668318e034c621666aa767fcf3400282b66f83e3cf83fd8d7f33b2f8b0f",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/015-bgp-route-reflector.yaml",
+      "sha256": "b79f4cf409045b0cdd68ee619215c6876f8dc20d8f536e6ff0496a855cadf96e",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/016-bgp-filtering-prefix-aspath.yaml",
+      "sha256": "126b84e03c034a340a9546a40e33b6073b6ed03d1034b1b027d4ce0e3d37b891",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/017-bgp-communities.yaml",
+      "sha256": "a11e26fb309dcf7a02a447e63333f2365a5fb80814a4a7fdc91cdbd0d1f7ef0d",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/018-mp-bgp-vrf-lite.yaml",
+      "sha256": "49d48add1df4c3739aad21ef4a6df9329eaa3a6858d600bc826b77b9d8867c47",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/019-bgp-troubleshooting.yaml",
+      "sha256": "2bcfe60e813b8dcf820cb70f68435ec4f0725dcbf3fa5bfa28c18f29e4bbb3d1",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/039-bgp-route-reflector-policy-lab.yaml",
+      "sha256": "59584015c10dca163f4cbae9090b7a4fdff2e2b18ad7753f32c6a7f977991cd2",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/045-enarsi-capstone-advanced-routing.yaml",
+      "sha256": "707e4cd82580c7ec968f809510fccbbee57982e307efc8f98844641d58fcc933",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/046-enarsi-capstone-vpn-services.yaml",
+      "sha256": "bc6a839ddd58ee71cd8ee462cb3cca4563a43bbaf5f7ebace859eb88073f4f6b",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/029-router-hardening.yaml",
+      "sha256": "092f7f11d13f4bdeffe0a1d7c4d03e1e6e9388b80e97adb3a108dd274355f5c6",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/031-acl-uRPF.yaml",
+      "sha256": "2cdffb976d853b25769242f6691f5f380ba83b09928f081d35082159fb0b57af",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/032-copp-control-plane.yaml",
+      "sha256": "0a7da8925183f2ef0fda7ca8f2b26df29cbb9412169ea48494ccf048c7d87291",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/025-dhcp-relay-snooping.yaml",
+      "sha256": "b97a0b065abe6237b63260f6f4a29cde2eefc8b746111f046aaf78a39e446f74",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/026-ipv6-first-hop-security.yaml",
+      "sha256": "e82e03ae1a9557b4095d9f652b351b150cea3c0820288125ee6c42b3f5a2f199",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/027-ntp-syslog-snmp.yaml",
+      "sha256": "fd7f3e6fb527ce35dd9243b2f695282f776bb929e4b1e7b5887fd7a35683f3c4",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/028-netflow-ip-sla.yaml",
+      "sha256": "11edddfe34c68363c190d68f3796ca176f7d3fd508bf26c55c6bd0cbac7e4911",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/001-eigrp-classic-named-ipv4-ipv6.yaml",
+      "sha256": "53c0104d05b7c96f83ec785db123d7f6287b0869fe9117b6357c8f5da26b28f9",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/002-eigrp-stub-summary-default.yaml",
+      "sha256": "4f7485c2046125b7207b56132dc816c58253fed99d21b392094a4983217c00a8",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/003-eigrp-authentication-load-balancing.yaml",
+      "sha256": "41f9c91b7ebfb0a6c24054e9156b68d395189a9a65da26d53913323211f2c7e1",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/004-eigrp-troubleshooting.yaml",
+      "sha256": "f9ab639da85c069cf9ded0ec90e148bb0862e6451a5ca1ce6c2480247bfdac01",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/005-ospfv2-ospfv3-multiarea.yaml",
+      "sha256": "15ea6be4c5ebcb6e284c5f314bfbc8a1b647300a6c15d1591252a96b87ef009e",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/006-ospf-stub-nssa.yaml",
+      "sha256": "f634cebf99ab2c324c79aee1175fc5285b41126350bac291871a3056dc0d922f",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/007-ospf-authentication-filtering.yaml",
+      "sha256": "ed7148be6510dec2ed993b878c2c29addcf20635271f8fb24dce2894fc89c880",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/008-ospf-troubleshooting.yaml",
+      "sha256": "7d46dada1aaa1762adc03b055ae68c62dbffc7d63938eedc774e50229903431b",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/009-route-redistribution-tags.yaml",
+      "sha256": "5e5d8c9f3441720dfff56210b272bc3b4282c7c3d1a2d61900dd18b37a5203c6",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/010-route-map-filtering.yaml",
+      "sha256": "478c54bbfd743c8d2f5f52164099336eb4f54f6a1264fd4febcd06a280b8faee",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/011-pbr-local-policy.yaml",
+      "sha256": "415bc11677b7ffe0544b8dda883a3f7b1c594a5693a2efeb47091766c1bf55e2",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/012-vrf-lite-routing-protocols.yaml",
+      "sha256": "b3c88bb64ab266b9adbc720860f977e994451c3fc462abb3a43174454b4a9d98",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/migration/043-static-edge-to-dynamic-routing.yaml",
+      "sha256": "05b5ed8f22342817fa535ef4c9ef0c27ea951e9cd353c6fc17222bcfc887acd2",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/services/040-pbr-with-ip-sla-fallback.yaml",
+      "sha256": "392de954ae2ee68cc89968d81988c74b9c9eb04b7a19df5f90a9eebc82f949e2",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/037-redistribution-nightmare.yaml",
+      "sha256": "4c43a4a747e3cfb5fb9c5e999e41692551dbd77808e8ee0c237c945bc3debb64",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/041-summarization-and-filtering-faults.yaml",
+      "sha256": "bcae07f4d7813c0d64a66f0335b8aa1b81e75ac914f85d5266ffb2c1e8250fd0",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/042-wrong-administrative-distance.yaml",
+      "sha256": "9bb4ae347756b6a3cf38f3127a816117b691815e4feef4902c2964f49c70a036",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/020-gre-tunnel-routing.yaml",
+      "sha256": "e4ad3f7093b030bc4a4910e791ffac4e6c8729e6f6bbbb93d367591132786a7a",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/021-dmvpn-phase2.yaml",
+      "sha256": "5b0af8a335c061145e863bb90c32e67cd6423943882dee6c3b73fec078334b37",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/022-dmvpn-phase3.yaml",
+      "sha256": "7eadafebc54db14d85fa964d69589a689bc893769a1a1e04b38255e828c26127",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/023-ipsec-vti.yaml",
+      "sha256": "d6568e2a519d0cc49b1c41c2a6a311c2e881ea5f90cec48a7f0e1d385194c90e",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/024-mpls-l3vpn-concepts.yaml",
+      "sha256": "bd9bde5239d1191d17b6b146fc6487c15991efc5d102d9565bfd3624e70747e5",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/038-dmvpn-hub-spoke-break-fix.yaml",
+      "sha256": "039e0cd2d36d794580da14a5280b15bbb6a8c59da17ae61e62179814e9aa80e8",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/001-campus-two-three-tier-ha.yaml",
+      "sha256": "ddb3c23de3f4378b1bec406a8732c5593da291c7f4101fe5d4a7bafde6e53223",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/002-fhrp-design-hsrp-vrrp.yaml",
+      "sha256": "035fab4ff6bbe8cc4ad04060009d12fcd2a54221cc972aa53ce96ee2a356fcce",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/003-sdwan-control-data-plane.yaml",
+      "sha256": "6877f6d268258af5f69521456f611bd2b22887bd597d7a6b3dac13fb7baece0c",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/004-sdaccess-fabric-roles.yaml",
+      "sha256": "d93ea6cd4f1c155e7dbae7032791443741645822aba576a678a4744d996e7d13",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/005-qos-policy-interpretation.yaml",
+      "sha256": "60918d44d0dad2156d21b469b03e5d9bb6bc99613266e8cc4d61420cc492c0aa",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml",
+      "sha256": "5411cbad60f350fc341baa4f34b115ffaea789a7914c12db804329c35c1b7f0a",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/assessment/049-encor-practical-checkpoint.yaml",
+      "sha256": "72ffceb58e3e614f6d0f1a554bd1449573742475a733fc8a68f2abf704bfdd43",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/037-restconf-netconf-yang.yaml",
+      "sha256": "1388deaa4340ab8e07dd83ac95a4c03749e6383a062a903d224f93a6eb879efd",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/038-python-requests-network-change.yaml",
+      "sha256": "e877d6a7455d0b2fae9e3dff0ee0e1875e335b3543e806d44dd575fca9a588b2",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/039-ansible-network-baseline.yaml",
+      "sha256": "ccd8407f512fbe522b1ee57a36f75f061391d0834343691a1404f58f8dcc2c69",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/040-json-yaml-jinja2.yaml",
+      "sha256": "5c02a87964f57b28edc6a0b8bc28e30b46b5ac8fb49624c0f2f49b522785e7c8",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/041-event-driven-automation.yaml",
+      "sha256": "b5fe7082ccb7163649c9a28c48b67377d170d35648119a170af0d27a2e8d4d81",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/046-netconf-restconf-baseline-change.yaml",
+      "sha256": "148729483922441c24c522af8379f59405938ee671d5a8ec801c16d70e2adf5e",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/capstone/050-encor-capstone-enterprise-edge.yaml",
+      "sha256": "577782bfe9d8275286299f10807b769f7c41b51d2b81e6c4a557ecaf2752e4e7",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/capstone/051-encor-capstone-campus-core.yaml",
+      "sha256": "4b9bf332469fbaf47c656b0f5780f580cecea9c79ce4f4c3ee58354533c6f353",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/012-dual-stack-campus.yaml",
+      "sha256": "c89cd7de8a81428ec046415f6d12f55da63cc78382ce9cc5156da3fc4d2ecd3e",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/013-ospf-network-types.yaml",
+      "sha256": "8a0a2cb9daf4a0b5fc7f6d63459208daae9cf985392ca06145c1b101d0556111",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/014-ospf-summarization-filtering.yaml",
+      "sha256": "cd3cf5d21d29e5465e1df691480ca7ce8efba0960270a496795e4b93782e0217",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/015-eigrp-named-mode.yaml",
+      "sha256": "f597838bb4da123ffb243b6d29158927cfcb0f66887f20c058599392467debee",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/016-ospf-eigrp-redistribution.yaml",
+      "sha256": "5657bac1cb259fc05be563498521ceb19a8992e22e7bd8c52e8a5cf3583bc9da",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/017-ebgp-ibgp-basics.yaml",
+      "sha256": "22f475970a7bca157c7d73d95cd759206f5b6acc6aa38be421a49f84d7a172ab",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/018-bgp-path-selection.yaml",
+      "sha256": "757c815de51ce2e68462ba5cf653fb7be927f417e778abbe1c0c8d30e7bb4ea4",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/019-multilayer-switching-svi-routing.yaml",
+      "sha256": "118763947207adfd468445dd9ad6db1a37a57d653f59186af6044193a83d0ff3",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/020-mst-rpvst-stp-tuning.yaml",
+      "sha256": "b23225c284fb6fc8327db581a416a181cef16bdc818083165ec18324a71042be",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/021-lacp-pagp-etherchannel.yaml",
+      "sha256": "9bf45a88d8f3b9ffa19821e0beb7ceb140a9a99bb5270448a89551e2ae927fa4",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/022-ipv6-first-hop-and-routing.yaml",
+      "sha256": "4896c8dc81bb4fa5be607df75ba526774b5bb26ca19d98c442ae13e69552609f",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/migration/048-flat-vlan-to-routed-access.yaml",
+      "sha256": "06230c8ce5c5dc6250f08ab36ff3fd023d857df6eaf7f1971224e35ee2373241",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/023-span-rspan-erspan.yaml",
+      "sha256": "03c3140b0d7a58dff7240ead14540f463a1b45c4960f231d20ccc96a86a35f8b",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/024-ip-sla-tracking.yaml",
+      "sha256": "1a7a5412c96d5cb9f383e4a9a2d9cdcb7e71c41ced046ae678d94f75369dc6bf",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/025-netflow-telemetry.yaml",
+      "sha256": "cc0cac77dfdd9ba49e56545ce0627843d6a0636af4eb2e143070ad4543ea262c",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/026-syslog-snmp-ntp.yaml",
+      "sha256": "b042e4ebc74e72b21bb91a399ed5a61534befa8d5a2b207c39f8fc576cd56206",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/027-dna-center-assurance-concepts.yaml",
+      "sha256": "5fce7f1a7653159ee4c623d1726ad6a6cd9faf9d54a80ccb7d9cb97cb6d7ebb1",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/028-troubleshooting-path.yaml",
+      "sha256": "9887e54f2adfc91c1854ea3135156acce50b9269c03542d28fa3562664a2dc88",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/042-dual-stack-campus-with-fhrp.yaml",
+      "sha256": "50f9fd0be762db299e294fdd0e778239ff47218628d8493867127199f67803bc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/043-vrf-lite-shared-services.yaml",
+      "sha256": "59aa4d0104306311a2ab29846e437b094881e764c683a799ed48f5b283059357",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/044-qos-marking-and-policing.yaml",
+      "sha256": "b739c3da539e9857da97b14561ace833ed74a7c922a77492dec955c7b6fb0f46",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/045-dual-isp-bgp-edge.yaml",
+      "sha256": "e89b7154908062530245cdb0844926bee83e6bbde7f8ead436afbde16f79e79d",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/030-8021x-mab-concepts.yaml",
+      "sha256": "e85e31416873ab748296d402dbbf6e96af1b91bc9c6f98bb64c7e659ac795cb5",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/031-control-plane-policing.yaml",
+      "sha256": "95fae2f57365f2fa46c3ef9688a67b00f9cffc2d3bdd1d3ffbe742cfc1674df6",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/032-acl-vacl-pacl.yaml",
+      "sha256": "655bf8f90a89d34e498c4961fb1dc2ec6224a2dabb43804afd2dcba264208472",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/033-infrastructure-device-hardening.yaml",
+      "sha256": "a0b427471ec5fcc12e6e5bfdf632013ef1a41e6670750ffdaafc5450084114f7",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/035-macsec-concepts.yaml",
+      "sha256": "aa65066bb472a81055185f1b82ee5dedd2003e3649642de84050c14231cafd3f",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/036-secure-management-plane.yaml",
+      "sha256": "e364fac744ef8238f84891d94630caa1112f09cb5acedf3d30fce8b944a73d6c",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/troubleshooting/047-campus-routing-blackhole.yaml",
+      "sha256": "2f94781803ab51c813a421f8518f7162429731c6f2ac596ae55631b6b5e5e110",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/007-vrf-lite-route-leaking.yaml",
+      "sha256": "1849cb1d7b260f0c9a9b683d3f53ffa246955141a361f27317a54fb4c6b62627",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml",
+      "sha256": "f19393f807de2dc123e21e441c9bf613355f728ae548db385695ad53dca1ed1f",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml",
+      "sha256": "2e2f819d261be77df9bcf89d0dd574569fec3a0cd0baaf06ae4b8765fe0dca99",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/010-lisp-vxlan-concepts.yaml",
+      "sha256": "3826ae0bd3256569545c245b4fe1bdba4b399381af5865e99b478aaa53851b9e",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/011-virtual-switching-paths.yaml",
+      "sha256": "5c9f76916ed19c24026810490b598a3e951d2d8b0d4cefb8bc4ce38c11ff4782",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/assessment/044-scor-practical-checkpoint.yaml",
+      "sha256": "34a685e55411ba5ca4d7597e205a1f048bbe04ead642480bec2aa8ca656bea10",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/031-security-api-python.yaml",
+      "sha256": "e92002ad0d0f5b56b9b44e2f88f0b7e2af9b829c5d89e62a05d511854d4f5977",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/032-firewall-policy-as-code.yaml",
+      "sha256": "ea40b59e52c56138976a13b8c3bc5a66c594d262e084bf05704b3f2143fb3517",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/033-soar-webhook-remediation.yaml",
+      "sha256": "aa5f76c8b58e2a41c7860ca2f1c39ce0ea573af11030b88eb1dd4b7faef5dacf",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/034-threat-intel-enrichment.yaml",
+      "sha256": "d3418295252500d1fb8a26de2436ff18b9a1c4fbabc5a717e38f8d7ecbbb21e3",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/035-secure-access-automation.yaml",
+      "sha256": "e9c9854d5c73e2a720d1681b74bad53c780f3e687025a93584e6fe9ebffe2be8",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/036-security-dashboard-telemetry.yaml",
+      "sha256": "a1adbe901b28c5715ae5cffb754b406cf54f2acf744a85b9b862c803592cdad7",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/045-scor-capstone-secure-edge.yaml",
+      "sha256": "d5053ab6aea05ebcb4da50e10a8c01c1ff0b69dc12e6baad8fa7af4377ad77ba",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/046-scor-capstone-soc-network.yaml",
+      "sha256": "130a520204b1eae732cd66330a4690098f3e1d3f80cafeaac9a3668ef813e4d2",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/016-cloud-security-shared-responsibility.yaml",
+      "sha256": "4b09c3fbb445f7452cc0ee4ad1a4c6695c9e5d2311b2402b6176962c79500cfc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/017-secure-email-web-concepts.yaml",
+      "sha256": "e0f76eacbc491e45c5df8a89e1ccf6b4de95aa685d920d5df547dbb57a942ba6",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/018-umbrella-dns-security.yaml",
+      "sha256": "868d5bb333a8fb86c1aac0753ec47bd3d47942efa04344ceefb178227648e8ab",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/019-casb-sase-concepts.yaml",
+      "sha256": "c8b8cafefdf4675df59bf8fcba03dab97d4d1401ea2954b5505d14be596ec04c",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/endpoint/020-endpoint-protection-edr.yaml",
+      "sha256": "4f00084177ef3540103d45c0c284d343c0cc46a746ff5d92a97237026d964b56",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/endpoint/021-malware-analysis-flow.yaml",
+      "sha256": "c6be01a9b164a8a23500193612de213c05b97821942218a221df159136dcb25f",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/endpoint/022-phishing-defense.yaml",
+      "sha256": "29a51b2e09a00b46c302f3808364a2bcd054f815d0b33eeaf2f1e3edc1a991da",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/firewall/038-firewall-policy-review-cleanup.yaml",
+      "sha256": "21132bf2c0503ef67a0240dde4861a9fa49213ce2a00147db7c445e451d773a6",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/incident-response/041-suspicious-host-containment.yaml",
+      "sha256": "d7ecbfe2c29aab88a19929a090d6a8098dd6de63a4a20185122b59d749e9eb1a",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/management/040-secure-admin-plane.yaml",
+      "sha256": "8b8db473cb3a10051127f5486d0fbbfbcd7bde15eeb17fbe0af9b0047271c543",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/nac/043-nac-quarantine-vlan-concept.yaml",
+      "sha256": "eba9c47f4757c120c04250f034e132fd12e8cd1605d2ad0353a7855dfa38867d",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/006-firewall-zone-policy.yaml",
+      "sha256": "f610fc612a1bdce7f9fe9a383293dc2545fb6062e107d5d0011f1eaa53900d83",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/007-router-switch-hardening.yaml",
+      "sha256": "c3b5c71040d8d0c5941784ae056380c8959c402a101126c9de31d2b913d9508a",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/008-acl-nat-inspection.yaml",
+      "sha256": "5f3a10c329f69ab87bfffa19e72827ec5de1539dc796eaf9c5b842341fa4868a",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/009-site-to-site-ipsec-ios.yaml",
+      "sha256": "b49f864ba0ee25ef0267d4530740f164e9bd2726ddcb958da6d5dc04d190c8cb",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/010-remote-access-vpn-concepts.yaml",
+      "sha256": "3bd96f1d66ca4a73e966648c9a607152669579f5971582a38407c8396f998853",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/011-aaa-ise-radius-tacacs.yaml",
+      "sha256": "d19aa268221f5c74a2ae5b4b8f86aa350cc1db4f4bc51b94c371a3da71eb2199",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/012-8021x-mab-nac.yaml",
+      "sha256": "cc1e61bde88f835f76772e3de82d2f39ea77344ae18b3e00d127d48f4e1272bc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/013-segmentation-vrf-acl.yaml",
+      "sha256": "6ec099fccb06f38124cce2083a757aa66a5bf525bc4b6c54dbf8ba1887d4e32d",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/014-secure-wireless-architecture.yaml",
+      "sha256": "8fd39f99cdc53f656abbed270a1f56eb17b7d5ca1ed05ed5dc0cc02c140ce3e5",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/015-intrusion-policy-concepts.yaml",
+      "sha256": "4ff9aa363861dbff1c5e3be481a01b2639c5d2a7c61327fe04c98e1e2f297cf4",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/scenario/037-zero-trust-branch-segmentation.yaml",
+      "sha256": "f0c7a43f4e4a550696b2feb7523611b8786e3813cbbffc38131353c2bdbbfc0c",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/023-zero-trust-network-access.yaml",
+      "sha256": "1c63d4bc68bd7c6cc2960598a87e0306bb43127291ce5bdae7afffdf247c4a1a",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/024-vpn-posture-policy.yaml",
+      "sha256": "43d7cf3122b017bcefcdb8df1127839fa86519fc2ed40d9af6e3974444298c91",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/025-guest-access-isolation.yaml",
+      "sha256": "9018f0601396d1cd67bcfba17e448bf44153ac901323e39f3d30e2dbfd071137",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/001-threats-vulnerabilities.yaml",
+      "sha256": "f75801686a66d845c342f6857a2085bf75f56ba7e5e25a49b701adb37c943526",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/002-cryptography-pki-ipsec.yaml",
+      "sha256": "a1e210914099d72aa3f33e1e41400a25e9bba7c836012c38006b5f2b58f9fd00",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/003-site-to-site-vpn-types.yaml",
+      "sha256": "8c9805bd0609ef8e52b1d3ff5729aea61f0572f06b0c7f3765f0f231680152bc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/004-security-intelligence-sharing.yaml",
+      "sha256": "43423df8c67eeed9bffed3e13ca3be1c28522eb57d82f0337a34ca47e351060b",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/005-sdn-api-security.yaml",
+      "sha256": "808f65f6526a677b14e9dd649055b482e51aab207f02953a47892cd59faf1ad6",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility/042-span-netflow-siem-triage.yaml",
+      "sha256": "5110c61e5e8f3ee774f7ca23fd305db43ddd0380ebddcd9b541a350c18e6c9ea",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/026-netflow-stealthwatch.yaml",
+      "sha256": "317c1a22fabd2d1e03d6eed309f65c19c0d8eb1e9f1699bc87c3ef1d5ef6cf89",
+      "status": "import-export-pass"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/027-syslog-siem-correlation.yaml",
       "sha256": "6d4d53a73ec0e82917ff24039708af880f8b768e17483d4a97e45ab7cddcf89b",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T20:41:53Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T20:41:54Z"
+      "status": "import-export-pass"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml",
-      "sha256": "4af983a172a6c493e396efa25858164603208abe24b1c65a0e47d40bb5d4b318",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T21:18:51Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T21:18:51Z"
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/028-packet-capture-span.yaml",
+      "sha256": "2d4190289e31c17012f0833cac1b85293541ed4aab17b664c96ef56ac42980b3",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/029-policy-enforcement-points.yaml",
+      "sha256": "668b3772080b9f9bb98e63456267d797904878f5e17e022b2d5a2ad88e9750d5",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/030-incident-response-network.yaml",
+      "sha256": "0c8cd1d5d4b5545d22eec6f97efc81abd9cd5aa80172b32a2459ae40ffb1d2ae",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/vpn/039-site-to-site-vpn-security-baseline.yaml",
+      "sha256": "d49273d1e1407c93b4b950f2a3c797fcfa3310cf11fc103af286db9168899a9f",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/apis/032-rest-pagination-and-error-handling.yaml",
+      "sha256": "54ed01ff8ced76f3a6421d3d6ff7b258e5e82e03696be86b0db781e4c32c427d",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/apis/033-oauth2-token-refresh-flow.yaml",
+      "sha256": "b5ee35617f64551b61ccf9c5dcdd1538520b1a7ac35d99ef446c6efd3dc5b779",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/assessment/038-devcor-practical-checkpoint.yaml",
+      "sha256": "9def7d676271592d4bd19fb0177ca6aa310cd15ff415fc4ad7a5187fde2d00c5",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/039-devcor-capstone-controller-integration.yaml",
+      "sha256": "18471567b877e24813262b2e0358d4eee6ddf926ccfb1d23997963d2ffb0af93",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/040-devcor-capstone-network-automation-app.yaml",
+      "sha256": "f66f7562cd118d07bce97ce579eaf9f7c6470564c452486762c0dfc38530864e",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/cisco-platforms/013-dna-center-inventory-api.yaml",
+      "sha256": "ff30dfff70baf9b07f3abcdfbf18e7dce6efdc444812ca3198116bf7d0a61a29",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/cisco-platforms/014-meraki-dashboard-api.yaml",
+      "sha256": "4ff1a491d0fbea4f0485d4182b5c237530d224fa2df70117cf41a3020b24eeef",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/cisco-platforms/015-webex-chatops.yaml",
+      "sha256": "4ee19555cafe2251f95fb6efe4313b6e866f04ada60329be8eebe2fd4346c59e",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/cisco-platforms/016-aci-api-intent.yaml",
+      "sha256": "23cd9a71177d2f27024c4124b1c1dcda5158dc379106e93766864f25553ebdc1",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/cisco-platforms/017-sdwan-api-policy.yaml",
+      "sha256": "eb201b0195dd73d248e40cc5e57a605aec68f0c5abf5018698fb989efc1052db",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/cisco-platforms/018-secure-firewall-api.yaml",
+      "sha256": "1d753cba134d71523f384c5fd270fcf8370b64f80f0d60f2d8add4f3c89c1bbb",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment/034-dockerized-network-tool.yaml",
+      "sha256": "6086d4b9e0d228ea81395ec480929480d07811fbf4546a5dccd55cb6360f6f8d",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/019-containerized-network-tool.yaml",
+      "sha256": "5b51b464084968af5db1d865b5ef99f2593e5f8499784242dd064615c9283664",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/020-ci-cd-for-network-automation.yaml",
+      "sha256": "2109e7258b8947fb11bbeb047542232763d263376231eaf0ca267255dd360e7d",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/021-secrets-management.yaml",
+      "sha256": "f4d6c836613221567554049755dd8a097a4638fdb320e76a42f500fdd7b8ce8a",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/022-secure-api-client.yaml",
+      "sha256": "4425988fa64785f7755d6f4290ad8d40139c594a654bbb36967a14b929e91901",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/023-application-threat-model.yaml",
+      "sha256": "cae46b2485dc07ee3e777c0752e3558d5c33538f04f86fd2d4487a847acfa0ed",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/024-kubernetes-network-automation.yaml",
+      "sha256": "be39162539e2d4cd8131f461e995322d88ef9c95846068985591165620a747dd",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/gitops/031-gitops-network-change-pipeline.yaml",
+      "sha256": "64d8709dd3ced3608b7302dee9778ba9e8dce51fdcb5d750d2995615d21f8910",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/025-ansible-inventory-network.yaml",
+      "sha256": "2545c46d1d998648a0c1b3b4f594708f6ed3bde613a5eaa7636b174ca54116ea",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/026-terraform-network-iac.yaml",
+      "sha256": "0579261d8a5f40e3c39cfa428924e79649e9d55eae241aa106e370cad7d54001",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/027-yang-model-interface-change.yaml",
+      "sha256": "d75496e189ca12cd73b1a5a58bc39e5508183dc9dd20ee2995148ee6752ca373",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/028-event-driven-remediation.yaml",
+      "sha256": "22bf74f2677116b4092270e60c3c6fd23d45309960b8897b5b7519eb4593ee22",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/029-ai-assisted-automation-guardrails.yaml",
+      "sha256": "66ea994e5ebc633e1948066a7e274afd5c2519bf6b74dd86bca23b6eb212c54e",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/030-gitops-network-change.yaml",
+      "sha256": "cff06cccaf9313d81183795fb0852af35036509869bb6a3f6fbc860fdbb11f4b",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/security/037-secure-api-client-threat-model.yaml",
+      "sha256": "0da656d3b8085a5b0907b916bb2b1d9c539224d2f141fb0ba6abdb44281da5ad",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/001-distributed-app-front-back-loadbalancer.yaml",
+      "sha256": "81ddb34701a4f0026f571c36550d570a73a98c3a722cfbf8048017be94b3e796",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/002-scalability-modularity.yaml",
+      "sha256": "5694630a41426255235d921d2c5bde3d11c102b37310b32d2ec4394dbc90e78f",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/003-ha-resiliency-hybrid-cloud.yaml",
+      "sha256": "2966e28718d4448d532d5735076f477caee0d5e77bf737f7479a106e31ecae8e",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/004-rate-limits-backoff.yaml",
+      "sha256": "697da1b7d11b3dd21f3078edf3d86c34b191050d9bad59c4c2c51b21084fc3a7",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/005-observability-logs-metrics-traces.yaml",
+      "sha256": "be44ffbe4b83324add62351c8a25ee1e840aba31c444e6ef0ab3d6c68a4a32bb",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/006-database-choice-for-network-apps.yaml",
+      "sha256": "96062b107c5cc7b6ed0f8899406d952a5a9bf925fa58862b60d8b974335851d9",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/007-rest-error-handling.yaml",
+      "sha256": "25d853ce3363bb792827e82002c5bf75c61a83e9252dfbe8e37e2261cd0d46dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/008-api-pagination.yaml",
+      "sha256": "6cc6f52c7de5b9cfd57bec9a604a7871884d6265561edd946c045ab5f310a733",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/009-http-cache-controls.yaml",
+      "sha256": "5d9166d0496c376b10f1390d506182e0624fd19dcbc138304b69966acbd1fd8e",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/010-oauth2-three-legged-flow.yaml",
+      "sha256": "29f69f3b3dd63cdbd7bfd5b6195b03a884552c8daf70f260c473b7bdfa38aef3",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml",
+      "sha256": "c29646bb75a5ccc05a29006979929ac6b862e6d41e79cd74eae62cdbecaf3825",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/012-api-contract-openapi.yaml",
+      "sha256": "5aea9f20e2367e25ba8b03ddb5f57e9b226b49f6606256b301eb3f2ca4a17408",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/validation/036-pyats-genie-style-validation.yaml",
+      "sha256": "6d5261e8b95e4fa30253da8b1d0c4012add51c134a0c8141f836620e474285cb",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/webhooks/035-webhook-receiver-config-validation.yaml",
+      "sha256": "1d5a9a5406f3954dfb5c1284327564efb4d676d8c3cf01d4dafa07344e479402",
+      "status": "import-export-pass"
     },
     {
       "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/030-aaa-radius-tacacs.yaml",
       "sha256": "aeacec3473e8c130724cd2636eb402a667f1ebf12956c17da29a5bdc40743f11",
       "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T21:18:53Z",
+      "started_utc": "2026-10-31T11:17:03Z",
       "checks": [],
       "status": "import-export-pass",
       "test_lab_removed": true,
-      "completed_utc": "2026-10-26T21:18:53Z"
+      "completed_utc": "2026-10-31T11:17:03Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/014-ospf-summarization-filtering.yaml",
-      "sha256": "cd3cf5d21d29e5465e1df691480ca7ce8efba0960270a496795e4b93782e0217",
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml",
+      "sha256": "4af983a172a6c493e396efa25858164603208abe24b1c65a0e47d40bb5d4b318",
       "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T21:18:55Z",
+      "started_utc": "2026-10-31T11:17:05Z",
       "checks": [],
       "status": "import-export-pass",
       "test_lab_removed": true,
-      "completed_utc": "2026-10-26T21:18:55Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/016-ospf-eigrp-redistribution.yaml",
-      "sha256": "5657bac1cb259fc05be563498521ceb19a8992e22e7bd8c52e8a5cf3583bc9da",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T21:18:57Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T21:18:57Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/017-ebgp-ibgp-basics.yaml",
-      "sha256": "22f475970a7bca157c7d73d95cd759206f5b6acc6aa38be421a49f84d7a172ab",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T21:18:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T21:18:59Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/018-bgp-path-selection.yaml",
-      "sha256": "757c815de51ce2e68462ba5cf653fb7be927f417e778abbe1c0c8d30e7bb4ea4",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-26T21:19:01Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-26T21:19:01Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/004-rate-limits-backoff.yaml",
-      "sha256": "697da1b7d11b3dd21f3078edf3d86c34b191050d9bad59c4c2c51b21084fc3a7",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T17:44:26Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T17:44:26Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/005-observability-logs-metrics-traces.yaml",
-      "sha256": "be44ffbe4b83324add62351c8a25ee1e840aba31c444e6ef0ab3d6c68a4a32bb",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T17:44:28Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T17:44:28Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/006-database-choice-for-network-apps.yaml",
-      "sha256": "96062b107c5cc7b6ed0f8899406d952a5a9bf925fa58862b60d8b974335851d9",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T17:44:30Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T17:44:30Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/007-rest-error-handling.yaml",
-      "sha256": "25d853ce3363bb792827e82002c5bf75c61a83e9252dfbe8e37e2261cd0d46dc",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T17:44:32Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T17:44:32Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/008-api-pagination.yaml",
-      "sha256": "6cc6f52c7de5b9cfd57bec9a604a7871884d6265561edd946c045ab5f310a733",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T17:44:34Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T17:44:34Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/009-http-cache-controls.yaml",
-      "sha256": "5d9166d0496c376b10f1390d506182e0624fd19dcbc138304b69966acbd1fd8e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T17:44:35Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T17:44:36Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/001-distributed-app-front-back-loadbalancer.yaml",
-      "sha256": "81ddb34701a4f0026f571c36550d570a73a98c3a722cfbf8048017be94b3e796",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T18:26:16Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T18:26:16Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/002-scalability-modularity.yaml",
-      "sha256": "5694630a41426255235d921d2c5bde3d11c102b37310b32d2ec4394dbc90e78f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T18:26:18Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T18:26:18Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/003-ha-resiliency-hybrid-cloud.yaml",
-      "sha256": "2966e28718d4448d532d5735076f477caee0d5e77bf737f7479a106e31ecae8e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T18:26:21Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T18:26:21Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/037-restconf-netconf-management.yaml",
-      "sha256": "6b199bed56708c92eb3bc51153b224676a8eb7a05b6bec3cfce42219fb547fe0",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T19:02:05Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T19:02:05Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/037-restconf-netconf-yang.yaml",
-      "sha256": "1388deaa4340ab8e07dd83ac95a4c03749e6383a062a903d224f93a6eb879efd",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T19:02:07Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T19:02:07Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/038-python-requests-network-change.yaml",
-      "sha256": "e877d6a7455d0b2fae9e3dff0ee0e1875e335b3543e806d44dd575fca9a588b2",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T19:02:09Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T19:02:09Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/040-python-api-inventory.yaml",
-      "sha256": "0899a03a4b0008eb9f367257c244920154204e0fb115f6d3379b59d57ebf132a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T19:02:11Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T19:02:11Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/validation/036-pyats-genie-style-validation.yaml",
-      "sha256": "6d5261e8b95e4fa30253da8b1d0c4012add51c134a0c8141f836620e474285cb",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T19:02:13Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T19:02:13Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/033-netconf-restconf-routing.yaml",
-      "sha256": "0e5e7a9b5d8c04d9aafac3271ff0471b04b3f79783d9ff05812f1f5e40ba3f2c",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T19:21:47Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T19:21:47Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/034-python-routing-troubleshooter.yaml",
-      "sha256": "9ecea969ace369a78bfa6b7f3e4180e3ffbc9bca4d3949616f7feb07bfc99221",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T19:21:49Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T19:21:50Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/automation/038-json-yaml-data-models.yaml",
-      "sha256": "0aa7647a181cee7bd6cc3198fa9f5e093cb290c8cb9355fe0452b3921dc553b2",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T19:42:55Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T19:42:55Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/040-json-yaml-jinja2.yaml",
-      "sha256": "5c02a87964f57b28edc6a0b8bc28e30b46b5ac8fb49624c0f2f49b522785e7c8",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T19:42:57Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T19:42:57Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/046-netconf-restconf-baseline-change.yaml",
-      "sha256": "148729483922441c24c522af8379f59405938ee671d5a8ec801c16d70e2adf5e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T19:42:59Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T19:42:59Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/027-yang-model-interface-change.yaml",
-      "sha256": "d75496e189ca12cd73b1a5a58bc39e5508183dc9dd20ee2995148ee6752ca373",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-27T19:43:01Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-27T19:43:02Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/025-ansible-inventory-network.yaml",
-      "sha256": "2545c46d1d998648a0c1b3b4f594708f6ed3bde613a5eaa7636b174ca54116ea",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T16:11:48Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T16:11:49Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/039-ansible-network-baseline.yaml",
-      "sha256": "ccd8407f512fbe522b1ee57a36f75f061391d0834343691a1404f58f8dcc2c69",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T16:11:50Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T16:11:51Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/035-ansible-routing-baseline.yaml",
-      "sha256": "ce7f2a9e72b5608685b3824b73ed62778cfa96206fb2757c9c0c13464f7b7d7a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T16:11:52Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T16:11:53Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/030-gitops-network-change.yaml",
-      "sha256": "cff06cccaf9313d81183795fb0852af35036509869bb6a3f6fbc860fdbb11f4b",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T16:26:04Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T16:26:04Z"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/gitops/031-gitops-network-change-pipeline.yaml",
-      "sha256": "64d8709dd3ced3608b7302dee9778ba9e8dce51fdcb5d750d2995615d21f8910",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T16:26:06Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T16:26:06Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/035-ipsec-site-to-site-concepts.yaml",
-      "sha256": "e83eb16b032fbe097abf4db956be98f763d2a3d2caa2ab5d898bd2e1cb62508d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T17:59:19Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T17:59:19Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/009-site-to-site-ipsec-ios.yaml",
-      "sha256": "b49f864ba0ee25ef0267d4530740f164e9bd2726ddcb958da6d5dc04d190c8cb",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T17:59:21Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T17:59:21Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/041-event-driven-automation.yaml",
-      "sha256": "b5fe7082ccb7163649c9a28c48b67377d170d35648119a170af0d27a2e8d4d81",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T17:59:23Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T17:59:23Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/024-mpls-l3vpn-concepts.yaml",
-      "sha256": "bd9bde5239d1191d17b6b146fc6487c15991efc5d102d9565bfd3624e70747e5",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T17:59:25Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T17:59:25Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/049-ccna-capstone-branch-office.yaml",
-      "sha256": "f0f22cd7cdf105bcd0b8392f3240d318e09d00ad30c2bff6bb0755585db61739",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T17:59:27Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T17:59:27Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/024-ip-sla-tracking.yaml",
-      "sha256": "1a7a5412c96d5cb9f383e4a9a2d9cdcb7e71c41ced046ae678d94f75369dc6bf",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T17:59:33Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T17:59:33Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/026-syslog-snmp-ntp.yaml",
-      "sha256": "b042e4ebc74e72b21bb91a399ed5a61534befa8d5a2b207c39f8fc576cd56206",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T17:59:35Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T17:59:35Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/027-ntp-syslog-snmp.yaml",
-      "sha256": "fd7f3e6fb527ce35dd9243b2f695282f776bb929e4b1e7b5887fd7a35683f3c4",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T17:59:37Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T17:59:37Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/assessment/047-ccna-practical-checkpoint-one.yaml",
-      "sha256": "6933125971585ab8b55c1041b3cf2eb0613b38dfe852dc71aac3dc12a9ab1982",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T18:48:11Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T18:48:11Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/assessment/048-ccna-practical-checkpoint-two.yaml",
-      "sha256": "2af1f342e8536a8d2518a74c72cd7ca6719f9c0f020b15decdb5618bdf753254",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T18:48:13Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T18:48:13Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/021-dmvpn-phase2.yaml",
-      "sha256": "5b0af8a335c061145e863bb90c32e67cd6423943882dee6c3b73fec078334b37",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T18:48:14Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T18:48:15Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/022-dmvpn-phase3.yaml",
-      "sha256": "7eadafebc54db14d85fa964d69589a689bc893769a1a1e04b38255e828c26127",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T18:48:16Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T18:48:16Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/038-dmvpn-hub-spoke-break-fix.yaml",
-      "sha256": "039e0cd2d36d794580da14a5280b15bbb6a8c59da17ae61e62179814e9aa80e8",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T18:48:18Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T18:48:18Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/007-vrf-lite-route-leaking.yaml",
-      "sha256": "1849cb1d7b260f0c9a9b683d3f53ffa246955141a361f27317a54fb4c6b62627",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T18:48:20Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T18:48:20Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/043-vrf-lite-shared-services.yaml",
-      "sha256": "59aa4d0104306311a2ab29846e437b094881e764c683a799ed48f5b283059357",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T18:48:22Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T18:48:22Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/013-segmentation-vrf-acl.yaml",
-      "sha256": "6ec099fccb06f38124cce2083a757aa66a5bf525bc4b6c54dbf8ba1887d4e32d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T18:48:24Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T18:48:24Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/029-router-hardening.yaml",
-      "sha256": "092f7f11d13f4bdeffe0a1d7c4d03e1e6e9388b80e97adb3a108dd274355f5c6",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T18:54:23Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T18:54:23Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/management/040-secure-admin-plane.yaml",
-      "sha256": "8b8db473cb3a10051127f5486d0fbbfbcd7bde15eeb17fbe0af9b0047271c543",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-28T18:54:26Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-28T18:54:27Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/036-secure-management-plane.yaml",
-      "sha256": "e364fac744ef8238f84891d94630caa1112f09cb5acedf3d30fce8b944a73d6c",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T13:40:57Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T13:40:57Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/troubleshooting/043-etherchannel-stp-failure-recovery.yaml",
-      "sha256": "d945d5f61f2100e38ed210534ac179e85f5fad51755cc53502f2d3219b33b945",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T14:10:29Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T14:10:29Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/044-layer-2-security-stack.yaml",
-      "sha256": "c5955ad2c291c0417eeb43adae35452c800eb688d521d078affeef9bf952e7fd",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T14:10:31Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T14:10:31Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/capstone/050-ccna-capstone-campus-access.yaml",
-      "sha256": "0807c0840c19471a440a2061ed200438660c5b13716692f912bfd7c6d282c4d6",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T14:10:33Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T14:10:33Z"
-    },
-    {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/042-ipv6-only-mini-campus.yaml",
-      "sha256": "5cd516e00973bdeeebe18e3fa36eb0e5cc7fb9e615f1da22f23ceec46eedbeb9",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T14:19:17Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T14:19:17Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/infrastructure/022-ipv6-first-hop-and-routing.yaml",
-      "sha256": "4896c8dc81bb4fa5be607df75ba526774b5bb26ca19d98c442ae13e69552609f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T14:19:19Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T14:19:19Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/002-fhrp-design-hsrp-vrrp.yaml",
-      "sha256": "035fab4ff6bbe8cc4ad04060009d12fcd2a54221cc972aa53ce96ee2a356fcce",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T14:19:21Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T14:19:22Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/001-campus-two-three-tier-ha.yaml",
-      "sha256": "ddb3c23de3f4378b1bec406a8732c5593da291c7f4101fe5d4a7bafde6e53223",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T14:29:00Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T14:29:00Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/troubleshooting/047-campus-routing-blackhole.yaml",
-      "sha256": "2f94781803ab51c813a421f8518f7162429731c6f2ac596ae55631b6b5e5e110",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T14:29:02Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T14:29:03Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/migration/048-flat-vlan-to-routed-access.yaml",
-      "sha256": "06230c8ce5c5dc6250f08ab36ff3fd023d857df6eaf7f1971224e35ee2373241",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T14:29:05Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T14:29:05Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/045-dual-isp-bgp-edge.yaml",
-      "sha256": "e89b7154908062530245cdb0844926bee83e6bbde7f8ead436afbde16f79e79d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T14:44:13Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T14:44:13Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/039-bgp-route-reflector-policy-lab.yaml",
-      "sha256": "59584015c10dca163f4cbae9090b7a4fdff2e2b18ad7753f32c6a7f977991cd2",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T14:44:15Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T14:44:15Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/018-mp-bgp-vrf-lite.yaml",
-      "sha256": "49d48add1df4c3739aad21ef4a6df9329eaa3a6858d600bc826b77b9d8867c47",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T14:44:17Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T14:44:17Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/023-ipsec-vti.yaml",
-      "sha256": "d6568e2a519d0cc49b1c41c2a6a311c2e881ea5f90cec48a7f0e1d385194c90e",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T15:21:15Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T15:21:15Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml",
-      "sha256": "2e2f819d261be77df9bcf89d0dd574569fec3a0cd0baaf06ae4b8765fe0dca99",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T15:21:17Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T15:21:17Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/vpn/039-site-to-site-vpn-security-baseline.yaml",
-      "sha256": "d49273d1e1407c93b4b950f2a3c797fcfa3310cf11fc103af286db9168899a9f",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T15:21:19Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T15:21:19Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/002-cryptography-pki-ipsec.yaml",
-      "sha256": "a1e210914099d72aa3f33e1e41400a25e9bba7c836012c38006b5f2b58f9fd00",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T15:21:21Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T15:21:21Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/004-security-intelligence-sharing.yaml",
-      "sha256": "43423df8c67eeed9bffed3e13ca3be1c28522eb57d82f0337a34ca47e351060b",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T15:21:22Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T15:21:23Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/031-security-api-python.yaml",
-      "sha256": "e92002ad0d0f5b56b9b44e2f88f0b7e2af9b829c5d89e62a05d511854d4f5977",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T15:21:24Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T15:21:24Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/incident-response/041-suspicious-host-containment.yaml",
-      "sha256": "d7ecbfe2c29aab88a19929a090d6a8098dd6de63a4a20185122b59d749e9eb1a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T15:42:08Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T15:42:08Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/nac/043-nac-quarantine-vlan-concept.yaml",
-      "sha256": "eba9c47f4757c120c04250f034e132fd12e8cd1605d2ad0353a7855dfa38867d",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T15:42:10Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T15:42:10Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/025-guest-access-isolation.yaml",
-      "sha256": "9018f0601396d1cd67bcfba17e448bf44153ac901323e39f3d30e2dbfd071137",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T15:42:11Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T15:42:12Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/006-firewall-zone-policy.yaml",
-      "sha256": "f610fc612a1bdce7f9fe9a383293dc2545fb6062e107d5d0011f1eaa53900d83",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T15:56:41Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T15:56:42Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/008-acl-nat-inspection.yaml",
-      "sha256": "5f3a10c329f69ab87bfffa19e72827ec5de1539dc796eaf9c5b842341fa4868a",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T15:56:43Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T15:56:44Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/045-scor-capstone-secure-edge.yaml",
-      "sha256": "d5053ab6aea05ebcb4da50e10a8c01c1ff0b69dc12e6baad8fa7af4377ad77ba",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T15:56:45Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T15:56:46Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/025-netflow-telemetry.yaml",
-      "sha256": "cc0cac77dfdd9ba49e56545ce0627843d6a0636af4eb2e143070ad4543ea262c",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T16:20:32Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T16:20:33Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/028-netflow-ip-sla.yaml",
-      "sha256": "11edddfe34c68363c190d68f3796ca176f7d3fd508bf26c55c6bd0cbac7e4911",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T16:20:34Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T16:20:35Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/026-netflow-stealthwatch.yaml",
-      "sha256": "317c1a22fabd2d1e03d6eed309f65c19c0d8eb1e9f1699bc87c3ef1d5ef6cf89",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T16:20:36Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T16:20:36Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/031-acl-uRPF.yaml",
-      "sha256": "2cdffb976d853b25769242f6691f5f380ba83b09928f081d35082159fb0b57af",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T16:20:38Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T16:20:38Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/031-control-plane-policing.yaml",
-      "sha256": "95fae2f57365f2fa46c3ef9688a67b00f9cffc2d3bdd1d3ffbe742cfc1674df6",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T18:53:05Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T18:53:05Z"
-    },
-    {
-      "path": "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/032-copp-control-plane.yaml",
-      "sha256": "0a7da8925183f2ef0fda7ca8f2b26df29cbb9412169ea48494ccf048c7d87291",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T18:53:07Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T18:53:07Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/029-policy-enforcement-points.yaml",
-      "sha256": "668b3772080b9f9bb98e63456267d797904878f5e17e022b2d5a2ad88e9750d5",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T18:53:09Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T18:53:09Z"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/005-qos-policy-interpretation.yaml",
-      "sha256": "60918d44d0dad2156d21b469b03e5d9bb6bc99613266e8cc4d61420cc492c0aa",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T19:27:10Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T19:27:10Z"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/015-intrusion-policy-concepts.yaml",
-      "sha256": "4ff9aa363861dbff1c5e3be481a01b2639c5d2a7c61327fe04c98e1e2f297cf4",
-      "cml_version": "2.10.1+build.21",
-      "started_utc": "2026-10-30T20:09:04Z",
-      "checks": [],
-      "status": "import-export-pass",
-      "test_lab_removed": true,
-      "completed_utc": "2026-10-30T20:09:04Z"
+      "completed_utc": "2026-10-31T11:17:05Z"
     }
   ]
 }

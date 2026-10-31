@@ -16090,5 +16090,3064 @@
         ]
       }
     ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/028-packet-capture-span.yaml": {
+    "checks": [
+      {
+        "node": "SW",
+        "command": "show monitor session 1",
+        "pattern": "Type\\s*:\\s*Local",
+        "expectation": "The local monitor session is installed; actual packet replication is checked separately."
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.0.10",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"INSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.0.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "CAPTURE",
+        "command": "python3 /lab/p.py proof p0",
+        "pattern": "(?s)(?=.*\"observed\": false)(?=.*\"quiet\": false)",
+        "expectation": "The deployed observer does not treat missing observations as verified quiet."
+      },
+      {
+        "node": "CAPTURE",
+        "command": "python3 /lab/p.py arm p0 8080",
+        "pattern": "\"armed\": true",
+        "expectation": "The actual receive-only AFPacket socket is bound to the live lab data interface before traffic is generated.",
+        "attempts": 1,
+        "command_timeout": 15
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.0.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "CAPTURE",
+        "command": "python3 /lab/p.py proof p0",
+        "pattern": "\"observed\": true",
+        "expectation": "The bounded receiver writes an actual matching Ethernet/IPv4/TCP GET frame to a bounded PCAP and verifies its tuple/hash.",
+        "attempts": 20,
+        "interval_seconds": 1,
+        "command_timeout": 15
+      }
+    ],
+    "transitions": [
+      {
+        "name": "mirror the wrong source direction",
+        "node": "SW",
+        "commands": [
+          "configure terminal",
+          "no monitor session 1",
+          "monitor session 1 source interface Ethernet0/0 tx",
+          "monitor session 1 destination interface Ethernet0/2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py arm p1 8081",
+            "pattern": "\"armed\": true",
+            "expectation": "The actual receive-only AFPacket socket is bound to the live lab data interface before traffic is generated.",
+            "attempts": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.0.20 --port 8081",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py proof p1",
+            "pattern": "\"quiet\": true",
+            "expectation": "The bounded receiver finishes a complete 12-second window without the selected fresh-port HTTP GET packet.",
+            "attempts": 20,
+            "interval_seconds": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.0.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore request visibility",
+        "node": "SW",
+        "commands": [
+          "configure terminal",
+          "no monitor session 1",
+          "monitor session 1 source interface Ethernet0/0 rx",
+          "monitor session 1 destination interface Ethernet0/2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py arm p2 8082",
+            "pattern": "\"armed\": true",
+            "expectation": "The actual receive-only AFPacket socket is bound to the live lab data interface before traffic is generated.",
+            "attempts": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.0.20 --port 8082",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py proof p2",
+            "pattern": "\"observed\": true",
+            "expectation": "The bounded receiver writes an actual matching Ethernet/IPv4/TCP GET frame to a bounded PCAP and verifies its tuple/hash.",
+            "attempts": 20,
+            "interval_seconds": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.0.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/023-span-rspan-erspan.yaml": {
+    "checks": [
+      {
+        "node": "SOURCE",
+        "command": "show monitor session 1",
+        "pattern": "Type\\s*:\\s*Remote",
+        "expectation": "The source remote monitor session is installed; packet transport is independently measured."
+      },
+      {
+        "node": "DEST",
+        "command": "show monitor session 1",
+        "pattern": "Type\\s*:\\s*Remote",
+        "expectation": "The remote destination session is installed before arming the actual receiver."
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.0.10",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"INSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.0.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "CAPTURE",
+        "command": "python3 /lab/p.py proof p0",
+        "pattern": "(?s)(?=.*\"observed\": false)(?=.*\"quiet\": false)",
+        "expectation": "The deployed observer does not treat missing observations as verified quiet."
+      },
+      {
+        "node": "CAPTURE",
+        "command": "python3 /lab/p.py arm p0 8080",
+        "pattern": "\"armed\": true",
+        "expectation": "The actual receive-only AFPacket socket is bound to the live lab data interface before traffic is generated.",
+        "attempts": 1,
+        "command_timeout": 15
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.0.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "CAPTURE",
+        "command": "python3 /lab/p.py proof p0",
+        "pattern": "\"observed\": true",
+        "expectation": "The bounded receiver writes an actual matching Ethernet/IPv4/TCP GET frame to a bounded PCAP and verifies its tuple/hash.",
+        "attempts": 20,
+        "interval_seconds": 1,
+        "command_timeout": 15
+      }
+    ],
+    "transitions": [
+      {
+        "name": "prune only remote visibility transport",
+        "node": "SOURCE",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "switchport trunk allowed vlan 10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py arm p1 8081",
+            "pattern": "\"armed\": true",
+            "expectation": "The actual receive-only AFPacket socket is bound to the live lab data interface before traffic is generated.",
+            "attempts": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.0.20 --port 8081",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py proof p1",
+            "pattern": "\"quiet\": true",
+            "expectation": "The bounded receiver finishes a complete 12-second window without the selected fresh-port HTTP GET packet.",
+            "attempts": 20,
+            "interval_seconds": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.0.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore remote mirror transport",
+        "node": "SOURCE",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "switchport trunk allowed vlan 10,999",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py arm p2 8082",
+            "pattern": "\"armed\": true",
+            "expectation": "The actual receive-only AFPacket socket is bound to the live lab data interface before traffic is generated.",
+            "attempts": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.0.20 --port 8082",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py proof p2",
+            "pattern": "\"observed\": true",
+            "expectation": "The bounded receiver writes an actual matching Ethernet/IPv4/TCP GET frame to a bounded PCAP and verifies its tuple/hash.",
+            "attempts": 20,
+            "interval_seconds": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.0.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility/042-span-netflow-siem-triage.yaml": {
+    "checks": [
+      {
+        "node": "GW",
+        "command": "show ip interface brief",
+        "pattern": "GigabitEthernet0/1\\s+198\\.18\\.30\\.1[^\\n]*up\\s+up",
+        "expectation": "The exporter transit interface is operational."
+      },
+      {
+        "node": "SW",
+        "command": "show monitor session 1",
+        "pattern": "Type\\s*:\\s*Local",
+        "expectation": "The local monitor session is installed; actual packet replication is checked separately."
+      },
+      {
+        "node": "INSIDE",
+        "command": "ip address show dev eth1",
+        "pattern": "inet 198\\.18\\.10\\.10/24",
+        "expectation": "The real traffic client data address is configured before arming the receiver."
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "CAPTURE",
+        "command": "python3 /lab/p.py proof p0",
+        "pattern": "(?s)(?=.*\"observed\": false)(?=.*\"quiet\": false)",
+        "expectation": "The deployed observer does not treat missing observations as verified quiet."
+      },
+      {
+        "node": "CAPTURE",
+        "command": "python3 /lab/p.py arm p0 8080 --routed",
+        "pattern": "\"armed\": true",
+        "expectation": "The actual receive-only AFPacket socket is bound to the live lab data interface before traffic is generated.",
+        "attempts": 1,
+        "command_timeout": 15
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "CAPTURE",
+        "command": "python3 /lab/p.py proof p0",
+        "pattern": "\"observed\": true",
+        "expectation": "The bounded receiver writes an actual matching Ethernet/IPv4/TCP GET frame to a bounded PCAP and verifies its tuple/hash.",
+        "attempts": 20,
+        "interval_seconds": 1,
+        "command_timeout": 15
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/f.py proof 8080",
+        "pattern": "\"observed\": true",
+        "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+        "attempts": 60,
+        "interval_seconds": 2,
+        "command_timeout": 15
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      }
+    ],
+    "transitions": [
+      {
+        "name": "isolate the packet visibility fault",
+        "node": "SW",
+        "commands": [
+          "configure terminal",
+          "no monitor session 1",
+          "monitor session 1 source interface Ethernet0/0 tx",
+          "monitor session 1 destination interface Ethernet0/2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py arm p1 8081 --routed",
+            "pattern": "\"armed\": true",
+            "expectation": "The actual receive-only AFPacket socket is bound to the live lab data interface before traffic is generated.",
+            "attempts": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 8081",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py proof p1",
+            "pattern": "\"quiet\": true",
+            "expectation": "The bounded receiver finishes a complete 12-second window without the selected fresh-port HTTP GET packet.",
+            "attempts": 20,
+            "interval_seconds": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/f.py proof 8081",
+            "pattern": "\"observed\": true",
+            "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+            "attempts": 60,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore both visibility witnesses",
+        "node": "SW",
+        "commands": [
+          "configure terminal",
+          "no monitor session 1",
+          "monitor session 1 source interface Ethernet0/0 rx",
+          "monitor session 1 destination interface Ethernet0/2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py arm p2 8082 --routed",
+            "pattern": "\"armed\": true",
+            "expectation": "The actual receive-only AFPacket socket is bound to the live lab data interface before traffic is generated.",
+            "attempts": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 8082",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py proof p2",
+            "pattern": "\"observed\": true",
+            "expectation": "The bounded receiver writes an actual matching Ethernet/IPv4/TCP GET frame to a bounded PCAP and verifies its tuple/hash.",
+            "attempts": 20,
+            "interval_seconds": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/f.py proof 8082",
+            "pattern": "\"observed\": true",
+            "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+            "attempts": 60,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "isolate the exporter path fault",
+        "node": "FILTER",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended EXPORT-PATH",
+          "deny udp host 198.18.30.1 host 198.18.20.20 eq 2055",
+          "permit ip any any",
+          "exit",
+          "interface GigabitEthernet0/0",
+          "ip access-group EXPORT-PATH in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py arm p3 8083 --routed",
+            "pattern": "\"armed\": true",
+            "expectation": "The actual receive-only AFPacket socket is bound to the live lab data interface before traffic is generated.",
+            "attempts": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 8083",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py proof p3",
+            "pattern": "\"observed\": true",
+            "expectation": "The bounded receiver writes an actual matching Ethernet/IPv4/TCP GET frame to a bounded PCAP and verifies its tuple/hash.",
+            "attempts": 20,
+            "interval_seconds": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/f.py quiet 8083",
+            "pattern": "\"quiet\": true",
+            "expectation": "No new binary NetFlow record for this otherwise successful mirrored HTTP request arrives during a complete40-second window.",
+            "attempts": 1,
+            "command_timeout": 60
+          },
+          {
+            "node": "FILTER",
+            "command": "show access-lists EXPORT-PATH",
+            "pattern": "deny udp[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The separate transit policy counts actual denied exporter datagrams."
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "recover independent packet and flow evidence",
+        "node": "FILTER",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip access-group EXPORT-PATH in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py arm p4 8084 --routed",
+            "pattern": "\"armed\": true",
+            "expectation": "The actual receive-only AFPacket socket is bound to the live lab data interface before traffic is generated.",
+            "attempts": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 8084",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "CAPTURE",
+            "command": "python3 /lab/p.py proof p4",
+            "pattern": "\"observed\": true",
+            "expectation": "The bounded receiver writes an actual matching Ethernet/IPv4/TCP GET frame to a bounded PCAP and verifies its tuple/hash.",
+            "attempts": 20,
+            "interval_seconds": 1,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/f.py proof 8084",
+            "pattern": "\"observed\": true",
+            "expectation": "Actual binary NetFlow contains nonzero TCP packet/byte counters for this phase-specific destination port.",
+            "attempts": 60,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/032-acl-vacl-pacl.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT-A",
+        "command": "ping 198.18.10.20 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      },
+      {
+        "node": "CLIENT-B",
+        "command": "ping 198.18.10.20 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      },
+      {
+        "node": "CLIENT-A",
+        "command": "ping 198.18.10.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      },
+      {
+        "node": "CLIENT-B",
+        "command": "ping 198.18.10.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      },
+      {
+        "node": "SERVER",
+        "command": "ping 198.18.10.10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "apply only the selected ingress port ACL",
+        "node": "SW",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "ip access-group CLIENT-POLICY in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT-A",
+            "command": "ping 198.18.10.20 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The protected segment drops all three probes."
+          },
+          {
+            "node": "CLIENT-B",
+            "command": "ping 198.18.10.20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT-A",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT-B",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "SERVER",
+            "command": "ping 198.18.10.10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "SW",
+            "command": "show access-lists CLIENT-POLICY",
+            "pattern": "deny icmp[^\\n]*echo[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Actual selected ingress echo requests increment the deny counter."
+          }
+        ]
+      },
+      {
+        "name": "restore the unfiltered access port",
+        "node": "SW",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "no ip access-group CLIENT-POLICY in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT-A",
+            "command": "ping 198.18.10.20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT-B",
+            "command": "ping 198.18.10.20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT-A",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT-B",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "SERVER",
+            "command": "ping 198.18.10.10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          }
+        ]
+      },
+      {
+        "name": "apply VLAN-wide request selection",
+        "node": "SW",
+        "commands": [
+          "configure terminal",
+          "vlan filter SERVICE-GUARD vlan-list 10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT-A",
+            "command": "ping 198.18.10.20 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The protected segment drops all three probes."
+          },
+          {
+            "node": "CLIENT-B",
+            "command": "ping 198.18.10.20 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The protected segment drops all three probes."
+          },
+          {
+            "node": "CLIENT-A",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT-B",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "SERVER",
+            "command": "ping 198.18.10.10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          }
+        ]
+      },
+      {
+        "name": "restore independent ingress service paths",
+        "node": "SW",
+        "commands": [
+          "configure terminal",
+          "no vlan filter SERVICE-GUARD vlan-list 10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT-A",
+            "command": "ping 198.18.10.20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT-B",
+            "command": "ping 198.18.10.20 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT-A",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT-B",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "SERVER",
+            "command": "ping 198.18.10.10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/025-dhcp-relay-snooping.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "show ip interface brief",
+        "pattern": "Ethernet0/0\\s+198\\.18\\.10\\.100\\s+YES DHCP\\s+up\\s+up",
+        "expectation": "The client actually receives its remote-subnet DHCP lease through the relay.",
+        "attempts": 45,
+        "interval_seconds": 3
+      },
+      {
+        "node": "SW",
+        "command": "show ip dhcp snooping binding",
+        "pattern": "02:00:00:00:10:02\\s+198\\.18\\.10\\.100\\s+\\d+\\s+dhcp-snooping\\s+10\\s+GigabitEthernet0/1",
+        "expectation": "The actual relayed lease binds the client MAC/address/VLAN and this access-switch ingress.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 198.18.10.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      },
+      {
+        "node": "SERVER",
+        "command": "ping 198.18.10.100 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "remove only relay-facing snooping trust",
+        "node": "SW",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip dhcp snooping trust",
+          "exit",
+          "do debug ip dhcp snooping packet",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          }
+        ]
+      },
+      {
+        "name": "force fresh acquisition through the untrusted reply port",
+        "node": "CLIENT",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "shutdown",
+          "no ip address dhcp",
+          "ip address dhcp",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "RELAY",
+            "command": "ping 198.18.10.100 repeat 5 timeout 2",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "An independent router observes a complete unanswered client window while reacquisition is blocked.",
+            "attempts": 1,
+            "command_timeout": 20
+          },
+          {
+            "node": "CLIENT",
+            "command": "show ip interface brief",
+            "pattern": "Ethernet0/0\\s+unassigned\\s+YES DHCP\\s+up\\s+up",
+            "expectation": "The new DHCP acquisition remains unassigned with the server-reply port untrusted.",
+            "attempts": 1
+          },
+          {
+            "node": "RELAY",
+            "command": "ping 198.18.10.100 repeat 5 timeout 2",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "An independent router observes a complete unanswered client window while reacquisition is blocked.",
+            "attempts": 1,
+            "command_timeout": 20
+          },
+          {
+            "node": "SW",
+            "command": "show running-config interface GigabitEthernet0/0",
+            "pattern": "interface GigabitEthernet0/0",
+            "expectation": "The relay-facing VLAN10 port has no trust exception during the measured failure.",
+            "absent_pattern": "ip dhcp snooping trust"
+          },
+          {
+            "node": "SW",
+            "command": "show logging | include DHCPDISCOVER|output port set",
+            "pattern": "(?s)message type[^\\r\\n]*DHCPDISCOVER[^\\r\\n]*\\r?\\n[^\\r\\n]*bridge packet output port set is null, packet is dropped",
+            "expectation": "A fresh DHCPDISCOVER is followed by the actual switch decision to drop it because no eligible trusted output port remains.",
+            "attempts": 40,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "CLIENT",
+            "command": "show ip interface brief",
+            "pattern": "Ethernet0/0\\s+unassigned\\s+YES DHCP\\s+up\\s+up",
+            "expectation": "The new DHCP acquisition remains unassigned with the server-reply port untrusted.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "restore the legitimate reply boundary",
+        "node": "SW",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "ip dhcp snooping trust",
+          "exit",
+          "do undebug all",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "show ip interface brief",
+            "pattern": "Ethernet0/0\\s+198\\.18\\.10\\.100\\s+YES DHCP\\s+up\\s+up",
+            "expectation": "The client actually receives its remote-subnet DHCP lease through the relay.",
+            "attempts": 45,
+            "interval_seconds": 3
+          },
+          {
+            "node": "SW",
+            "command": "show ip dhcp snooping binding",
+            "pattern": "02:00:00:00:10:02\\s+198\\.18\\.10\\.100\\s+\\d+\\s+dhcp-snooping\\s+10\\s+GigabitEthernet0/1",
+            "expectation": "The actual relayed lease binds the client MAC/address/VLAN and this access-switch ingress.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "SERVER",
+            "command": "ping 198.18.10.100 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/042-dual-stack-campus-with-fhrp.yaml": {
+    "checks": [
+      {
+        "node": "CORE1",
+        "command": "show standby brief",
+        "pattern": "Active\\s+local",
+        "expectation": "CORE1 is the actual active gateway.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CORE1",
+        "command": "show standby brief",
+        "pattern": "(?im)^Vl10\\s+11\\s+\\d+\\s+P\\s+Active\\s+local[^\\r\\n]*FE80::10",
+        "expectation": "The independently numbered IPv6 HSRP group is actually active on CORE1.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 198.18.10.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The actual first-hop virtual IP is reachable.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The explicit endpoint route and the active first hop reach the isolated loopback service.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping ipv6 2001:DB8:FFFF::80 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The IPv6 endpoint actually forwards through its explicit virtual link-local next hop.",
+        "attempts": 30,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "fail only the preferred gateway SVI",
+        "node": "CORE1",
+        "commands": [
+          "configure terminal",
+          "interface Vlan10",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CORE2",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "CORE2 actually takes over the virtual gateway.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE2",
+            "command": "show standby brief",
+            "pattern": "(?im)^Vl10\\s+11\\s+\\d+\\s+P\\s+Active\\s+local[^\\r\\n]*FE80::10",
+            "expectation": "The independently numbered IPv6 HSRP group is actually active on CORE2.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual first-hop virtual IP is reachable.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The explicit endpoint route and the active first hop reach the isolated loopback service.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping ipv6 2001:DB8:FFFF::80 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The IPv6 endpoint actually forwards through its explicit virtual link-local next hop.",
+            "attempts": 30,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "recover both preferred first hops",
+        "node": "CORE1",
+        "commands": [
+          "configure terminal",
+          "interface Vlan10",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CORE1",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "CORE1 is the actual active gateway.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE1",
+            "command": "show standby brief",
+            "pattern": "(?im)^Vl10\\s+11\\s+\\d+\\s+P\\s+Active\\s+local[^\\r\\n]*FE80::10",
+            "expectation": "The independently numbered IPv6 HSRP group is actually active on CORE1.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual first-hop virtual IP is reachable.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The explicit endpoint route and the active first hop reach the isolated loopback service.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping ipv6 2001:DB8:FFFF::80 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The IPv6 endpoint actually forwards through its explicit virtual link-local next hop.",
+            "attempts": 30,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "isolate an IPv6 endpoint route fault",
+        "node": "CLIENT",
+        "commands": [
+          "configure terminal",
+          "no ipv6 route 2001:DB8:FFFF::80/128 Ethernet0/0 FE80::10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping ipv6 2001:DB8:FFFF::80 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The IPv6 endpoint loses only the selected IPv6 service after its explicit next-hop route is withdrawn.",
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The explicit endpoint route and the active first hop reach the isolated loopback service.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE1",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "CORE1 is the actual active gateway.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE1",
+            "command": "show standby brief",
+            "pattern": "(?im)^Vl10\\s+11\\s+\\d+\\s+P\\s+Active\\s+local[^\\r\\n]*FE80::10",
+            "expectation": "The independently numbered IPv6 HSRP group is actually active on CORE1.",
+            "attempts": 40,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore the selected IPv6 service route",
+        "node": "CLIENT",
+        "commands": [
+          "configure terminal",
+          "ipv6 route 2001:DB8:FFFF::80/128 Ethernet0/0 FE80::10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CORE1",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "CORE1 is the actual active gateway.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE1",
+            "command": "show standby brief",
+            "pattern": "(?im)^Vl10\\s+11\\s+\\d+\\s+P\\s+Active\\s+local[^\\r\\n]*FE80::10",
+            "expectation": "The independently numbered IPv6 HSRP group is actually active on CORE1.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual first-hop virtual IP is reachable.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.80 source Ethernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The explicit endpoint route and the active first hop reach the isolated loopback service.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping ipv6 2001:DB8:FFFF::80 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The IPv6 endpoint actually forwards through its explicit virtual link-local next hop.",
+            "attempts": 30,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/041-small-office-full-stack.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "show ip interface brief",
+        "pattern": "Ethernet0/0\\s+198\\.18\\.10\\.100\\s+YES DHCP\\s+up\\s+up",
+        "expectation": "The office client actually acquires the only available DHCP lease.",
+        "attempts": 45,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "show ip route 0.0.0.0",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.10\\.1",
+        "expectation": "The DHCP-dependent static default resolves to the actual advertised gateway.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 198.18.10.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping 192.0.2.80 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      },
+      {
+        "node": "GW",
+        "command": "show ip nat translations",
+        "pattern": "icmp\\s+198\\.18\\.0\\.1:\\d+\\s+198\\.18\\.10\\.100:\\d+\\s+192\\.0\\.2\\.80:",
+        "expectation": "An actual client ICMP translation uses the WAN address, not a configured NAT string."
+      },
+      {
+        "node": "SERVER",
+        "command": "show ip route 198.18.10.100",
+        "pattern": "Network not in table",
+        "expectation": "The service has no route back to the private client; successful replies depend on actual PAT."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "remove only client source translation",
+        "node": "GW",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0.10",
+          "no ip nat inside",
+          "exit",
+          "do clear ip nat translation *",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.80 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The protected segment drops all three probes."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "GW",
+            "command": "ping 192.0.2.80 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "SERVER",
+            "command": "show ip route 198.18.10.100",
+            "pattern": "Network not in table",
+            "expectation": "The service has no route back to the private client; successful replies depend on actual PAT."
+          }
+        ]
+      },
+      {
+        "name": "recover actual source translation",
+        "node": "GW",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0.10",
+          "ip nat inside",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "show ip interface brief",
+            "pattern": "Ethernet0/0\\s+198\\.18\\.10\\.100\\s+YES DHCP\\s+up\\s+up",
+            "expectation": "The office client actually acquires the only available DHCP lease.",
+            "attempts": 45,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "show ip route 0.0.0.0",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.10\\.1",
+            "expectation": "The DHCP-dependent static default resolves to the actual advertised gateway.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.80 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "GW",
+            "command": "show ip nat translations",
+            "pattern": "icmp\\s+198\\.18\\.0\\.1:\\d+\\s+198\\.18\\.10\\.100:\\d+\\s+192\\.0\\.2\\.80:",
+            "expectation": "An actual client ICMP translation uses the WAN address, not a configured NAT string."
+          },
+          {
+            "node": "SERVER",
+            "command": "show ip route 198.18.10.100",
+            "pattern": "Network not in table",
+            "expectation": "The service has no route back to the private client; successful replies depend on actual PAT."
+          }
+        ]
+      },
+      {
+        "name": "prune only the office VLAN",
+        "node": "SW",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "switchport trunk allowed vlan 20",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The protected segment drops all three probes."
+          },
+          {
+            "node": "SERVER",
+            "command": "ping 198.18.0.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT",
+            "command": "show ip interface brief",
+            "pattern": "Ethernet0/0\\s+198\\.18\\.10\\.100\\s+YES DHCP\\s+up\\s+up",
+            "expectation": "The office client actually acquires the only available DHCP lease.",
+            "attempts": 45,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "recover the office trunk",
+        "node": "SW",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "switchport trunk allowed vlan 10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "show ip interface brief",
+            "pattern": "Ethernet0/0\\s+198\\.18\\.10\\.100\\s+YES DHCP\\s+up\\s+up",
+            "expectation": "The office client actually acquires the only available DHCP lease.",
+            "attempts": 45,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "show ip route 0.0.0.0",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.10\\.1",
+            "expectation": "The DHCP-dependent static default resolves to the actual advertised gateway.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 198.18.10.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping 192.0.2.80 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "GW",
+            "command": "show ip nat translations",
+            "pattern": "icmp\\s+198\\.18\\.0\\.1:\\d+\\s+198\\.18\\.10\\.100:\\d+\\s+192\\.0\\.2\\.80:",
+            "expectation": "An actual client ICMP translation uses the WAN address, not a configured NAT string."
+          },
+          {
+            "node": "SERVER",
+            "command": "show ip route 198.18.10.100",
+            "pattern": "Network not in table",
+            "expectation": "The service has no route back to the private client; successful replies depend on actual PAT."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/apis/032-rest-pagination-and-error-handling.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py pagination baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Actual remote pagination invariants hold for baseline.",
+        "attempts": 3,
+        "interval_seconds": 2
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py errors baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Actual remote errors invariants hold for baseline.",
+        "attempts": 3,
+        "interval_seconds": 2
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py rate baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Actual remote rate invariants hold for baseline.",
+        "attempts": 3,
+        "interval_seconds": 2
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py telemetry baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Actual remote telemetry invariants hold for baseline.",
+        "attempts": 3,
+        "interval_seconds": 2
+      }
+    ],
+    "transitions": [
+      {
+        "name": "isolate a cyclic pagination failure",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode cursor-loop"
+        ],
+        "command_pattern": "\"status\": \"configured\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py pagination fault",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote pagination invariants hold for fault.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py errors baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote errors invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py telemetry baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote telemetry invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "recover complete collection",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode healthy"
+        ],
+        "command_pattern": "\"status\": \"configured\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py pagination baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote pagination invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py errors baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote errors invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py rate baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote rate invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py telemetry baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote telemetry invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "isolate resource availability",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode unavailable"
+        ],
+        "command_pattern": "\"status\": \"configured\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py errors fault",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote errors invariants hold for fault.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py pagination baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote pagination invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "recover bounded resource access",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode healthy"
+        ],
+        "command_pattern": "\"status\": \"configured\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py pagination baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote pagination invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py errors baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote errors invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py rate baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote rate invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py telemetry baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote telemetry invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "isolate persistent throttling",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode always-throttle"
+        ],
+        "command_pattern": "\"status\": \"configured\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py rate fault",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote rate invariants hold for fault.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py errors baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote errors invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py pagination baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote pagination invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "recover the complete pipeline",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode healthy"
+        ],
+        "command_pattern": "\"status\": \"configured\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py pagination baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote pagination invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py errors baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote errors invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py rate baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote rate invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py telemetry baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote telemetry invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/assessment/038-devcor-practical-checkpoint.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py database baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Actual remote database invariants hold for baseline.",
+        "attempts": 3,
+        "interval_seconds": 2
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py cache baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Actual remote cache invariants hold for baseline.",
+        "attempts": 3,
+        "interval_seconds": 2
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py telemetry baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Actual remote telemetry invariants hold for baseline.",
+        "attempts": 3,
+        "interval_seconds": 2
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py errors baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "Actual remote errors invariants hold for baseline.",
+        "attempts": 3,
+        "interval_seconds": 2
+      }
+    ],
+    "transitions": [
+      {
+        "name": "detect a false cache validator",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode stale-etag"
+        ],
+        "command_pattern": "\"status\": \"configured\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py cache fault",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote cache invariants hold for fault.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py database baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote database invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py telemetry baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote telemetry invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "restore representation revalidation",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode healthy"
+        ],
+        "command_pattern": "\"status\": \"configured\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py database baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote database invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py cache baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote cache invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py telemetry baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote telemetry invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py errors baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote errors invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "detect missing correlation despite healthy HTTP",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode no-trace"
+        ],
+        "command_pattern": "\"status\": \"configured\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py telemetry fault",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote telemetry invariants hold for fault.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py database baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote database invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py cache baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote cache invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "restore actual event correlation",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode healthy"
+        ],
+        "command_pattern": "\"status\": \"configured\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py database baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote database invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py cache baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote cache invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py telemetry baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote telemetry invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py errors baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote errors invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "reject persistence without partial writes",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode read-only"
+        ],
+        "command_pattern": "\"status\": \"configured\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py database fault",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote database invariants hold for fault.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py cache baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote cache invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py telemetry baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote telemetry invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "recover application integrity",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/client.py --set-mode healthy"
+        ],
+        "command_pattern": "\"status\": \"configured\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py database baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote database invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py cache baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote cache invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py telemetry baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote telemetry invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/client.py errors baseline",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "Actual remote errors invariants hold for baseline.",
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/028-troubleshooting-path.yaml": {
+    "checks": [
+      {
+        "node": "EDGE",
+        "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The independent endpoint request completes.",
+        "attempts": 20,
+        "interval_seconds": 2
+      },
+      {
+        "node": "SERVICE",
+        "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The reverse-originated echo exchange completes even when only forward echo requests are filtered.",
+        "attempts": 15,
+        "interval_seconds": 2
+      },
+      {
+        "node": "EDGE",
+        "command": "ping 198.18.12.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All three probes succeed."
+      },
+      {
+        "node": "TRANSIT",
+        "command": "ping 192.0.2.80 source Ethernet0/1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The final-hop router still reaches the service using its own connected return path.",
+        "attempts": 15,
+        "interval_seconds": 2
+      },
+      {
+        "node": "EDGE",
+        "command": "show ip route 192.0.2.80",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.12\\.2",
+        "expectation": "The source endpoint retains its intended destination next hop."
+      },
+      {
+        "node": "SERVICE",
+        "command": "show ip route 192.0.2.1",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.23\\.1",
+        "expectation": "The service retains its explicit return route."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "remove only the endpoint return route",
+        "node": "SERVICE",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.1 255.255.255.255 198.18.23.1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The independent endpoint request fails under the named controlled path fault.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "EDGE",
+            "command": "ping 198.18.12.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "TRANSIT",
+            "command": "ping 192.0.2.80 source Ethernet0/1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The final-hop router still reaches the service using its own connected return path.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "EDGE",
+            "command": "show ip route 192.0.2.80",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.12\\.2",
+            "expectation": "The source endpoint retains its intended destination next hop."
+          },
+          {
+            "node": "SERVICE",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The service lacks only the remote endpoint return route."
+          }
+        ]
+      },
+      {
+        "name": "recover the endpoint return path",
+        "node": "SERVICE",
+        "commands": [
+          "configure terminal",
+          "ip route 192.0.2.1 255.255.255.255 198.18.23.1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent endpoint request completes.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "SERVICE",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The reverse-originated echo exchange completes even when only forward echo requests are filtered.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "EDGE",
+            "command": "ping 198.18.12.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "TRANSIT",
+            "command": "ping 192.0.2.80 source Ethernet0/1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The final-hop router still reaches the service using its own connected return path.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "EDGE",
+            "command": "show ip route 192.0.2.80",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.12\\.2",
+            "expectation": "The source endpoint retains its intended destination next hop."
+          },
+          {
+            "node": "SERVICE",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.23\\.1",
+            "expectation": "The service retains its explicit return route."
+          }
+        ]
+      },
+      {
+        "name": "filter only forward echo requests",
+        "node": "TRANSIT",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "ip access-group REQUEST-FAULT in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The independent endpoint request fails under the named controlled path fault.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "SERVICE",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The reverse-originated echo exchange completes even when only forward echo requests are filtered.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "EDGE",
+            "command": "ping 198.18.12.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "TRANSIT",
+            "command": "ping 192.0.2.80 source Ethernet0/1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The final-hop router still reaches the service using its own connected return path.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "EDGE",
+            "command": "show ip route 192.0.2.80",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.12\\.2",
+            "expectation": "The source endpoint retains its intended destination next hop."
+          },
+          {
+            "node": "SERVICE",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.23\\.1",
+            "expectation": "The service retains its explicit return route."
+          },
+          {
+            "node": "TRANSIT",
+            "command": "show access-lists REQUEST-FAULT",
+            "pattern": "deny icmp[^\\n]*echo[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Actual selected transit requests increment the deny counter."
+          }
+        ]
+      },
+      {
+        "name": "recover forward request admission",
+        "node": "TRANSIT",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no ip access-group REQUEST-FAULT in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent endpoint request completes.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "SERVICE",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The reverse-originated echo exchange completes even when only forward echo requests are filtered.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "EDGE",
+            "command": "ping 198.18.12.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "TRANSIT",
+            "command": "ping 192.0.2.80 source Ethernet0/1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The final-hop router still reaches the service using its own connected return path.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "EDGE",
+            "command": "show ip route 192.0.2.80",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.12\\.2",
+            "expectation": "The source endpoint retains its intended destination next hop."
+          },
+          {
+            "node": "SERVICE",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.23\\.1",
+            "expectation": "The service retains its explicit return route."
+          }
+        ]
+      },
+      {
+        "name": "replace the source forwarding decision",
+        "node": "EDGE",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.80 255.255.255.255 198.18.12.2",
+          "ip route 192.0.2.80 255.255.255.255 Null0",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The independent endpoint request fails under the named controlled path fault.",
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "EDGE",
+            "command": "ping 198.18.12.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "TRANSIT",
+            "command": "ping 192.0.2.80 source Ethernet0/1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The final-hop router still reaches the service using its own connected return path.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "SERVICE",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.23\\.1",
+            "expectation": "The service retains its explicit return route."
+          },
+          {
+            "node": "EDGE",
+            "command": "show ip route 192.0.2.80",
+            "pattern": "Null0",
+            "expectation": "The actual installed service route is the deliberate local discard."
+          }
+        ]
+      },
+      {
+        "name": "recover the intended source next hop",
+        "node": "EDGE",
+        "commands": [
+          "configure terminal",
+          "no ip route 192.0.2.80 255.255.255.255 Null0",
+          "ip route 192.0.2.80 255.255.255.255 198.18.12.2",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent endpoint request completes.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "SERVICE",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The reverse-originated echo exchange completes even when only forward echo requests are filtered.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "EDGE",
+            "command": "ping 198.18.12.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All three probes succeed."
+          },
+          {
+            "node": "TRANSIT",
+            "command": "ping 192.0.2.80 source Ethernet0/1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The final-hop router still reaches the service using its own connected return path.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "EDGE",
+            "command": "show ip route 192.0.2.80",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.12\\.2",
+            "expectation": "The source endpoint retains its intended destination next hop."
+          },
+          {
+            "node": "SERVICE",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.23\\.1",
+            "expectation": "The service retains its explicit return route."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/capstone/050-encor-capstone-enterprise-edge.yaml": {
+    "checks": [
+      {
+        "node": "EDGE",
+        "command": "show ip bgp summary",
+        "pattern": "(?m)^198\\.18\\.1\\.2\\s+[^\\r\\n]*\\s+1\\s*$",
+        "expectation": "The actual ISP1 BGP session has received the one allowed service prefix.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "EDGE",
+        "command": "show ip bgp summary",
+        "pattern": "(?m)^198\\.18\\.2\\.2\\s+[^\\r\\n]*\\s+1\\s*$",
+        "expectation": "The actual ISP2 BGP session has received the one allowed service prefix.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "EDGE",
+        "command": "show ip route 192.0.2.80",
+        "pattern": "(?s)Known via \"bgp 65001\".*198\\.18\\.1\\.2",
+        "expectation": "The actual installed service route selects ISP1.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "EDGE",
+        "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The independent edge loopback source actually reaches the selected provider service.",
+        "attempts": 20,
+        "interval_seconds": 2
+      }
+    ],
+    "transitions": [
+      {
+        "name": "reference clear first receiver request counters",
+        "node": "ISP1",
+        "commands": [
+          "clear access-list counters PATH-MEASURE"
+        ],
+        "checks": [
+          {
+            "node": "ISP1",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo",
+            "expectation": "The receiver records no selected service requests since its counter reset.",
+            "absent_pattern": "permit icmp[^\\r\\n]*echo[^\\r\\n]*\\([1-9][0-9]* match"
+          }
+        ]
+      },
+      {
+        "name": "reference measure selected provider with fresh receiver counters",
+        "node": "ISP2",
+        "commands": [
+          "clear access-list counters PATH-MEASURE"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent edge loopback source actually reaches the selected provider service.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "ISP1",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo[^\\r\\n]*\\([1-9][0-9]* match",
+            "expectation": "The receiver records actual selected service requests."
+          },
+          {
+            "node": "ISP2",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo",
+            "expectation": "The receiver records no selected service requests since its counter reset.",
+            "absent_pattern": "permit icmp[^\\r\\n]*echo[^\\r\\n]*\\([1-9][0-9]* match"
+          }
+        ]
+      },
+      {
+        "name": "withdraw only the preferred service advertisement",
+        "node": "ISP1",
+        "commands": [
+          "configure terminal",
+          "router bgp 65002",
+          "no network 192.0.2.80 mask 255.255.255.255",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "show ip bgp summary",
+            "pattern": "(?m)^198\\.18\\.2\\.2\\s+[^\\r\\n]*\\s+1\\s*$",
+            "expectation": "The actual ISP2 BGP session has received the one allowed service prefix.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "EDGE",
+            "command": "show ip route 192.0.2.80",
+            "pattern": "(?s)Known via \"bgp 65001\".*198\\.18\\.2\\.2",
+            "expectation": "The actual installed service route selects ISP2.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent edge loopback source actually reaches the selected provider service.",
+            "attempts": 20,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "withdrawal clear first receiver request counters",
+        "node": "ISP1",
+        "commands": [
+          "clear access-list counters PATH-MEASURE"
+        ],
+        "checks": [
+          {
+            "node": "ISP1",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo",
+            "expectation": "The receiver records no selected service requests since its counter reset.",
+            "absent_pattern": "permit icmp[^\\r\\n]*echo[^\\r\\n]*\\([1-9][0-9]* match"
+          }
+        ]
+      },
+      {
+        "name": "withdrawal measure selected provider with fresh receiver counters",
+        "node": "ISP2",
+        "commands": [
+          "clear access-list counters PATH-MEASURE"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent edge loopback source actually reaches the selected provider service.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "ISP2",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo[^\\r\\n]*\\([1-9][0-9]* match",
+            "expectation": "The receiver records actual selected service requests."
+          },
+          {
+            "node": "ISP1",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo",
+            "expectation": "The receiver records no selected service requests since its counter reset.",
+            "absent_pattern": "permit icmp[^\\r\\n]*echo[^\\r\\n]*\\([1-9][0-9]* match"
+          }
+        ]
+      },
+      {
+        "name": "restore preferred service origination",
+        "node": "ISP1",
+        "commands": [
+          "configure terminal",
+          "router bgp 65002",
+          "network 192.0.2.80 mask 255.255.255.255",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "show ip bgp summary",
+            "pattern": "(?m)^198\\.18\\.1\\.2\\s+[^\\r\\n]*\\s+1\\s*$",
+            "expectation": "The actual ISP1 BGP session has received the one allowed service prefix.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "EDGE",
+            "command": "show ip bgp summary",
+            "pattern": "(?m)^198\\.18\\.2\\.2\\s+[^\\r\\n]*\\s+1\\s*$",
+            "expectation": "The actual ISP2 BGP session has received the one allowed service prefix.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "EDGE",
+            "command": "show ip route 192.0.2.80",
+            "pattern": "(?s)Known via \"bgp 65001\".*198\\.18\\.1\\.2",
+            "expectation": "The actual installed service route selects ISP1.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent edge loopback source actually reaches the selected provider service.",
+            "attempts": 20,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "advertisement recovery clear first receiver request counters",
+        "node": "ISP1",
+        "commands": [
+          "clear access-list counters PATH-MEASURE"
+        ],
+        "checks": [
+          {
+            "node": "ISP1",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo",
+            "expectation": "The receiver records no selected service requests since its counter reset.",
+            "absent_pattern": "permit icmp[^\\r\\n]*echo[^\\r\\n]*\\([1-9][0-9]* match"
+          }
+        ]
+      },
+      {
+        "name": "advertisement recovery measure selected provider with fresh receiver counters",
+        "node": "ISP2",
+        "commands": [
+          "clear access-list counters PATH-MEASURE"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent edge loopback source actually reaches the selected provider service.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "ISP1",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo[^\\r\\n]*\\([1-9][0-9]* match",
+            "expectation": "The receiver records actual selected service requests."
+          },
+          {
+            "node": "ISP2",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo",
+            "expectation": "The receiver records no selected service requests since its counter reset.",
+            "absent_pattern": "permit icmp[^\\r\\n]*echo[^\\r\\n]*\\([1-9][0-9]* match"
+          }
+        ]
+      },
+      {
+        "name": "introduce a preference mistake with healthy peers",
+        "node": "EDGE",
+        "commands": [
+          "configure terminal",
+          "route-map ISP2-IN permit 10",
+          "set local-preference 250",
+          "exit",
+          "do clear ip bgp 198.18.2.2 soft in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "show ip bgp summary",
+            "pattern": "(?m)^198\\.18\\.1\\.2\\s+[^\\r\\n]*\\s+1\\s*$",
+            "expectation": "The actual ISP1 BGP session has received the one allowed service prefix.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "EDGE",
+            "command": "show ip bgp summary",
+            "pattern": "(?m)^198\\.18\\.2\\.2\\s+[^\\r\\n]*\\s+1\\s*$",
+            "expectation": "The actual ISP2 BGP session has received the one allowed service prefix.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "EDGE",
+            "command": "show ip route 192.0.2.80",
+            "pattern": "(?s)Known via \"bgp 65001\".*198\\.18\\.2\\.2",
+            "expectation": "The actual installed service route selects ISP2.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent edge loopback source actually reaches the selected provider service.",
+            "attempts": 20,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "preference mistake clear first receiver request counters",
+        "node": "ISP1",
+        "commands": [
+          "clear access-list counters PATH-MEASURE"
+        ],
+        "checks": [
+          {
+            "node": "ISP1",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo",
+            "expectation": "The receiver records no selected service requests since its counter reset.",
+            "absent_pattern": "permit icmp[^\\r\\n]*echo[^\\r\\n]*\\([1-9][0-9]* match"
+          }
+        ]
+      },
+      {
+        "name": "preference mistake measure selected provider with fresh receiver counters",
+        "node": "ISP2",
+        "commands": [
+          "clear access-list counters PATH-MEASURE"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent edge loopback source actually reaches the selected provider service.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "ISP2",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo[^\\r\\n]*\\([1-9][0-9]* match",
+            "expectation": "The receiver records actual selected service requests."
+          },
+          {
+            "node": "ISP1",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo",
+            "expectation": "The receiver records no selected service requests since its counter reset.",
+            "absent_pattern": "permit icmp[^\\r\\n]*echo[^\\r\\n]*\\([1-9][0-9]* match"
+          }
+        ]
+      },
+      {
+        "name": "restore intended provider preference",
+        "node": "EDGE",
+        "commands": [
+          "configure terminal",
+          "route-map ISP2-IN permit 10",
+          "set local-preference 100",
+          "exit",
+          "do clear ip bgp 198.18.2.2 soft in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "show ip bgp summary",
+            "pattern": "(?m)^198\\.18\\.1\\.2\\s+[^\\r\\n]*\\s+1\\s*$",
+            "expectation": "The actual ISP1 BGP session has received the one allowed service prefix.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "EDGE",
+            "command": "show ip bgp summary",
+            "pattern": "(?m)^198\\.18\\.2\\.2\\s+[^\\r\\n]*\\s+1\\s*$",
+            "expectation": "The actual ISP2 BGP session has received the one allowed service prefix.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "EDGE",
+            "command": "show ip route 192.0.2.80",
+            "pattern": "(?s)Known via \"bgp 65001\".*198\\.18\\.1\\.2",
+            "expectation": "The actual installed service route selects ISP1.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent edge loopback source actually reaches the selected provider service.",
+            "attempts": 20,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "final recovery clear first receiver request counters",
+        "node": "ISP1",
+        "commands": [
+          "clear access-list counters PATH-MEASURE"
+        ],
+        "checks": [
+          {
+            "node": "ISP1",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo",
+            "expectation": "The receiver records no selected service requests since its counter reset.",
+            "absent_pattern": "permit icmp[^\\r\\n]*echo[^\\r\\n]*\\([1-9][0-9]* match"
+          }
+        ]
+      },
+      {
+        "name": "final recovery measure selected provider with fresh receiver counters",
+        "node": "ISP2",
+        "commands": [
+          "clear access-list counters PATH-MEASURE"
+        ],
+        "checks": [
+          {
+            "node": "EDGE",
+            "command": "ping 192.0.2.80 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The independent edge loopback source actually reaches the selected provider service.",
+            "attempts": 20,
+            "interval_seconds": 2
+          },
+          {
+            "node": "ISP1",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo[^\\r\\n]*\\([1-9][0-9]* match",
+            "expectation": "The receiver records actual selected service requests."
+          },
+          {
+            "node": "ISP2",
+            "command": "show access-lists PATH-MEASURE",
+            "pattern": "permit icmp host 192\\.0\\.2\\.1 host 192\\.0\\.2\\.80 echo",
+            "expectation": "The receiver records no selected service requests since its counter reset.",
+            "absent_pattern": "permit icmp[^\\r\\n]*echo[^\\r\\n]*\\([1-9][0-9]* match"
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/capstone/051-encor-capstone-campus-core.yaml": {
+    "checks": [
+      {
+        "node": "CORE1",
+        "command": "show ip route 198.19.0.80",
+        "pattern": "Known via \"ospf 1\"",
+        "expectation": "The selected core actually has a remote-service OSPF route.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CORE2",
+        "command": "show ip route 198.19.0.80",
+        "pattern": "Known via \"ospf 1\"",
+        "expectation": "The selected core actually has a remote-service OSPF route.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CORE1",
+        "command": "show standby brief",
+        "pattern": "Active\\s+local",
+        "expectation": "CORE1 is the actual active gateway.",
+        "attempts": 40,
+        "interval_seconds": 3
+      },
+      {
+        "node": "CORE1",
+        "command": "show track 1",
+        "pattern": "Reachability is Up",
+        "expectation": "The object tracks actual remote-prefix reachability, not local carrier alone.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "ACCESS",
+        "command": "show interfaces Vlan10",
+        "pattern": "Vlan10 is up, line protocol is up",
+        "expectation": "The access LAN remains operational independently of first-hop ownership.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "ACCESS",
+        "command": "ping 198.18.10.1 source Vlan10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The local virtual gateway remains actually reachable.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "ACCESS",
+        "command": "ping 198.19.0.80 source Vlan10 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The access SVI source actually reaches the separate remote service through the selected virtual first hop.",
+        "attempts": 30,
+        "interval_seconds": 3
+      }
+    ],
+    "transitions": [
+      {
+        "name": "lose upstream routing without dropping the LAN",
+        "node": "CORE1",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "passive-interface GigabitEthernet0/1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CORE1",
+            "command": "show track 1",
+            "pattern": "Reachability is Down",
+            "expectation": "The object tracks actual remote-prefix reachability, not local carrier alone.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE1",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "CORE1 is the actual active gateway.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "ACCESS",
+            "command": "ping 198.18.10.1 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The local virtual gateway remains actually reachable.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "ACCESS",
+            "command": "ping 198.19.0.80 source Vlan10 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The access SVI source loses remote service despite a reachable local virtual gateway.",
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE2",
+            "command": "show ip route 198.19.0.80",
+            "pattern": "Known via \"ospf 1\"",
+            "expectation": "The selected core actually has a remote-service OSPF route.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE2",
+            "command": "ping 198.19.0.80 source GigabitEthernet0/0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The standby core independently reaches the same separate service.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "ACCESS",
+            "command": "show interfaces Vlan10",
+            "pattern": "Vlan10 is up, line protocol is up",
+            "expectation": "The access LAN remains operational independently of first-hop ownership.",
+            "attempts": 30,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "connect first-hop priority to actual route health",
+        "node": "CORE1",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "standby 10 track 1 decrement 30",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CORE1",
+            "command": "show track 1",
+            "pattern": "Reachability is Down",
+            "expectation": "The object tracks actual remote-prefix reachability, not local carrier alone.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE2",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "CORE2 actually takes over the virtual gateway.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "ACCESS",
+            "command": "ping 198.18.10.1 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The local virtual gateway remains actually reachable.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "ACCESS",
+            "command": "ping 198.19.0.80 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The access SVI source actually reaches the separate remote service through the selected virtual first hop.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "ACCESS",
+            "command": "show interfaces Vlan10",
+            "pattern": "Vlan10 is up, line protocol is up",
+            "expectation": "The access LAN remains operational independently of first-hop ownership.",
+            "attempts": 30,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "recover the preferred routed gateway",
+        "node": "CORE1",
+        "commands": [
+          "configure terminal",
+          "router ospf 1",
+          "no passive-interface GigabitEthernet0/1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CORE1",
+            "command": "show ip route 198.19.0.80",
+            "pattern": "Known via \"ospf 1\"",
+            "expectation": "The selected core actually has a remote-service OSPF route.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE2",
+            "command": "show ip route 198.19.0.80",
+            "pattern": "Known via \"ospf 1\"",
+            "expectation": "The selected core actually has a remote-service OSPF route.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE1",
+            "command": "show standby brief",
+            "pattern": "Active\\s+local",
+            "expectation": "CORE1 is the actual active gateway.",
+            "attempts": 40,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CORE1",
+            "command": "show track 1",
+            "pattern": "Reachability is Up",
+            "expectation": "The object tracks actual remote-prefix reachability, not local carrier alone.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "ACCESS",
+            "command": "show interfaces Vlan10",
+            "pattern": "Vlan10 is up, line protocol is up",
+            "expectation": "The access LAN remains operational independently of first-hop ownership.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "ACCESS",
+            "command": "ping 198.18.10.1 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The local virtual gateway remains actually reachable.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "ACCESS",
+            "command": "ping 198.19.0.80 source Vlan10 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The access SVI source actually reaches the separate remote service through the selected virtual first hop.",
+            "attempts": 30,
+            "interval_seconds": 3
+          }
+        ]
+      }
+    ]
   }
 }

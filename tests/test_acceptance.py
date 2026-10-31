@@ -259,6 +259,27 @@ class AcceptanceTests(unittest.TestCase):
                 )
             self.assertFalse(rows[0]["passed"])
 
+    def test_rejected_interface_address_cannot_count_as_a_configuration_pass(self):
+        address = "ip address 198.18.10.200 255.255.255.255"
+        plan = {
+            "checks": [CHECK],
+            "transitions": [
+                {"name": "address", "node": "R1", "commands": [address], "checks": [CHECK]}
+            ],
+        }
+        connection = Console(
+            [
+                "show ip route\nvia 198.18.0.2",
+                address + "\n% 198.18.10.200 overlaps with Ethernet0/0\nR1(config-if)#",
+            ]
+        )
+        rows = []
+        with self.assertRaises(AssertionError):
+            execute_plan(plan, lambda _: connection, rows.append)
+        self.assertEqual(len(rows), 2)
+        self.assertFalse(rows[-1]["passed"])
+        self.assertEqual(connection.commands, ["show ip route", address])
+
     def test_ordered_failure_recovery_checks_are_actually_executed(self):
         backup = {**CHECK, "pattern": "via 198.18.1.2"}
         plan = {

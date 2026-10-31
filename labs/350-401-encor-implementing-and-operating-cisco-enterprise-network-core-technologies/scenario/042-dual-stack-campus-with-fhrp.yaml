@@ -1,246 +1,228 @@
 lab:
   title: Dual Stack Campus With FHRP
-  description: 350-401 ENCOR - Implementing and Operating Cisco Enterprise Network Core Technologies scenario-based
-    CML lab.
-  notes: '350-401 ENCOR scenario lab: Dual Stack Campus With FHRP
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# Dual Stack Campus With FHRP
 
 
-    Lab type: capstone
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Scenario:
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-401-042-dual-stack-campus-with-fhrp.md
 
-    You are taking over a partially built network. Use the topology, startup configs, and this note as
-    the work order.
+
+    Four IOL nodes form a real redundant Layer2 campus with two gateway cores, an access switch and an
+    independent client. IPv4 uses HSRPv2 group10 and virtual198.18.10.1. IPv6 uses separate group11 and
+    the explicitly configured virtual link-local FE80::10; CLIENT has an interface-qualified static IPv6
+    route through that next hop. Checks identify the IPv6 group row explicitly rather than accepting the
+    IPv4 Active row as IPv6 proof. Each core owns the same isolated training loopback service in each
+    family, so this proves first-hop forwarding failover to an equivalent endpoint, not persistence of
+    a stateful application. Shutting CORE1 Vlan10 keeps its Layer2 links present but transfers both first-hop
+    roles to CORE2. Restoring it must preempt both roles. Withdrawing only the explicit client IPv6 service
+    route breaks the IPv6 service while IPv4 service and both HSRP roles remain healthy; HA alone cannot
+    correct a missing endpoint route. All traffic is isolated, with no external connector. Nominal RAM
+    is4GiB. Syntax reference: https://www.cisco.com/c/en/us/support/docs/ip/hot-standby-router-protocol-hsrp/113216-ipv6-hsrp-00.html
+    and https://www.cisco.com/c/en/us/td/docs/ios/ipv6/command/reference/ipv6_book/ipv6_17.html ; actual
+    support is established only by the recorded image-specific traffic tests.
 
 
     Objectives:
 
-    - Deploy IPv4 and IPv6 campus routing.
+    - Verify separate IPv4 and IPv6 HSRPv2 groups and actual endpoint traffic in both families.
 
-    - Use first-hop redundancy for user VLANs.
+    - Fail the preferred core SVI and require both virtual first hops and data paths to recover through
+    the other core.
 
-    - Verify failover and routing convergence.
+    - Restore preemption, isolate an IPv6-only endpoint route fault while IPv4 remains healthy, and recover
+    both families.
 
-
-    Suggested verification:
-
-    - show ip interface brief
-
-    - show ip route
-
-    - show running-config
-
-
-    Stretch goals:
-
-    - Document the final design.
-
-    - Add one extra validation command for each requirement.
-
-    - Make one controlled change and prove that the network still works.'
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: CORE-R1
-  node_definition: iosv
+  label: CORE1
+  node_definition: ioll2-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.10.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.10.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.1.1\
-      \ 255.255.255.255\n"
+    content: "hostname CORE1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nvtp mode transparent\nspanning-tree mode rapid-pvst\ninterface\
+      \ range Ethernet0/0 - 3\n shutdown\n exit\nvlan 10\n name CAMPUS\n exit\nspanning-tree vlan 10 priority\
+      \ 4096\nspanning-tree mode rapid-pvst\ninterface Ethernet0/0\n switchport trunk encapsulation dot1q\n\
+      \ switchport mode trunk\n switchport trunk allowed vlan 10\n spanning-tree vlan 10 cost 4\n no shutdown\n\
+      \ exit\ninterface Ethernet0/1\n switchport trunk encapsulation dot1q\n switchport mode trunk\n switchport\
+      \ trunk allowed vlan 10\n spanning-tree vlan 10 cost 4\n no shutdown\n exit\ninterface Vlan10\n\
+      \ ip address 198.18.10.2 255.255.255.0\n standby version 2\n standby 10 ip 198.18.10.1\n standby\
+      \ 10 priority 110\n standby 10 preempt\n no shutdown\n exit\ninterface Loopback0\n ip address 192.0.2.80\
+      \ 255.255.255.255\n no shutdown\n exit\n\nipv6 unicast-routing\ninterface Vlan10\n ipv6 address\
+      \ FE80::2 link-local\n ipv6 address 2001:DB8:10::2/64\n standby 11 ipv6 FE80::10\n standby 11 priority\
+      \ 110\n standby 11 preempt\n exit\ninterface Loopback0\n ipv6 address 2001:DB8:FFFF::80/128\n exitend\n"
+  cpu_limit: 100
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 0
-  y: 0
-  priority: 100
   tags: []
 - id: n1
-  label: DIST-R2
-  node_definition: iosv
+  label: CORE2
+  node_definition: ioll2-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.11.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.11.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.2.1\
-      \ 255.255.255.255\n"
+    content: "hostname CORE2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nvtp mode transparent\nspanning-tree mode rapid-pvst\ninterface\
+      \ range Ethernet0/0 - 3\n shutdown\n exit\nvlan 10\n name CAMPUS\n exit\nspanning-tree vlan 10 priority\
+      \ 8192\nspanning-tree mode rapid-pvst\ninterface Ethernet0/0\n switchport trunk encapsulation dot1q\n\
+      \ switchport mode trunk\n switchport trunk allowed vlan 10\n spanning-tree vlan 10 cost 4\n no shutdown\n\
+      \ exit\ninterface Ethernet0/1\n switchport trunk encapsulation dot1q\n switchport mode trunk\n switchport\
+      \ trunk allowed vlan 10\n spanning-tree vlan 10 cost 4\n no shutdown\n exit\ninterface Vlan10\n\
+      \ ip address 198.18.10.3 255.255.255.0\n standby version 2\n standby 10 ip 198.18.10.1\n standby\
+      \ 10 priority 100\n standby 10 preempt\n no shutdown\n exit\ninterface Loopback0\n ip address 192.0.2.80\
+      \ 255.255.255.255\n no shutdown\n exit\n\nipv6 unicast-routing\ninterface Vlan10\n ipv6 address\
+      \ FE80::3 link-local\n ipv6 address 2001:DB8:10::3/64\n standby 11 ipv6 FE80::10\n standby 11 priority\
+      \ 100\n standby 11 preempt\n exit\ninterface Loopback0\n ipv6 address 2001:DB8:FFFF::80/128\n exitend\n"
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 240
-  y: 0
-  priority: 99
   tags: []
 - id: n2
-  label: ACCESS-SW1
-  node_definition: iosvl2
+  label: ACCESS
+  node_definition: ioll2-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nvlan 20\n name USERS_20\nvlan 30\n name SERVICES_30\n\
-      interface range GigabitEthernet0/0-3\n switchport mode access\n spanning-tree portfast\n"
+    content: "hostname ACCESS\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nvtp mode transparent\nspanning-tree mode rapid-pvst\ninterface\
+      \ range Ethernet0/0 - 3\n shutdown\n exit\nvlan 10\n name LAB\n exit\nspanning-tree vlan 10 priority\
+      \ 32768\ninterface Vlan10\n ip address 198.18.10.4 255.255.255.0\n no shutdown\n exit\nspanning-tree\
+      \ mode rapid-pvst\ninterface Ethernet0/0\n switchport trunk encapsulation dot1q\n switchport mode\
+      \ trunk\n switchport trunk allowed vlan 10\n spanning-tree vlan 10 cost 4\n no shutdown\n exit\n\
+      interface Ethernet0/1\n switchport trunk encapsulation dot1q\n switchport mode trunk\n switchport\
+      \ trunk allowed vlan 10\n spanning-tree vlan 10 cost 4\n no shutdown\n exit\ninterface Ethernet0/2\n\
+      \ switchport mode access\n switchport access vlan 10\n spanning-tree portfast\n no shutdown\n exit\n\
+      end\n"
+  cpu_limit: 100
+  priority: 98
+  x: 520
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 480
-  y: 0
-  priority: 98
   tags: []
 - id: n3
-  label: ACCESS-SW2
-  node_definition: iosvl2
+  label: CLIENT
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname SW2\nno ip domain-lookup\nvlan 21\n name USERS_21\nvlan 31\n name SERVICES_31\n\
-      interface range GigabitEthernet0/0-3\n switchport mode access\n spanning-tree portfast\n"
+    content: "hostname CLIENT\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Ethernet0/0\n ip address 198.18.10.10 255.255.255.0\n no shutdown\n exit\nip route\
+      \ 192.0.2.80 255.255.255.255 198.18.10.1\n\nipv6 unicast-routing\ninterface Ethernet0/0\n ipv6 address\
+      \ FE80::A link-local\n ipv6 address 2001:DB8:10::10/64\n exit\nipv6 route 2001:DB8:FFFF::80/128\
+      \ Ethernet0/0 FE80::10\nend\n"
+  cpu_limit: 100
+  priority: 97
+  x: 780
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 720
-  y: 0
-  priority: 97
-  tags: []
-- id: n4
-  label: CLIENT-1
-  node_definition: desktop
-  configuration:
-  - name: node.cfg
-    content: '# CLIENT-1
-
-      # Use this node as a lightweight endpoint or API/mock server.
-
-      '
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  x: 0
-  y: 200
-  priority: 96
-  tags: []
-- id: n5
-  label: SERVER-1
-  node_definition: desktop
-  configuration:
-  - name: node.cfg
-    content: '# SERVER-1
-
-      # Use this node as a lightweight endpoint or API/mock server.
-
-      '
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  x: 240
-  y: 200
-  priority: 95
   tags: []
 links:
-- n1: n0
+- id: l0
+  n1: n0
   i1: i1
   n2: n1
   i2: i1
-  id: l0
-- n1: n0
+- id: l1
+  n1: n0
   i1: i2
   n2: n2
   i2: i1
-  id: l1
-- n1: n1
+- id: l2
+  n1: n1
   i1: i2
-  n2: n3
-  i2: i1
-  id: l2
-- n1: n2
-  i1: i2
-  n2: n3
+  n2: n2
   i2: i2
-  id: l3
-- n1: n2
-  i1: i3
-  n2: n4
-  i2: i0
-  id: l4
-- n1: n3
-  i1: i3
-  n2: n5
-  i2: i0
-  id: l5
+- id: l3
+  n1: n3
+  i1: i1
+  n2: n2
+  i2: i3
 annotations: []
 smart_annotations: []

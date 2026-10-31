@@ -1,57 +1,65 @@
 lab:
   title: ENCOR Capstone Campus Core
-  description: 350-401 ENCOR - Implementing and Operating Cisco Enterprise Network Core Technologies scenario-based
-    CML lab.
-  notes: '350-401 ENCOR scenario lab: ENCOR Capstone Campus Core
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# ENCOR Capstone Campus Core
 
 
-    Lab type: capstone
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Scenario:
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-401-051-encor-capstone-campus-core.md
 
-    You are taking over a partially built network. Use the topology, startup configs, and this note as
-    the work order.
+
+    Two IOSv gateway routers, one IOL-L2 access switch and a separate IOL-XE service router form a redundant
+    campus. ACCESS is an explicitly modeled sourced SVI endpoint, not an independent workstation. Both
+    cores advertise the campus /24 through separate OSPF uplinks to SERVICE; its loopback198.19.0.80 is
+    a single actual remote endpoint, with a real OSPF return path. HSRP10 supplies the access next hop198.18.10.1,
+    on the shared access VLAN. The initial untracked HSRP configuration is deliberately an incomplete
+    resilience policy. Making only CORE1 OSPF uplink passive removes that adjacency and service route
+    without shutting its physical link or LAN SVI. The virtual IP remains reachable/active on CORE1, the
+    access service fails, and CORE2 independently reaches the same service. Attaching the already configured
+    route-reachability object with decrement30 must lower CORE1 below the preempting CORE2 and recover
+    actual sourced traffic; the access LAN stays operational. Restoring OSPF must recover the tracked
+    route and preferred HSRP ownership. This proves prefix tracking and control-plane failure recovery,
+    not IP SLA application probes, BFD, physical failure timing or stateful application continuity. Nominal
+    RAM is3GiB.
 
 
     Objectives:
 
-    - Build a small core/distribution/access topology.
+    - Correlate the access LAN, HSRP active gateway, OSPF service routes and actual access-SVI traffic.
 
-    - Tune Layer 2 and Layer 3 resiliency.
+    - Lose only the active core OSPF adjacency while its LAN carrier and virtual gateway stay healthy;
+    prove untracked HSRP does not repair upstream routing loss.
 
-    - Add network assurance telemetry points.
+    - Apply real route-object tracking to transfer the first hop to the healthy core, then recover OSPF
+    and preferred ownership.
 
-
-    Suggested verification:
-
-    - show ip interface brief
-
-    - show ip route
-
-    - show running-config
-
-
-    Stretch goals:
-
-    - Document the final design.
-
-    - Add one extra validation command for each requirement.
-
-    - Make one controlled change and prove that the network still works.'
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: CORE-R1
+  label: CORE1
   node_definition: iosv
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.10.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.10.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.1.1\
-      \ 255.255.255.255\n"
+    content: "hostname CORE1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.10.2 255.255.255.0\n\
+      \ no shutdown\n standby version 2\n standby 10 ip 198.18.10.1\n standby 10 priority 110\n standby\
+      \ 10 preempt\n exit\ninterface GigabitEthernet0/1\n ip address 198.18.12.1 255.255.255.252\n no\
+      \ shutdown\n ip ospf hello-interval 2\n ip ospf dead-interval 8\n exit\nrouter ospf 1\n router-id\
+      \ 192.0.2.1\n passive-interface default\n no passive-interface GigabitEthernet0/1\n network 198.18.12.0\
+      \ 0.0.0.3 area 0\n network 198.18.10.0 0.0.0.255 area 0\n exit\ntrack 1 ip route 198.19.0.80 255.255.255.255\
+      \ reachability\n exit\nend\n"
+  cpu_limit: 100
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
@@ -72,21 +80,24 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  x: 0
-  y: 0
-  priority: 100
   tags: []
 - id: n1
-  label: DIST-R2
+  label: CORE2
   node_definition: iosv
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.11.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.11.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.2.1\
-      \ 255.255.255.255\n"
+    content: "hostname CORE2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.10.3 255.255.255.0\n\
+      \ no shutdown\n standby version 2\n standby 10 ip 198.18.10.1\n standby 10 priority 100\n standby\
+      \ 10 preempt\n exit\ninterface GigabitEthernet0/1\n ip address 198.18.23.1 255.255.255.252\n no\
+      \ shutdown\n ip ospf hello-interval 2\n ip ospf dead-interval 8\n exit\nrouter ospf 1\n router-id\
+      \ 192.0.2.2\n passive-interface default\n no passive-interface GigabitEthernet0/1\n network 198.18.23.0\
+      \ 0.0.0.3 area 0\n network 198.18.10.0 0.0.0.255 area 0\n exit\ntrack 1 ip route 198.19.0.80 255.255.255.255\
+      \ reachability\n exit\nend\n"
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
@@ -107,140 +118,102 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  x: 240
-  y: 0
-  priority: 99
   tags: []
 - id: n2
-  label: ACCESS-SW1
-  node_definition: iosvl2
+  label: ACCESS
+  node_definition: ioll2-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nvlan 20\n name USERS_20\nvlan 30\n name SERVICES_30\n\
-      interface range GigabitEthernet0/0-3\n switchport mode access\n spanning-tree portfast\n"
+    content: "hostname ACCESS\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nvtp mode transparent\nspanning-tree mode rapid-pvst\ninterface\
+      \ range Ethernet0/0 - 3\n shutdown\n exit\nip routing\nvlan 10\n name CAMPUS\n exit\ninterface Ethernet0/0\n\
+      \ switchport mode access\n switchport access vlan 10\n spanning-tree portfast\n no shutdown\n exit\n\
+      interface Ethernet0/1\n switchport mode access\n switchport access vlan 10\n spanning-tree portfast\n\
+      \ no shutdown\n exit\ninterface Vlan10\n ip address 198.18.10.10 255.255.255.0\n no shutdown\n exit\n\
+      ip route 198.19.0.80 255.255.255.255 198.18.10.1\nend\n"
+  cpu_limit: 100
+  priority: 98
+  x: 520
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 480
-  y: 0
-  priority: 98
   tags: []
 - id: n3
-  label: ACCESS-SW2
-  node_definition: iosvl2
+  label: SERVICE
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname SW2\nno ip domain-lookup\nvlan 21\n name USERS_21\nvlan 31\n name SERVICES_31\n\
-      interface range GigabitEthernet0/0-3\n switchport mode access\n spanning-tree portfast\n"
+    content: "hostname SERVICE\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Ethernet0/0\n ip address 198.18.12.2 255.255.255.252\n no shutdown\n ip ospf hello-interval\
+      \ 2\n ip ospf dead-interval 8\n exit\ninterface Ethernet0/1\n ip address 198.18.23.2 255.255.255.252\n\
+      \ no shutdown\n ip ospf hello-interval 2\n ip ospf dead-interval 8\n exit\ninterface Loopback0\n\
+      \ ip address 198.19.0.80 255.255.255.255\n no shutdown\n exit\nrouter ospf 1\n router-id 192.0.2.80\n\
+      \ passive-interface Loopback0\n network 198.18.12.0 0.0.0.3 area 0\n network 198.18.23.0 0.0.0.3\
+      \ area 0\n network 198.19.0.80 0.0.0.0 area 0\n exit\nend\n"
+  cpu_limit: 100
+  priority: 97
+  x: 780
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 720
-  y: 0
-  priority: 97
-  tags: []
-- id: n4
-  label: CLIENT-1
-  node_definition: desktop
-  configuration:
-  - name: node.cfg
-    content: '# CLIENT-1
-
-      # Use this node as a lightweight endpoint or API/mock server.
-
-      '
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  x: 0
-  y: 200
-  priority: 96
-  tags: []
-- id: n5
-  label: SERVER-1
-  node_definition: desktop
-  configuration:
-  - name: node.cfg
-    content: '# SERVER-1
-
-      # Use this node as a lightweight endpoint or API/mock server.
-
-      '
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  x: 240
-  y: 200
-  priority: 95
   tags: []
 links:
-- n1: n0
+- id: l0
+  n1: n0
   i1: i1
-  n2: n1
-  i2: i1
-  id: l0
-- n1: n0
-  i1: i2
   n2: n2
   i2: i1
-  id: l1
-- n1: n1
+- id: l1
+  n1: n1
+  i1: i1
+  n2: n2
+  i2: i2
+- id: l2
+  n1: n0
   i1: i2
   n2: n3
   i2: i1
-  id: l2
-- n1: n2
+- id: l3
+  n1: n1
   i1: i2
   n2: n3
   i2: i2
-  id: l3
-- n1: n2
-  i1: i3
-  n2: n4
-  i2: i0
-  id: l4
-- n1: n3
-  i1: i3
-  n2: n5
-  i2: i0
-  id: l5
 annotations: []
 smart_annotations: []

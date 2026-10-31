@@ -952,5 +952,82 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-401-005-qos-policy-interpretation.md",
     "example_profile": "native-qos-flow"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/028-packet-capture-span.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 95,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-028-packet-capture-span.md",
+    "example_profile": "native-packet-mirror"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/023-span-rspan-erspan.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-023-span-rspan-erspan.md",
+    "example_profile": "native-packet-mirror"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility/042-span-netflow-siem-triage.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 150,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-042-span-netflow-siem-triage.md",
+    "example_profile": "native-flow-packet"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/032-acl-vacl-pacl.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-032-acl-vacl-pacl.md"
+  },
+  "labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-services/025-dhcp-relay-snooping.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/300-410-025-dhcp-relay-snooping.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/042-dual-stack-campus-with-fhrp.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 140,
+    "kind": "scenario",
+    "workbook": "docs/workbooks/350-401-042-dual-stack-campus-with-fhrp.md"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/041-small-office-full-stack.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 145,
+    "kind": "scenario",
+    "workbook": "docs/workbooks/200-301-041-small-office-full-stack.md"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/apis/032-rest-pagination-and-error-handling.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-032-rest-pagination-and-error-handling.md",
+    "example_profile": "native-api-core"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/assessment/038-devcor-practical-checkpoint.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 125,
+    "kind": "scenario",
+    "workbook": "docs/workbooks/350-901-038-devcor-practical-checkpoint.md",
+    "example_profile": "native-api-core"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/028-troubleshooting-path.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 125,
+    "kind": "scenario",
+    "workbook": "docs/workbooks/350-401-028-troubleshooting-path.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/capstone/050-encor-capstone-enterprise-edge.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 150,
+    "kind": "scenario",
+    "workbook": "docs/workbooks/350-401-050-encor-capstone-enterprise-edge.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/capstone/051-encor-capstone-campus-core.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 155,
+    "kind": "scenario",
+    "workbook": "docs/workbooks/350-401-051-encor-capstone-campus-core.md"
   }
 }

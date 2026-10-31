@@ -13,7 +13,15 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import yaml
 from embed_webhook import update as update_embedded
-from labtools import UniqueLoader, check_evidence, config_signature, graph_signature, load, validate
+from labtools import (
+    UniqueLoader,
+    check_evidence,
+    config_signature,
+    graph_signature,
+    load,
+    require_resource_budget,
+    validate,
+)
 
 
 def module(name, path):
@@ -36,6 +44,43 @@ class TopologyQuality(unittest.TestCase):
         for path in (ROOT / "labs").rglob("*.yaml"):
             with self.subTest(path=path):
                 self.assertEqual(validate(load(path)), [])
+
+    def test_catalyst_q200_requires_complete_port_mapping_and_full_memory(self):
+        topology = copy.deepcopy(self.sample)
+        node = topology["nodes"][0]
+        node["node_definition"] = "cat9000v-q200"
+        labels = ["GigabitEthernet0/0", *[f"GigabitEthernet1/0/{i}" for i in range(1, 9)]]
+        node["interfaces"] = [{"id": "i0", "label": "Loopback0", "type": "loopback"}] + [
+            {"id": f"i{i + 1}", "label": label, "type": "physical", "slot": i}
+            for i, label in enumerate(labels)
+        ]
+        node["ram"] = 12288
+        self.assertEqual(validate(topology), [])
+        node["node_definition"] = "cat9000v-uadp"
+        node["ram"] = 18432
+        self.assertEqual(validate(topology), [])
+        node["ram"] = 12288
+        self.assertTrue(any("18432 MiB" in error for error in validate(topology)))
+        node["node_definition"] = "cat9000v-q200"
+        node["interfaces"].pop()
+        self.assertTrue(any("first eight data slots" in error for error in validate(topology)))
+        node["ram"] = 4096
+        self.assertTrue(any("12288 MiB" in error for error in validate(topology)))
+
+    def test_large_case_requires_single_selection_and_real_free_memory(self):
+        with self.assertRaises(ValueError):
+            require_resource_budget(14336, 4096, 1)
+        with self.assertRaises(ValueError):
+            require_resource_budget(14336, 16384, 2, 64 * 1024**3)
+        for unknown_or_low in (None, 31 * 1024**3):
+            with self.assertRaises(ValueError):
+                require_resource_budget(14336, 16384, 1, unknown_or_low)
+        require_resource_budget(14336, 16384, 1, 32 * 1024**3)
+        require_resource_budget(20480, 24576, 1, 48 * 1024**3)
+        require_resource_budget(4096, 4096, 3)
+        for invalid in (True, 0, 32769, 8192.0):
+            with self.assertRaises(ValueError):
+                require_resource_budget(1024, invalid, 1, 64 * 1024**3)
 
     def test_relative_documentation_links_exist(self):
         for path in ROOT.rglob("*.md"):

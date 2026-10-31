@@ -35,6 +35,7 @@ from labtools import (
     graph_signature,
     load,
     plan_digest,
+    require_resource_budget,
     validate,
 )
 from linux_console import NATIVE_CONSOLE_PORT, NATIVE_LINUX, establish_linux_shell
@@ -84,13 +85,23 @@ class WebConsole:
             prompt = self.read(8)
             self.socket.send("\x03\r")
             prompt += self.read(3)
-            if node.node_definition in ("iosv", "iosvl2", "iol-xe", "ioll2-xe", "csr1000v"):
+            if node.node_definition in (
+                "iosv",
+                "iosvl2",
+                "iol-xe",
+                "ioll2-xe",
+                "csr1000v",
+                "cat9000v-q200",
+                "cat9000v-uadp",
+            ):
                 prompt = establish_ios_prompt(
                     self.label,
                     prompt,
                     self.socket.send,
                     self.read,
-                    timeout=600 if node.node_definition == "iosv" else 240,
+                    timeout=600
+                    if node.node_definition in ("iosv", "cat9000v-q200", "cat9000v-uadp")
+                    else 240,
                 )
                 establish_ios_privilege(self.label, self.socket.send, self.read)
                 self.command("terminal length 0", 3)
@@ -173,13 +184,23 @@ class SSHConsole:
             prompt = self.read(8)
             self.channel.send("\r")
             prompt += self.read(3)
-            if node.node_definition in ("iosv", "iosvl2", "iol-xe", "ioll2-xe", "csr1000v"):
+            if node.node_definition in (
+                "iosv",
+                "iosvl2",
+                "iol-xe",
+                "ioll2-xe",
+                "csr1000v",
+                "cat9000v-q200",
+                "cat9000v-uadp",
+            ):
                 prompt = establish_ios_prompt(
                     self.label,
                     prompt,
                     self.channel.send,
                     self.read,
-                    timeout=600 if node.node_definition == "iosv" else 240,
+                    timeout=600
+                    if node.node_definition in ("iosv", "cat9000v-q200", "cat9000v-uadp")
+                    else 240,
                 )
                 establish_ios_privilege(self.label, self.channel.send, self.read)
                 self.command("terminal length 0", 3)
@@ -270,8 +291,16 @@ def main():
         metavar="TYPE=IMAGE_ID",
         help="Private image selection, e.g. iosv=iosv-159-3-m12; source YAML stays portable",
     )
+    parser.add_argument(
+        "--max-lab-ram-mib",
+        type=int,
+        default=4096,
+        help="Explicit per-lab RAM cap; above 4096 requires one selected lab and twice the reservation free (maximum 32768)",
+    )
     parser.add_argument("--output", type=Path, default=ROOT / "private-validation/result.json")
     args = parser.parse_args()
+    if not 1 <= args.max_lab_ram_mib <= 32768:
+        parser.error("RAM budget must be between 1 and 32768 MiB")
     if urlsplit(args.url).scheme != "https":
         parser.error("Use HTTPS with a trusted certificate; TLS verification is never disabled")
     password = os.environ.get("CML_PASSWORD") or getpass.getpass("CML password: ")
@@ -307,6 +336,14 @@ def main():
         paths = [p for p in paths if p.relative_to(ROOT).as_posix() in checks]
     if not paths:
         raise ValueError("No matching lab paths")
+    if args.phase == "functional" and args.max_lab_ram_mib > 4096 and len(paths) != 1:
+        raise ValueError("A larger RAM budget requires exactly one selected lab")
+    free_bytes = None
+    if args.phase == "functional" and args.max_lab_ram_mib > 4096:
+        stats = client.get_system_stats()
+        free_bytes = max(
+            (v["stats"]["memory"]["free"] for v in stats["computes"].values()), default=0
+        )
     tag = "CML-Labs QA " + uuid.uuid4().hex[:10] + " - "
     results = []
     version = client.system_info()["version"]
@@ -328,10 +365,12 @@ def main():
         failure = None
         try:
             if args.phase == "functional":
-                if sum(n.get("ram") or RAM_MIB[n["node_definition"]] for n in data["nodes"]) > 4096:
-                    raise ValueError(
-                        "This small-lab harness refuses more than 4096 MiB nominal node RAM"
-                    )
+                require_resource_budget(
+                    sum(n.get("ram") or RAM_MIB[n["node_definition"]] for n in data["nodes"]),
+                    args.max_lab_ram_mib,
+                    len(paths),
+                    free_bytes,
+                )
                 if any(
                     str(l.state()) not in ("STOPPED", "DEFINED_ON_CORE") for l in client.all_labs()
                 ):

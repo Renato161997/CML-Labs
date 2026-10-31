@@ -102,3 +102,18 @@ edge must reach the isolated service, before a failed client probe can be
 attributed to a NAT policy fault. A failed prerequisite aborts the case. Evidence
 must include these checks under the `prerequisite` phase; a duplicate baseline
 check or a green overall flag cannot replace them.
+
+
+## Explicit reservation for a larger lab
+
+The default functional cap remains 4096 MiB of nominal node RAM. A larger case must be selected individually and must have at least twice the explicit reservation free on one compute before it starts. The maximum accepted reservation is 32768 MiB; it does not authorize parallel heavy cases. Existing active labs still block the run, and only the owned temporary copy is changed.
+
+For a contributor-added curated 20 GiB Catalyst-UADP case with its own registered acceptance plan, after independently confirming that the required image is installed:
+
+```powershell
+python scripts/cml_smoke.py --url https://your-controller --phase functional --lab your-curated-large-case --max-lab-ram-mib 24576 --image-override cat9000v-uadp=your-installed-uadp-image --console websocket --output private-validation/source-guard.json
+```
+
+This requires at least 48 GiB free on one compute, reserves one selected case and still requires every registered prerequisite, fault and recovery check. Successful boot, an active binding, or a larger memory budget cannot replace a real functional result. Both Catalyst variants need the management slot plus the first eight data slots even when only two data ports are linked. The topology includes its board provisioning file and 18 GiB/4 vCPU UADP switch settings; do not reduce them to fit the small-case pool.
+
+ENCOR034 remains an uncurated source-guard scaffold and has no functional pass. The larger-case option does not make it eligible for the functional suite. See [platform observations](../docs/PLATFORM-NOTES.md).
