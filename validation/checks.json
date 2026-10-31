@@ -20482,5 +20482,169 @@
         ]
       }
     ]
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/006-wireless-architecture-cml.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/w.py check",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"role\": \"client\")(?=.*\"received\": 3\\b)",
+        "expectation": "Actual radio authentication, kernel association and three bound ICMP replies agree.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 2
+      },
+      {
+        "node": "AP",
+        "command": "python3 /lab/w.py check",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"role\": \"ap\")",
+        "expectation": "Actual AP operational control remains healthy.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 2
+      }
+    ],
+    "transitions": [
+      {
+        "name": "introduce a nonexistent SSID",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/w.py configure --fault ssid"
+        ],
+        "command_pattern": "\"configured\": true",
+        "command_timeout": 35,
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/w.py check --fault ssid --expect down",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"role\": \"client\")(?=.*\"received\": 0\\b)",
+            "expectation": "Actual the controlled fault never completes authentication during the observation window and actual bound traffic fails.",
+            "command_timeout": 90,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "AP",
+            "command": "python3 /lab/w.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"role\": \"ap\")",
+            "expectation": "Actual AP operational control remains healthy.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "restore the declared radio profile",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/w.py configure"
+        ],
+        "command_pattern": "\"configured\": true",
+        "command_timeout": 35,
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/w.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"role\": \"client\")(?=.*\"received\": 3\\b)",
+            "expectation": "Actual radio authentication, kernel association and three bound ICMP replies agree.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 2
+          },
+          {
+            "node": "AP",
+            "command": "python3 /lab/w.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"role\": \"ap\")",
+            "expectation": "Actual AP operational control remains healthy.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/014-secure-wireless-architecture.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/w.py check",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"role\": \"client\")(?=.*\"received\": 3\\b)",
+        "expectation": "Actual radio authentication, kernel association and three bound ICMP replies agree.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 2
+      },
+      {
+        "node": "AP",
+        "command": "python3 /lab/w.py check",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"role\": \"ap\")",
+        "expectation": "Actual AP operational control remains healthy.",
+        "command_timeout": 90,
+        "attempts": 2,
+        "interval_seconds": 2
+      }
+    ],
+    "transitions": [
+      {
+        "name": "introduce an incorrect shared key",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/w.py configure --fault key"
+        ],
+        "command_pattern": "\"configured\": true",
+        "command_timeout": 35,
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/w.py check --fault key --expect down",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"role\": \"client\")(?=.*\"received\": 0\\b)",
+            "expectation": "Actual the controlled fault never completes authentication during the observation window and actual bound traffic fails.",
+            "command_timeout": 90,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "AP",
+            "command": "python3 /lab/w.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"role\": \"ap\")",
+            "expectation": "Actual AP operational control remains healthy.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "restore the declared radio profile",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/w.py configure"
+        ],
+        "command_pattern": "\"configured\": true",
+        "command_timeout": 35,
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/w.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"role\": \"client\")(?=.*\"received\": 3\\b)",
+            "expectation": "Actual radio authentication, kernel association and three bound ICMP replies agree.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 2
+          },
+          {
+            "node": "AP",
+            "command": "python3 /lab/w.py check",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"role\": \"ap\")",
+            "expectation": "Actual AP operational control remains healthy.",
+            "command_timeout": 90,
+            "attempts": 2,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
   }
 }

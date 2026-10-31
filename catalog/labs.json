@@ -842,26 +842,25 @@
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/006-wireless-architecture-cml.yaml",
-      "title": "Wireless Architecture Scenario",
+      "title": "Wireless Association and SSID Recovery",
       "track": "200-301",
       "topic": "network-fundamentals",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "wireless-ap",
+        "wireless-client"
       ],
-      "nominal_ram_mib": 1792,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 80,
+      "workbook": "docs/workbooks/200-301-006-wireless-architecture-cml.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "201f324eda544ba723198cc4dd8e0e19aec67f27331ef2286a102ebd61da530d"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T16:49:05Z",
+      "sha256": "2a47c9ca3d09b59fbdb4d931ef56717bb48834007745cd2c4a1f71a3f98c86ab"
     },
     {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/041-small-office-full-stack.yaml",
@@ -3799,25 +3798,25 @@
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/014-secure-wireless-architecture.yaml",
-      "title": "Secure Wireless Architecture",
+      "title": "WPA2-PSK: Authentication, CCMP and Recovery",
       "track": "350-701",
       "topic": "network-security",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosvl2"
+        "wireless-ap",
+        "wireless-client"
       ],
-      "nominal_ram_mib": 1792,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 80,
+      "workbook": "docs/workbooks/350-701-014-secure-wireless-architecture.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "8fd39f99cdc53f656abbed270a1f56eb17b7d5ca1ed05ed5dc0cc02c140ce3e5"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T16:50:44Z",
+      "sha256": "02fce7fe15d6f7e705950991674d54c44a9c646b61393fb1577c87529131d525"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/015-intrusion-policy-concepts.yaml",

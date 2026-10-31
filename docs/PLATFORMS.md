@@ -12,6 +12,7 @@ project images have separate build and import guides.
 | IOL-XE | Ethernet0/0, then Ethernet1/0 | 1024 MiB | Additional routing exercises |
 | IOL-L2 XE | Ethernet0/0, then Ethernet1/0 | 1024 MiB | Available for compatible switching exercises |
 | Ubuntu | ens2 | 2048 MiB | Existing offline application exercises |
+| Wireless AP / Wireless Client | ens2 wired, wlan0 radio | 2048 MiB | Native Ubuntu simulated-radio exercises; wired ports remain unused in the two-guest fixtures |
 | CSR 1000v | GigabitEthernet1 | 3072 MiB | Full IOS XE console/API prerequisites; check each workbook's live result |
 | net-tools | eth0 management, eth1 first lab data interface | 512 MiB | Native Python, requests, curl and Net-SNMP client tools |
 | CML-Labs Inspection | eth0 management, eth1/eth2 inline pair | 1024 MiB | Separate digest-pinned Snort3 derivative with a root guest shell; see the [image guide](INSPECTION.md) and actual live results |

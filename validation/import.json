@@ -203,11 +203,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/006-wireless-architecture-cml.yaml",
-      "sha256": "201f324eda544ba723198cc4dd8e0e19aec67f27331ef2286a102ebd61da530d",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/scenario/041-small-office-full-stack.yaml",
       "sha256": "8461e6d8da3c3938366c5eaaab4be69e4508a4cba7c522bf612579e48def1dce",
       "status": "import-export-pass"
@@ -843,11 +838,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/014-secure-wireless-architecture.yaml",
-      "sha256": "8fd39f99cdc53f656abbed270a1f56eb17b7d5ca1ed05ed5dc0cc02c140ce3e5",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/015-intrusion-policy-concepts.yaml",
       "sha256": "4ff9aa363861dbff1c5e3be481a01b2639c5d2a7c61327fe04c98e1e2f297cf4",
       "status": "import-export-pass"
@@ -1203,11 +1193,6 @@
       "completed_utc": "2026-10-31T12:01:45Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/007-router-switch-hardening.yaml",
       "sha256": "379f0c359adb9fa7456d3fb1ad43e05871b3ccd8ffd67f701e7ea787071f8fb4",
       "cml_version": "2.10.1+build.21",
@@ -1216,6 +1201,31 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T16:01:08Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/006-wireless-architecture-cml.yaml",
+      "sha256": "2a47c9ca3d09b59fbdb4d931ef56717bb48834007745cd2c4a1f71a3f98c86ab",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T16:46:35Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T16:46:35Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/014-secure-wireless-architecture.yaml",
+      "sha256": "02fce7fe15d6f7e705950991674d54c44a9c646b61393fb1577c87529131d525",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T16:46:36Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T16:46:37Z"
     }
   ]
 }

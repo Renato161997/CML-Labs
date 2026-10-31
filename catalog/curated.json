@@ -1074,5 +1074,19 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-701-007-router-switch-hardening.md",
     "example_profile": "switch-management-source"
+  },
+  "labs/200-301-ccna-implementing-and-administering-cisco-solutions/network-fundamentals/006-wireless-architecture-cml.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 80,
+    "kind": "practice",
+    "workbook": "docs/workbooks/200-301-006-wireless-architecture-cml.md",
+    "example_profile": "wireless-radio"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/014-secure-wireless-architecture.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 80,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-014-secure-wireless-architecture.md",
+    "example_profile": "wireless-radio"
   }
 }

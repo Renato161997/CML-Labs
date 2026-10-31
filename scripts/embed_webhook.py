@@ -11,6 +11,7 @@ import yaml
 from labtools import ROOT, load
 
 PROFILES = {
+    "wireless-radio": {"/lab/w.py": "examples/wireless/radio_probe.py"},
     "webhook": {
         "/opt/cml-webhook/receiver.py": "examples/webhook/receiver.py",
         "/opt/cml-webhook/probe.py": "examples/webhook/probe.py",
@@ -226,7 +227,7 @@ def update(check=False):
         data = load(path)
         dirty = native_sources(data, metadata)
         for node in data["nodes"]:
-            if node["node_definition"] != "ubuntu":
+            if node["node_definition"] not in ("ubuntu", "wireless-ap", "wireless-client"):
                 continue
             userdata = next(f for f in node["configuration"] if f["name"] == "user-data")
             cloud = yaml.safe_load(userdata["content"])
