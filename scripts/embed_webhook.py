@@ -43,6 +43,10 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-kernel-bridge": {
+        label: {"/lab/b.py": "examples/virtualization/kernel_bridge.py"}
+        for label in ("SW", "LEFT", "RIGHT")
+    },
     "aaa-sessions": {
         "RADIUS": {"/lab/a.sh": "examples/management/aaa_accounting.sh"},
         "TACACS": {"/lab/a.sh": "examples/management/aaa_accounting.sh"},

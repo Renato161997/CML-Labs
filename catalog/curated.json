@@ -1179,5 +1179,12 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-901-023-application-threat-model.md",
     "example_profile": "native-iosxe-api-security"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/011-virtual-switching-paths.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 70,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-011-virtual-switching-paths.md",
+    "example_profile": "native-kernel-bridge"
   }
 }
