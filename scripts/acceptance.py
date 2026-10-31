@@ -4,7 +4,7 @@ import re
 import time
 
 CLI_ERROR = re.compile(
-    r"%\s*(?:Invalid input|Incomplete command|Ambiguous command|Unknown command|Error)",
+    r"%\s*(?:Invalid input|Incomplete command|Ambiguous command|Unknown command|Invalid source interface|Error)|%[ \t]+[^\r\n]+ overlaps with [^\r\n]+",
     re.IGNORECASE,
 )
 

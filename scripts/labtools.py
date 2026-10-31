@@ -22,7 +22,9 @@ PHYSICAL = {
     "alpine": [f"eth{i}" for i in range(4)],
     "ubuntu": [f"ens{i}" for i in range(2, 10)],
     "csr1000v": [f"GigabitEthernet{i}" for i in range(1, 27)],
+    "cat9000v-q200": ["GigabitEthernet0/0", *[f"GigabitEthernet1/0/{i}" for i in range(1, 25)]],
 }
+PHYSICAL["cat9000v-uadp"] = PHYSICAL["cat9000v-q200"].copy()
 PHYSICAL.update(
     {
         kind: [f"eth{i}" for i in range(4)]
@@ -40,7 +42,17 @@ RAM_MIB = {"iosv": 512, "iosvl2": 768, "desktop": 512, "alpine": 512, "ubuntu": 
 RAM_MIB.update(
     {"iol-xe": 1024, "ioll2-xe": 1024, "cml-labs-toolbox": 1024, "cml-labs-inspection": 1024}
 )
-RAM_MIB.update({"csr1000v": 3072, "net-tools": 512, "radius": 512, "syslog": 512, "tacplus": 512})
+RAM_MIB.update(
+    {
+        "cat9000v-q200": 12288,
+        "cat9000v-uadp": 18432,
+        "csr1000v": 3072,
+        "net-tools": 512,
+        "radius": 512,
+        "syslog": 512,
+        "tacplus": 512,
+    }
+)
 
 
 class UniqueLoader(yaml.SafeLoader):
@@ -130,6 +142,15 @@ def validate(data):
                 elif interface.get("label") != expected[slot]:
                     errors.append(f"interface label does not match slot: {nid}/{iid}")
                 slots.add(slot)
+        if definition in ("cat9000v-q200", "cat9000v-uadp"):
+            if not set(range(9)).issubset(slots):
+                errors.append(
+                    "Catalyst model requires the management slot and first eight data slots"
+                )
+            if n.get("ram") is not None and (
+                type(n["ram"]) is not int or n["ram"] < RAM_MIB[definition]
+            ):
+                errors.append(f"Catalyst model requires at least {RAM_MIB[definition]} MiB RAM")
     link_ids = set()
     occupied = set()
     for link in links:
@@ -177,6 +198,19 @@ def graph_signature(data):
         ]
         edges.append(tuple(sorted(endpoints)))
     return sorted((n["label"], n["node_definition"]) for n in nodes.values()), sorted(edges)
+
+
+def require_resource_budget(nominal_mib, budget_mib, selected_cases, free_bytes=None):
+    """Keep the default small budget; reserve a single explicitly selected larger case."""
+    if type(budget_mib) is not int or not 1 <= budget_mib <= 32768:
+        raise ValueError("RAM budget must be an integer between 1 and 32768 MiB")
+    if nominal_mib > budget_mib:
+        raise ValueError("Nominal node RAM exceeds the selected per-lab budget")
+    if budget_mib > 4096:
+        if selected_cases != 1:
+            raise ValueError("A larger RAM budget requires exactly one selected lab")
+        if type(free_bytes) is not int or free_bytes < 2 * budget_mib * 1024 * 1024:
+            raise ValueError("A larger lab needs at least twice its reserved RAM free")
 
 
 def plan_digest(plan):

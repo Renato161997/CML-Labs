@@ -46,6 +46,8 @@ The inline-inspection exercise additionally uses the separate [CML-Labs Inspecti
 | [Ansible inventory](docs/workbooks/350-901-025-ansible-inventory-network.md) | Real inventory/playbook processes, remote facts and a wrong-key negative control |
 | [Ansible routing baseline](docs/workbooks/300-410-035-ansible-routing-baseline.md) | Apply/repeat a route, test real forwarding, withdraw and recover |
 
+See [platform behavior and evidence boundaries](docs/PLATFORM-NOTES.md) before substituting images.
+
 Use the dated [functional results](validation/RESULTS.md) for exact source hashes and tested images. CI alone does not run these device integrations.
 
 ## Import and run

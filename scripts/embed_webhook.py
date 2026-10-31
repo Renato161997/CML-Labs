@@ -29,6 +29,22 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-packet-mirror": {
+        "INSIDE": {"/lab/t.py": "examples/security/traffic_fixture.py"},
+        "OUTSIDE": {"/lab/t.py": "examples/security/traffic_fixture.py"},
+        "CAPTURE": {"/lab/p.py": "examples/security/packet_observer.py"},
+    },
+    "native-flow-packet": {
+        "INSIDE": {
+            "/lab/t.py": "examples/security/traffic_fixture.py",
+            "/lab/f.py": "examples/security/netflow_fixture.py",
+        },
+        "OUTSIDE": {
+            "/lab/t.py": "examples/security/traffic_fixture.py",
+            "/lab/f.py": "examples/security/netflow_fixture.py",
+        },
+        "CAPTURE": {"/lab/p.py": "examples/security/packet_observer.py"},
+    },
     "native-qos-flow": {
         "INSIDE": {
             "/lab/t.py": "examples/security/traffic_fixture.py",

@@ -1,266 +1,176 @@
 lab:
   title: ENCOR Capstone Enterprise Edge
-  description: 350-401 ENCOR - Implementing and Operating Cisco Enterprise Network Core Technologies scenario-based
-    CML lab.
-  notes: '350-401 ENCOR scenario lab: ENCOR Capstone Enterprise Edge
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# ENCOR Capstone Enterprise Edge
 
 
-    Lab type: capstone
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Scenario:
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-401-050-encor-capstone-enterprise-edge.md
 
-    You are taking over a partially built network. Use the topology, startup configs, and this note as
-    the work order.
+
+    Three IOL-XE routers form a dual-provider eBGP edge. EDGE advertises only192.0.2.1/32; each separate
+    provider advertises only192.0.2.80/32 and owns an equivalent isolated loopback endpoint. Local preference200
+    vs100 selects ISP1. Actual edge requests explicitly source Loopback0, so provider return learning
+    is required. Fresh per-provider ingress ACL counters identify the request path: the selected receiver
+    must count packets and the other must have no selected echo-request matches, independently of route
+    text or successful ping. Withdrawing ISP1 service origination must move forwarding to ISP2 while the
+    alternate session remains healthy. Restoring the advertisement must reselect ISP1. A deliberate ISP2
+    local-preference250 error, applied with inbound soft refresh, must move traffic to ISP2 despite both
+    sessions being up; restoring100 must restore intended forwarding. The equal service loopbacks model
+    an anycast-style equivalent endpoint, not preservation of a stateful application. No Internet, physical
+    provider, RPKI, BFD, WAN encryption or production firewall is instantiated. Nominal RAM is3GiB.
 
 
     Objectives:
 
-    - Combine OSPF, BGP, NAT, ACLs, and monitoring.
+    - Verify both real eBGP sessions, per-provider prefix controls, preferred installed route and actual
+    receiver-side packet path.
 
-    - Build a resilient WAN edge.
+    - Withdraw only the preferred service advertisement and prove continued traffic through the alternate
+    provider.
 
-    - Validate primary and backup paths.
+    - Recover the advertisement, introduce a local-preference mistake with both sessions healthy, and
+    restore the intended provider path.
 
-
-    Suggested verification:
-
-    - show ip interface brief
-
-    - show ip route
-
-    - show running-config
-
-
-    Stretch goals:
-
-    - Document the final design.
-
-    - Add one extra validation command for each requirement.
-
-    - Make one controlled change and prove that the network still works.'
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: HQ-R1
-  node_definition: iosv
+  label: EDGE
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.10.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.10.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.1.1\
-      \ 255.255.255.255\n"
+    content: "hostname EDGE\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.1.1 255.255.255.252\n no shutdown\n exit\ninterface Ethernet0/1\n\
+      \ ip address 198.18.2.1 255.255.255.252\n no shutdown\n exit\nip prefix-list EDGE-ONLY permit 192.0.2.1/32\n\
+      route-map ISP1-IN permit 10\n set local-preference 200\n exit\nroute-map ISP2-IN permit 10\n set\
+      \ local-preference 100\n exit\nrouter bgp 65001\n bgp router-id 192.0.2.1\n network 192.0.2.1 mask\
+      \ 255.255.255.255\n neighbor 198.18.1.2 remote-as 65002\n neighbor 198.18.1.2 timers 3 9\n neighbor\
+      \ 198.18.1.2 route-map ISP1-IN in\n neighbor 198.18.1.2 prefix-list EDGE-ONLY out\n neighbor 198.18.2.2\
+      \ remote-as 65003\n neighbor 198.18.2.2 timers 3 9\n neighbor 198.18.2.2 route-map ISP2-IN in\n\
+      \ neighbor 198.18.2.2 prefix-list EDGE-ONLY out\n exit\nend\n"
+  cpu_limit: 100
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 0
-  y: 0
-  priority: 100
   tags: []
 - id: n1
-  label: ISP-R2
-  node_definition: iosv
+  label: ISP1
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.11.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.11.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.2.1\
-      \ 255.255.255.255\n"
+    content: "hostname ISP1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.80 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.1.2 255.255.255.252\n no shutdown\n ip access-group PATH-MEASURE\
+      \ in\n exit\nip access-list extended PATH-MEASURE\n permit icmp host 192.0.2.1 host 192.0.2.80 echo\n\
+      \ permit ip any any\n exit\nip prefix-list SERVICE-ONLY permit 192.0.2.80/32\nrouter bgp 65002\n\
+      \ bgp router-id 203.0.113.1\n network 192.0.2.80 mask 255.255.255.255\n neighbor 198.18.1.1 remote-as\
+      \ 65001\n neighbor 198.18.1.1 timers 3 9\n neighbor 198.18.1.1 prefix-list SERVICE-ONLY out\n exit\n\
+      end\n"
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 240
-  y: 0
-  priority: 99
   tags: []
 - id: n2
-  label: BRANCH-R3
-  node_definition: iosv
+  label: ISP2
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R3\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.12.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.12.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.3.1\
-      \ 255.255.255.255\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 480
-  y: 0
+    content: "hostname ISP2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\ninterface Loopback0\n ip address 192.0.2.80 255.255.255.255\n no shutdown\n exit\ninterface\
+      \ Ethernet0/0\n ip address 198.18.2.2 255.255.255.252\n no shutdown\n ip access-group PATH-MEASURE\
+      \ in\n exit\nip access-list extended PATH-MEASURE\n permit icmp host 192.0.2.1 host 192.0.2.80 echo\n\
+      \ permit ip any any\n exit\nip prefix-list SERVICE-ONLY permit 192.0.2.80/32\nrouter bgp 65003\n\
+      \ bgp router-id 203.0.113.2\n network 192.0.2.80 mask 255.255.255.255\n neighbor 198.18.2.1 remote-as\
+      \ 65001\n neighbor 198.18.2.1 timers 3 9\n neighbor 198.18.2.1 prefix-list SERVICE-ONLY out\n exit\n\
+      end\n"
+  cpu_limit: 100
   priority: 98
-  tags: []
-- id: n3
-  label: EDGE-R4
-  node_definition: iosv
-  configuration:
-  - name: ios_config.txt
-    content: "hostname R4\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.13.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.13.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.4.1\
-      \ 255.255.255.255\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 720
+  x: 520
   y: 0
-  priority: 97
-  tags: []
-- id: n4
-  label: HQ-SW
-  node_definition: iosvl2
-  configuration:
-  - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nvlan 20\n name USERS_20\nvlan 30\n name SERVICES_30\n\
-      interface range GigabitEthernet0/0-3\n switchport mode access\n spanning-tree portfast\n"
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  x: 0
-  y: 200
-  priority: 96
-  tags: []
-- id: n5
-  label: BRANCH-PC
-  node_definition: desktop
-  configuration:
-  - name: node.cfg
-    content: '# BRANCH-PC
-
-      # Use this node as a lightweight endpoint or API/mock server.
-
-      '
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
-  x: 240
-  y: 200
-  priority: 95
   tags: []
 links:
-- n1: n0
+- id: l0
+  n1: n0
   i1: i1
   n2: n1
   i2: i1
-  id: l0
-- n1: n1
+- id: l1
+  n1: n0
   i1: i2
   n2: n2
   i2: i1
-  id: l1
-- n1: n0
-  i1: i2
-  n2: n3
-  i2: i1
-  id: l2
-- n1: n3
-  i1: i2
-  n2: n2
-  i2: i2
-  id: l3
-- n1: n0
-  i1: i3
-  n2: n4
-  i2: i1
-  id: l4
-- n1: n2
-  i1: i3
-  n2: n5
-  i2: i0
-  id: l5
 annotations: []
 smart_annotations: []
