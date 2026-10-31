@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **165**.
+Import/export passes: **233/233**. Functional passes: **169**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -54,6 +54,7 @@ Import/export passes: **233/233**. Functional passes: **165**.
 | [Passwords Banners Secure Management](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/036-passwords-banners-secure-management.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ubuntu-24-04-20260307 | 5 | 4 | 2026-10-25T17:55:21Z |
 | [Layer 2 Security Stack](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/security/044-layer-2-security-stack.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, iosvl2-2020 | 23 | 27 | 2026-10-30T14:13:17Z |
 | [EtherChannel STP Failure Recovery](../labs/200-301-ccna-implementing-and-administering-cisco-solutions/troubleshooting/043-etherchannel-stp-failure-recovery.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 17 | 16 | 2026-10-30T13:55:36Z |
+| [ENARSI Practical: Routing, DNS and Source Policy](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/assessment/044-enarsi-practical-checkpoint.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 15 | 9 | 2026-10-31T11:53:30Z |
 | [NETCONF RESTCONF Routing](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/033-netconf-restconf-routing.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 13 | 31 | 2026-10-27T19:18:58Z |
 | [Python Routing Troubleshooter](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/034-python-routing-troubleshooter.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 13 | 31 | 2026-10-27T19:30:47Z |
 | [Ansible Routing Baseline](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/automation/035-ansible-routing-baseline.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 16 | 32 | 2026-10-28T16:14:57Z |
@@ -65,6 +66,8 @@ Import/export passes: **233/233**. Functional passes: **165**.
 | [MP-BGP VRF Lite](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/018-mp-bgp-vrf-lite.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 18 | 8 | 2026-10-30T14:42:20Z |
 | [BGP Troubleshooting](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/019-bgp-troubleshooting.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 4 | 4 | 2026-10-25T15:57:37Z |
 | [BGP Route Reflector Policy Lab](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/bgp/039-bgp-route-reflector-policy-lab.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 32 | 2026-10-30T14:37:43Z |
+| [ENARSI Capstone: Inter-Area Routing and Selective BGP Export](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/045-enarsi-capstone-advanced-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 19 | 12 | 2026-10-31T11:56:00Z |
+| [ENARSI Capstone: Dual-Tenant MPLS VPN Isolation](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/capstone/046-enarsi-capstone-vpn-services.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 50 | 16 | 2026-10-31T12:01:36Z |
 | [Router Hardening](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/029-router-hardening.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ubuntu-24-04-20260307 | 10 | 12 | 2026-10-30T13:37:13Z |
 | [ENARSI 030 - AAA NAS source troubleshooting](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/030-aaa-radius-tacacs.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 14 | 6 | 2026-10-26T21:10:50Z |
 | [ACL And uRPF](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/infra-security/031-acl-uRPF.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 18 | 25 | 2026-10-30T16:19:20Z |
@@ -86,6 +89,7 @@ Import/export passes: **233/233**. Functional passes: **165**.
 | [VRF Lite Routing Protocols](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/layer-3/012-vrf-lite-routing-protocols.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 5 | 0 | 2026-10-25T12:42:37Z |
 | [Static Edge To Dynamic Routing](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/migration/043-static-edge-to-dynamic-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 32 | 2026-10-26T19:00:30Z |
 | [PBR With IP SLA Fallback](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/services/040-pbr-with-ip-sla-fallback.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 14 | 2026-10-26T18:46:57Z |
+| [Redistribution Nightmare](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/037-redistribution-nightmare.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 29 | 29 | 2026-10-31T12:04:05Z |
 | [Summarization And Filtering Faults](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/041-summarization-and-filtering-faults.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 15 | 8 | 2026-10-26T18:56:20Z |
 | [Wrong Administrative Distance](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/troubleshooting/042-wrong-administrative-distance.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 16 | 14 | 2026-10-26T18:52:47Z |
 | [GRE Tunnel Routing](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/020-gre-tunnel-routing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 6 | 12 | 2026-10-25T12:42:29Z |
