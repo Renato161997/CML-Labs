@@ -4520,25 +4520,25 @@
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/022-secure-api-client.yaml",
-      "title": "Secure API Client",
+      "title": "Secure API Client: Verified Peers and Backend Recovery",
       "track": "350-901",
       "topic": "deployment-security",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-toolbox",
+        "csr1000v"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 110,
+      "workbook": "docs/workbooks/350-901-022-secure-api-client.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "4425988fa64785f7755d6f4290ad8d40139c594a654bbb36967a14b929e91901"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T18:46:06Z",
+      "sha256": "9d51443fe3869aae0847540f780c905facd03c23091e076edc359e9224b2e298"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/023-application-threat-model.yaml",
@@ -4742,26 +4742,25 @@
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/security/037-secure-api-client-threat-model.yaml",
-      "title": "Secure API Client Threat Model",
+      "title": "Client Threat Model: Peer Identity, Schemas and Availability",
       "track": "350-901",
       "topic": "security",
-      "nodes": 5,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "cml-labs-toolbox",
+        "csr1000v"
       ],
-      "nominal_ram_mib": 2816,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 110,
+      "workbook": "docs/workbooks/350-901-037-secure-api-client-threat-model.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "0da656d3b8085a5b0907b916bb2b1d9c539224d2f141fb0ba6abdb44281da5ad"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T18:48:55Z",
+      "sha256": "7f504eee0296e0449df238e84a2d66ba36e6b6e0e106558b18fdb18d1157c725"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/001-distributed-app-front-back-loadbalancer.yaml",

@@ -1276,5 +1276,19 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-901-012-api-contract-openapi.md",
     "example_profile": "native-openapi-contract"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/022-secure-api-client.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-022-secure-api-client.md",
+    "example_profile": "native-iosxe-api"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/security/037-secure-api-client-threat-model.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-037-secure-api-client-threat-model.md",
+    "example_profile": "native-iosxe-api"
   }
 }
