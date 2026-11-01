@@ -848,16 +848,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment/034-dockerized-network-tool.yaml",
-      "sha256": "6086d4b9e0d228ea81395ec480929480d07811fbf4546a5dccd55cb6360f6f8d",
-      "status": "import-export-pass"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/019-containerized-network-tool.yaml",
-      "sha256": "5b51b464084968af5db1d865b5ef99f2593e5f8499784242dd064615c9283664",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/020-ci-cd-for-network-automation.yaml",
       "sha256": "2109e7258b8947fb11bbeb047542232763d263376231eaf0ca267255dd360e7d",
       "status": "import-export-pass"
@@ -1358,11 +1348,6 @@
       "completed_utc": "2026-11-01T18:39:21Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/030-8021x-mab-concepts.yaml",
       "sha256": "054a915dd3454f42a2c1ccf65c4a70bfc3edd0ac8db79e32a2e9a3f6a3798914",
       "cml_version": "2.10.1+build.21",
@@ -1381,6 +1366,31 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T19:25:04Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/019-containerized-network-tool.yaml",
+      "sha256": "5daff539d3f83477bb059bd7b9586b026efba88a416afbc75c55c43d0775be86",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T19:46:45Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T19:46:45Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment/034-dockerized-network-tool.yaml",
+      "sha256": "13c0c3f36d3e25482114e1929507e74b522552d755424a5dd66537790a0806e4",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T19:46:50Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T19:46:50Z"
     }
   ]
 }

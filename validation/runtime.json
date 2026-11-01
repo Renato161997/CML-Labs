@@ -49039,6 +49039,464 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T19:32:42Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/019-containerized-network-tool.yaml",
+      "sha256": "5daff539d3f83477bb059bd7b9586b026efba88a416afbc75c55c43d0775be86",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T19:48:49Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/u.py baseline",
+          "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/u.py baseline\n{\"kernel_unprivileged\": true, \"owned_result_written_and_removed\": true, \"phase\": \"baseline\", \"pid\": 30, \"root_regain_denied\": true, \"root_sentinel_readable\": false, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py baseline",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py baseline\n{\"contract_accepted\": true, \"phase\": \"baseline\", \"reason\": null, \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "SERVER",
+          "command": "cat /sys/class/net/eth1/carrier",
+          "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# cat /sys/class/net/eth1/carrier\n1\nroot@SERVER:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.164 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.203 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.558 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2034ms\nrtt min/avg/max/mdev = 0.164/0.308/0.558/0.177 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "stat -c \"%a %u\" /lab/root-only.fixture",
+          "expectation": "Independently observe root ownership and actual sentinel-file permission mode.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# stat -c \"%a %u\" /lab/root-only.fixture\n600 0\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "expose only the public permission-test sentinel",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/u.py expose",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/u.py expose\n{\"root_file_readable\": true, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "expose only the public permission-test sentinel",
+          "node": "CLIENT",
+          "command": "python3 /lab/u.py readable",
+          "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/u.py readable\n{\"kernel_unprivileged\": true, \"owned_result_written_and_removed\": true, \"phase\": \"readable\", \"pid\": 36, \"root_regain_denied\": true, \"root_sentinel_readable\": true, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "expose only the public permission-test sentinel",
+          "node": "CLIENT",
+          "command": "stat -c \"%a %u\" /lab/root-only.fixture",
+          "expectation": "Independently observe root ownership and actual sentinel-file permission mode.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# stat -c \"%a %u\" /lab/root-only.fixture\n644 0\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "expose only the public permission-test sentinel",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py baseline",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py baseline\n{\"contract_accepted\": true, \"phase\": \"baseline\", \"reason\": null, \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "expose only the public permission-test sentinel",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.202 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.505 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=1.18 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2073ms\nrtt min/avg/max/mdev = 0.202/0.629/1.182/0.409 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore actual root-only file permissions",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/u.py secure",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/u.py secure\n{\"root_file_readable\": false, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore actual root-only file permissions",
+          "node": "CLIENT",
+          "command": "python3 /lab/u.py baseline",
+          "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/u.py baseline\n{\"kernel_unprivileged\": true, \"owned_result_written_and_removed\": true, \"phase\": \"baseline\", \"pid\": 42, \"root_regain_denied\": true, \"root_sentinel_readable\": false, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore actual root-only file permissions",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py baseline",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py baseline\n{\"contract_accepted\": true, \"phase\": \"baseline\", \"reason\": null, \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore actual root-only file permissions",
+          "node": "SERVER",
+          "command": "cat /sys/class/net/eth1/carrier",
+          "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# cat /sys/class/net/eth1/carrier\n1\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restore actual root-only file permissions",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.244 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.393 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.478 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2037ms\nrtt min/avg/max/mdev = 0.244/0.371/0.478/0.096 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore actual root-only file permissions",
+          "node": "CLIENT",
+          "command": "stat -c \"%a %u\" /lab/root-only.fixture",
+          "expectation": "Independently observe root ownership and actual sentinel-file permission mode.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# stat -c \"%a %u\" /lab/root-only.fixture\n600 0\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "omit only the public classroom API key",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/u.py no-key",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/u.py no-key\n{\"kernel_unprivileged\": true, \"owned_result_written_and_removed\": true, \"phase\": \"no-key\", \"pid\": 47, \"root_regain_denied\": true, \"root_sentinel_readable\": false, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "omit only the public classroom API key",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py baseline",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py baseline\n{\"contract_accepted\": true, \"phase\": \"baseline\", \"reason\": null, \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "omit only the public classroom API key",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.179 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.883 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.627 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 0.179/0.563/0.883/0.290 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "omit only the public classroom API key",
+          "node": "CLIENT",
+          "command": "stat -c \"%a %u\" /lab/root-only.fixture",
+          "expectation": "Independently observe root ownership and actual sentinel-file permission mode.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# stat -c \"%a %u\" /lab/root-only.fixture\n600 0\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "change only the source media type",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/a.py media",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/a.py media\n{\"source_mode\": \"media\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "change only the source media type",
+          "node": "CLIENT",
+          "command": "python3 /lab/u.py media",
+          "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/u.py media\n{\"kernel_unprivileged\": true, \"owned_result_written_and_removed\": true, \"phase\": \"media\", \"pid\": 52, \"root_regain_denied\": true, \"root_sentinel_readable\": false, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "change only the source media type",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py media-bad",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py media-bad\n{\"contract_accepted\": false, \"phase\": \"media-bad\", \"reason\": \"unexpected_media\", \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "change only the source media type",
+          "node": "SERVER",
+          "command": "cat /sys/class/net/eth1/carrier",
+          "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# cat /sys/class/net/eth1/carrier\n1\nroot@SERVER:~# "
+        },
+        {
+          "phase": "change only the source media type",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.195 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.156 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.461 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2033ms\nrtt min/avg/max/mdev = 0.156/0.270/0.461/0.135 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "recover the agreed source response",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/a.py good",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/a.py good\n{\"source_mode\": \"good\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "recover the agreed source response",
+          "node": "CLIENT",
+          "command": "python3 /lab/u.py baseline",
+          "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/u.py baseline\n{\"kernel_unprivileged\": true, \"owned_result_written_and_removed\": true, \"phase\": \"baseline\", \"pid\": 56, \"root_regain_denied\": true, \"root_sentinel_readable\": false, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "recover the agreed source response",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py baseline",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py baseline\n{\"contract_accepted\": true, \"phase\": \"baseline\", \"reason\": null, \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "recover the agreed source response",
+          "node": "SERVER",
+          "command": "cat /sys/class/net/eth1/carrier",
+          "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# cat /sys/class/net/eth1/carrier\n1\nroot@SERVER:~# "
+        },
+        {
+          "phase": "recover the agreed source response",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.330 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.451 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.892 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2063ms\nrtt min/avg/max/mdev = 0.330/0.557/0.892/0.241 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "recover the agreed source response",
+          "node": "CLIENT",
+          "command": "stat -c \"%a %u\" /lab/root-only.fixture",
+          "expectation": "Independently observe root ownership and actual sentinel-file permission mode.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# stat -c \"%a %u\" /lab/root-only.fixture\n600 0\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "9557935d94c876a359b9a202d33d543613d4346a1e52268ec49e353a0374abc4",
+      "startup_states": {
+        "SERVER": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "SERVER": null,
+        "CLIENT": null
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T19:49:55Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment/034-dockerized-network-tool.yaml",
+      "sha256": "13c0c3f36d3e25482114e1929507e74b522552d755424a5dd66537790a0806e4",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T19:49:57Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/u.py baseline",
+          "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/u.py baseline\n{\"kernel_unprivileged\": true, \"owned_result_written_and_removed\": true, \"phase\": \"baseline\", \"pid\": 30, \"root_regain_denied\": true, \"root_sentinel_readable\": false, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py baseline",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py baseline\n{\"contract_accepted\": true, \"phase\": \"baseline\", \"reason\": null, \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "SERVER",
+          "command": "cat /sys/class/net/eth1/carrier",
+          "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# cat /sys/class/net/eth1/carrier\n1\nroot@SERVER:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.197 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.335 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.356 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2032ms\nrtt min/avg/max/mdev = 0.197/0.296/0.356/0.070 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "stat -c \"%a %u\" /lab/root-only.fixture",
+          "expectation": "Independently observe root ownership and actual sentinel-file permission mode.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# stat -c \"%a %u\" /lab/root-only.fixture\n600 0\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "produce a schema-invalid response without breaking the container link",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/a.py schema",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/a.py schema\n{\"source_mode\": \"schema\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "produce a schema-invalid response without breaking the container link",
+          "node": "CLIENT",
+          "command": "python3 /lab/u.py schema",
+          "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/u.py schema\n{\"kernel_unprivileged\": true, \"owned_result_written_and_removed\": true, \"phase\": \"schema\", \"pid\": 35, \"root_regain_denied\": true, \"root_sentinel_readable\": false, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "produce a schema-invalid response without breaking the container link",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py schema-bad",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py schema-bad\n{\"contract_accepted\": false, \"phase\": \"schema-bad\", \"reason\": \"schema_violation\", \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "produce a schema-invalid response without breaking the container link",
+          "node": "SERVER",
+          "command": "cat /sys/class/net/eth1/carrier",
+          "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# cat /sys/class/net/eth1/carrier\n1\nroot@SERVER:~# "
+        },
+        {
+          "phase": "produce a schema-invalid response without breaking the container link",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.159 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.433 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.762 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2025ms\nrtt min/avg/max/mdev = 0.159/0.451/0.762/0.246 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the contract and run fresh stateless workloads",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/a.py good",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/a.py good\n{\"source_mode\": \"good\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restore the contract and run fresh stateless workloads",
+          "node": "CLIENT",
+          "command": "python3 /lab/u.py baseline",
+          "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/u.py baseline\n{\"kernel_unprivileged\": true, \"owned_result_written_and_removed\": true, \"phase\": \"baseline\", \"pid\": 39, \"root_regain_denied\": true, \"root_sentinel_readable\": false, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the contract and run fresh stateless workloads",
+          "node": "CLIENT",
+          "command": "python3 /lab/u.py baseline",
+          "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/u.py baseline\n{\"kernel_unprivileged\": true, \"owned_result_written_and_removed\": true, \"phase\": \"baseline\", \"pid\": 41, \"root_regain_denied\": true, \"root_sentinel_readable\": false, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the contract and run fresh stateless workloads",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py baseline",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py baseline\n{\"contract_accepted\": true, \"phase\": \"baseline\", \"reason\": null, \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the contract and run fresh stateless workloads",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.172 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.322 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.341 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2053ms\nrtt min/avg/max/mdev = 0.172/0.278/0.341/0.075 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "verify real API refusal with the workload still unprivileged",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/u.py no-key",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/u.py no-key\n{\"kernel_unprivileged\": true, \"owned_result_written_and_removed\": true, \"phase\": \"no-key\", \"pid\": 45, \"root_regain_denied\": true, \"root_sentinel_readable\": false, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "verify real API refusal with the workload still unprivileged",
+          "node": "CLIENT",
+          "command": "python3 /lab/u.py baseline",
+          "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/u.py baseline\n{\"kernel_unprivileged\": true, \"owned_result_written_and_removed\": true, \"phase\": \"baseline\", \"pid\": 47, \"root_regain_denied\": true, \"root_sentinel_readable\": false, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "verify real API refusal with the workload still unprivileged",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py baseline",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py baseline\n{\"contract_accepted\": true, \"phase\": \"baseline\", \"reason\": null, \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "verify real API refusal with the workload still unprivileged",
+          "node": "CLIENT",
+          "command": "stat -c \"%a %u\" /lab/root-only.fixture",
+          "expectation": "Independently observe root ownership and actual sentinel-file permission mode.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# stat -c \"%a %u\" /lab/root-only.fixture\n600 0\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "02b24ab396e9e703910871f8ddc8efb305dee5fb043a35fb06c1c4ec42a80724",
+      "startup_states": {
+        "SERVER": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "SERVER": null,
+        "CLIENT": null
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T19:50:49Z"
     }
   ]
 }
