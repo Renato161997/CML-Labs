@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **186**.
+Import/export passes: **233/233**. Functional passes: **188**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -106,6 +106,7 @@ Import/export passes: **233/233**. Functional passes: **186**.
 | [DMVPN Hub Spoke Break Fix](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/038-dmvpn-hub-spoke-break-fix.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, iosvl2-2020 | 9 | 0 | 2026-10-28T18:34:07Z |
 | [Campus Two Tier Three Tier HA](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/001-campus-two-three-tier-ha.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 11 | 16 | 2026-10-30T14:25:51Z |
 | [FHRP Design HSRP VRRP](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/002-fhrp-design-hsrp-vrrp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 23 | 16 | 2026-10-30T14:18:58Z |
+| [Fabric Roles: Routed Underlay and VXLAN Overlay](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/004-sdaccess-fabric-roles.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3 | 35 | 8 | 2026-10-31T23:28:24Z |
 | [QoS Policy Interpretation](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/005-qos-policy-interpretation.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 6 | 8 | 2026-10-30T19:26:06Z |
 | [CEF CAM TCAM RIB FIB](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 21 | 18 | 2026-10-26T19:52:51Z |
 | [RESTCONF NETCONF YANG](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/037-restconf-netconf-yang.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 5 | 34 | 2026-10-27T19:04:45Z |
@@ -147,6 +148,7 @@ Import/export passes: **233/233**. Functional passes: **186**.
 | [VRF Lite Route Leaking](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/007-vrf-lite-route-leaking.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 17 | 16 | 2026-10-28T18:46:40Z |
 | [GRE Overlay Underlay](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/008-gre-overlay-underlay.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 22 | 16 | 2026-10-26T19:54:02Z |
 | [IPsec GRE Design](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 23 | 20 | 2026-10-30T15:00:07Z |
+| [VXLAN: Encapsulation, VNI Mismatch and Recovery](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/010-lisp-vxlan-concepts.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 35 | 8 | 2026-10-31T23:30:16Z |
 | [Virtual Switching: VLAN Isolation and Dynamic MAC Learning](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/011-virtual-switching-paths.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 11 | 2 | 2026-10-31T23:04:07Z |
 | [Security API Python](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/031-security-api-python.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 16 | 5 | 2026-10-30T15:16:18Z |
 | [SCOR Capstone Secure Edge](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/045-scor-capstone-secure-edge.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 23 | 18 | 2026-10-30T16:02:32Z |

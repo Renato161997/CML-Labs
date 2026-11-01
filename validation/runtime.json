@@ -42313,6 +42313,760 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T23:04:07Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/004-sdaccess-fabric-roles.yaml",
+      "sha256": "cd92083b0f1d63a8e3a18a2d45051652e505fb00f920717aecdc75234cb4ef50",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T23:27:11Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"routed\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"routed\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh baseline wire window",
+          "kind": "configuration",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py capture",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py capture\n{\"capture_generation\": 1, \"status\": \"passed\"}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh baseline wire window",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "start a fresh baseline wire window",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh baseline wire window",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"routed\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "start a fresh baseline wire window",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"routed\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "prove baseline overlay delivery and actual encapsulation",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "python3 /lab/v.py good",
+          "passed": true,
+          "output": "\nroot@LEFT:~# python3 /lab/v.py good\n{\"overlay_replies\": 3, \"status\": \"passed\"}\nroot@LEFT:~# "
+        },
+        {
+          "phase": "prove baseline overlay delivery and actual encapsulation",
+          "node": "RIGHT",
+          "command": "python3 /lab/v.py good",
+          "expectation": "Three actual interface-bound overlay probes succeed.",
+          "passed": true,
+          "output": "\nroot@RIGHT:~# python3 /lab/v.py good\n{\"overlay_replies\": 3, \"status\": \"passed\"}\nroot@RIGHT:~# "
+        },
+        {
+          "phase": "prove baseline overlay delivery and actual encapsulation",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py wire-good",
+          "expectation": "A fresh acknowledged packet-socket window observes actual expected-peer UDP4789 VXLAN with the selected inner ARP/echo request; the wire VNI and TTL are decoded independently of actual receiver VNI state.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py wire-good\n{\"generation\": 1, \"receiver_vni\": 100, \"selected_packets\": 5, \"status\": \"passed\", \"vni_mismatch\": false, \"wire_ttl\": 63, \"wire_vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "prove baseline overlay delivery and actual encapsulation",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "prove baseline overlay delivery and actual encapsulation",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "change only the receiver VNI",
+          "kind": "configuration",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py mismatch",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py mismatch\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"routed\", \"status\": \"passed\", \"vni\": 101}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "change only the receiver VNI",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"routed\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "change only the receiver VNI",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"routed\", \"status\": \"passed\", \"vni\": 101}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "change only the receiver VNI",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "change only the receiver VNI",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh mismatch wire window",
+          "kind": "configuration",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py capture",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py capture\n{\"capture_generation\": 2, \"status\": \"passed\"}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh mismatch wire window",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"routed\", \"status\": \"passed\", \"vni\": 101}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh mismatch wire window",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "start a fresh mismatch wire window",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "observe wire VNI mismatch with healthy underlay",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "python3 /lab/v.py down",
+          "passed": true,
+          "output": "\nroot@LEFT:~# python3 /lab/v.py down\n{\"overlay_replies\": 0, \"status\": \"passed\"}\nroot@LEFT:~# "
+        },
+        {
+          "phase": "observe wire VNI mismatch with healthy underlay",
+          "node": "RIGHT",
+          "command": "python3 /lab/v.py down",
+          "expectation": "Three actual interface-bound overlay probes fail while both endpoint addressing and underlay controls remain intact.",
+          "passed": true,
+          "output": "\nroot@RIGHT:~# python3 /lab/v.py down\n{\"overlay_replies\": 0, \"status\": \"passed\"}\nroot@RIGHT:~# "
+        },
+        {
+          "phase": "observe wire VNI mismatch with healthy underlay",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py wire-mismatch",
+          "expectation": "A fresh acknowledged packet-socket window observes actual expected-peer UDP4789 VXLAN with the selected inner ARP/echo request; the wire VNI and TTL are decoded independently of actual receiver VNI state.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py wire-mismatch\n{\"generation\": 2, \"receiver_vni\": 101, \"selected_packets\": 4, \"status\": \"passed\", \"vni_mismatch\": true, \"wire_ttl\": 63, \"wire_vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "observe wire VNI mismatch with healthy underlay",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "observe wire VNI mismatch with healthy underlay",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "restore the original receiver VNI",
+          "kind": "configuration",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py repair",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py repair\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"routed\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "restore the original receiver VNI",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "restore the original receiver VNI",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "restore the original receiver VNI",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"routed\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "restore the original receiver VNI",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"routed\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh recovered wire window",
+          "kind": "configuration",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py capture",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py capture\n{\"capture_generation\": 3, \"status\": \"passed\"}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh recovered wire window",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "start a fresh recovered wire window",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh recovered wire window",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"routed\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "start a fresh recovered wire window",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"routed\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "verify actual overlay and wire recovery",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "python3 /lab/v.py good",
+          "passed": true,
+          "output": "\nroot@LEFT:~# python3 /lab/v.py good\n{\"overlay_replies\": 3, \"status\": \"passed\"}\nroot@LEFT:~# "
+        },
+        {
+          "phase": "verify actual overlay and wire recovery",
+          "node": "RIGHT",
+          "command": "python3 /lab/v.py good",
+          "expectation": "Three actual interface-bound overlay probes succeed.",
+          "passed": true,
+          "output": "\nroot@RIGHT:~# python3 /lab/v.py good\n{\"overlay_replies\": 3, \"status\": \"passed\"}\nroot@RIGHT:~# "
+        },
+        {
+          "phase": "verify actual overlay and wire recovery",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py wire-good",
+          "expectation": "A fresh acknowledged packet-socket window observes actual expected-peer UDP4789 VXLAN with the selected inner ARP/echo request; the wire VNI and TTL are decoded independently of actual receiver VNI state.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py wire-good\n{\"generation\": 3, \"receiver_vni\": 100, \"selected_packets\": 4, \"status\": \"passed\", \"vni_mismatch\": false, \"wire_ttl\": 63, \"wire_vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "verify actual overlay and wire recovery",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "verify actual overlay and wire recovery",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"routed\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        }
+      ],
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "startup_states": {
+        "VTEP1": "BOOTED",
+        "VTEP2": "BOOTED",
+        "LEFT": "BOOTED",
+        "RIGHT": "BOOTED",
+        "SPINE": "BOOTED"
+      },
+      "images": {
+        "VTEP1": "net-tools-2-10-1-3",
+        "VTEP2": "net-tools-2-10-1-3",
+        "LEFT": "net-tools-2-10-1-3",
+        "RIGHT": "net-tools-2-10-1-3",
+        "SPINE": "iol-xe-17-18-02"
+      },
+      "plan_sha256": "cdad1c429812da6a5a4e4305808ac82beec79136e4090f1e3906e92cb4d45b5b",
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T23:28:24Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/010-lisp-vxlan-concepts.yaml",
+      "sha256": "5af1c2260dba93285512bf23799268e101692a2110f7bb5f749f5a159650a4f3",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T23:28:27Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"direct\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"direct\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh baseline wire window",
+          "kind": "configuration",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py capture",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py capture\n{\"capture_generation\": 1, \"status\": \"passed\"}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh baseline wire window",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "start a fresh baseline wire window",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh baseline wire window",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"direct\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "start a fresh baseline wire window",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"direct\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "prove baseline overlay delivery and actual encapsulation",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "python3 /lab/v.py good",
+          "passed": true,
+          "output": "\nroot@LEFT:~# python3 /lab/v.py good\n{\"overlay_replies\": 3, \"status\": \"passed\"}\nroot@LEFT:~# "
+        },
+        {
+          "phase": "prove baseline overlay delivery and actual encapsulation",
+          "node": "RIGHT",
+          "command": "python3 /lab/v.py good",
+          "expectation": "Three actual interface-bound overlay probes succeed.",
+          "passed": true,
+          "output": "\nroot@RIGHT:~# python3 /lab/v.py good\n{\"overlay_replies\": 3, \"status\": \"passed\"}\nroot@RIGHT:~# "
+        },
+        {
+          "phase": "prove baseline overlay delivery and actual encapsulation",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py wire-good",
+          "expectation": "A fresh acknowledged packet-socket window observes actual expected-peer UDP4789 VXLAN with the selected inner ARP/echo request; the wire VNI and TTL are decoded independently of actual receiver VNI state.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py wire-good\n{\"generation\": 1, \"receiver_vni\": 100, \"selected_packets\": 5, \"status\": \"passed\", \"vni_mismatch\": false, \"wire_ttl\": 64, \"wire_vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "prove baseline overlay delivery and actual encapsulation",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "prove baseline overlay delivery and actual encapsulation",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "change only the receiver VNI",
+          "kind": "configuration",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py mismatch",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py mismatch\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"direct\", \"status\": \"passed\", \"vni\": 101}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "change only the receiver VNI",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"direct\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "change only the receiver VNI",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"direct\", \"status\": \"passed\", \"vni\": 101}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "change only the receiver VNI",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "change only the receiver VNI",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh mismatch wire window",
+          "kind": "configuration",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py capture",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py capture\n{\"capture_generation\": 2, \"status\": \"passed\"}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh mismatch wire window",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"direct\", \"status\": \"passed\", \"vni\": 101}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh mismatch wire window",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "start a fresh mismatch wire window",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "observe wire VNI mismatch with healthy underlay",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "python3 /lab/v.py down",
+          "passed": true,
+          "output": "\nroot@LEFT:~# python3 /lab/v.py down\n{\"overlay_replies\": 0, \"status\": \"passed\"}\nroot@LEFT:~# "
+        },
+        {
+          "phase": "observe wire VNI mismatch with healthy underlay",
+          "node": "RIGHT",
+          "command": "python3 /lab/v.py down",
+          "expectation": "Three actual interface-bound overlay probes fail while both endpoint addressing and underlay controls remain intact.",
+          "passed": true,
+          "output": "\nroot@RIGHT:~# python3 /lab/v.py down\n{\"overlay_replies\": 0, \"status\": \"passed\"}\nroot@RIGHT:~# "
+        },
+        {
+          "phase": "observe wire VNI mismatch with healthy underlay",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py wire-mismatch",
+          "expectation": "A fresh acknowledged packet-socket window observes actual expected-peer UDP4789 VXLAN with the selected inner ARP/echo request; the wire VNI and TTL are decoded independently of actual receiver VNI state.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py wire-mismatch\n{\"generation\": 2, \"receiver_vni\": 101, \"selected_packets\": 4, \"status\": \"passed\", \"vni_mismatch\": true, \"wire_ttl\": 64, \"wire_vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "observe wire VNI mismatch with healthy underlay",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "observe wire VNI mismatch with healthy underlay",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "restore the original receiver VNI",
+          "kind": "configuration",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py repair",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py repair\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"direct\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "restore the original receiver VNI",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "restore the original receiver VNI",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "restore the original receiver VNI",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"direct\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "restore the original receiver VNI",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"direct\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh recovered wire window",
+          "kind": "configuration",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py capture",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py capture\n{\"capture_generation\": 3, \"status\": \"passed\"}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh recovered wire window",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "start a fresh recovered wire window",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "start a fresh recovered wire window",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"direct\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "start a fresh recovered wire window",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py state",
+          "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py state\n{\"kernel_release\": \"6.8.0-147-generic\", \"mode\": \"direct\", \"status\": \"passed\", \"vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "verify actual overlay and wire recovery",
+          "kind": "configuration",
+          "node": "LEFT",
+          "command": "python3 /lab/v.py good",
+          "passed": true,
+          "output": "\nroot@LEFT:~# python3 /lab/v.py good\n{\"overlay_replies\": 3, \"status\": \"passed\"}\nroot@LEFT:~# "
+        },
+        {
+          "phase": "verify actual overlay and wire recovery",
+          "node": "RIGHT",
+          "command": "python3 /lab/v.py good",
+          "expectation": "Three actual interface-bound overlay probes succeed.",
+          "passed": true,
+          "output": "\nroot@RIGHT:~# python3 /lab/v.py good\n{\"overlay_replies\": 3, \"status\": \"passed\"}\nroot@RIGHT:~# "
+        },
+        {
+          "phase": "verify actual overlay and wire recovery",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py wire-good",
+          "expectation": "A fresh acknowledged packet-socket window observes actual expected-peer UDP4789 VXLAN with the selected inner ARP/echo request; the wire VNI and TTL are decoded independently of actual receiver VNI state.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py wire-good\n{\"generation\": 3, \"receiver_vni\": 100, \"selected_packets\": 4, \"status\": \"passed\", \"vni_mismatch\": false, \"wire_ttl\": 64, \"wire_vni\": 100}\nroot@VTEP2:~# "
+        },
+        {
+          "phase": "verify actual overlay and wire recovery",
+          "node": "VTEP1",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP1:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP1:~# "
+        },
+        {
+          "phase": "verify actual overlay and wire recovery",
+          "node": "VTEP2",
+          "command": "python3 /lab/v.py underlay",
+          "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+          "passed": true,
+          "output": "\nroot@VTEP2:~# python3 /lab/v.py underlay\n{\"mode\": \"direct\", \"status\": \"passed\", \"underlay_replies\": 3}\nroot@VTEP2:~# "
+        }
+      ],
+      "plan_sha256": "e3e8cd2d48812b0f94972deb46bbf2fe40a1049e2d558532a2aad3a71af520d0",
+      "startup_states": {
+        "VTEP1": "BOOTED",
+        "VTEP2": "BOOTED",
+        "LEFT": "BOOTED",
+        "RIGHT": "BOOTED"
+      },
+      "images": {
+        "VTEP1": "net-tools-2-10-1-3",
+        "VTEP2": "net-tools-2-10-1-3",
+        "LEFT": "net-tools-2-10-1-3",
+        "RIGHT": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T23:30:16Z"
     }
   ]
 }

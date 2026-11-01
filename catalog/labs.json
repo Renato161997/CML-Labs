@@ -2131,26 +2131,25 @@
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/004-sdaccess-fabric-roles.yaml",
-      "title": "SD-Access Fabric Roles",
+      "title": "Fabric Roles: Routed Underlay and VXLAN Overlay",
       "track": "350-401",
       "topic": "architecture",
-      "nodes": 3,
+      "nodes": 5,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe",
+        "net-tools"
       ],
-      "nominal_ram_mib": 1792,
+      "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 100,
+      "workbook": "docs/workbooks/350-401-004-sdaccess-fabric-roles.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "d93ea6cd4f1c155e7dbae7032791443741645822aba576a678a4744d996e7d13"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T23:28:24Z",
+      "sha256": "cd92083b0f1d63a8e3a18a2d45051652e505fb00f920717aecdc75234cb4ef50"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/005-qos-policy-interpretation.yaml",
@@ -3136,26 +3135,24 @@
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/010-lisp-vxlan-concepts.yaml",
-      "title": "LISP VXLAN Concepts",
+      "title": "VXLAN: Encapsulation, VNI Mismatch and Recovery",
       "track": "350-401",
       "topic": "virtualization",
-      "nodes": 3,
+      "nodes": 4,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "net-tools"
       ],
-      "nominal_ram_mib": 1792,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 100,
+      "workbook": "docs/workbooks/350-401-010-lisp-vxlan-concepts.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "3826ae0bd3256569545c245b4fe1bdba4b399381af5865e99b478aaa53851b9e"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-10-31T23:30:16Z",
+      "sha256": "5af1c2260dba93285512bf23799268e101692a2110f7bb5f749f5a159650a4f3"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/011-virtual-switching-paths.yaml",

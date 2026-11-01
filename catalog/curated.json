@@ -1186,5 +1186,19 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-401-011-virtual-switching-paths.md",
     "example_profile": "native-kernel-bridge"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/010-lisp-vxlan-concepts.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-010-lisp-vxlan-concepts.md",
+    "example_profile": "native-vxlan-dataplane"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/004-sdaccess-fabric-roles.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-004-sdaccess-fabric-roles.md",
+    "example_profile": "native-vxlan-dataplane"
   }
 }

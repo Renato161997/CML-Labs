@@ -22936,5 +22936,779 @@
         ]
       }
     ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/010-lisp-vxlan-concepts.yaml": {
+    "checks": [
+      {
+        "node": "VTEP1",
+        "command": "python3 /lab/v.py underlay",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+        "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+        "command_timeout": 30,
+        "attempts": 2,
+        "interval_seconds": 1
+      },
+      {
+        "node": "VTEP2",
+        "command": "python3 /lab/v.py underlay",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+        "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+        "command_timeout": 30,
+        "attempts": 2,
+        "interval_seconds": 1
+      },
+      {
+        "node": "VTEP1",
+        "command": "python3 /lab/v.py state",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+        "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+        "attempts": 1
+      },
+      {
+        "node": "VTEP2",
+        "command": "python3 /lab/v.py state",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+        "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+        "attempts": 1
+      }
+    ],
+    "transitions": [
+      {
+        "name": "start a fresh baseline wire window",
+        "node": "VTEP2",
+        "commands": [
+          "python3 /lab/v.py capture"
+        ],
+        "command_pattern": "\"capture_generation\": [1-9]",
+        "command_timeout": 15,
+        "checks": [
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "prove baseline overlay delivery and actual encapsulation",
+        "node": "LEFT",
+        "commands": [
+          "python3 /lab/v.py good"
+        ],
+        "command_pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"overlay_replies\": 3)",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "RIGHT",
+            "command": "python3 /lab/v.py good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"overlay_replies\": 3\\b)",
+            "expectation": "Three actual interface-bound overlay probes succeed.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py wire-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"receiver_vni\": 100\\b)(?=.*\"wire_vni\": 100)(?=.*\"wire_ttl\": 64\\b)(?=.*\"vni_mismatch\": false)",
+            "expectation": "A fresh acknowledged packet-socket window observes actual expected-peer UDP4789 VXLAN with the selected inner ARP/echo request; the wire VNI and TTL are decoded independently of actual receiver VNI state.",
+            "command_timeout": 20,
+            "attempts": 3,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "change only the receiver VNI",
+        "node": "VTEP2",
+        "commands": [
+          "python3 /lab/v.py mismatch"
+        ],
+        "command_pattern": "\"vni\": 101",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 101\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "start a fresh mismatch wire window",
+        "node": "VTEP2",
+        "commands": [
+          "python3 /lab/v.py capture"
+        ],
+        "command_pattern": "\"capture_generation\": [1-9]",
+        "command_timeout": 15,
+        "checks": [
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 101\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "observe wire VNI mismatch with healthy underlay",
+        "node": "LEFT",
+        "commands": [
+          "python3 /lab/v.py down"
+        ],
+        "command_pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"overlay_replies\": 0)",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "RIGHT",
+            "command": "python3 /lab/v.py down",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"overlay_replies\": 0\\b)",
+            "expectation": "Three actual interface-bound overlay probes fail while both endpoint addressing and underlay controls remain intact.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py wire-mismatch",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"receiver_vni\": 101\\b)(?=.*\"wire_vni\": 100)(?=.*\"wire_ttl\": 64\\b)(?=.*\"vni_mismatch\": true)",
+            "expectation": "A fresh acknowledged packet-socket window observes actual expected-peer UDP4789 VXLAN with the selected inner ARP/echo request; the wire VNI and TTL are decoded independently of actual receiver VNI state.",
+            "command_timeout": 20,
+            "attempts": 3,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "restore the original receiver VNI",
+        "node": "VTEP2",
+        "commands": [
+          "python3 /lab/v.py repair"
+        ],
+        "command_pattern": "\"vni\": 100",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "start a fresh recovered wire window",
+        "node": "VTEP2",
+        "commands": [
+          "python3 /lab/v.py capture"
+        ],
+        "command_pattern": "\"capture_generation\": [1-9]",
+        "command_timeout": 15,
+        "checks": [
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "verify actual overlay and wire recovery",
+        "node": "LEFT",
+        "commands": [
+          "python3 /lab/v.py good"
+        ],
+        "command_pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"overlay_replies\": 3)",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "RIGHT",
+            "command": "python3 /lab/v.py good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"overlay_replies\": 3\\b)",
+            "expectation": "Three actual interface-bound overlay probes succeed.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py wire-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"receiver_vni\": 100\\b)(?=.*\"wire_vni\": 100)(?=.*\"wire_ttl\": 64\\b)(?=.*\"vni_mismatch\": false)",
+            "expectation": "A fresh acknowledged packet-socket window observes actual expected-peer UDP4789 VXLAN with the selected inner ARP/echo request; the wire VNI and TTL are decoded independently of actual receiver VNI state.",
+            "command_timeout": 20,
+            "attempts": 3,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/004-sdaccess-fabric-roles.yaml": {
+    "checks": [
+      {
+        "node": "VTEP1",
+        "command": "python3 /lab/v.py underlay",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+        "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+        "command_timeout": 30,
+        "attempts": 2,
+        "interval_seconds": 1
+      },
+      {
+        "node": "VTEP2",
+        "command": "python3 /lab/v.py underlay",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+        "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+        "command_timeout": 30,
+        "attempts": 2,
+        "interval_seconds": 1
+      },
+      {
+        "node": "VTEP1",
+        "command": "python3 /lab/v.py state",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+        "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+        "attempts": 1
+      },
+      {
+        "node": "VTEP2",
+        "command": "python3 /lab/v.py state",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+        "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+        "attempts": 1
+      }
+    ],
+    "transitions": [
+      {
+        "name": "start a fresh baseline wire window",
+        "node": "VTEP2",
+        "commands": [
+          "python3 /lab/v.py capture"
+        ],
+        "command_pattern": "\"capture_generation\": [1-9]",
+        "command_timeout": 15,
+        "checks": [
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "prove baseline overlay delivery and actual encapsulation",
+        "node": "LEFT",
+        "commands": [
+          "python3 /lab/v.py good"
+        ],
+        "command_pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"overlay_replies\": 3)",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "RIGHT",
+            "command": "python3 /lab/v.py good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"overlay_replies\": 3\\b)",
+            "expectation": "Three actual interface-bound overlay probes succeed.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py wire-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"receiver_vni\": 100\\b)(?=.*\"wire_vni\": 100)(?=.*\"wire_ttl\": 63\\b)(?=.*\"vni_mismatch\": false)",
+            "expectation": "A fresh acknowledged packet-socket window observes actual expected-peer UDP4789 VXLAN with the selected inner ARP/echo request; the wire VNI and TTL are decoded independently of actual receiver VNI state.",
+            "command_timeout": 20,
+            "attempts": 3,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "change only the receiver VNI",
+        "node": "VTEP2",
+        "commands": [
+          "python3 /lab/v.py mismatch"
+        ],
+        "command_pattern": "\"vni\": 101",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 101\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "start a fresh mismatch wire window",
+        "node": "VTEP2",
+        "commands": [
+          "python3 /lab/v.py capture"
+        ],
+        "command_pattern": "\"capture_generation\": [1-9]",
+        "command_timeout": 15,
+        "checks": [
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 101\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "observe wire VNI mismatch with healthy underlay",
+        "node": "LEFT",
+        "commands": [
+          "python3 /lab/v.py down"
+        ],
+        "command_pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"overlay_replies\": 0)",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "RIGHT",
+            "command": "python3 /lab/v.py down",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"overlay_replies\": 0\\b)",
+            "expectation": "Three actual interface-bound overlay probes fail while both endpoint addressing and underlay controls remain intact.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py wire-mismatch",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"receiver_vni\": 101\\b)(?=.*\"wire_vni\": 100)(?=.*\"wire_ttl\": 63\\b)(?=.*\"vni_mismatch\": true)",
+            "expectation": "A fresh acknowledged packet-socket window observes actual expected-peer UDP4789 VXLAN with the selected inner ARP/echo request; the wire VNI and TTL are decoded independently of actual receiver VNI state.",
+            "command_timeout": 20,
+            "attempts": 3,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          }
+        ]
+      },
+      {
+        "name": "restore the original receiver VNI",
+        "node": "VTEP2",
+        "commands": [
+          "python3 /lab/v.py repair"
+        ],
+        "command_pattern": "\"vni\": 100",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "start a fresh recovered wire window",
+        "node": "VTEP2",
+        "commands": [
+          "python3 /lab/v.py capture"
+        ],
+        "command_pattern": "\"capture_generation\": [1-9]",
+        "command_timeout": 15,
+        "checks": [
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py state",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vni\": 100\\b)",
+            "expectation": "Actual kernel VXLAN identifier, local/remote addresses, UDP4789, TTL64, route next hop and forwarding bridge ports agree; the execution kernel is recorded.",
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "verify actual overlay and wire recovery",
+        "node": "LEFT",
+        "commands": [
+          "python3 /lab/v.py good"
+        ],
+        "command_pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"overlay_replies\": 3)",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "RIGHT",
+            "command": "python3 /lab/v.py good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"overlay_replies\": 3\\b)",
+            "expectation": "Three actual interface-bound overlay probes succeed.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py wire-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"receiver_vni\": 100\\b)(?=.*\"wire_vni\": 100)(?=.*\"wire_ttl\": 63\\b)(?=.*\"vni_mismatch\": false)",
+            "expectation": "A fresh acknowledged packet-socket window observes actual expected-peer UDP4789 VXLAN with the selected inner ARP/echo request; the wire VNI and TTL are decoded independently of actual receiver VNI state.",
+            "command_timeout": 20,
+            "attempts": 3,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP1",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          },
+          {
+            "node": "VTEP2",
+            "command": "python3 /lab/v.py underlay",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"underlay_replies\": 3)",
+            "expectation": "Actual interface-bound underlay traffic reaches the declared peer through the expected direct or routed next hop while the configured tunnel and bridge ports remain up.",
+            "command_timeout": 30,
+            "attempts": 2,
+            "interval_seconds": 1
+          }
+        ]
+      }
+    ]
   }
 }

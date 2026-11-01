@@ -448,11 +448,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/004-sdaccess-fabric-roles.yaml",
-      "sha256": "d93ea6cd4f1c155e7dbae7032791443741645822aba576a678a4744d996e7d13",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/005-qos-policy-interpretation.yaml",
       "sha256": "60918d44d0dad2156d21b469b03e5d9bb6bc99613266e8cc4d61420cc492c0aa",
       "status": "import-export-pass"
@@ -650,11 +645,6 @@
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml",
       "sha256": "2e2f819d261be77df9bcf89d0dd574569fec3a0cd0baaf06ae4b8765fe0dca99",
-      "status": "import-export-pass"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/010-lisp-vxlan-concepts.yaml",
-      "sha256": "3826ae0bd3256569545c245b4fe1bdba4b399381af5865e99b478aaa53851b9e",
       "status": "import-export-pass"
     },
     {
@@ -1283,11 +1273,6 @@
       "completed_utc": "2026-10-31T22:38:54Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/011-virtual-switching-paths.yaml",
       "sha256": "21e8b59276eed013a10112c502c59d5a637d2248b7fb8618770db0b63df648fe",
       "cml_version": "2.10.1+build.21",
@@ -1296,6 +1281,31 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T23:00:45Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/010-lisp-vxlan-concepts.yaml",
+      "sha256": "5af1c2260dba93285512bf23799268e101692a2110f7bb5f749f5a159650a4f3",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T23:25:36Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T23:25:36Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/004-sdaccess-fabric-roles.yaml",
+      "sha256": "cd92083b0f1d63a8e3a18a2d45051652e505fb00f920717aecdc75234cb4ef50",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-10-31T23:25:38Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-10-31T23:25:38Z"
     }
   ]
 }

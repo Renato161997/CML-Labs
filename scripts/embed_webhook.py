@@ -43,6 +43,10 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-vxlan-dataplane": {
+        label: {"/lab/v.py": "examples/virtualization/vxlan_probe.py"}
+        for label in ("VTEP1", "VTEP2", "LEFT", "RIGHT")
+    },
     "native-kernel-bridge": {
         label: {"/lab/b.py": "examples/virtualization/kernel_bridge.py"}
         for label in ("SW", "LEFT", "RIGHT")
