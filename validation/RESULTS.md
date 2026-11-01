@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **201**.
+Import/export passes: **233/233**. Functional passes: **203**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -142,6 +142,7 @@ Import/export passes: **233/233**. Functional passes: **201**.
 | [QoS: Receiver-Verified DSCP and Selective Policing](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/044-qos-marking-and-policing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3 | 8 | 16 | 2026-11-01T11:55:21Z |
 | [Dual ISP BGP Edge](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/045-dual-isp-bgp-edge.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 14 | 16 | 2026-10-30T14:49:49Z |
 | [ENCOR 029 - RADIUS and TACACS+ authentication](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 13 | 8 | 2026-10-26T21:19:56Z |
+| [Wired 802.1X: EAP-TLS and Locked Ingress Admission](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/030-8021x-mab-concepts.yaml) | passed | 2.10.1+build.21 | controller default (unresolved), net-tools-2-10-1-3 | 30 | 6 | 2026-11-01T19:30:22Z |
 | [Control Plane Policing](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/031-control-plane-policing.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 12 | 8 | 2026-10-30T18:52:17Z |
 | [ACL VACL PACL](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/032-acl-vacl-pacl.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 26 | 14 | 2026-10-30T20:47:49Z |
 | [Infrastructure Hardening: AAA, Accounting and VTY Policy](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/033-infrastructure-device-hardening.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 28 | 45 | 2026-10-31T22:11:46Z |
@@ -168,6 +169,7 @@ Import/export passes: **233/233**. Functional passes: **201**.
 | [ACL NAT Inspection](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/008-acl-nat-inspection.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 16 | 10 | 2026-10-30T15:55:15Z |
 | [Site To Site IPsec IOS](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/009-site-to-site-ipsec-ios.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 14 | 12 | 2026-10-28T17:12:27Z |
 | [AAA: RADIUS, TACACS+ SSH Sessions and Accounting](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/011-aaa-ise-radius-tacacs.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 21 | 34 | 2026-10-31T22:07:13Z |
+| [NAC Concepts: Certificate Identity and Weaker MAC Fallback](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/012-8021x-mab-nac.yaml) | passed | 2.10.1+build.21 | controller default (unresolved), net-tools-2-10-1-3 | 30 | 6 | 2026-11-01T19:32:42Z |
 | [Segmentation VRF ACL](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/013-segmentation-vrf-acl.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 18 | 8 | 2026-10-28T18:38:49Z |
 | [WPA2-PSK: Authentication, CCMP and Recovery](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/014-secure-wireless-architecture.yaml) | passed | 2.10.1+build.21 | wireless-ap-24-04-20260409, wireless-client-24-04-20260409 | 6 | 2 | 2026-10-31T16:50:44Z |
 | [Intrusion Policy Concepts](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/015-intrusion-policy-concepts.yaml) | passed | 2.10.1+build.21 | cml-labs-inspection-cdecd8f68cdd, net-tools-2-10-1-3 | 33 | 3 | 2026-10-30T20:10:39Z |

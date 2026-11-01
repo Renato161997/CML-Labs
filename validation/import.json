@@ -593,11 +593,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/030-8021x-mab-concepts.yaml",
-      "sha256": "e85e31416873ab748296d402dbbf6e96af1b91bc9c6f98bb64c7e659ac795cb5",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/031-control-plane-policing.yaml",
       "sha256": "95fae2f57365f2fa46c3ef9688a67b00f9cffc2d3bdd1d3ffbe742cfc1674df6",
       "status": "import-export-pass"
@@ -725,11 +720,6 @@
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/010-remote-access-vpn-concepts.yaml",
       "sha256": "3bd96f1d66ca4a73e966648c9a607152669579f5971582a38407c8396f998853",
-      "status": "import-export-pass"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/012-8021x-mab-nac.yaml",
-      "sha256": "cc1e61bde88f835f76772e3de82d2f39ea77344ae18b3e00d127d48f4e1272bc",
       "status": "import-export-pass"
     },
     {
@@ -1348,11 +1338,6 @@
       "completed_utc": "2026-11-01T18:25:26Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/022-secure-api-client.yaml",
       "sha256": "9d51443fe3869aae0847540f780c905facd03c23091e076edc359e9224b2e298",
       "cml_version": "2.10.1+build.21",
@@ -1371,6 +1356,31 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T18:39:21Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/030-8021x-mab-concepts.yaml",
+      "sha256": "054a915dd3454f42a2c1ccf65c4a70bfc3edd0ac8db79e32a2e9a3f6a3798914",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T19:24:37Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T19:24:37Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/012-8021x-mab-nac.yaml",
+      "sha256": "eac6ef78a8785db4ddbb36535a0d836c83ed1c36d293a7e384dc62c6e187bce1",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T19:25:04Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T19:25:04Z"
     }
   ]
 }
