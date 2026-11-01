@@ -1262,5 +1262,12 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-701-044-scor-practical-checkpoint.md",
     "example_profile": "native-firewall-traffic"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/032-firewall-policy-as-code.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-032-firewall-policy-as-code.md",
+    "example_profile": "native-policy-as-code"
   }
 }

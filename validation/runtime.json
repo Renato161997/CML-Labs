@@ -46901,6 +46901,477 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T13:20:30Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/032-firewall-policy-as-code.yaml",
+      "sha256": "60b4de4c18574dc6af3e39610bc330c71f38f33f6ca7be0cb046c90c4901d8f2",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T13:35:38Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=1.68 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.55 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.15 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2004ms\nrtt min/avg/max/mdev = 1.149/1.457/1.677/0.224 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "FW",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The actual named client ingress policy remains bound.",
+          "passed": true,
+          "output": "\nFW#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is POLICY-CODE\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nFW#"
+        },
+        {
+          "phase": "reject unsafe candidates before any deployment",
+          "kind": "configuration",
+          "node": "INSIDE",
+          "command": "python3 /lab/p.py reject-unsafe",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/p.py reject-unsafe\n{\"artifact_unchanged\": true, \"sha256\": \"088e9ac5f3fe1124ed641286f0d7aaad402ad6bf9cca07c7ef225e134aafbd8b\", \"status\": \"passed\", \"unsafe_candidates_rejected\": 5}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "reject unsafe candidates before any deployment",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "reject unsafe candidates before any deployment",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "reject unsafe candidates before any deployment",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "reject unsafe candidates before any deployment",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "reject unsafe candidates before any deployment",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=0.884 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.80 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.48 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2018ms\nrtt min/avg/max/mdev = 0.884/1.388/1.802/0.380 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "reject unsafe candidates before any deployment",
+          "node": "FW",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The actual named client ingress policy remains bound.",
+          "passed": true,
+          "output": "\nFW#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is POLICY-CODE\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nFW#"
+        },
+        {
+          "phase": "deploy the accepted version-1 application permit",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "copy http://198.18.10.10:8081/approved running-config",
+          "passed": true,
+          "output": "\nFW#copy http://198.18.10.10:8081/approved running-config\nAccessing http://198.18.10.10:8081/approved...\nLoading http://198.18.10.10:8081/approved \n257 bytes copied in 0.004 secs (64250 bytes/sec)\nFW#"
+        },
+        {
+          "phase": "deploy the accepted version-1 application permit",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "deploy the accepted version-1 application permit",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "deploy the accepted version-1 application permit",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "deploy the accepted version-1 application permit",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "deploy the accepted version-1 application permit",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=0.823 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.59 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.49 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2047ms\nrtt min/avg/max/mdev = 0.823/1.301/1.594/0.341 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "deploy the accepted version-1 application permit",
+          "node": "FW",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The actual named client ingress policy remains bound.",
+          "passed": true,
+          "output": "\nFW#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is POLICY-CODE\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nFW#"
+        },
+        {
+          "phase": "stage version-2 application deny without deploying it",
+          "kind": "configuration",
+          "node": "INSIDE",
+          "command": "python3 /lab/p.py block",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/p.py block\n{\"application\": \"deny\", \"sha256\": \"cbb686a0ae850223c1e87a2b994d5d5b46906bdc4dcf5b6c42bb3d5ebc08ab3a\", \"status\": \"passed\", \"version\": 2}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "stage version-2 application deny without deploying it",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "stage version-2 application deny without deploying it",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "stage version-2 application deny without deploying it",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "stage version-2 application deny without deploying it",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "stage version-2 application deny without deploying it",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=1.11 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.45 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.26 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 1.106/1.270/1.446/0.139 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "stage version-2 application deny without deploying it",
+          "node": "FW",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The actual named client ingress policy remains bound.",
+          "passed": true,
+          "output": "\nFW#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is POLICY-CODE\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nFW#"
+        },
+        {
+          "phase": "deploy the actual application-deny change",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "copy http://198.18.10.10:8081/approved running-config",
+          "passed": true,
+          "output": "\nFW#copy http://198.18.10.10:8081/approved running-config\nAccessing http://198.18.10.10:8081/approved...\nLoading http://198.18.10.10:8081/approved \n255 bytes copied in 0.003 secs (85000 bytes/sec)\nFW#"
+        },
+        {
+          "phase": "deploy the actual application-deny change",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "deploy the actual application-deny change",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "deploy the actual application-deny change",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "deploy the actual application-deny change",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "deploy the actual application-deny change",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=1.03 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.33 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=0.942 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 0.942/1.101/1.333/0.167 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "deploy the actual application-deny change",
+          "node": "FW",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The actual named client ingress policy remains bound.",
+          "passed": true,
+          "output": "\nFW#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is POLICY-CODE\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nFW#"
+        },
+        {
+          "phase": "stage the saved version-1 rollback without deploying it",
+          "kind": "configuration",
+          "node": "INSIDE",
+          "command": "python3 /lab/p.py rollback",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/p.py rollback\n{\"application\": \"allow\", \"sha256\": \"088e9ac5f3fe1124ed641286f0d7aaad402ad6bf9cca07c7ef225e134aafbd8b\", \"status\": \"passed\", \"version\": 1}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "stage the saved version-1 rollback without deploying it",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "stage the saved version-1 rollback without deploying it",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "stage the saved version-1 rollback without deploying it",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "stage the saved version-1 rollback without deploying it",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "stage the saved version-1 rollback without deploying it",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=0.817 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.28 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.02 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2042ms\nrtt min/avg/max/mdev = 0.817/1.038/1.280/0.189 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "stage the saved version-1 rollback without deploying it",
+          "node": "FW",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The actual named client ingress policy remains bound.",
+          "passed": true,
+          "output": "\nFW#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is POLICY-CODE\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nFW#"
+        },
+        {
+          "phase": "apply the accepted prior snapshot and recover packets",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "copy http://198.18.10.10:8081/approved running-config",
+          "passed": true,
+          "output": "\nFW#copy http://198.18.10.10:8081/approved running-config\nAccessing http://198.18.10.10:8081/approved...\nLoading http://198.18.10.10:8081/approved \n257 bytes copied in 0.004 secs (64250 bytes/sec)\nFW#"
+        },
+        {
+          "phase": "apply the accepted prior snapshot and recover packets",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "apply the accepted prior snapshot and recover packets",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "apply the accepted prior snapshot and recover packets",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "apply the accepted prior snapshot and recover packets",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "apply the accepted prior snapshot and recover packets",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=0.670 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.63 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.16 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2034ms\nrtt min/avg/max/mdev = 0.670/1.152/1.626/0.390 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "apply the accepted prior snapshot and recover packets",
+          "node": "FW",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The actual named client ingress policy remains bound.",
+          "passed": true,
+          "output": "\nFW#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is POLICY-CODE\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nFW#"
+        },
+        {
+          "phase": "reject unsafe candidates while safe traffic remains deployed",
+          "kind": "configuration",
+          "node": "INSIDE",
+          "command": "python3 /lab/p.py reject-unsafe",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/p.py reject-unsafe\n{\"artifact_unchanged\": true, \"sha256\": \"088e9ac5f3fe1124ed641286f0d7aaad402ad6bf9cca07c7ef225e134aafbd8b\", \"status\": \"passed\", \"unsafe_candidates_rejected\": 5}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "reject unsafe candidates while safe traffic remains deployed",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "reject unsafe candidates while safe traffic remains deployed",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "reject unsafe candidates while safe traffic remains deployed",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "reject unsafe candidates while safe traffic remains deployed",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "reject unsafe candidates while safe traffic remains deployed",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=1.08 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.56 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.16 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 1.082/1.268/1.564/0.211 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "reject unsafe candidates while safe traffic remains deployed",
+          "node": "FW",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The actual named client ingress policy remains bound.",
+          "passed": true,
+          "output": "\nFW#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is POLICY-CODE\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nFW#"
+        }
+      ],
+      "plan_sha256": "56e63feed869e783f43746fba582879447117756032629d7bb3bee4eb1634611",
+      "startup_states": {
+        "FW": "BOOTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "BOOTED"
+      },
+      "images": {
+        "FW": "iol-xe-17-18-02",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T13:37:13Z"
     }
   ]
 }

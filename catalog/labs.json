@@ -3216,25 +3216,25 @@
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/032-firewall-policy-as-code.yaml",
-      "title": "Firewall Policy As Code",
+      "title": "Policy as Code: Guarded Artifacts, Real Deployment and Rollback",
       "track": "350-701",
       "topic": "automation",
       "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv"
+        "iol-xe",
+        "net-tools"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 110,
+      "workbook": "docs/workbooks/350-701-032-firewall-policy-as-code.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "ea40b59e52c56138976a13b8c3bc5a66c594d262e084bf05704b3f2143fb3517"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T13:37:13Z",
+      "sha256": "60b4de4c18574dc6af3e39610bc330c71f38f33f6ca7be0cb046c90c4901d8f2"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/033-soar-webhook-remediation.yaml",
