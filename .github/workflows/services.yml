@@ -1,0 +1,51 @@
+name: Protocol services image
+on:
+  pull_request:
+    paths: ['services/**', 'scripts/services_assets.py', 'scripts/toolbox_assets.py', '.github/workflows/services.yml']
+  push:
+    branches: [main]
+    paths: ['services/**', 'scripts/services_assets.py', 'scripts/toolbox_assets.py', '.github/workflows/services.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - run: python3 -m pip install PyYAML
+      - run: bash services/build.sh
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: services-${{ github.sha }}
+          path: dist/services/*
+          compression-level: 0
+          retention-days: 7
+  publish:
+    needs: verify
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: services-${{ github.sha }}
+          path: dist/services
+      - name: Verify and publish immutable release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          (cd dist/services && sha256sum -c SHA256SUMS)
+          test "$(cat dist/services/source-commit.txt)" = "$GITHUB_SHA"
+          tag="services-${GITHUB_SHA:0:12}"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo 'Release exists; refusing to overwrite assets.' >&2
+            exit 1
+          fi
+          gh release create "$tag" dist/services/* --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" --title "Protocol services ${GITHUB_SHA:0:12}" \
+            --notes 'Isolated open-source CML guest with wired EAP tools and JSON Schema validation. Separate node kind; existing images remain unchanged. Verify SHA256SUMS and package inventory. Container build checks do not establish CML runtime protocol validation.'
