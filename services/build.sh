@@ -6,7 +6,7 @@ image="cml-labs-services:${revision:0:12}"
 mkdir -p dist/services
 docker build --platform linux/amd64 --label "org.opencontainers.image.revision=$revision" -t "$image" services
 docker run --rm "$image" python3 -c 'import importlib.metadata,json,cryptography,jsonschema; print(json.dumps({m:importlib.metadata.version(m) for m in ("cryptography","jsonschema")}))'
-docker run --rm "$image" python3 -c 'import re,subprocess; commands=("hostapd","wpa_supplicant"); results=[subprocess.run([c,"-h"],capture_output=True,text=True) for c in commands]; assert all(re.search(r"(?m)^\s*wired\s*=",r.stdout+r.stderr) for r in results), "Wired driver missing"; print("WIRED_DRIVERS_PRESENT")' >dist/services/wired-drivers.txt
+docker run --rm --network none "$image" python3 /opt/cml-services/check_drivers.py >dist/services/wired-drivers.txt
 docker run --rm "$image" sh -c 'openssl version; command -v bridge; command -v tcpdump; test "$(id -u)" = 0'
 docker run --rm "$image" dpkg-query -W '-f=${Package}\t${Version}\n' >dist/services/packages.tsv
 printf '%s\n' "$revision" >dist/services/source-commit.txt

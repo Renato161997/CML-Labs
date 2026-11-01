@@ -11,5 +11,6 @@ RUN apt-get update \
 
 # Preserve Debian copyright information; no host networking or nested daemon.
 COPY entrypoint.sh /usr/local/bin/cml-services-entrypoint
+COPY check_drivers.py /opt/cml-services/check_drivers.py
 RUN chmod 0755 /usr/local/bin/cml-services-entrypoint
 ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/cml-services-entrypoint"]
