@@ -4431,48 +4431,45 @@
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment/034-dockerized-network-tool.yaml",
-      "title": "Dockerized Network Tool",
+      "title": "Dockerized Tool: Artifact Provenance and Runtime Contract",
       "track": "350-901",
       "topic": "deployment",
-      "nodes": 5,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "cml-labs-services"
       ],
-      "nominal_ram_mib": 2816,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 110,
+      "workbook": "docs/workbooks/350-901-034-dockerized-network-tool.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "6086d4b9e0d228ea81395ec480929480d07811fbf4546a5dccd55cb6360f6f8d"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T19:50:49Z",
+      "sha256": "13c0c3f36d3e25482114e1929507e74b522552d755424a5dd66537790a0806e4"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/019-containerized-network-tool.yaml",
-      "title": "Containerized Network Tool",
+      "title": "Container Security: A Real Unprivileged Network Workload",
       "track": "350-901",
       "topic": "deployment-security",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-services"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 110,
+      "workbook": "docs/workbooks/350-901-019-containerized-network-tool.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "5b51b464084968af5db1d865b5ef99f2593e5f8499784242dd064615c9283664"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T19:49:55Z",
+      "sha256": "5daff539d3f83477bb059bd7b9586b026efba88a416afbc75c55c43d0775be86"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/020-ci-cd-for-network-automation.yaml",

@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **203**.
+Import/export passes: **233/233**. Functional passes: **205**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -188,9 +188,11 @@ Import/export passes: **233/233**. Functional passes: **203**.
 | [DEVCOR Practical Checkpoint](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/assessment/038-devcor-practical-checkpoint.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 25 | 6 | 2026-10-30T21:01:52Z |
 | [Capstone: Device-Backed Controller Reconciliation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/039-devcor-capstone-controller-integration.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 12 | 32 | 2026-10-31T17:38:27Z |
 | [Capstone: Durable Jobs, Compensation and Concurrent Replay](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/040-devcor-capstone-network-automation-app.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 19 | 34 | 2026-10-31T17:41:46Z |
+| [Container Security: A Real Unprivileged Network Workload](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/019-containerized-network-tool.yaml) | passed | 2.10.1+build.21 | controller default (unresolved) | 26 | 5 | 2026-11-01T19:49:55Z |
 | [Secrets: OS Ownership, Scoped Injection and Live Rotation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/021-secrets-management.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 4 | 2 | 2026-11-01T11:55:49Z |
 | [Secure API Client: Verified Peers and Backend Recovery](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/022-secure-api-client.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 4 | 34 | 2026-11-01T18:46:06Z |
 | [Application Threat Model: API Denial and Backend Failure](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/023-application-threat-model.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 16 | 35 | 2026-10-31T22:46:21Z |
+| [Dockerized Tool: Artifact Provenance and Runtime Contract](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment/034-dockerized-network-tool.yaml) | passed | 2.10.1+build.21 | controller default (unresolved) | 16 | 3 | 2026-11-01T19:50:49Z |
 | [GitOps Network Change Pipeline](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/gitops/031-gitops-network-change-pipeline.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 13 | 33 | 2026-10-28T16:29:07Z |
 | [Ansible Inventory Network](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/025-ansible-inventory-network.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-28T16:08:45Z |
 | [YANG Model Interface Change](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/027-yang-model-interface-change.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-27T19:45:41Z |

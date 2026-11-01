@@ -27918,5 +27918,426 @@
         ]
       }
     ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/019-containerized-network-tool.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/u.py baseline",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+        "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+        "command_timeout": 30,
+        "attempts": 3,
+        "interval_seconds": 2
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/a.py baseline",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+        "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+        "command_timeout": 30,
+        "attempts": 3,
+        "interval_seconds": 2
+      },
+      {
+        "node": "SERVER",
+        "command": "cat /sys/class/net/eth1/carrier",
+        "pattern": "(?m)^1\\s*$",
+        "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim."
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping -n -c 3 -W 2 198.18.0.1",
+        "pattern": "3 packets transmitted, 3 received",
+        "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+        "command_timeout": 15
+      },
+      {
+        "node": "CLIENT",
+        "command": "stat -c \"%a %u\" /lab/root-only.fixture",
+        "pattern": "(?m)^600 0\\s*$",
+        "expectation": "Independently observe root ownership and actual sentinel-file permission mode."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "expose only the public permission-test sentinel",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/u.py expose"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/u.py readable",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"readable\")",
+            "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "stat -c \"%a %u\" /lab/root-only.fixture",
+            "pattern": "(?m)^644 0\\s*$",
+            "expectation": "Independently observe root ownership and actual sentinel-file permission mode."
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          }
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"root_file_readable\": true"
+      },
+      {
+        "name": "restore actual root-only file permissions",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/u.py secure"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/u.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "SERVER",
+            "command": "cat /sys/class/net/eth1/carrier",
+            "pattern": "(?m)^1\\s*$",
+            "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          },
+          {
+            "node": "CLIENT",
+            "command": "stat -c \"%a %u\" /lab/root-only.fixture",
+            "pattern": "(?m)^600 0\\s*$",
+            "expectation": "Independently observe root ownership and actual sentinel-file permission mode."
+          }
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"root_file_readable\": false"
+      },
+      {
+        "name": "omit only the public classroom API key",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/u.py no-key"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          },
+          {
+            "node": "CLIENT",
+            "command": "stat -c \"%a %u\" /lab/root-only.fixture",
+            "pattern": "(?m)^600 0\\s*$",
+            "expectation": "Independently observe root ownership and actual sentinel-file permission mode."
+          }
+        ],
+        "command_timeout": 30,
+        "command_pattern": "(?s)(?=.*\"phase\": \"no-key\")(?=.*\"status\": \"passed\")"
+      },
+      {
+        "name": "change only the source media type",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/a.py media"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/u.py media",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"media\")",
+            "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py media-bad",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"media-bad\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "SERVER",
+            "command": "cat /sys/class/net/eth1/carrier",
+            "pattern": "(?m)^1\\s*$",
+            "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          }
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"source_mode\": \"media\""
+      },
+      {
+        "name": "recover the agreed source response",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/a.py good"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/u.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "SERVER",
+            "command": "cat /sys/class/net/eth1/carrier",
+            "pattern": "(?m)^1\\s*$",
+            "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          },
+          {
+            "node": "CLIENT",
+            "command": "stat -c \"%a %u\" /lab/root-only.fixture",
+            "pattern": "(?m)^600 0\\s*$",
+            "expectation": "Independently observe root ownership and actual sentinel-file permission mode."
+          }
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"source_mode\": \"good\""
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment/034-dockerized-network-tool.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/u.py baseline",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+        "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+        "command_timeout": 30,
+        "attempts": 3,
+        "interval_seconds": 2
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/a.py baseline",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+        "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+        "command_timeout": 30,
+        "attempts": 3,
+        "interval_seconds": 2
+      },
+      {
+        "node": "SERVER",
+        "command": "cat /sys/class/net/eth1/carrier",
+        "pattern": "(?m)^1\\s*$",
+        "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim."
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping -n -c 3 -W 2 198.18.0.1",
+        "pattern": "3 packets transmitted, 3 received",
+        "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+        "command_timeout": 15
+      },
+      {
+        "node": "CLIENT",
+        "command": "stat -c \"%a %u\" /lab/root-only.fixture",
+        "pattern": "(?m)^600 0\\s*$",
+        "expectation": "Independently observe root ownership and actual sentinel-file permission mode."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "produce a schema-invalid response without breaking the container link",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/a.py schema"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/u.py schema",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"schema\")",
+            "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py schema-bad",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"schema-bad\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "SERVER",
+            "command": "cat /sys/class/net/eth1/carrier",
+            "pattern": "(?m)^1\\s*$",
+            "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          }
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"source_mode\": \"schema\""
+      },
+      {
+        "name": "restore the contract and run fresh stateless workloads",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/a.py good"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/u.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/u.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          }
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"source_mode\": \"good\""
+      },
+      {
+        "name": "verify real API refusal with the workload still unprivileged",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/u.py no-key"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/u.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "Require actual Docker guest, kernel UID/GID/capability/NNP measurements in a separate exited workload, denied UID-zero regain, actual sentinel-file read result, owned output cleanup and the specified real API result.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "stat -c \"%a %u\" /lab/root-only.fixture",
+            "pattern": "(?m)^600 0\\s*$",
+            "expectation": "Independently observe root ownership and actual sentinel-file permission mode."
+          }
+        ],
+        "command_timeout": 30,
+        "command_pattern": "(?s)(?=.*\"phase\": \"no-key\")(?=.*\"status\": \"passed\")"
+      }
+    ]
   }
 }

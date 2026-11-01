@@ -303,6 +303,15 @@ NATIVE_PROFILES["native-wired-nac"] = {
 }
 
 
+NATIVE_PROFILES["native-container-tool"] = {
+    "SERVER": {"/lab/a.py": "examples/automation/openapi_contract.py"},
+    "CLIENT": {
+        "/lab/a.py": "examples/automation/openapi_contract.py",
+        "/lab/u.py": "examples/automation/container_tool.py",
+    },
+}
+
+
 def native_sources(data, metadata):
     """Validate registered source payloads without executing a shell or guest code."""
     profile = NATIVE_PROFILES.get(metadata.get("example_profile"))

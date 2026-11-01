@@ -1304,5 +1304,19 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-701-012-8021x-mab-nac.md",
     "example_profile": "native-wired-nac"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/019-containerized-network-tool.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-019-containerized-network-tool.md",
+    "example_profile": "native-container-tool"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment/034-dockerized-network-tool.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-034-dockerized-network-tool.md",
+    "example_profile": "native-container-tool"
   }
 }
