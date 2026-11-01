@@ -1,127 +1,672 @@
 lab:
-  title: Firewall Policy As Code
-  description: 350-701 SCOR - Implementing and Operating Cisco Security Core Technologies importable CML
-    topology.
-  notes: '350-701 SCOR blueprint lab: Firewall Policy As Code
+  title: 'Policy as Code: Guarded Artifacts, Real Deployment and Rollback'
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# Policy as Code: Guarded Artifacts, Real Deployment and Rollback
 
 
-    Topics:
-
-    - policy as code
-
-    - firewall automation
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Tasks:
-
-    1. Represent rules as data
-
-    2. Validate changes
-
-    3. Generate deployment plan
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-701-032-firewall-policy-as-code.md
 
 
-    Useful checks:
+    A native publisher compiles a deliberately closed JSON classroom intent into an actual IOS ACL merge
+    artifact. Its only resources are source 198.18.10.10/32, service 198.18.20.20/32, application TCP
+    8080 and administration-port fixture TCP 9090. It accepts application allow/deny but always denies
+    administration and preserves ICMP. Extra fields, command injection, changed resources, noninteger/out-of-range
+    versions and an administration allow are rejected before publication. Every rejected example must
+    leave the complete previously approved artifact bytes unchanged. This is a finite teaching compiler,
+    not a general policy language or universal security validator.
 
-    - show ip interface brief
 
-    - show running-config
+    The initial published version 1 allows the application, but the actual router reference starts with
+    application deny. This intentionally distinguishes staged desired state from deployed running state.
+    The router''s real HTTP client fetches the complete artifact from INSIDE 198.18.10.10:8081/approved
+    and merges it into its actual running configuration. Four fixed ACL sequences are explicitly deleted/re-added
+    while the ACL stays defined; this is not an atomic transactional device commit or a zero-loss change.
+    Sequence 5 is a separate immutable, narrowly scoped stateless TCP-return exception for that router-originated
+    artifact download. It is not identity authentication or a stateful firewall. No other client/admin
+    permit is implied.
 
-    - show ip route
 
-    - show ip protocols
+    After applying version 1, actual remote application HTTP must work with the observed client peer while
+    the remote administration request remains blocked. Both local service listeners and three routed ICMP
+    replies remain positive controls. Publish version 2 with application deny: running traffic must remain
+    allowed until the router actually downloads/applies it. After real deployment the application must
+    fail while administration stays blocked and controls remain healthy. Publish the previously stored
+    accepted version-1 snapshot: traffic must remain blocked until the rollback is actually applied; then
+    recover the original allow/deny matrix. Rejected unsafe intent must never alter the published artifact
+    or deployed behavior.
 
-    - ping and traceroute between endpoints'
+
+    State stores intent, complete bytes and SHA256; every served artifact must match its validated intent
+    and digest. This is representation consistency, not a digital signature. The HTTP path is read-only
+    and intentionally plaintext inside an isolated link. CLI root fixture actions stage the two accepted
+    intents; there is no authenticated production approval interface, signed supply chain, remote secret,
+    cloud service, real CI deployment, vendor firewall manager or formal all-flow equivalence claim. No
+    Internet connector or original user lab is touched. Only the imported copy may be stopped/wiped.
+
+
+
+    Objectives:
+
+    - Reject unsafe or out-of-scope desired intent before changing the published artifact.
+
+    - Distinguish staged desired state from actual IOS configuration and actual service packets.
+
+    - Perform real HTTP artifact deployment and rollback, preserving administration denial and independent
+    controls.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: R1
-  node_definition: iosv
-  x: -180
-  y: 0
+  label: FW
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR Firewall Policy As Code ^C\n\
-      interface GigabitEthernet0/0\n description SECCORE-SCOR Firewall Policy As Code\n ip address 10.255.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface Loopback0\n description SECCORE-SCOR Firewall Policy As\
-      \ Code\n ip address 10.255.255.1 255.255.255.255\n no shutdown\nend"
+    content: "hostname FW\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\nno logging console\nfile prompt quiet\nip http client source-interface Ethernet0/0\nip access-list\
+      \ extended POLICY-CODE\n 5 permit tcp host 198.18.10.10 eq 8081 host 198.18.10.1 established\n 10\
+      \ deny tcp host 198.18.10.10 host 198.18.20.20 eq 8080\n 20 deny tcp any host 198.18.20.20 eq 9090\n\
+      \ 30 permit icmp any any\n 40 deny ip any any\n exit\ninterface Ethernet0/0\n ip address 198.18.10.1\
+      \ 255.255.255.0\n no shutdown\n ip access-group POLICY-CODE in\n exit\ninterface Ethernet0/1\n ip\
+      \ address 198.18.20.1 255.255.255.0\n no shutdown\n exit\nend\n"
+  cpu_limit: 100
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
+  ram: 1024
+  cpus: 1
 - id: n1
-  label: DEVBOX
-  node_definition: desktop
-  x: 180
-  y: 0
+  label: INSIDE
+  node_definition: net-tools
+  configuration:
+  - name: boot.sh
+    content: '#!/bin/bash
+
+      set -eu
+
+      ip address add 198.18.10.10/24 dev eth1
+
+      ip link set eth1 up
+
+      ip route add 198.18.20.0/24 via 198.18.10.1 dev eth1
+
+      mkdir -p /lab
+
+      echo CML-POLICY-CODE-V1 > /lab/CML-POLICY-FIXTURE
+
+      base64 -d > /lab/p.py <<''CML_EMBED_EXAMPLES_SECURITY_POLICY_CODE_PY''
+
+      IiIiQ2xvc2VkIGNsYXNzcm9vbSBBQ0wgY29tcGlsZXIgYW5kIHN0YWdlZCBIVFRQIGFydGlmYWN0
+
+      IHB1Ymxpc2hlci4iIiIKCmltcG9ydCBhcmdwYXJzZQppbXBvcnQgY29weQppbXBvcnQgaGFzaGxp
+
+      YgppbXBvcnQgaHR0cC5zZXJ2ZXIKaW1wb3J0IGpzb24KaW1wb3J0IG9zCmltcG9ydCBzdWJwcm9j
+
+      ZXNzCmltcG9ydCBzeXMKZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCgpST09UID0gUGF0aCgiL2xh
+
+      YiIpCk1BUktFUiA9ICJDTUwtUE9MSUNZLUNPREUtVjEiCgoKZGVmIGludGVudCh2ZXJzaW9uPTEs
+
+      IGFwcGxpY2F0aW9uPSJhbGxvdyIpOgogICAgcmV0dXJuIHsKICAgICAgICAidmVyc2lvbiI6IHZl
+
+      cnNpb24sCiAgICAgICAgInNvdXJjZSI6ICIxOTguMTguMTAuMTAvMzIiLAogICAgICAgICJ0YXJn
+
+      ZXQiOiAiMTk4LjE4LjIwLjIwLzMyIiwKICAgICAgICAiYXBwbGljYXRpb24iOiBhcHBsaWNhdGlv
+
+      biwKICAgICAgICAiYWRtaW5pc3RyYXRpb24iOiAiZGVueSIsCiAgICAgICAgImljbXAiOiAiYWxs
+
+      b3ciLAogICAgfQoKCmRlZiBjb21waWxlX3BvbGljeSh2YWx1ZSk6CiAgICBpZiBub3QgaXNpbnN0
+
+      YW5jZSh2YWx1ZSwgZGljdCkgb3Igc2V0KHZhbHVlKSAhPSB7CiAgICAgICAgInZlcnNpb24iLAog
+
+      ICAgICAgICJzb3VyY2UiLAogICAgICAgICJ0YXJnZXQiLAogICAgICAgICJhcHBsaWNhdGlvbiIs
+
+      CiAgICAgICAgImFkbWluaXN0cmF0aW9uIiwKICAgICAgICAiaWNtcCIsCiAgICB9OgogICAgICAg
+
+      IHJhaXNlIFZhbHVlRXJyb3IoIk9ubHkgdGhlIGNsb3NlZCBleGVyY2lzZSBpbnRlbnQgZmllbGRz
+
+      IGFyZSBhY2NlcHRlZCIpCiAgICBpZiB0eXBlKHZhbHVlWyJ2ZXJzaW9uIl0pIGlzIG5vdCBpbnQg
+
+      b3Igbm90IDEgPD0gdmFsdWVbInZlcnNpb24iXSA8PSAxMDA6CiAgICAgICAgcmFpc2UgVmFsdWVF
+
+      cnJvcigiSW52YWxpZCBib3VuZGVkIHZlcnNpb24iKQogICAgaWYgdmFsdWVbInNvdXJjZSJdICE9
+
+      ICIxOTguMTguMTAuMTAvMzIiIG9yIHZhbHVlWyJ0YXJnZXQiXSAhPSAiMTk4LjE4LjIwLjIwLzMy
+
+      IjoKICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJJbnRlbnQgY2hhbmdlcyB0aGUgYXBwcm92ZWQg
+
+      ZXhlcmNpc2UgcmVzb3VyY2Ugc2NvcGUiKQogICAgaWYgKAogICAgICAgIHZhbHVlWyJhcHBsaWNh
+
+      dGlvbiJdIG5vdCBpbiAoImFsbG93IiwgImRlbnkiKQogICAgICAgIG9yIHZhbHVlWyJhZG1pbmlz
+
+      dHJhdGlvbiJdICE9ICJkZW55IgogICAgICAgIG9yIHZhbHVlWyJpY21wIl0gIT0gImFsbG93Igog
+
+      ICAgKToKICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJJbnRlbnQgdmlvbGF0ZXMgdGhlIGFkbWlu
+
+      aXN0cmF0aW9uL2NvbnRyb2wgaW52YXJpYW50cyIpCiAgICBhY3Rpb24gPSAicGVybWl0IiBpZiB2
+
+      YWx1ZVsiYXBwbGljYXRpb24iXSA9PSAiYWxsb3ciIGVsc2UgImRlbnkiCiAgICByZXR1cm4gKAog
+
+      ICAgICAgICIhIENNTCBjbGFzc3Jvb20gQUNMIGludGVudCB2ZXJzaW9uICIgKyBzdHIodmFsdWVb
+
+      InZlcnNpb24iXSkgKyAiXG4iCiAgICAgICAgImlwIGFjY2Vzcy1saXN0IGV4dGVuZGVkIFBPTElD
+
+      WS1DT0RFXG4iCiAgICAgICAgIiBubyAxMFxuIgogICAgICAgICIgMTAgIiArIGFjdGlvbiArICIg
+
+      dGNwIGhvc3QgMTk4LjE4LjEwLjEwIGhvc3QgMTk4LjE4LjIwLjIwIGVxIDgwODBcbiIKICAgICAg
+
+      ICAiIG5vIDIwXG4iCiAgICAgICAgIiAyMCBkZW55IHRjcCBhbnkgaG9zdCAxOTguMTguMjAuMjAg
+
+      ZXEgOTA5MFxuIgogICAgICAgICIgbm8gMzBcbiIKICAgICAgICAiIDMwIHBlcm1pdCBpY21wIGFu
+
+      eSBhbnlcbiIKICAgICAgICAiIG5vIDQwXG4iCiAgICAgICAgIiA0MCBkZW55IGlwIGFueSBhbnlc
+
+      biIKICAgICAgICAiIGV4aXRcbiIKICAgICAgICAiZW5kXG4iCiAgICApCgoKZGVmIGRpZ2VzdCh0
+
+      ZXh0KToKICAgIHJldHVybiBoYXNobGliLnNoYTI1Nih0ZXh0LmVuY29kZSgidXRmLTgiKSkuaGV4
+
+      ZGlnZXN0KCkKCgpkZWYgc3RhdGVfcmVhZChwYXRoKToKICAgIGlmIHBhdGguaXNfc3ltbGluaygp
+
+      OgogICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoIkFydGlmYWN0IGxpbmtzIGFyZSByZWZ1c2VkIikK
+
+      ICAgIHZhbHVlID0ganNvbi5sb2FkcyhwYXRoLnJlYWRfdGV4dCgpKQogICAgaWYgbm90IGlzaW5z
+
+      dGFuY2UodmFsdWUsIGRpY3QpIG9yIHNldCh2YWx1ZSkgIT0geyJpbnRlbnQiLCAiYm9keSIsICJz
+
+      aGEyNTYifToKICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJJbnZhbGlkIGFydGlmYWN0IGVudmVs
+
+      b3BlIikKICAgIGV4cGVjdGVkID0gY29tcGlsZV9wb2xpY3kodmFsdWVbImludGVudCJdKQogICAg
+
+      aWYgdmFsdWVbImJvZHkiXSAhPSBleHBlY3RlZCBvciB2YWx1ZVsic2hhMjU2Il0gIT0gZGlnZXN0
+
+      KGV4cGVjdGVkKToKICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJBcnRpZmFjdCBkb2VzIG5vdCBt
+
+      YXRjaCBhY2NlcHRlZCBpbnRlbnQiKQogICAgcmV0dXJuIHZhbHVlCgoKZGVmIHB1Ymxpc2godmFs
+
+      dWUsIHBhdGgpOgogICAgYm9keSA9IGNvbXBpbGVfcG9saWN5KHZhbHVlKQogICAgcmVzdWx0ID0g
+
+      eyJpbnRlbnQiOiBjb3B5LmRlZXBjb3B5KHZhbHVlKSwgImJvZHkiOiBib2R5LCAic2hhMjU2Ijog
+
+      ZGlnZXN0KGJvZHkpfQogICAgaWYgcGF0aC5pc19zeW1saW5rKCk6CiAgICAgICAgcmFpc2UgVmFs
+
+      dWVFcnJvcigiQXJ0aWZhY3QgbGlua3MgYXJlIHJlZnVzZWQiKQogICAgdGVtcCA9IHBhdGgud2l0
+
+      aF9zdWZmaXgoIi5uZXh0IikKICAgIHdpdGggdGVtcC5vcGVuKCJ4IikgYXMgb3V0cHV0OgogICAg
+
+      ICAgIGpzb24uZHVtcChyZXN1bHQsIG91dHB1dCwgc29ydF9rZXlzPVRydWUpCiAgICB0ZW1wLmNo
+
+      bW9kKDBvNjAwKQogICAgdGVtcC5yZXBsYWNlKHBhdGgpCiAgICByZXR1cm4gcmVzdWx0CgoKZGVm
+
+      IHJlZnVzZV91bnNhZmUocGF0aCk6CiAgICBiZWZvcmUgPSBwYXRoLnJlYWRfYnl0ZXMoKQogICAg
+
+      Y3VycmVudCA9IHN0YXRlX3JlYWQocGF0aCkKICAgIHNhbXBsZXMgPSBbCiAgICAgICAgZGljdChj
+
+      dXJyZW50WyJpbnRlbnQiXSwgYWRtaW5pc3RyYXRpb249ImFsbG93IiksCiAgICAgICAgZGljdChj
+
+      dXJyZW50WyJpbnRlbnQiXSwgc291cmNlPSIwLjAuMC4wLzAiKSwKICAgICAgICBkaWN0KGN1cnJl
+
+      bnRbImludGVudCJdLCB0YXJnZXQ9IjAuMC4wLjAvMCIpLAogICAgICAgIGRpY3QoY3VycmVudFsi
+
+      aW50ZW50Il0sIHZlcnNpb249VHJ1ZSksCiAgICAgICAgZGljdChjdXJyZW50WyJpbnRlbnQiXSwg
+
+      Y29tbWFuZHM9WyJwZXJtaXQgaXAgYW55IGFueSJdKSwKICAgIF0KICAgIGZvciB2YWx1ZSBpbiBz
+
+      YW1wbGVzOgogICAgICAgIHRyeToKICAgICAgICAgICAgcHVibGlzaCh2YWx1ZSwgcGF0aCkKICAg
+
+      ICAgICBleGNlcHQgVmFsdWVFcnJvcjoKICAgICAgICAgICAgcGFzcwogICAgICAgIGVsc2U6CiAg
+
+      ICAgICAgICAgIHJhaXNlIEFzc2VydGlvbkVycm9yKCJVbnNhZmUgaW50ZW50IHdhcyBwdWJsaXNo
+
+      ZWQiKQogICAgICAgIGFzc2VydCBwYXRoLnJlYWRfYnl0ZXMoKSA9PSBiZWZvcmUKICAgIHJldHVy
+
+      biB7CiAgICAgICAgInN0YXR1cyI6ICJwYXNzZWQiLAogICAgICAgICJ1bnNhZmVfY2FuZGlkYXRl
+
+      c19yZWplY3RlZCI6IGxlbihzYW1wbGVzKSwKICAgICAgICAiYXJ0aWZhY3RfdW5jaGFuZ2VkIjog
+
+      VHJ1ZSwKICAgICAgICAic2hhMjU2IjogY3VycmVudFsic2hhMjU2Il0sCiAgICB9CgoKZGVmIG1h
+
+      a2Vfc2VydmVyKGFkZHJlc3MpOgogICAgY2xhc3MgSGFuZGxlcihodHRwLnNlcnZlci5CYXNlSFRU
+
+      UFJlcXVlc3RIYW5kbGVyKToKICAgICAgICBkZWYgZG9fR0VUKHNlbGYpOgogICAgICAgICAgICBp
+
+      ZiBzZWxmLnBhdGggIT0gIi9hcHByb3ZlZCI6CiAgICAgICAgICAgICAgICBzZWxmLnNlbmRfZXJy
+
+      b3IoNDA0KQogICAgICAgICAgICAgICAgcmV0dXJuCiAgICAgICAgICAgIHRyeToKICAgICAgICAg
+
+      ICAgICAgIHZhbHVlID0gc3RhdGVfcmVhZChST09UIC8gImFwcHJvdmVkLmpzb24iKQogICAgICAg
+
+      ICAgICAgICAgcmF3ID0gdmFsdWVbImJvZHkiXS5lbmNvZGUoInV0Zi04IikKICAgICAgICAgICAg
+
+      ZXhjZXB0IChPU0Vycm9yLCBWYWx1ZUVycm9yLCBUeXBlRXJyb3IsIEtleUVycm9yKToKICAgICAg
+
+      ICAgICAgICAgIHNlbGYuc2VuZF9lcnJvcig1MDMpCiAgICAgICAgICAgICAgICByZXR1cm4KICAg
+
+      ICAgICAgICAgc2VsZi5zZW5kX3Jlc3BvbnNlKDIwMCkKICAgICAgICAgICAgc2VsZi5zZW5kX2hl
+
+      YWRlcigiQ29udGVudC1UeXBlIiwgInRleHQvcGxhaW4iKQogICAgICAgICAgICBzZWxmLnNlbmRf
+
+      aGVhZGVyKCJDb250ZW50LUxlbmd0aCIsIHN0cihsZW4ocmF3KSkpCiAgICAgICAgICAgIHNlbGYu
+
+      c2VuZF9oZWFkZXIoIkVUYWciLCAnIicgKyB2YWx1ZVsic2hhMjU2Il0gKyAnIicpCiAgICAgICAg
+
+      ICAgIHNlbGYuZW5kX2hlYWRlcnMoKQogICAgICAgICAgICBzZWxmLndmaWxlLndyaXRlKHJhdykK
+
+      CiAgICAgICAgZGVmIGxvZ19tZXNzYWdlKHNlbGYsICphcmdzKToKICAgICAgICAgICAgcGFzcwoK
+
+      ICAgIHJldHVybiBodHRwLnNlcnZlci5IVFRQU2VydmVyKGFkZHJlc3MsIEhhbmRsZXIpCgoKZGVm
+
+      IGNvbmZpZ3VyZSgpOgogICAgdmFsdWUgPSBwdWJsaXNoKGludGVudCgpLCBST09UIC8gImFwcHJv
+
+      dmVkLmpzb24iKQogICAgcHVibGlzaChpbnRlbnQoKSwgUk9PVCAvICJyb2xsYmFjay5qc29uIikK
+
+      ICAgIHdpdGggKFJPT1QgLyAicG9saWN5LWh0dHAubG9nIikub3BlbigiYWIiKSBhcyBvdXRwdXQ6
+
+      CiAgICAgICAgc3VicHJvY2Vzcy5Qb3BlbigKICAgICAgICAgICAgW3N5cy5leGVjdXRhYmxlLCBz
+
+      dHIoUGF0aChfX2ZpbGVfXykucmVzb2x2ZSgpKSwgInNlcnZlIl0sCiAgICAgICAgICAgIHN0ZGlu
+
+      PXN1YnByb2Nlc3MuREVWTlVMTCwKICAgICAgICAgICAgc3Rkb3V0PW91dHB1dCwKICAgICAgICAg
+
+      ICAgc3RkZXJyPXN1YnByb2Nlc3MuU1RET1VULAogICAgICAgICAgICBzdGFydF9uZXdfc2Vzc2lv
+
+      bj1UcnVlLAogICAgICAgICkKICAgIHJldHVybiB7InN0YXR1cyI6ICJwYXNzZWQiLCAidmVyc2lv
+
+      biI6IHZhbHVlWyJpbnRlbnQiXVsidmVyc2lvbiJdLCAic2hhMjU2IjogdmFsdWVbInNoYTI1NiJd
+
+      fQoKCmRlZiBtYWluKCk6CiAgICBwYXJzZXIgPSBhcmdwYXJzZS5Bcmd1bWVudFBhcnNlcihkZXNj
+
+      cmlwdGlvbj1fX2RvY19fKQogICAgcGFyc2VyLmFkZF9hcmd1bWVudCgKICAgICAgICAiYWN0aW9u
+
+      IiwgY2hvaWNlcz0oImNvbmZpZ3VyZSIsICJzZXJ2ZSIsICJyZWplY3QtdW5zYWZlIiwgImJsb2Nr
+
+      IiwgInJvbGxiYWNrIiwgInN0YXRlIikKICAgICkKICAgIGFjdGlvbiA9IHBhcnNlci5wYXJzZV9h
+
+      cmdzKCkuYWN0aW9uCiAgICBpZiBvcy5nZXRldWlkKCkgIT0gMCBvciAoUk9PVCAvICJDTUwtUE9M
+
+      SUNZLUZJWFRVUkUiKS5yZWFkX3RleHQoKS5zdHJpcCgpICE9IE1BUktFUjoKICAgICAgICByYWlz
+
+      ZSBQZXJtaXNzaW9uRXJyb3IoIk9ubHkgdGhlIG1hcmtlZCBleGVyY2lzZSBwdWJsaXNoZXIgaXMg
+
+      YWNjZXB0ZWQiKQogICAgaWYgYWN0aW9uID09ICJjb25maWd1cmUiOgogICAgICAgIHZhbHVlID0g
+
+      Y29uZmlndXJlKCkKICAgIGVsaWYgYWN0aW9uID09ICJzZXJ2ZSI6CiAgICAgICAgbWFrZV9zZXJ2
+
+      ZXIoKCIxOTguMTguMTAuMTAiLCA4MDgxKSkuc2VydmVfZm9yZXZlcigpCiAgICAgICAgcmV0dXJu
+
+      CiAgICBlbGlmIGFjdGlvbiA9PSAicmVqZWN0LXVuc2FmZSI6CiAgICAgICAgdmFsdWUgPSByZWZ1
+
+      c2VfdW5zYWZlKFJPT1QgLyAiYXBwcm92ZWQuanNvbiIpCiAgICBlbGlmIGFjdGlvbiA9PSAiYmxv
+
+      Y2siOgogICAgICAgIHJlc3VsdCA9IHB1Ymxpc2goaW50ZW50KDIsICJkZW55IiksIFJPT1QgLyAi
+
+      YXBwcm92ZWQuanNvbiIpCiAgICAgICAgdmFsdWUgPSB7CiAgICAgICAgICAgICJzdGF0dXMiOiAi
+
+      cGFzc2VkIiwKICAgICAgICAgICAgImFwcGxpY2F0aW9uIjogImRlbnkiLAogICAgICAgICAgICAi
+
+      dmVyc2lvbiI6IDIsCiAgICAgICAgICAgICJzaGEyNTYiOiByZXN1bHRbInNoYTI1NiJdLAogICAg
+
+      ICAgIH0KICAgIGVsaWYgYWN0aW9uID09ICJyb2xsYmFjayI6CiAgICAgICAgcHJldmlvdXMgPSBz
+
+      dGF0ZV9yZWFkKFJPT1QgLyAicm9sbGJhY2suanNvbiIpCiAgICAgICAgcmVzdWx0ID0gcHVibGlz
+
+      aChwcmV2aW91c1siaW50ZW50Il0sIFJPT1QgLyAiYXBwcm92ZWQuanNvbiIpCiAgICAgICAgdmFs
+
+      dWUgPSB7CiAgICAgICAgICAgICJzdGF0dXMiOiAicGFzc2VkIiwKICAgICAgICAgICAgImFwcGxp
+
+      Y2F0aW9uIjogImFsbG93IiwKICAgICAgICAgICAgInZlcnNpb24iOiByZXN1bHRbImludGVudCJd
+
+      WyJ2ZXJzaW9uIl0sCiAgICAgICAgICAgICJzaGEyNTYiOiByZXN1bHRbInNoYTI1NiJdLAogICAg
+
+      ICAgIH0KICAgIGVsc2U6CiAgICAgICAgcmVzdWx0ID0gc3RhdGVfcmVhZChST09UIC8gImFwcHJv
+
+      dmVkLmpzb24iKQogICAgICAgIHZhbHVlID0gewogICAgICAgICAgICAic3RhdHVzIjogInBhc3Nl
+
+      ZCIsCiAgICAgICAgICAgICJhcHBsaWNhdGlvbiI6IHJlc3VsdFsiaW50ZW50Il1bImFwcGxpY2F0
+
+      aW9uIl0sCiAgICAgICAgICAgICJ2ZXJzaW9uIjogcmVzdWx0WyJpbnRlbnQiXVsidmVyc2lvbiJd
+
+      LAogICAgICAgICAgICAic2hhMjU2IjogcmVzdWx0WyJzaGEyNTYiXSwKICAgICAgICB9CiAgICBw
+
+      cmludChqc29uLmR1bXBzKHZhbHVlLCBzb3J0X2tleXM9VHJ1ZSkpCgoKaWYgX19uYW1lX18gPT0g
+
+      Il9fbWFpbl9fIjoKICAgIG1haW4oKQo=
+
+      CML_EMBED_EXAMPLES_SECURITY_POLICY_CODE_PY
+
+      base64 -d > /lab/t.py <<''CML_EMBED_EXAMPLES_SECURITY_TRAFFIC_FIXTURE_PY''
+
+      IiIiUGxhaW4gSFRUUCBwYWNrZXQvcGVlciBmaXh0dXJlIHJlc3RyaWN0ZWQgdG8gaXNvbGF0ZWQg
+
+      YmVuY2htYXJrIG9yIGxvb3BiYWNrIElQcy4iIiIKCmZyb20gX19mdXR1cmVfXyBpbXBvcnQgYW5u
+
+      b3RhdGlvbnMKCmltcG9ydCBhcmdwYXJzZQppbXBvcnQgaHR0cC5jbGllbnQKaW1wb3J0IGh0dHAu
+
+      c2VydmVyCmltcG9ydCBpcGFkZHJlc3MKaW1wb3J0IGpzb24KCgpkZWYgZml4dHVyZV9hZGRyZXNz
+
+      KHZhbHVlKToKICAgIGFkZHJlc3MgPSBpcGFkZHJlc3MuSVB2NEFkZHJlc3ModmFsdWUpCiAgICBp
+
+      ZiBub3QgKGFkZHJlc3MgaW4gaXBhZGRyZXNzLklQdjROZXR3b3JrKCIxOTguMTguMC4wLzE1Iikg
+
+      b3IgYWRkcmVzcy5pc19sb29wYmFjayk6CiAgICAgICAgcmFpc2UgVmFsdWVFcnJvcigiT25seSBi
+
+      ZW5jaG1hcmsvbG9vcGJhY2sgZml4dHVyZSBJUHY0IHRhcmdldHMgYXJlIGFjY2VwdGVkIikKICAg
+
+      IHJldHVybiBzdHIoYWRkcmVzcykKCgpjbGFzcyBIYW5kbGVyKGh0dHAuc2VydmVyLkJhc2VIVFRQ
+
+      UmVxdWVzdEhhbmRsZXIpOgogICAgZGVmIGxvZ19tZXNzYWdlKHNlbGYsICpfYXJncyk6CiAgICAg
+
+      ICAgcGFzcwoKICAgIGRlZiBkb19HRVQoc2VsZik6CiAgICAgICAgaWYgc2VsZi5wYXRoICE9ICIv
+
+      aGVhbHRoIjoKICAgICAgICAgICAgc2VsZi5zZW5kX2Vycm9yKDQwNCkKICAgICAgICAgICAgcmV0
+
+      dXJuCiAgICAgICAgZGF0YSA9IGpzb24uZHVtcHMoCiAgICAgICAgICAgIHsic2VydmVyIjogc2Vs
+
+      Zi5zZXJ2ZXIuZml4dHVyZV9sYWJlbCwgInBlZXIiOiBzZWxmLmNsaWVudF9hZGRyZXNzWzBdfSwK
+
+      ICAgICAgICAgICAgc29ydF9rZXlzPVRydWUsCiAgICAgICAgKS5lbmNvZGUoInV0Zi04IikKICAg
+
+      ICAgICBzZWxmLnNlbmRfcmVzcG9uc2UoMjAwKQogICAgICAgIHNlbGYuc2VuZF9oZWFkZXIoIkNv
+
+      bnRlbnQtVHlwZSIsICJhcHBsaWNhdGlvbi9qc29uIikKICAgICAgICBzZWxmLnNlbmRfaGVhZGVy
+
+      KCJDb250ZW50LUxlbmd0aCIsIHN0cihsZW4oZGF0YSkpKQogICAgICAgIHNlbGYuZW5kX2hlYWRl
+
+      cnMoKQogICAgICAgIHNlbGYud2ZpbGUud3JpdGUoZGF0YSkKCgpkZWYgc2VydmVyKGFkZHJlc3Ms
+
+      IHBvcnQsIGxhYmVsKToKICAgIHZhbHVlID0gaHR0cC5zZXJ2ZXIuVGhyZWFkaW5nSFRUUFNlcnZl
+
+      cigoZml4dHVyZV9hZGRyZXNzKGFkZHJlc3MpLCBwb3J0KSwgSGFuZGxlcikKICAgIHZhbHVlLmZp
+
+      eHR1cmVfbGFiZWwgPSBsYWJlbAogICAgdmFsdWUuZGFlbW9uX3RocmVhZHMgPSBUcnVlCiAgICBy
+
+      ZXR1cm4gdmFsdWUKCgpkZWYgcHJvYmUoYWRkcmVzcywgcG9ydD04MDgwLCB0aW1lb3V0PTMpOgog
+
+      ICAgYWRkcmVzcyA9IGZpeHR1cmVfYWRkcmVzcyhhZGRyZXNzKQogICAgY29ubmVjdGlvbiA9IGh0
+
+      dHAuY2xpZW50LkhUVFBDb25uZWN0aW9uKGFkZHJlc3MsIHBvcnQsIHRpbWVvdXQ9dGltZW91dCkK
+
+      ICAgIHRyeToKICAgICAgICBjb25uZWN0aW9uLnJlcXVlc3QoIkdFVCIsICIvaGVhbHRoIikKICAg
+
+      ICAgICByZXNwb25zZSA9IGNvbm5lY3Rpb24uZ2V0cmVzcG9uc2UoKQogICAgICAgIGJvZHkgPSBy
+
+      ZXNwb25zZS5yZWFkKDQwOTcpCiAgICAgICAgaWYgbGVuKGJvZHkpID4gNDA5NjoKICAgICAgICAg
+
+      ICAgcmFpc2UgVmFsdWVFcnJvcigiT3ZlcnNpemVkIGZpeHR1cmUgcmVzcG9uc2UiKQogICAgICAg
+
+      IHZhbHVlID0ganNvbi5sb2Fkcyhib2R5KQogICAgICAgIGlmIHNldCh2YWx1ZSkgIT0geyJwZWVy
+
+      IiwgInNlcnZlciJ9OgogICAgICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJVbmV4cGVjdGVkIGZp
+
+      eHR1cmUgc2NoZW1hIikKICAgICAgICByZXR1cm4geyJyZWFjaGFibGUiOiBUcnVlLCAic3RhdHVz
+
+      IjogcmVzcG9uc2Uuc3RhdHVzLCAqKnZhbHVlfQogICAgZXhjZXB0IFRpbWVvdXRFcnJvcjoKICAg
+
+      ICAgICByZXR1cm4geyJyZWFjaGFibGUiOiBGYWxzZSwgInJlYXNvbiI6ICJ0aW1lb3V0In0KICAg
+
+      IGV4Y2VwdCBDb25uZWN0aW9uUmVmdXNlZEVycm9yOgogICAgICAgIHJldHVybiB7InJlYWNoYWJs
+
+      ZSI6IEZhbHNlLCAicmVhc29uIjogImNvbm5lY3Rpb25fcmVmdXNlZCJ9CiAgICBleGNlcHQgT1NF
+
+      cnJvcjoKICAgICAgICByZXR1cm4geyJyZWFjaGFibGUiOiBGYWxzZSwgInJlYXNvbiI6ICJuZXR3
+
+      b3JrX3JlamVjdGVkIn0KICAgIGZpbmFsbHk6CiAgICAgICAgY29ubmVjdGlvbi5jbG9zZSgpCgoK
+
+      ZGVmIG1haW4oKToKICAgIHBhcnNlciA9IGFyZ3BhcnNlLkFyZ3VtZW50UGFyc2VyKGRlc2NyaXB0
+
+      aW9uPV9fZG9jX18pCiAgICBwYXJzZXIuYWRkX2FyZ3VtZW50KCJhY3Rpb24iLCBjaG9pY2VzPSgi
+
+      c2VydmUiLCAicHJvYmUiKSkKICAgIHBhcnNlci5hZGRfYXJndW1lbnQoImFkZHJlc3MiLCB0eXBl
+
+      PWZpeHR1cmVfYWRkcmVzcykKICAgIHBhcnNlci5hZGRfYXJndW1lbnQoIi0tcG9ydCIsIHR5cGU9
+
+      aW50LCBkZWZhdWx0PTgwODApCiAgICBwYXJzZXIuYWRkX2FyZ3VtZW50KCItLWxhYmVsIiwgY2hv
+
+      aWNlcz0oIklOU0lERSIsICJPVVRTSURFIiksIGRlZmF1bHQ9Ik9VVFNJREUiKQogICAgYXJncyA9
+
+      IHBhcnNlci5wYXJzZV9hcmdzKCkKICAgIGlmIG5vdCAxMDI0IDw9IGFyZ3MucG9ydCA8PSA2NTUz
+
+      NToKICAgICAgICBwYXJzZXIuZXJyb3IoIlVzZSBhbiB1bnByaXZpbGVnZWQgZml4dHVyZSBwb3J0
+
+      IikKICAgIGlmIGFyZ3MuYWN0aW9uID09ICJzZXJ2ZSI6CiAgICAgICAgd2l0aCBzZXJ2ZXIoYXJn
+
+      cy5hZGRyZXNzLCBhcmdzLnBvcnQsIGFyZ3MubGFiZWwpIGFzIGxpc3RlbmVyOgogICAgICAgICAg
+
+      ICBsaXN0ZW5lci5zZXJ2ZV9mb3JldmVyKHBvbGxfaW50ZXJ2YWw9MC4xKQogICAgZWxzZToKICAg
+
+      ICAgICBwcmludChqc29uLmR1bXBzKHByb2JlKGFyZ3MuYWRkcmVzcywgYXJncy5wb3J0KSwgc29y
+
+      dF9rZXlzPVRydWUpKQoKCmlmIF9fbmFtZV9fID09ICJfX21haW5fXyI6CiAgICBtYWluKCkK
+
+      CML_EMBED_EXAMPLES_SECURITY_TRAFFIC_FIXTURE_PY
+
+      python3 /lab/t.py serve 198.18.10.10 --label INSIDE >/lab/http.log 2>&1 &
+
+      python3 /lab/p.py configure
+
+      echo READY >/dev/console
+
+      exit 0
+
+      '
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
-  - id: i0
+  - id: i1
     label: eth0
     type: physical
     slot: 0
-  configuration: []
-  priority: 99
-  tags: []
-- id: n2
-  label: API-TARGET
-  node_definition: iosv
-  x: 0
-  y: 160
-  configuration:
-  - name: ios_config.txt
-    content: "hostname API-TARGET\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR Firewall Policy As\
-      \ Code ^C\ninterface GigabitEthernet0/0\n description SECCORE-SCOR Firewall Policy As Code\n ip\
-      \ address 10.255.0.2 255.255.255.0\n no shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: eth1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: eth2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: eth3
     type: physical
     slot: 3
-  priority: 98
   tags: []
+  ram: 512
+  cpus: 1
+- id: n2
+  label: OUTSIDE
+  node_definition: net-tools
+  configuration:
+  - name: boot.sh
+    content: '#!/bin/bash
+
+      set -eu
+
+      ip address add 198.18.20.20/24 dev eth1
+
+      ip link set eth1 up
+
+      ip route add 198.18.10.0/24 via 198.18.20.1 dev eth1
+
+      mkdir -p /lab
+
+      base64 -d > /lab/t.py <<''CML_EMBED_EXAMPLES_SECURITY_TRAFFIC_FIXTURE_PY''
+
+      IiIiUGxhaW4gSFRUUCBwYWNrZXQvcGVlciBmaXh0dXJlIHJlc3RyaWN0ZWQgdG8gaXNvbGF0ZWQg
+
+      YmVuY2htYXJrIG9yIGxvb3BiYWNrIElQcy4iIiIKCmZyb20gX19mdXR1cmVfXyBpbXBvcnQgYW5u
+
+      b3RhdGlvbnMKCmltcG9ydCBhcmdwYXJzZQppbXBvcnQgaHR0cC5jbGllbnQKaW1wb3J0IGh0dHAu
+
+      c2VydmVyCmltcG9ydCBpcGFkZHJlc3MKaW1wb3J0IGpzb24KCgpkZWYgZml4dHVyZV9hZGRyZXNz
+
+      KHZhbHVlKToKICAgIGFkZHJlc3MgPSBpcGFkZHJlc3MuSVB2NEFkZHJlc3ModmFsdWUpCiAgICBp
+
+      ZiBub3QgKGFkZHJlc3MgaW4gaXBhZGRyZXNzLklQdjROZXR3b3JrKCIxOTguMTguMC4wLzE1Iikg
+
+      b3IgYWRkcmVzcy5pc19sb29wYmFjayk6CiAgICAgICAgcmFpc2UgVmFsdWVFcnJvcigiT25seSBi
+
+      ZW5jaG1hcmsvbG9vcGJhY2sgZml4dHVyZSBJUHY0IHRhcmdldHMgYXJlIGFjY2VwdGVkIikKICAg
+
+      IHJldHVybiBzdHIoYWRkcmVzcykKCgpjbGFzcyBIYW5kbGVyKGh0dHAuc2VydmVyLkJhc2VIVFRQ
+
+      UmVxdWVzdEhhbmRsZXIpOgogICAgZGVmIGxvZ19tZXNzYWdlKHNlbGYsICpfYXJncyk6CiAgICAg
+
+      ICAgcGFzcwoKICAgIGRlZiBkb19HRVQoc2VsZik6CiAgICAgICAgaWYgc2VsZi5wYXRoICE9ICIv
+
+      aGVhbHRoIjoKICAgICAgICAgICAgc2VsZi5zZW5kX2Vycm9yKDQwNCkKICAgICAgICAgICAgcmV0
+
+      dXJuCiAgICAgICAgZGF0YSA9IGpzb24uZHVtcHMoCiAgICAgICAgICAgIHsic2VydmVyIjogc2Vs
+
+      Zi5zZXJ2ZXIuZml4dHVyZV9sYWJlbCwgInBlZXIiOiBzZWxmLmNsaWVudF9hZGRyZXNzWzBdfSwK
+
+      ICAgICAgICAgICAgc29ydF9rZXlzPVRydWUsCiAgICAgICAgKS5lbmNvZGUoInV0Zi04IikKICAg
+
+      ICAgICBzZWxmLnNlbmRfcmVzcG9uc2UoMjAwKQogICAgICAgIHNlbGYuc2VuZF9oZWFkZXIoIkNv
+
+      bnRlbnQtVHlwZSIsICJhcHBsaWNhdGlvbi9qc29uIikKICAgICAgICBzZWxmLnNlbmRfaGVhZGVy
+
+      KCJDb250ZW50LUxlbmd0aCIsIHN0cihsZW4oZGF0YSkpKQogICAgICAgIHNlbGYuZW5kX2hlYWRl
+
+      cnMoKQogICAgICAgIHNlbGYud2ZpbGUud3JpdGUoZGF0YSkKCgpkZWYgc2VydmVyKGFkZHJlc3Ms
+
+      IHBvcnQsIGxhYmVsKToKICAgIHZhbHVlID0gaHR0cC5zZXJ2ZXIuVGhyZWFkaW5nSFRUUFNlcnZl
+
+      cigoZml4dHVyZV9hZGRyZXNzKGFkZHJlc3MpLCBwb3J0KSwgSGFuZGxlcikKICAgIHZhbHVlLmZp
+
+      eHR1cmVfbGFiZWwgPSBsYWJlbAogICAgdmFsdWUuZGFlbW9uX3RocmVhZHMgPSBUcnVlCiAgICBy
+
+      ZXR1cm4gdmFsdWUKCgpkZWYgcHJvYmUoYWRkcmVzcywgcG9ydD04MDgwLCB0aW1lb3V0PTMpOgog
+
+      ICAgYWRkcmVzcyA9IGZpeHR1cmVfYWRkcmVzcyhhZGRyZXNzKQogICAgY29ubmVjdGlvbiA9IGh0
+
+      dHAuY2xpZW50LkhUVFBDb25uZWN0aW9uKGFkZHJlc3MsIHBvcnQsIHRpbWVvdXQ9dGltZW91dCkK
+
+      ICAgIHRyeToKICAgICAgICBjb25uZWN0aW9uLnJlcXVlc3QoIkdFVCIsICIvaGVhbHRoIikKICAg
+
+      ICAgICByZXNwb25zZSA9IGNvbm5lY3Rpb24uZ2V0cmVzcG9uc2UoKQogICAgICAgIGJvZHkgPSBy
+
+      ZXNwb25zZS5yZWFkKDQwOTcpCiAgICAgICAgaWYgbGVuKGJvZHkpID4gNDA5NjoKICAgICAgICAg
+
+      ICAgcmFpc2UgVmFsdWVFcnJvcigiT3ZlcnNpemVkIGZpeHR1cmUgcmVzcG9uc2UiKQogICAgICAg
+
+      IHZhbHVlID0ganNvbi5sb2Fkcyhib2R5KQogICAgICAgIGlmIHNldCh2YWx1ZSkgIT0geyJwZWVy
+
+      IiwgInNlcnZlciJ9OgogICAgICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJVbmV4cGVjdGVkIGZp
+
+      eHR1cmUgc2NoZW1hIikKICAgICAgICByZXR1cm4geyJyZWFjaGFibGUiOiBUcnVlLCAic3RhdHVz
+
+      IjogcmVzcG9uc2Uuc3RhdHVzLCAqKnZhbHVlfQogICAgZXhjZXB0IFRpbWVvdXRFcnJvcjoKICAg
+
+      ICAgICByZXR1cm4geyJyZWFjaGFibGUiOiBGYWxzZSwgInJlYXNvbiI6ICJ0aW1lb3V0In0KICAg
+
+      IGV4Y2VwdCBDb25uZWN0aW9uUmVmdXNlZEVycm9yOgogICAgICAgIHJldHVybiB7InJlYWNoYWJs
+
+      ZSI6IEZhbHNlLCAicmVhc29uIjogImNvbm5lY3Rpb25fcmVmdXNlZCJ9CiAgICBleGNlcHQgT1NF
+
+      cnJvcjoKICAgICAgICByZXR1cm4geyJyZWFjaGFibGUiOiBGYWxzZSwgInJlYXNvbiI6ICJuZXR3
+
+      b3JrX3JlamVjdGVkIn0KICAgIGZpbmFsbHk6CiAgICAgICAgY29ubmVjdGlvbi5jbG9zZSgpCgoK
+
+      ZGVmIG1haW4oKToKICAgIHBhcnNlciA9IGFyZ3BhcnNlLkFyZ3VtZW50UGFyc2VyKGRlc2NyaXB0
+
+      aW9uPV9fZG9jX18pCiAgICBwYXJzZXIuYWRkX2FyZ3VtZW50KCJhY3Rpb24iLCBjaG9pY2VzPSgi
+
+      c2VydmUiLCAicHJvYmUiKSkKICAgIHBhcnNlci5hZGRfYXJndW1lbnQoImFkZHJlc3MiLCB0eXBl
+
+      PWZpeHR1cmVfYWRkcmVzcykKICAgIHBhcnNlci5hZGRfYXJndW1lbnQoIi0tcG9ydCIsIHR5cGU9
+
+      aW50LCBkZWZhdWx0PTgwODApCiAgICBwYXJzZXIuYWRkX2FyZ3VtZW50KCItLWxhYmVsIiwgY2hv
+
+      aWNlcz0oIklOU0lERSIsICJPVVRTSURFIiksIGRlZmF1bHQ9Ik9VVFNJREUiKQogICAgYXJncyA9
+
+      IHBhcnNlci5wYXJzZV9hcmdzKCkKICAgIGlmIG5vdCAxMDI0IDw9IGFyZ3MucG9ydCA8PSA2NTUz
+
+      NToKICAgICAgICBwYXJzZXIuZXJyb3IoIlVzZSBhbiB1bnByaXZpbGVnZWQgZml4dHVyZSBwb3J0
+
+      IikKICAgIGlmIGFyZ3MuYWN0aW9uID09ICJzZXJ2ZSI6CiAgICAgICAgd2l0aCBzZXJ2ZXIoYXJn
+
+      cy5hZGRyZXNzLCBhcmdzLnBvcnQsIGFyZ3MubGFiZWwpIGFzIGxpc3RlbmVyOgogICAgICAgICAg
+
+      ICBsaXN0ZW5lci5zZXJ2ZV9mb3JldmVyKHBvbGxfaW50ZXJ2YWw9MC4xKQogICAgZWxzZToKICAg
+
+      ICAgICBwcmludChqc29uLmR1bXBzKHByb2JlKGFyZ3MuYWRkcmVzcywgYXJncy5wb3J0KSwgc29y
+
+      dF9rZXlzPVRydWUpKQoKCmlmIF9fbmFtZV9fID09ICJfX21haW5fXyI6CiAgICBtYWluKCkK
+
+      CML_EMBED_EXAMPLES_SECURITY_TRAFFIC_FIXTURE_PY
+
+      python3 /lab/t.py serve 198.18.20.20 --label OUTSIDE >/lab/http.log 2>&1 &
+
+      python3 /lab/t.py serve 198.18.20.20 --port 9090 --label OUTSIDE >/lab/admin-http.log 2>&1 &
+
+      echo READY >/dev/console
+
+      exit 0
+
+      '
+  cpu_limit: 100
+  priority: 98
+  x: 520
+  y: 0
+  interfaces:
+  - id: i1
+    label: eth0
+    type: physical
+    slot: 0
+  - id: i2
+    label: eth1
+    type: physical
+    slot: 1
+  - id: i3
+    label: eth2
+    type: physical
+    slot: 2
+  - id: i4
+    label: eth3
+    type: physical
+    slot: 3
+  tags: []
+  ram: 512
+  cpus: 1
 links:
 - id: l0
-  n1: n0
-  i1: i1
-  n2: n1
-  i2: i0
-- id: l1
-  n1: n0
+  n1: n1
   i1: i2
-  n2: n2
+  n2: n0
   i2: i1
+- id: l1
+  n1: n2
+  i1: i2
+  n2: n0
+  i2: i2
 annotations: []
 smart_annotations: []

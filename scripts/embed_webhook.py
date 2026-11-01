@@ -282,6 +282,15 @@ NATIVE_PROFILES["native-indicator-feed"] = {
 }
 
 
+NATIVE_PROFILES["native-policy-as-code"] = {
+    "INSIDE": {
+        **NATIVE_PROFILES["native-firewall-traffic"]["INSIDE"],
+        "/lab/p.py": "examples/security/policy_code.py",
+    },
+    "OUTSIDE": NATIVE_PROFILES["native-firewall-traffic"]["OUTSIDE"],
+}
+
+
 def native_sources(data, metadata):
     """Validate registered source payloads without executing a shell or guest code."""
     profile = NATIVE_PROFILES.get(metadata.get("example_profile"))

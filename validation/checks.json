@@ -26349,5 +26349,488 @@
         ]
       }
     ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/032-firewall-policy-as-code.yaml": {
+    "checks": [
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": false)",
+        "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+        "pattern": "(?s)(?=.*\"reachable\": false)",
+        "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "ping -n -c 3 -W 2 198.18.20.20",
+        "pattern": "3 packets transmitted, 3 received",
+        "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+        "attempts": 5,
+        "interval_seconds": 2
+      },
+      {
+        "node": "FW",
+        "command": "show ip interface Ethernet0/0",
+        "pattern": "Inbound\\s+access list is POLICY-CODE",
+        "expectation": "The actual named client ingress policy remains bound."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "reject unsafe candidates before any deployment",
+        "node": "INSIDE",
+        "commands": [
+          "python3 /lab/p.py reject-unsafe"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"artifact_unchanged\": true",
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 2 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "FW",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is POLICY-CODE",
+            "expectation": "The actual named client ingress policy remains bound."
+          }
+        ]
+      },
+      {
+        "name": "deploy the accepted version-1 application permit",
+        "node": "FW",
+        "commands": [
+          "copy http://198.18.10.10:8081/approved running-config"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "bytes copied",
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 2 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "FW",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is POLICY-CODE",
+            "expectation": "The actual named client ingress policy remains bound."
+          }
+        ]
+      },
+      {
+        "name": "stage version-2 application deny without deploying it",
+        "node": "INSIDE",
+        "commands": [
+          "python3 /lab/p.py block"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"application\": \"deny\"",
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 2 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "FW",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is POLICY-CODE",
+            "expectation": "The actual named client ingress policy remains bound."
+          }
+        ]
+      },
+      {
+        "name": "deploy the actual application-deny change",
+        "node": "FW",
+        "commands": [
+          "copy http://198.18.10.10:8081/approved running-config"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "bytes copied",
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 2 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "FW",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is POLICY-CODE",
+            "expectation": "The actual named client ingress policy remains bound."
+          }
+        ]
+      },
+      {
+        "name": "stage the saved version-1 rollback without deploying it",
+        "node": "INSIDE",
+        "commands": [
+          "python3 /lab/p.py rollback"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"application\": \"allow\"",
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 2 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "FW",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is POLICY-CODE",
+            "expectation": "The actual named client ingress policy remains bound."
+          }
+        ]
+      },
+      {
+        "name": "apply the accepted prior snapshot and recover packets",
+        "node": "FW",
+        "commands": [
+          "copy http://198.18.10.10:8081/approved running-config"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "bytes copied",
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 2 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "FW",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is POLICY-CODE",
+            "expectation": "The actual named client ingress policy remains bound."
+          }
+        ]
+      },
+      {
+        "name": "reject unsafe candidates while safe traffic remains deployed",
+        "node": "INSIDE",
+        "commands": [
+          "python3 /lab/p.py reject-unsafe"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"artifact_unchanged\": true",
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 2 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The routed ICMP control stays usable regardless of the staged or deployed application decision.",
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "FW",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is POLICY-CODE",
+            "expectation": "The actual named client ingress policy remains bound."
+          }
+        ]
+      }
+    ]
   }
 }
