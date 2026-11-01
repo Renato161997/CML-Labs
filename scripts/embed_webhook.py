@@ -43,6 +43,10 @@ PROFILES = {
 }
 
 NATIVE_PROFILES = {
+    "native-secret-files": {"TOOLS": {"/lab/s.py": "examples/security/secret_files.py"}},
+    "native-qos-dataplane": {
+        role: {"/lab/q.py": "examples/security/qos_probe.py"} for role in ("CLIENT", "SERVER")
+    },
     "native-vxlan-dataplane": {
         label: {"/lab/v.py": "examples/virtualization/vxlan_probe.py"}
         for label in ("VTEP1", "VTEP2", "LEFT", "RIGHT")

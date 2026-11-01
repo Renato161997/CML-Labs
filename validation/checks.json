@@ -23710,5 +23710,665 @@
         ]
       }
     ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/003-sdwan-control-data-plane.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The direct control/transport address remains reachable independently of the service route."
+      },
+      {
+        "node": "R2",
+        "command": "ping 198.18.0.1 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The direct control/transport address remains reachable independently of the service route."
+      },
+      {
+        "node": "R1",
+        "command": "show ip bgp summary",
+        "pattern": "198\\.18\\.0\\.2\\s+4\\s+65002\\s+\\d+\\s+\\d+\\s+\\d+\\s+0\\s+0\\s+\\S+\\s+1\\s*$",
+        "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R2",
+        "command": "show ip bgp summary",
+        "pattern": "198\\.18\\.0\\.1\\s+4\\s+65001\\s+\\d+\\s+\\d+\\s+\\d+\\s+0\\s+0\\s+\\S+\\s+1\\s*$",
+        "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 192.0.2.2",
+        "pattern": "(?s)(?=.*Known via \"bgp 65001\")(?=.*172\\.16\\.0\\.2)",
+        "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R2",
+        "command": "show ip route 192.0.2.1",
+        "pattern": "(?s)(?=.*Known via \"bgp 65002\")(?=.*172\\.16\\.0\\.1)",
+        "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show ip cef 192.0.2.2",
+        "pattern": "(?s)192\\.0\\.2\\.2/32.*172\\.16\\.0\\.2.*Tunnel0",
+        "expectation": "Actual CEF recursion selects the encrypted GRE tunnel rather than a plaintext underlay path.",
+        "attempts": 8,
+        "interval_seconds": 2
+      },
+      {
+        "node": "R2",
+        "command": "show ip cef 192.0.2.1",
+        "pattern": "(?s)192\\.0\\.2\\.1/32.*172\\.16\\.0\\.1.*Tunnel0",
+        "expectation": "Actual CEF recursion selects the encrypted GRE tunnel rather than a plaintext underlay path.",
+        "attempts": 8,
+        "interval_seconds": 2
+      },
+      {
+        "node": "R1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The remote service loopback responds through the actual learned overlay path.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R2",
+        "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The remote service loopback responds through the actual learned overlay path.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show crypto isakmp sa",
+        "pattern": "QM_IDLE",
+        "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+        "attempts": 20,
+        "interval_seconds": 3,
+        "command_timeout": 60
+      },
+      {
+        "node": "R2",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+        "attempts": 20,
+        "interval_seconds": 3,
+        "command_timeout": 60
+      }
+    ],
+    "transitions": [
+      {
+        "name": "block only encrypted data while control remains up",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended CONTROL-DATA-ESP",
+          "deny esp any any",
+          "permit ip any any",
+          "exit",
+          "interface GigabitEthernet0/0",
+          "ip access-group CONTROL-DATA-ESP in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The controlled fault blocks the protected service."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The direct control/transport address remains reachable independently of the service route."
+          },
+          {
+            "node": "R2",
+            "command": "ping 198.18.0.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The direct control/transport address remains reachable independently of the service route."
+          },
+          {
+            "node": "R1",
+            "command": "show ip bgp summary",
+            "pattern": "198\\.18\\.0\\.2\\s+4\\s+65002\\s+\\d+\\s+\\d+\\s+\\d+\\s+0\\s+0\\s+\\S+\\s+1\\s*$",
+            "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp summary",
+            "pattern": "198\\.18\\.0\\.1\\s+4\\s+65001\\s+\\d+\\s+\\d+\\s+\\d+\\s+0\\s+0\\s+\\S+\\s+1\\s*$",
+            "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)(?=.*Known via \"bgp 65001\")(?=.*172\\.16\\.0\\.2)",
+            "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)(?=.*Known via \"bgp 65002\")(?=.*172\\.16\\.0\\.1)",
+            "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show access-lists CONTROL-DATA-ESP",
+            "pattern": "deny esp any any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The actual encrypted-data deny counter increments while BGP remains established."
+          }
+        ]
+      },
+      {
+        "name": "restore the encrypted data plane",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip access-group CONTROL-DATA-ESP in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The direct control/transport address remains reachable independently of the service route."
+          },
+          {
+            "node": "R2",
+            "command": "ping 198.18.0.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The direct control/transport address remains reachable independently of the service route."
+          },
+          {
+            "node": "R1",
+            "command": "show ip bgp summary",
+            "pattern": "198\\.18\\.0\\.2\\s+4\\s+65002\\s+\\d+\\s+\\d+\\s+\\d+\\s+0\\s+0\\s+\\S+\\s+1\\s*$",
+            "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp summary",
+            "pattern": "198\\.18\\.0\\.1\\s+4\\s+65001\\s+\\d+\\s+\\d+\\s+\\d+\\s+0\\s+0\\s+\\S+\\s+1\\s*$",
+            "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)(?=.*Known via \"bgp 65001\")(?=.*172\\.16\\.0\\.2)",
+            "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)(?=.*Known via \"bgp 65002\")(?=.*172\\.16\\.0\\.1)",
+            "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip cef 192.0.2.2",
+            "pattern": "(?s)192\\.0\\.2\\.2/32.*172\\.16\\.0\\.2.*Tunnel0",
+            "expectation": "Actual CEF recursion selects the encrypted GRE tunnel rather than a plaintext underlay path.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R2",
+            "command": "show ip cef 192.0.2.1",
+            "pattern": "(?s)192\\.0\\.2\\.1/32.*172\\.16\\.0\\.1.*Tunnel0",
+            "expectation": "Actual CEF recursion selects the encrypted GRE tunnel rather than a plaintext underlay path.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The remote service loopback responds through the actual learned overlay path.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The remote service loopback responds through the actual learned overlay path.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show crypto isakmp sa",
+            "pattern": "QM_IDLE",
+            "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "R2",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          }
+        ]
+      },
+      {
+        "name": "withdraw only control information",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "router bgp 65001",
+          "neighbor 198.18.0.2 shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "Actual loss of BGP information removes the service route, with no static/default fallback.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R2",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "Actual loss of BGP information removes the service route, with no static/default fallback.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The controlled fault blocks the protected service."
+          },
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The direct control/transport address remains reachable independently of the service route."
+          },
+          {
+            "node": "R2",
+            "command": "ping 198.18.0.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The direct control/transport address remains reachable independently of the service route."
+          },
+          {
+            "node": "R1",
+            "command": "ping 172.16.0.2 source Tunnel0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Encrypted tunnel-peer reachability remains independently usable.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R2",
+            "command": "ping 172.16.0.1 source Tunnel0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Encrypted tunnel-peer reachability remains independently usable.",
+            "attempts": 15,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "show crypto isakmp sa",
+            "pattern": "QM_IDLE",
+            "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+            "attempts": 20,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore control and service forwarding",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "router bgp 65001",
+          "no neighbor 198.18.0.2 shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The direct control/transport address remains reachable independently of the service route."
+          },
+          {
+            "node": "R2",
+            "command": "ping 198.18.0.1 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The direct control/transport address remains reachable independently of the service route."
+          },
+          {
+            "node": "R1",
+            "command": "show ip bgp summary",
+            "pattern": "198\\.18\\.0\\.2\\s+4\\s+65002\\s+\\d+\\s+\\d+\\s+\\d+\\s+0\\s+0\\s+\\S+\\s+1\\s*$",
+            "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp summary",
+            "pattern": "198\\.18\\.0\\.1\\s+4\\s+65001\\s+\\d+\\s+\\d+\\s+\\d+\\s+0\\s+0\\s+\\S+\\s+1\\s*$",
+            "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "(?s)(?=.*Known via \"bgp 65001\")(?=.*172\\.16\\.0\\.2)",
+            "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip route 192.0.2.1",
+            "pattern": "(?s)(?=.*Known via \"bgp 65002\")(?=.*172\\.16\\.0\\.1)",
+            "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip cef 192.0.2.2",
+            "pattern": "(?s)192\\.0\\.2\\.2/32.*172\\.16\\.0\\.2.*Tunnel0",
+            "expectation": "Actual CEF recursion selects the encrypted GRE tunnel rather than a plaintext underlay path.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R2",
+            "command": "show ip cef 192.0.2.1",
+            "pattern": "(?s)192\\.0\\.2\\.1/32.*172\\.16\\.0\\.1.*Tunnel0",
+            "expectation": "Actual CEF recursion selects the encrypted GRE tunnel rather than a plaintext underlay path.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The remote service loopback responds through the actual learned overlay path.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The remote service loopback responds through the actual learned overlay path.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show crypto isakmp sa",
+            "pattern": "QM_IDLE",
+            "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "R2",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/044-qos-marking-and-policing.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/q.py marked",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"mode\": \"marked\")(?=.*\"control_received\": 4)(?=.*\"fresh_generation\": true)",
+        "expectation": "Fresh receiver-side UDP sequence and IP_RECVTOS observations must meet the exact marked contract while all four independent control datagrams arrive unmarked.",
+        "command_timeout": 30,
+        "attempts": 3,
+        "interval_seconds": 2
+      },
+      {
+        "node": "R1",
+        "command": "show policy-map interface Ethernet0/1 output",
+        "pattern": "(?s)(?=.*Service-policy output: CML-MARK)(?=.*dscp ef)(?=.*Packets marked [1-9][0-9]*)",
+        "expectation": "The forwarding router also reports actual packet marking in its attached egress policy, independently of receiver TOS evidence.",
+        "command_timeout": 30
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw only actual egress marking",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "no service-policy output CML-MARK",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/q.py unmarked",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"mode\": \"unmarked\")(?=.*\"control_received\": 4)(?=.*\"fresh_generation\": true)",
+            "expectation": "Fresh receiver-side UDP sequence and IP_RECVTOS observations must meet the exact unmarked contract while all four independent control datagrams arrive unmarked.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "restore receiver-observed EF marking",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "service-policy output CML-MARK",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/q.py marked",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"mode\": \"marked\")(?=.*\"control_received\": 4)(?=.*\"fresh_generation\": true)",
+            "expectation": "Fresh receiver-side UDP sequence and IP_RECVTOS observations must meet the exact marked contract while all four independent control datagrams arrive unmarked.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "attach the selective data policer",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "service-policy input CML-POLICE",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show policy-map interface Ethernet0/0 input",
+            "pattern": "(?s)(?=.*Class-map: CML-DATA)(?=.*police:)(?=.*exceeded 0 packets)",
+            "expectation": "Before the selected burst, the newly attached real policer has no historical exceeded packets.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/q.py limited",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"mode\": \"limited\")(?=.*\"control_received\": 4)(?=.*\"fresh_generation\": true)",
+            "expectation": "Fresh receiver-side UDP sequence and IP_RECVTOS observations must meet the exact limited contract while all four independent control datagrams arrive unmarked.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "show policy-map interface Ethernet0/0 input",
+            "pattern": "(?s)(?=.*Class-map: CML-DATA)(?=.*police:)(?=.*conformed [1-9][0-9]* packets)(?=.*exceeded [1-9][0-9]* packets)",
+            "expectation": "Actual fresh conform/exceed packet counters distinguish policing drops from receiver timing or stale totals.",
+            "attempts": 8,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "restore complete marked data delivery",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/0",
+          "no service-policy input CML-POLICE",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/q.py marked",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"mode\": \"marked\")(?=.*\"control_received\": 4)(?=.*\"fresh_generation\": true)",
+            "expectation": "Fresh receiver-side UDP sequence and IP_RECVTOS observations must meet the exact marked contract while all four independent control datagrams arrive unmarked.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/021-secrets-management.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/s.py baseline",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"untrusted_file_denied\": true)(?=.*\"untrusted_api_status\": 401)(?=.*\"service_api_status\": 200)(?=.*\"secrets_logged\": false)",
+        "expectation": "Real OS processes use separate UIDs/groups. The service reads its root-owned group-readable key and authenticates; the untrusted process cannot read or write it and receives HTTP 401. The service cannot write the key either. Actual service metadata must not contain the active key.",
+        "command_timeout": 30,
+        "attempts": 3,
+        "interval_seconds": 2
+      }
+    ],
+    "transitions": [
+      {
+        "name": "expose only the fixture credential read mode",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/s.py expose"
+        ],
+        "command_pattern": "\"vulnerability_observed\": true",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/s.py exposed",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"vulnerability_observed\": true)(?=.*\"untrusted_api_status\": 200)(?=.*\"secrets_logged\": false)",
+            "expectation": "The separate untrusted UID actually reads the deliberately world-readable credential and successfully authenticates against the live service; a permission string alone cannot pass.",
+            "command_timeout": 30
+          }
+        ]
+      },
+      {
+        "name": "restore scoped file access and rotate the compromised value",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/s.py repair"
+        ],
+        "command_pattern": "\"rotation_invalidated_cached_key\": true",
+        "command_timeout": 30,
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/s.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"untrusted_file_denied\": true)(?=.*\"untrusted_api_status\": 401)(?=.*\"service_api_status\": 200)(?=.*\"secrets_logged\": false)",
+            "expectation": "Real OS processes use separate UIDs/groups. The service reads its root-owned group-readable key and authenticates; the untrusted process cannot read or write it and receives HTTP 401. The service cannot write the key either. Actual service metadata must not contain the active key.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/s.py recovered",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"old_credential_api_status\": 401)(?=.*\"untrusted_file_denied\": true)(?=.*\"service_api_status\": 200)(?=.*\"rotation_invalidated_cached_key\": true)(?=.*\"secrets_logged\": false)",
+            "expectation": "Restored ownership/mode denies fresh untrusted reads; replay of the actually captured prior key fails at the live service while the legitimate reader authenticates with the replacement.",
+            "command_timeout": 30
+          }
+        ]
+      }
+    ]
   }
 }

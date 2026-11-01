@@ -1,80 +1,77 @@
 lab:
-  title: Catalyst SD-WAN Control Data Plane
-  description: CCNP-ENCOR CML lab generated from blueprint coverage.
-  notes: 'CCNP-ENCOR blueprint lab: Catalyst SD-WAN Control Data Plane
+  title: 'Control and Data Planes: Independent BGP and Encrypted GRE Paths'
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# Control and Data Planes: Independent BGP and Encrypted GRE Paths
 
 
-    Topics:
-
-    - SD-WAN
-
-    - control plane
-
-    - data plane
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Suggested tasks:
-
-    1. Map controller roles
-
-    2. Trace overlay vs underlay paths
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-401-003-sdwan-control-data-plane.md
 
 
-    Suggested verification:
+    Two real IOSv routers separate an underlay BGP control session from GRE-over-IPsec service forwarding.
+    Each advertises only its service loopback; a documented inbound route-map sets the peer tunnel next
+    hop. Actual BGP learned routes, CEF recursion to Tunnel0, bidirectional service replies and both IPsec
+    counter directions are independent acceptance controls. There are no static/default service routes
+    concealing loss of control information.
 
-    - show ip interface brief
 
-    - show interfaces status
+    First block only ESP on R2. BGP and its learned service routes must remain healthy while service data
+    fails and the exact ESP deny counter increments. Restore ESP and prove the data path recovers. Then
+    administratively stop only R1''s BGP neighbor. Both service routes must disappear and service traffic
+    fail, while direct transport and actual encrypted tunnel-peer traffic remain healthy. Restore that
+    neighbor and require fresh learned routes, CEF selection and service recovery.
 
-    - show ip route
 
-    - show running-config | section router
+    This is a protocol-backed architectural analogy, not Cisco SD-WAN. No vManage, vSmart, vBond, OMP,
+    proprietary TLOC policy, application-aware routing or controller compatibility is implemented or inferred.
+    BGP carries training control information; GRE/IPsec carries selected service traffic. IKEv1 and the
+    public exercise-only PSK are legacy interoperability fixtures, not production authentication guidance.
+    All peers and prefixes are isolated. This verifies software protocol and packet behavior, not hardware
+    cryptographic throughput.
 
-    - ping between the lab endpoints'
+
+    Objectives:
+
+    - Observe real control-session, learned-route, CEF and encrypted service-path evidence separately.
+
+    - Break only encrypted forwarding while retaining control-plane state and identify actual ESP drops.
+
+    - Withdraw only the control session while retaining transport/tunnel reachability, then recover the
+    learned service path.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
   node_definition: iosv
-  x: -200
-  y: 0
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR Catalyst SD-WAN Control Data\
-      \ Plane ^C\ninterface GigabitEthernet0/0\n description CCNP-ENCOR Catalyst SD-WAN Control Data Plane\n\
-      \ ip address 10.10.10.1 255.255.255.0\n no shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nno logging console\ncrypto isakmp policy 10\n encryption aes\
+      \ 256\n hash sha256\n authentication pre-share\n group 14\n lifetime 3600\n exit\ncrypto isakmp\
+      \ key CML-VPN-DESIGN-PUBLIC-ONLY address 198.18.0.2\ncrypto ipsec transform-set DESIGN-SET esp-aes\
+      \ 256 esp-sha256-hmac\n mode transport\n exit\ncrypto ipsec profile DESIGN-PROFILE\n set transform-set\
+      \ DESIGN-SET\n set pfs group14\n exit\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.1 255.255.255.252\n no\
+      \ shutdown\n exit\ninterface Tunnel0\n ip address 172.16.0.1 255.255.255.252\n ip mtu 1400\n tunnel\
+      \ source GigabitEthernet0/0\n tunnel destination 198.18.0.2\n tunnel mode gre ip\n tunnel protection\
+      \ ipsec profile DESIGN-PROFILE\n no shutdown\n exit\nroute-map OVERLAY-IN permit 10\n set ip next-hop\
+      \ 172.16.0.2\n exit\nrouter bgp 65001\n bgp router-id 192.0.2.1\n bgp log-neighbor-changes\n timers\
+      \ bgp 3 9\n neighbor 198.18.0.2 remote-as 65002\n neighbor 198.18.0.2 advertisement-interval 0\n\
+      \ neighbor 198.18.0.2 route-map OVERLAY-IN in\n network 192.0.2.1 mask 255.255.255.255\n exit\n\
+      end\n"
+  cpu_limit: 100
   priority: 100
-  tags: []
-- id: n1
-  label: SW1
-  node_definition: iosvl2
   x: 0
   y: 0
-  configuration:
-  - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nbanner motd ^C CCNP-ENCOR Catalyst SD-WAN Control Data\
-      \ Plane ^C\nvlan 10\n name USERS\nvlan 20\n name SERVICES\nvlan 99\n name MGMT\ninterface range\
-      \ GigabitEthernet0/1-3\n switchport mode access\n spanning-tree portfast\nend"
   interfaces:
   - id: i0
     label: Loopback0
@@ -95,20 +92,50 @@ nodes:
     label: GigabitEthernet0/3
     type: physical
     slot: 3
-  priority: 99
   tags: []
-- id: n2
-  label: DEVBOX
-  node_definition: desktop
-  x: 200
-  y: 0
+- id: n1
+  label: R2
+  node_definition: iosv
+  configuration:
+  - name: ios_config.txt
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\nno logging console\ncrypto isakmp policy 10\n encryption aes\
+      \ 256\n hash sha256\n authentication pre-share\n group 14\n lifetime 3600\n exit\ncrypto isakmp\
+      \ key CML-VPN-DESIGN-PUBLIC-ONLY address 198.18.0.1\ncrypto ipsec transform-set DESIGN-SET esp-aes\
+      \ 256 esp-sha256-hmac\n mode transport\n exit\ncrypto ipsec profile DESIGN-PROFILE\n set transform-set\
+      \ DESIGN-SET\n set pfs group14\n exit\ninterface Loopback0\n ip address 192.0.2.2 255.255.255.255\n\
+      \ no shutdown\n exit\ninterface GigabitEthernet0/0\n ip address 198.18.0.2 255.255.255.252\n no\
+      \ shutdown\n exit\ninterface Tunnel0\n ip address 172.16.0.2 255.255.255.252\n ip mtu 1400\n tunnel\
+      \ source GigabitEthernet0/0\n tunnel destination 198.18.0.1\n tunnel mode gre ip\n tunnel protection\
+      \ ipsec profile DESIGN-PROFILE\n no shutdown\n exit\nroute-map OVERLAY-IN permit 10\n set ip next-hop\
+      \ 172.16.0.1\n exit\nrouter bgp 65002\n bgp router-id 192.0.2.2\n bgp log-neighbor-changes\n timers\
+      \ bgp 3 9\n neighbor 198.18.0.1 remote-as 65001\n neighbor 198.18.0.1 advertisement-interval 0\n\
+      \ neighbor 198.18.0.1 route-map OVERLAY-IN in\n network 192.0.2.2 mask 255.255.255.255\n exit\n\
+      end\n"
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
   - id: i0
-    label: eth0
+    label: Loopback0
+    type: loopback
+  - id: i1
+    label: GigabitEthernet0/0
     type: physical
     slot: 0
-  configuration: []
-  priority: 98
+  - id: i2
+    label: GigabitEthernet0/1
+    type: physical
+    slot: 1
+  - id: i3
+    label: GigabitEthernet0/2
+    type: physical
+    slot: 2
+  - id: i4
+    label: GigabitEthernet0/3
+    type: physical
+    slot: 3
   tags: []
 links:
 - id: l0
@@ -116,10 +143,5 @@ links:
   i1: i1
   n2: n1
   i2: i1
-- id: l1
-  n1: n1
-  i1: i2
-  n2: n2
-  i2: i0
 annotations: []
 smart_annotations: []

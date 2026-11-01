@@ -1200,5 +1200,25 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-401-004-sdaccess-fabric-roles.md",
     "example_profile": "native-vxlan-dataplane"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/003-sdwan-control-data-plane.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-003-sdwan-control-data-plane.md"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/044-qos-marking-and-policing.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-044-qos-marking-and-policing.md",
+    "example_profile": "native-qos-dataplane"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/021-secrets-management.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 85,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-021-secrets-management.md",
+    "example_profile": "native-secret-files"
   }
 }

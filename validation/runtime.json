@@ -43067,6 +43067,938 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T23:30:16Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/003-sdwan-control-data-plane.yaml",
+      "sha256": "d1d9d895ff7c19241cf521723606e17600522864c61ee822672dae204332ba56",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T11:47:50Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The direct control/transport address remains reachable independently of the service route.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/105/202 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "ping 198.18.0.1 repeat 3",
+          "expectation": "The direct control/transport address remains reachable independently of the service route.",
+          "passed": true,
+          "output": "\nR2#ping 198.18.0.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/137/206 ms\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip bgp summary",
+          "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+          "passed": true,
+          "output": "\nR1#show ip bgp summary\nBGP router identifier 192.0.2.1, local AS number 65001\nBGP table version is 3, main routing table version 3\n2 network entries using 288 bytes of memory\n2 path entries using 168 bytes of memory\n2/2 BGP path/bestpath attribute entries using 320 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 800 total bytes of memory\nBGP activity 2/0 prefixes, 2/0 paths, scan interval 60 secs\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.2      4        65002      16      15        3    0    0 00:00:40        1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+          "passed": true,
+          "output": "\nR2#show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65002\nBGP table version is 3, main routing table version 3\n2 network entries using 288 bytes of memory\n2 path entries using 168 bytes of memory\n2/2 BGP path/bestpath attribute entries using 320 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 800 total bytes of memory\nBGP activity 2/0 prefixes, 2/0 paths, scan interval 60 secs\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.1      4        65001      16      17        3    0    0 00:00:42        1\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"bgp 65001\", distance 20, metric 0\n  Tag 65002, type external\n  Last update from 172.16.0.2 00:00:41 ago\n  Routing Descriptor Blocks:\n  * 172.16.0.2, from 198.18.0.2, 00:00:41 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65002\n      MPLS label: none\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"bgp 65002\", distance 20, metric 0\n  Tag 65001, type external\n  Last update from 172.16.0.1 00:00:43 ago\n  Routing Descriptor Blocks:\n  * 172.16.0.1, from 198.18.0.1, 00:00:43 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65001\n      MPLS label: none\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip cef 192.0.2.2",
+          "expectation": "Actual CEF recursion selects the encrypted GRE tunnel rather than a plaintext underlay path.",
+          "passed": true,
+          "output": "\nR1#show ip cef 192.0.2.2\n192.0.2.2/32\n  nexthop 172.16.0.2 Tunnel0\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip cef 192.0.2.1",
+          "expectation": "Actual CEF recursion selects the encrypted GRE tunnel rather than a plaintext underlay path.",
+          "passed": true,
+          "output": "\nR2#show ip cef 192.0.2.1\n192.0.2.1/32\n  nexthop 172.16.0.1 Tunnel0\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The remote service loopback responds through the actual learned overlay path.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 12/13/17 ms\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "The remote service loopback responds through the actual learned overlay path.",
+          "passed": true,
+          "output": "\nR2#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 12/17/23 ms\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show crypto isakmp sa",
+          "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+          "passed": true,
+          "output": "\nR1#show crypto isakmp sa\nIPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n198.18.0.1      198.18.0.2      QM_IDLE           1002 ACTIVE\n198.18.0.2      198.18.0.1      QM_IDLE           1001 ACTIVE\n\nIPv6 Crypto ISAKMP SA\n\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 6, #pkts encrypt: 6, #pkts digest: 6\n    #pkts decaps: 6, #pkts decrypt: 6, #pkts verify: 6\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 6, #pkts encrypt: 6, #pkts digest: 6\n    #pkts decaps: 6, #pkts decrypt: 6, #pkts verify: 6\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR2#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-list extended CONTROL-DATA-ESP",
+          "passed": true,
+          "output": "\nR2(config)#ip access-list extended CONTROL-DATA-ESP\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "deny esp any any",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#deny esp any any\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "permit ip any any",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#permit ip any any\nR2(config-ext-nacl)#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(config-ext-nacl)#exit\nR2(config)#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nR2(config)#interface GigabitEthernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "ip access-group CONTROL-DATA-ESP in",
+          "passed": true,
+          "output": "\nR2(config-if)#ip access-group CONTROL-DATA-ESP in\nR2(config-if)#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The controlled fault blocks the protected service.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The direct control/transport address remains reachable independently of the service route.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/5/7 ms\nR1#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "node": "R2",
+          "command": "ping 198.18.0.1 repeat 3",
+          "expectation": "The direct control/transport address remains reachable independently of the service route.",
+          "passed": true,
+          "output": "\nR2#ping 198.18.0.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/5/8 ms\nR2#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "node": "R1",
+          "command": "show ip bgp summary",
+          "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+          "passed": true,
+          "output": "\nR1#show ip bgp summary\nBGP router identifier 192.0.2.1, local AS number 65001\nBGP table version is 3, main routing table version 3\n2 network entries using 288 bytes of memory\n2 path entries using 168 bytes of memory\n2/2 BGP path/bestpath attribute entries using 320 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 800 total bytes of memory\nBGP activity 2/0 prefixes, 2/0 paths, scan interval 60 secs\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.2      4        65002      26      25        3    0    0 00:01:10        1\nR1#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+          "passed": true,
+          "output": "\nR2#show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65002\nBGP table version is 3, main routing table version 3\n2 network entries using 288 bytes of memory\n2 path entries using 168 bytes of memory\n2/2 BGP path/bestpath attribute entries using 320 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 800 total bytes of memory\nBGP activity 2/0 prefixes, 2/0 paths, scan interval 60 secs\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.1      4        65001      26      26        3    0    0 00:01:12        1\nR2#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"bgp 65001\", distance 20, metric 0\n  Tag 65002, type external\n  Last update from 172.16.0.2 00:01:10 ago\n  Routing Descriptor Blocks:\n  * 172.16.0.2, from 198.18.0.2, 00:01:10 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65002\n      MPLS label: none\nR1#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "node": "R2",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"bgp 65002\", distance 20, metric 0\n  Tag 65001, type external\n  Last update from 172.16.0.1 00:01:12 ago\n  Routing Descriptor Blocks:\n  * 172.16.0.1, from 198.18.0.1, 00:01:12 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65001\n      MPLS label: none\nR2#"
+        },
+        {
+          "phase": "block only encrypted data while control remains up",
+          "node": "R2",
+          "command": "show access-lists CONTROL-DATA-ESP",
+          "expectation": "The actual encrypted-data deny counter increments while BGP remains established.",
+          "passed": true,
+          "output": "\nR2#show access-lists CONTROL-DATA-ESP\nExtended IP access list CONTROL-DATA-ESP\n    10 deny esp any any (3 matches)\n    20 permit ip any any (16 matches)\nR2#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nR2(config)#interface GigabitEthernet0/0\nR2(config-if)#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no ip access-group CONTROL-DATA-ESP in",
+          "passed": true,
+          "output": "\nR2(config-if)#no ip access-group CONTROL-DATA-ESP in\nR2(config-if)#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config-if)#end\nR2#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The direct control/transport address remains reachable independently of the service route.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/5/7 ms\nR1#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "node": "R2",
+          "command": "ping 198.18.0.1 repeat 3",
+          "expectation": "The direct control/transport address remains reachable independently of the service route.",
+          "passed": true,
+          "output": "\nR2#ping 198.18.0.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 5/6/9 ms\nR2#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "node": "R1",
+          "command": "show ip bgp summary",
+          "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+          "passed": true,
+          "output": "\nR1#show ip bgp summary\nBGP router identifier 192.0.2.1, local AS number 65001\nBGP table version is 3, main routing table version 3\n2 network entries using 288 bytes of memory\n2 path entries using 168 bytes of memory\n2/2 BGP path/bestpath attribute entries using 320 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 800 total bytes of memory\nBGP activity 2/0 prefixes, 2/0 paths, scan interval 60 secs\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.2      4        65002      30      29        3    0    0 00:01:22        1\nR1#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+          "passed": true,
+          "output": "\nR2#show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65002\nBGP table version is 3, main routing table version 3\n2 network entries using 288 bytes of memory\n2 path entries using 168 bytes of memory\n2/2 BGP path/bestpath attribute entries using 320 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 800 total bytes of memory\nBGP activity 2/0 prefixes, 2/0 paths, scan interval 60 secs\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.1      4        65001      30      30        3    0    0 00:01:24        1\nR2#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"bgp 65001\", distance 20, metric 0\n  Tag 65002, type external\n  Last update from 172.16.0.2 00:01:22 ago\n  Routing Descriptor Blocks:\n  * 172.16.0.2, from 198.18.0.2, 00:01:22 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65002\n      MPLS label: none\nR1#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "node": "R2",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"bgp 65002\", distance 20, metric 0\n  Tag 65001, type external\n  Last update from 172.16.0.1 00:01:24 ago\n  Routing Descriptor Blocks:\n  * 172.16.0.1, from 198.18.0.1, 00:01:24 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65001\n      MPLS label: none\nR2#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "node": "R1",
+          "command": "show ip cef 192.0.2.2",
+          "expectation": "Actual CEF recursion selects the encrypted GRE tunnel rather than a plaintext underlay path.",
+          "passed": true,
+          "output": "\nR1#show ip cef 192.0.2.2\n192.0.2.2/32\n  nexthop 172.16.0.2 Tunnel0\nR1#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "node": "R2",
+          "command": "show ip cef 192.0.2.1",
+          "expectation": "Actual CEF recursion selects the encrypted GRE tunnel rather than a plaintext underlay path.",
+          "passed": true,
+          "output": "\nR2#show ip cef 192.0.2.1\n192.0.2.1/32\n  nexthop 172.16.0.1 Tunnel0\nR2#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The remote service loopback responds through the actual learned overlay path.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 11/13/19 ms\nR1#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "node": "R2",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "The remote service loopback responds through the actual learned overlay path.",
+          "passed": true,
+          "output": "\nR2#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 12/14/17 ms\nR2#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "node": "R1",
+          "command": "show crypto isakmp sa",
+          "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+          "passed": true,
+          "output": "\nR1#show crypto isakmp sa\nIPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n198.18.0.1      198.18.0.2      QM_IDLE           1002 ACTIVE\n198.18.0.2      198.18.0.1      QM_IDLE           1001 ACTIVE\n\nIPv6 Crypto ISAKMP SA\n\nR1#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "node": "R1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 15, #pkts encrypt: 15, #pkts digest: 15\n    #pkts decaps: 12, #pkts decrypt: 12, #pkts verify: 12\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR1#"
+        },
+        {
+          "phase": "restore the encrypted data plane",
+          "node": "R2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 12, #pkts encrypt: 12, #pkts digest: 12\n    #pkts decaps: 12, #pkts decrypt: 12, #pkts verify: 12\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR2#"
+        },
+        {
+          "phase": "withdraw only control information",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "withdraw only control information",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "router bgp 65001",
+          "passed": true,
+          "output": "\nR1(config)#router bgp 65001\nR1(config-router)#"
+        },
+        {
+          "phase": "withdraw only control information",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "neighbor 198.18.0.2 shutdown",
+          "passed": true,
+          "output": "\nR1(config-router)#neighbor 198.18.0.2 shutdown\nR1(config-router)#"
+        },
+        {
+          "phase": "withdraw only control information",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-router)#end\nR1#"
+        },
+        {
+          "phase": "withdraw only control information",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "Actual loss of BGP information removes the service route, with no static/default fallback.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\n% Subnet not in table\nR1#"
+        },
+        {
+          "phase": "withdraw only control information",
+          "node": "R2",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "Actual loss of BGP information removes the service route, with no static/default fallback.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.1\n% Subnet not in table\nR2#"
+        },
+        {
+          "phase": "withdraw only control information",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The controlled fault blocks the protected service.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n...\nSuccess rate is 0 percent (0/3)\nR1#"
+        },
+        {
+          "phase": "withdraw only control information",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The direct control/transport address remains reachable independently of the service route.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/7 ms\nR1#"
+        },
+        {
+          "phase": "withdraw only control information",
+          "node": "R2",
+          "command": "ping 198.18.0.1 repeat 3",
+          "expectation": "The direct control/transport address remains reachable independently of the service route.",
+          "passed": true,
+          "output": "\nR2#ping 198.18.0.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/6 ms\nR2#"
+        },
+        {
+          "phase": "withdraw only control information",
+          "node": "R1",
+          "command": "ping 172.16.0.2 source Tunnel0 repeat 3",
+          "expectation": "Encrypted tunnel-peer reachability remains independently usable.",
+          "passed": true,
+          "output": "\nR1#ping 172.16.0.2 source Tunnel0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 172.16.0.2, timeout is 2 seconds:\nPacket sent with a source address of 172.16.0.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 13/13/14 ms\nR1#"
+        },
+        {
+          "phase": "withdraw only control information",
+          "node": "R2",
+          "command": "ping 172.16.0.1 source Tunnel0 repeat 3",
+          "expectation": "Encrypted tunnel-peer reachability remains independently usable.",
+          "passed": true,
+          "output": "\nR2#ping 172.16.0.1 source Tunnel0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 172.16.0.1, timeout is 2 seconds:\nPacket sent with a source address of 172.16.0.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 11/14/20 ms\nR2#"
+        },
+        {
+          "phase": "withdraw only control information",
+          "node": "R1",
+          "command": "show crypto isakmp sa",
+          "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+          "passed": true,
+          "output": "\nR1#show crypto isakmp sa\nIPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n198.18.0.1      198.18.0.2      QM_IDLE           1002 ACTIVE\n198.18.0.2      198.18.0.1      QM_IDLE           1001 ACTIVE\n\nIPv6 Crypto ISAKMP SA\n\nR1#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "router bgp 65001",
+          "passed": true,
+          "output": "\nR1(config)#router bgp 65001\nR1(config-router)#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no neighbor 198.18.0.2 shutdown",
+          "passed": true,
+          "output": "\nR1(config-router)#no neighbor 198.18.0.2 shutdown\nR1(config-router)#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-router)#end\nR1#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "node": "R1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The direct control/transport address remains reachable independently of the service route.",
+          "passed": true,
+          "output": "\nR1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/5/8 ms\nR1#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "node": "R2",
+          "command": "ping 198.18.0.1 repeat 3",
+          "expectation": "The direct control/transport address remains reachable independently of the service route.",
+          "passed": true,
+          "output": "\nR2#ping 198.18.0.1 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.1, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/5 ms\nR2#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "node": "R1",
+          "command": "show ip bgp summary",
+          "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+          "passed": true,
+          "output": "\nR1#show ip bgp summary\nBGP router identifier 192.0.2.1, local AS number 65001\nBGP table version is 5, main routing table version 5\n2 network entries using 288 bytes of memory\n2 path entries using 168 bytes of memory\n2/2 BGP path/bestpath attribute entries using 320 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 800 total bytes of memory\nBGP activity 3/1 prefixes, 3/1 paths, scan interval 60 secs\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.2      4        65002       6       6        5    0    0 00:00:03        1\nR1#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The actual independent underlay BGP session is established and receives the peer service prefix.",
+          "passed": true,
+          "output": "\nR2#show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65002\nBGP table version is 5, main routing table version 5\n2 network entries using 288 bytes of memory\n2 path entries using 168 bytes of memory\n2/2 BGP path/bestpath attribute entries using 320 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 800 total bytes of memory\nBGP activity 2/0 prefixes, 3/1 paths, scan interval 60 secs\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.1      4        65001       6       6        5    0    0 00:00:05        1\nR2#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "node": "R1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+          "passed": true,
+          "output": "\nR1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"bgp 65001\", distance 20, metric 0\n  Tag 65002, type external\n  Last update from 172.16.0.2 00:00:06 ago\n  Routing Descriptor Blocks:\n  * 172.16.0.2, from 198.18.0.2, 00:00:06 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65002\n      MPLS label: none\nR1#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "node": "R2",
+          "command": "show ip route 192.0.2.1",
+          "expectation": "The service route was learned through BGP and selects the explicitly declared overlay next hop.",
+          "passed": true,
+          "output": "\nR2#show ip route 192.0.2.1\nRouting entry for 192.0.2.1/32\n  Known via \"bgp 65002\", distance 20, metric 0\n  Tag 65001, type external\n  Last update from 172.16.0.1 00:00:08 ago\n  Routing Descriptor Blocks:\n  * 172.16.0.1, from 198.18.0.1, 00:00:08 ago\n      Route metric is 0, traffic share count is 1\n      AS Hops 1\n      Route tag 65001\n      MPLS label: none\nR2#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "node": "R1",
+          "command": "show ip cef 192.0.2.2",
+          "expectation": "Actual CEF recursion selects the encrypted GRE tunnel rather than a plaintext underlay path.",
+          "passed": true,
+          "output": "\nR1#show ip cef 192.0.2.2\n192.0.2.2/32\n  nexthop 172.16.0.2 Tunnel0\nR1#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "node": "R2",
+          "command": "show ip cef 192.0.2.1",
+          "expectation": "Actual CEF recursion selects the encrypted GRE tunnel rather than a plaintext underlay path.",
+          "passed": true,
+          "output": "\nR2#show ip cef 192.0.2.1\n192.0.2.1/32\n  nexthop 172.16.0.1 Tunnel0\nR2#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "node": "R1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "The remote service loopback responds through the actual learned overlay path.",
+          "passed": true,
+          "output": "\nR1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 11/13/18 ms\nR1#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "node": "R2",
+          "command": "ping 192.0.2.1 source Loopback0 repeat 3",
+          "expectation": "The remote service loopback responds through the actual learned overlay path.",
+          "passed": true,
+          "output": "\nR2#ping 192.0.2.1 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.1, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.2 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 12/13/16 ms\nR2#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "node": "R1",
+          "command": "show crypto isakmp sa",
+          "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+          "passed": true,
+          "output": "\nR1#show crypto isakmp sa\nIPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n198.18.0.1      198.18.0.2      QM_IDLE           1002 ACTIVE\n198.18.0.2      198.18.0.1      QM_IDLE           1001 ACTIVE\n\nIPv6 Crypto ISAKMP SA\n\nR1#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "node": "R1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 27, #pkts encrypt: 27, #pkts digest: 27\n    #pkts decaps: 24, #pkts decrypt: 24, #pkts verify: 24\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR1#"
+        },
+        {
+          "phase": "restore control and service forwarding",
+          "node": "R2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nR2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 24, #pkts encrypt: 24, #pkts digest: 24\n    #pkts decaps: 24, #pkts decrypt: 24, #pkts verify: 24\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nR2#"
+        }
+      ],
+      "plan_sha256": "ddd55160b82cda083cd7d1fea0b0fffb12972904254bda9ac2c59c2611ca045a",
+      "startup_states": {
+        "R1": "STARTED",
+        "R2": "STARTED"
+      },
+      "images": {
+        "R1": "iosv-159-3-m12",
+        "R2": "iosv-159-3-m12"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "R1",
+        "R2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T11:54:16Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/044-qos-marking-and-policing.yaml",
+      "sha256": "13aa354f9296b3060b03e37990bf41e51cb8d86da81c35fdd508e42edf2d17a6",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T11:54:18Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/q.py marked",
+          "expectation": "Fresh receiver-side UDP sequence and IP_RECVTOS observations must meet the exact marked contract while all four independent control datagrams arrive unmarked.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/q.py marked\n{\"control_received\": 4, \"data_received\": 16, \"fresh_generation\": true, \"mode\": \"marked\", \"observed_control_tos\": [0], \"observed_data_tos\": [184], \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show policy-map interface Ethernet0/1 output",
+          "expectation": "The forwarding router also reports actual packet marking in its attached egress policy, independently of receiver TOS evidence.",
+          "passed": true,
+          "output": "\nR1#show policy-map interface Ethernet0/1 output\n Ethernet0/1 \n\n  Service-policy output: CML-MARK\n\n    Class-map: CML-DATA (match-all)  \n      16 packets, 16672 bytes\n      5 minute offered rate 0000 bps, drop rate 0000 bps\n      Match: access-group name CML-QOS-DATA\n      QoS Set\n        dscp ef\n          Packets marked 16\n\n    Class-map: class-default (match-any)  \n      62 packets, 8202 bytes\n      5 minute offered rate 0000 bps, drop rate 0000 bps\n      Match: any \nR1#"
+        },
+        {
+          "phase": "withdraw only actual egress marking",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "withdraw only actual egress marking",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/1",
+          "passed": true,
+          "output": "\nR1(config)#interface Ethernet0/1\nR1(config-if)#"
+        },
+        {
+          "phase": "withdraw only actual egress marking",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no service-policy output CML-MARK",
+          "passed": true,
+          "output": "\nR1(config-if)#no service-policy output CML-MARK\nR1(config-if)#"
+        },
+        {
+          "phase": "withdraw only actual egress marking",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "withdraw only actual egress marking",
+          "node": "CLIENT",
+          "command": "python3 /lab/q.py unmarked",
+          "expectation": "Fresh receiver-side UDP sequence and IP_RECVTOS observations must meet the exact unmarked contract while all four independent control datagrams arrive unmarked.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/q.py unmarked\n{\"control_received\": 4, \"data_received\": 16, \"fresh_generation\": true, \"mode\": \"unmarked\", \"observed_control_tos\": [0], \"observed_data_tos\": [0], \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore receiver-observed EF marking",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore receiver-observed EF marking",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/1",
+          "passed": true,
+          "output": "\nR1(config)#interface Ethernet0/1\nR1(config-if)#"
+        },
+        {
+          "phase": "restore receiver-observed EF marking",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "service-policy output CML-MARK",
+          "passed": true,
+          "output": "\nR1(config-if)#service-policy output CML-MARK\nR1(config-if)#"
+        },
+        {
+          "phase": "restore receiver-observed EF marking",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "restore receiver-observed EF marking",
+          "node": "CLIENT",
+          "command": "python3 /lab/q.py marked",
+          "expectation": "Fresh receiver-side UDP sequence and IP_RECVTOS observations must meet the exact marked contract while all four independent control datagrams arrive unmarked.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/q.py marked\n{\"control_received\": 4, \"data_received\": 16, \"fresh_generation\": true, \"mode\": \"marked\", \"observed_control_tos\": [0], \"observed_data_tos\": [184], \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "attach the selective data policer",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "attach the selective data policer",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR1(config)#interface Ethernet0/0\nR1(config-if)#"
+        },
+        {
+          "phase": "attach the selective data policer",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "service-policy input CML-POLICE",
+          "passed": true,
+          "output": "\nR1(config-if)#service-policy input CML-POLICE\nR1(config-if)#"
+        },
+        {
+          "phase": "attach the selective data policer",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "attach the selective data policer",
+          "node": "R1",
+          "command": "show policy-map interface Ethernet0/0 input",
+          "expectation": "Before the selected burst, the newly attached real policer has no historical exceeded packets.",
+          "passed": true,
+          "output": "\nR1#show policy-map interface Ethernet0/0 input\n Ethernet0/0 \n\n  Service-policy input: CML-POLICE\n\n    Class-map: CML-DATA (match-all)  \n      0 packets, 0 bytes\n      5 minute offered rate 0000 bps, drop rate 0000 bps\n      Match: access-group name CML-QOS-DATA\n      police:\n          cir 8000 bps, bc 1500 bytes\n        conformed 0 packets, 0 bytes; actions:\n          transmit \n        exceeded 0 packets, 0 bytes; actions:\n          drop \n        conformed 0000 bps, exceeded 0000 bps\n\n    Class-map: class-default (match-any)  \n      0 packets, 0 bytes\n      5 minute offered rate 0000 bps, drop rate 0000 bps\n      Match: any \nR1#"
+        },
+        {
+          "phase": "attach the selective data policer",
+          "node": "CLIENT",
+          "command": "python3 /lab/q.py limited",
+          "expectation": "Fresh receiver-side UDP sequence and IP_RECVTOS observations must meet the exact limited contract while all four independent control datagrams arrive unmarked.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/q.py limited\n{\"control_received\": 4, \"data_received\": 1, \"fresh_generation\": true, \"mode\": \"limited\", \"observed_control_tos\": [0], \"observed_data_tos\": [184], \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "attach the selective data policer",
+          "node": "R1",
+          "command": "show policy-map interface Ethernet0/0 input",
+          "expectation": "Actual fresh conform/exceed packet counters distinguish policing drops from receiver timing or stale totals.",
+          "passed": true,
+          "output": "\nR1#show policy-map interface Ethernet0/0 input\n Ethernet0/0 \n\n  Service-policy input: CML-POLICE\n\n    Class-map: CML-DATA (match-all)  \n      16 packets, 16672 bytes\n      5 minute offered rate 0000 bps, drop rate 0000 bps\n      Match: access-group name CML-QOS-DATA\n      police:\n          cir 8000 bps, bc 1500 bytes\n        conformed 1 packets, 1042 bytes; actions:\n          transmit \n        exceeded 15 packets, 15630 bytes; actions:\n          drop \n        conformed 0000 bps, exceeded 0000 bps\n\n    Class-map: class-default (match-any)  \n      40 packets, 4119 bytes\n      5 minute offered rate 0000 bps, drop rate 0000 bps\n      Match: any \nR1#"
+        },
+        {
+          "phase": "restore complete marked data delivery",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore complete marked data delivery",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/0",
+          "passed": true,
+          "output": "\nR1(config)#interface Ethernet0/0\nR1(config-if)#"
+        },
+        {
+          "phase": "restore complete marked data delivery",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no service-policy input CML-POLICE",
+          "passed": true,
+          "output": "\nR1(config-if)#no service-policy input CML-POLICE\nR1(config-if)#"
+        },
+        {
+          "phase": "restore complete marked data delivery",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "restore complete marked data delivery",
+          "node": "CLIENT",
+          "command": "python3 /lab/q.py marked",
+          "expectation": "Fresh receiver-side UDP sequence and IP_RECVTOS observations must meet the exact marked contract while all four independent control datagrams arrive unmarked.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/q.py marked\n{\"control_received\": 4, \"data_received\": 16, \"fresh_generation\": true, \"mode\": \"marked\", \"observed_control_tos\": [0], \"observed_data_tos\": [184], \"status\": \"passed\"}\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "6230107b1bdfc970e329c0d16c24230cfb2b76b792163849aed90ef0ec0b75fe",
+      "startup_states": {
+        "CLIENT": "BOOTED",
+        "R1": "BOOTED",
+        "SERVER": "STARTED"
+      },
+      "images": {
+        "CLIENT": "net-tools-2-10-1-3",
+        "R1": "iol-xe-17-18-02",
+        "SERVER": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "SERVER"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T11:55:21Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/021-secrets-management.yaml",
+      "sha256": "824026e31e49396a51b27d90f35afc57431bbb2e4a57647ffe41743301c34d95",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T11:55:24Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "TOOLS",
+          "command": "python3 /lab/s.py baseline",
+          "expectation": "Real OS processes use separate UIDs/groups. The service reads its root-owned group-readable key and authenticates; the untrusted process cannot read or write it and receives HTTP 401. The service cannot write the key either. Actual service metadata must not contain the active key.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/s.py baseline\n{\"secrets_logged\": false, \"service_api_status\": 200, \"service_uid\": 1500, \"status\": \"passed\", \"untrusted_api_status\": 401, \"untrusted_file_denied\": true, \"untrusted_uid\": 1501}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "expose only the fixture credential read mode",
+          "kind": "configuration",
+          "node": "TOOLS",
+          "command": "python3 /lab/s.py expose",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/s.py expose\n{\"secrets_logged\": false, \"status\": \"passed\", \"untrusted_api_status\": 200, \"untrusted_file_denied\": false, \"vulnerability_observed\": true}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "expose only the fixture credential read mode",
+          "node": "TOOLS",
+          "command": "python3 /lab/s.py exposed",
+          "expectation": "The separate untrusted UID actually reads the deliberately world-readable credential and successfully authenticates against the live service; a permission string alone cannot pass.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/s.py exposed\n{\"secrets_logged\": false, \"status\": \"passed\", \"untrusted_api_status\": 200, \"vulnerability_observed\": true}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restore scoped file access and rotate the compromised value",
+          "kind": "configuration",
+          "node": "TOOLS",
+          "command": "python3 /lab/s.py repair",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/s.py repair\n{\"old_credential_api_status\": 401, \"rotation_invalidated_cached_key\": true, \"secrets_logged\": false, \"service_api_status\": 200, \"status\": \"passed\", \"untrusted_file_denied\": true}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restore scoped file access and rotate the compromised value",
+          "node": "TOOLS",
+          "command": "python3 /lab/s.py baseline",
+          "expectation": "Real OS processes use separate UIDs/groups. The service reads its root-owned group-readable key and authenticates; the untrusted process cannot read or write it and receives HTTP 401. The service cannot write the key either. Actual service metadata must not contain the active key.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/s.py baseline\n{\"secrets_logged\": false, \"service_api_status\": 200, \"service_uid\": 1500, \"status\": \"passed\", \"untrusted_api_status\": 401, \"untrusted_file_denied\": true, \"untrusted_uid\": 1501}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restore scoped file access and rotate the compromised value",
+          "node": "TOOLS",
+          "command": "python3 /lab/s.py recovered",
+          "expectation": "Restored ownership/mode denies fresh untrusted reads; replay of the actually captured prior key fails at the live service while the legitimate reader authenticates with the replacement.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/s.py recovered\n{\"old_credential_api_status\": 401, \"rotation_invalidated_cached_key\": true, \"secrets_logged\": false, \"service_api_status\": 200, \"status\": \"passed\", \"untrusted_file_denied\": true}\nroot@TOOLS:~# "
+        }
+      ],
+      "plan_sha256": "ed2f48cf5cf05259527f65e5ff5b6ecc086fc591ba1c942dba5cef35f62cb434",
+      "startup_states": {
+        "TOOLS": "BOOTED"
+      },
+      "images": {
+        "TOOLS": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T11:55:49Z"
     }
   ]
 }
