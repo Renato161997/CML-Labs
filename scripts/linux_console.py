@@ -11,7 +11,15 @@ import time
 from console_protocol import response_complete
 
 NATIVE_LINUX = frozenset(
-    {"net-tools", "radius", "syslog", "tacplus", "cml-labs-toolbox", "cml-labs-inspection"}
+    {
+        "net-tools",
+        "radius",
+        "syslog",
+        "tacplus",
+        "cml-labs-toolbox",
+        "cml-labs-inspection",
+        "cml-labs-services",
+    }
 )
 NATIVE_CONSOLE_PORT = {
     "net-tools": 0,
@@ -20,6 +28,7 @@ NATIVE_CONSOLE_PORT = {
     "tacplus": 1,
     "cml-labs-toolbox": 0,
     "cml-labs-inspection": 0,
+    "cml-labs-services": 0,
 }
 ROOT_PROMPT = r"(?:root@[^:\n]+:[^\n#]*#|/[^\n#]*#|bash-[\d.]+#)"
 

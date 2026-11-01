@@ -291,6 +291,11 @@ NATIVE_PROFILES["native-policy-as-code"] = {
 }
 
 
+NATIVE_PROFILES["native-openapi-contract"] = {
+    role: {"/lab/a.py": "examples/automation/openapi_contract.py"} for role in ("SERVER", "CLIENT")
+}
+
+
 def native_sources(data, metadata):
     """Validate registered source payloads without executing a shell or guest code."""
     profile = NATIVE_PROFILES.get(metadata.get("example_profile"))

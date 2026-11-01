@@ -26832,5 +26832,357 @@
         ]
       }
     ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/012-api-contract-openapi.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/a.py baseline",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+        "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+        "command_timeout": 30,
+        "attempts": 3,
+        "interval_seconds": 2
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/a.py auth-errors",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-errors\")",
+        "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+        "command_timeout": 30,
+        "attempts": 1,
+        "interval_seconds": 2
+      },
+      {
+        "node": "SERVER",
+        "command": "cat /sys/class/net/eth1/carrier",
+        "pattern": "(?m)^1\\s*$",
+        "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim."
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping -n -c 3 -W 2 198.18.0.1",
+        "pattern": "3 packets transmitted, 3 received",
+        "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+        "command_timeout": 15
+      }
+    ],
+    "transitions": [
+      {
+        "name": "return an invalid response field type",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/a.py schema"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"source_mode\": \"schema\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py schema-bad",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"schema-bad\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          },
+          {
+            "node": "SERVER",
+            "command": "cat /sys/class/net/eth1/carrier",
+            "pattern": "(?m)^1\\s*$",
+            "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim."
+          }
+        ]
+      },
+      {
+        "name": "recover after schema fault",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/a.py good"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"source_mode\": \"good\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          }
+        ]
+      },
+      {
+        "name": "return an undeclared response status",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/a.py status"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"source_mode\": \"status\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py status-bad",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"status-bad\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          },
+          {
+            "node": "SERVER",
+            "command": "cat /sys/class/net/eth1/carrier",
+            "pattern": "(?m)^1\\s*$",
+            "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim."
+          }
+        ]
+      },
+      {
+        "name": "recover after status fault",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/a.py good"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"source_mode\": \"good\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          }
+        ]
+      },
+      {
+        "name": "return an incorrect media type",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/a.py media"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"source_mode\": \"media\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py media-bad",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"media-bad\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          },
+          {
+            "node": "SERVER",
+            "command": "cat /sys/class/net/eth1/carrier",
+            "pattern": "(?m)^1\\s*$",
+            "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim."
+          }
+        ]
+      },
+      {
+        "name": "recover after media fault",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/a.py good"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"source_mode\": \"good\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          }
+        ]
+      },
+      {
+        "name": "change the remote agreed document",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/a.py contract"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"source_mode\": \"contract\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py contract-bad",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"contract-bad\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          },
+          {
+            "node": "SERVER",
+            "command": "cat /sys/class/net/eth1/carrier",
+            "pattern": "(?m)^1\\s*$",
+            "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim."
+          }
+        ]
+      },
+      {
+        "name": "recover after contract fault",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/a.py good"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"source_mode\": \"good\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          }
+        ]
+      },
+      {
+        "name": "demonstrate a schema-valid but factually false claim",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/a.py lie"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"source_mode\": \"lie\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py semantic-lie",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"semantic-lie\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "SERVER",
+            "command": "cat /sys/class/net/eth1/carrier",
+            "pattern": "(?m)^1\\s*$",
+            "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          }
+        ]
+      },
+      {
+        "name": "restore actual interface facts",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/a.py good"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"source_mode\": \"good\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py baseline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 3,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/a.py auth-errors",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-errors\")",
+            "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "SERVER",
+            "command": "cat /sys/class/net/eth1/carrier",
+            "pattern": "(?m)^1\\s*$",
+            "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim."
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+            "command_timeout": 15
+          }
+        ]
+      }
+    ]
   }
 }
