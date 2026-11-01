@@ -3527,26 +3527,25 @@
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/firewall/038-firewall-policy-review-cleanup.yaml",
-      "title": "Firewall Policy Review Cleanup",
+      "title": "Firewall Policy Review: Shadowed Rules, Cleanup and Rollback",
       "track": "350-701",
       "topic": "firewall",
-      "nodes": 6,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe",
+        "net-tools"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 100,
+      "workbook": "docs/workbooks/350-701-038-firewall-policy-review-cleanup.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "21132bf2c0503ef67a0240dde4861a9fa49213ce2a00147db7c445e451d773a6"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T12:05:43Z",
+      "sha256": "e2a2c2a9165a5980d1b67a363c62bf747910e83e60046955c27a7b6db9fe6e72"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/incident-response/041-suspicious-host-containment.yaml",

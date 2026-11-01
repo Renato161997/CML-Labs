@@ -24370,5 +24370,373 @@
         ]
       }
     ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/firewall/038-firewall-policy-review-cleanup.yaml": {
+    "checks": [
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.20\")(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.20\")(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+        "pattern": "(?s)(?=.*\"reachable\": false)",
+        "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "ping -c 3 -W 1 198.18.20.20",
+        "pattern": "3(?: packets)? received,\\s+0% packet loss",
+        "expectation": "The independent routed ICMP control continues to receive all three replies.",
+        "attempts": 5,
+        "interval_seconds": 2,
+        "command_timeout": 15
+      },
+      {
+        "node": "FW",
+        "command": "show running-config | include ip access-group",
+        "pattern": "ip access-group REVIEW-IN in",
+        "expectation": "The actual ingress remains bound to the reviewed policy; the legacy fixture is not applied.",
+        "absent_pattern": "LEGACY-NOT-BOUND"
+      },
+      {
+        "node": "FW",
+        "command": "show access-lists REVIEW-IN",
+        "pattern": "(?s)(?=.*10 permit tcp 198\\.18\\.10\\.0[^\\n]*eq 8080[^\\n]*\\([1-9][0-9]* match)(?=.*20 permit tcp host 198\\.18\\.10\\.10)(?=.*30 deny tcp 198\\.18\\.10\\.0[^\\n]*eq 9090[^\\n]*\\([1-9][0-9]* match)(?=.*40 deny tcp host 198\\.18\\.10\\.10)",
+        "expectation": "The first broader rules count actual allowed/denied traffic; the later narrower rules are present but cannot be reached for their covered tuple.",
+        "absent_pattern": "(?m)^\\s*(?:20|40) [^\\n]*\\([1-9][0-9]* match"
+      },
+      {
+        "node": "FW",
+        "command": "show ip access-lists",
+        "pattern": "(?s)(?=.*Extended IP access list REVIEW-IN)(?=.*Extended IP access list LEGACY-NOT-BOUND)",
+        "expectation": "Both reviewed and explicitly unbound legacy ACL objects exist in the initial source."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "remove only the explicitly unbound legacy ACL",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "no ip access-list extended LEGACY-NOT-BOUND",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.20\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.20\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -c 3 -W 1 198.18.20.20",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The independent routed ICMP control continues to receive all three replies.",
+            "attempts": 5,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "FW",
+            "command": "show running-config | include ip access-group",
+            "pattern": "ip access-group REVIEW-IN in",
+            "expectation": "The actual ingress remains bound to the reviewed policy; the legacy fixture is not applied.",
+            "absent_pattern": "LEGACY-NOT-BOUND"
+          },
+          {
+            "node": "FW",
+            "command": "show ip access-lists",
+            "pattern": "Extended IP access list REVIEW-IN",
+            "expectation": "The live reviewed policy remains while only the unbound legacy object disappears.",
+            "absent_pattern": "LEGACY-NOT-BOUND"
+          }
+        ]
+      },
+      {
+        "name": "remove only the two known shadowed sequences",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended REVIEW-IN",
+          "no 20",
+          "no 40",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.20\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.20\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -c 3 -W 1 198.18.20.20",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The independent routed ICMP control continues to receive all three replies.",
+            "attempts": 5,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "FW",
+            "command": "show running-config | include ip access-group",
+            "pattern": "ip access-group REVIEW-IN in",
+            "expectation": "The actual ingress remains bound to the reviewed policy; the legacy fixture is not applied.",
+            "absent_pattern": "LEGACY-NOT-BOUND"
+          },
+          {
+            "node": "FW",
+            "command": "show ip access-lists",
+            "pattern": "Extended IP access list REVIEW-IN",
+            "expectation": "The live reviewed policy remains while only the unbound legacy object disappears.",
+            "absent_pattern": "LEGACY-NOT-BOUND"
+          },
+          {
+            "node": "FW",
+            "command": "show access-lists REVIEW-IN",
+            "pattern": "(?s)(?=.*10 permit tcp 198\\.18\\.10\\.0)(?=.*30 deny tcp 198\\.18\\.10\\.0)(?=.*50 permit icmp any any)(?=.*60 deny ip any any)",
+            "expectation": "The retained allow, deny, control and default-deny entries remain; only the known shadowed sequences were removed.",
+            "absent_pattern": "(?m)^\\s*(?:20|40)\\s+(?:permit|deny)"
+          }
+        ]
+      },
+      {
+        "name": "withdraw a retained necessary application permit",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended REVIEW-IN",
+          "no 10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.20\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.20\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -c 3 -W 1 198.18.20.20",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The independent routed ICMP control continues to receive all three replies.",
+            "attempts": 5,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "FW",
+            "command": "show running-config | include ip access-group",
+            "pattern": "ip access-group REVIEW-IN in",
+            "expectation": "The actual ingress remains bound to the reviewed policy; the legacy fixture is not applied.",
+            "absent_pattern": "LEGACY-NOT-BOUND"
+          },
+          {
+            "node": "FW",
+            "command": "show access-lists REVIEW-IN",
+            "pattern": "60 deny ip any any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "The actual default-deny counter observes the application requests after the required permit disappears."
+          }
+        ]
+      },
+      {
+        "name": "restore the clean required application behavior",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended REVIEW-IN",
+          "10 permit tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 8080",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.20\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.20\\.20\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -c 3 -W 1 198.18.20.20",
+            "pattern": "3(?: packets)? received,\\s+0% packet loss",
+            "expectation": "The independent routed ICMP control continues to receive all three replies.",
+            "attempts": 5,
+            "interval_seconds": 2,
+            "command_timeout": 15
+          },
+          {
+            "node": "FW",
+            "command": "show running-config | include ip access-group",
+            "pattern": "ip access-group REVIEW-IN in",
+            "expectation": "The actual ingress remains bound to the reviewed policy; the legacy fixture is not applied.",
+            "absent_pattern": "LEGACY-NOT-BOUND"
+          },
+          {
+            "node": "FW",
+            "command": "show ip access-lists",
+            "pattern": "Extended IP access list REVIEW-IN",
+            "expectation": "The live reviewed policy remains while only the unbound legacy object disappears.",
+            "absent_pattern": "LEGACY-NOT-BOUND"
+          },
+          {
+            "node": "FW",
+            "command": "show access-lists REVIEW-IN",
+            "pattern": "(?s)(?=.*10 permit tcp 198\\.18\\.10\\.0)(?=.*30 deny tcp 198\\.18\\.10\\.0)(?=.*50 permit icmp any any)(?=.*60 deny ip any any)",
+            "expectation": "The retained allow, deny, control and default-deny entries remain; only the known shadowed sequences were removed.",
+            "absent_pattern": "(?m)^\\s*(?:20|40)\\s+(?:permit|deny)"
+          }
+        ]
+      }
+    ]
   }
 }
