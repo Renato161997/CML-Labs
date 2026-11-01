@@ -47729,6 +47729,676 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T18:30:13Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/022-secure-api-client.yaml",
+      "sha256": "9d51443fe3869aae0847540f780c905facd03c23091e076edc359e9224b2e298",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T18:43:22Z",
+      "checks": [
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto key mypubkey rsa",
+          "passed": true,
+          "output": "\nAPI#show crypto key mypubkey rsa\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "clock set 18:40:09 1 Nov 2026",
+          "passed": true,
+          "output": "\nAPI#clock set 18:40:09 1 Nov 2026\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "debug crypto pki transactions",
+          "passed": true,
+          "output": "\nAPI#debug crypto pki transactions\nCrypto PKI Trans debugging is on\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nAPI#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto key generate rsa general-keys label LABSSH modulus 3072",
+          "passed": true,
+          "output": "\nAPI(config)#crypto key generate rsa general-keys label LABSSH modulus 3072\nThe name for the keys will be: LABSSH\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\n[OK] (elapsed time was 0 seconds)\n\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto key generate rsa general-keys label LABTLS modulus 3072",
+          "passed": true,
+          "output": "\nAPI(config)#crypto key generate rsa general-keys label LABTLS modulus 3072\nThe name for the keys will be: LABTLS\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\nNov  1 18:40:11.597: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH has been generated or imported by crypto-engine\nNov  1 18:40:11.607: %SSH-5-ENABLED: SSH 2.0 has been enabled\nNov  1 18:40:11.918: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH.server has been generated or imported by crypto-engine\n[OK] (elapsed time was 2 seconds)\n\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip ssh rsa keypair-name LABSSH",
+          "passed": true,
+          "output": "\nAPI(config)#ip ssh rsa keypair-name LABSSH\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto pki trustpoint LABTLS",
+          "passed": true,
+          "output": "\nAPI(config)#crypto pki trustpoint LABTLS\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "enrollment selfsigned",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#enrollment selfsigned\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "subject-name CN=api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#subject-name CN=api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "subject-alt-name api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#subject-alt-name api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "serial-number none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#serial-number none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "fqdn api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#fqdn api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip-address none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#ip-address none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "revocation-check none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#revocation-check none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "rsakeypair LABTLS",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#rsakeypair LABTLS\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "hash sha256",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#hash sha256\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "exit",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#exit\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-trustpoint LABTLS",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-trustpoint LABTLS\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-server",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-server\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "restconf",
+          "passed": true,
+          "output": "\nAPI(config)#restconf\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "netconf-yang",
+          "passed": true,
+          "output": "\nAPI(config)#netconf-yang\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "end",
+          "passed": true,
+          "output": "esources completed\nAPI(config)#\nAPI(config)#end\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show platform software yang-management process",
+          "passed": true,
+          "output": "\nAPI#show platform software yang-management process\nconfd            : Not Running\nnesd             : Not Running\nsyncfd           : Not Running\nncsshd           : Not Running\ndmiauthd         : Not Running\nnginx            : Running    \nndbmand          : Not Running\npubd             : Running    \n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show platform software yang-management process",
+          "passed": true,
+          "output": "\nAPI#show platform software yang-management process\nconfd            : Running    \nnesd             : Running    \nsyncfd           : Running    \nncsshd           : Running    \ndmiauthd         : Running    \nnginx            : Running    \nndbmand          : Running    \npubd             : Running    \n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "undebug all",
+          "passed": true,
+          "output": "\nAPI#undebug all\nAll possible debugging has been turned off\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto pki certificates pem",
+          "passed": true,
+          "output": "EYSUVxS5vYw6\nEb7QIRvO21fOWZDJ8ua7LNvbP8+UEAIKNkFjwPenq1QeSydqLAk24Q25/9VdM89P\ns0TQhVFR6bFcJU/VzUUTy4IcaWwGwH2VllbVsKJj/DHXpsLE3TT7Omd637oSGfCr\nAs2hbdUFxbI0C4mfIuxZasynRfKH23DLohfp2zWOId6fnQiLSN6L0HmzP8s1p7Oe\nm5U+fOYlrEI+Orlm1amSEklbVlSeOeiJAbnQt5FviY0F15SGKAv3l+MEjxdyQZTx\nSo3zz/GcGJYl2V7JhyFreMG3ClgYGisQp0RicnR3tgZA2eLtF4OAwUYCP/Ozz20f\ngiByOEsuHj2NXfO1kyWXTWQuMQMdDcwkG9jJtk38lqtIF2fZZZ3rI04fET73oFzL\nFponGBukZFJM6K+VvwcZG2sbdKEZII9PqyRHNStpmGMRzKbyfiBxViyGYNLtk8WR\na5Py/68Et9ptNkdGJanJCIgtEWOd5FtvrRZ2OX90lhIBpUbp1/A=\n-----END CERTIFICATE-----\n\n% General Purpose Certificate:\n-----BEGIN CERTIFICATE-----\nMIIEcjCCAtqgAwIBAgIBATANBgkqhkiG9w0BAQsFADBCMRwwGgYDVQQDExNhcGku\nY21sLWxhYi5leGFtcGxlMSIwIAYJKoZIhvcNAQkCFhNhcGkuY21sLWxhYi5leGFt\ncGxlMB4XDTI2MTEwMTE4NDAyM1oXDTM2MTAzMTE4NDAyM1owQjEcMBoGA1UEAxMT\nYXBpLmNtbC1sYWIuZXhhbXBsZTEiMCAGCSqGSIb3DQEJAhYTYXBpLmNtbC1sYWIu\nZXhhbXBsZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBALGo7dM+ox/x\nqZqOk5BVG7H9ib6Yl1sZJlbayk90q7ROx4mLql5+f2QQfeeUFUfLTYVetH1EFowA\nqj5kkfu1RMfM2jw4rsXQ/HxWpOa5LB7qRzIR4O2PKwKj08raz6IOKW4BTe4EZK8n\nOlKYLgf5S+JBNyx8zO3aNpsU3X5gO/RotvtDUpUUl2Xhkacw9p88WQh+VBg2weNB\n5OrT3VUCH5bSt9HaFq1RpbZ27iZwqxpwTLTQO1ne4aj8s9sqiUxV0CQy0gL/saAt\nqOlXq5VIYJc5jUnNsDkHiU1bNz5rDCoui2rLGgDZe8X0ZANODlxKS0qyxxbeYgDv\n7eDPZl8fQJPO1XZHwMpNH3sRSt/G5z0CpbHrBoSS5l9Kfv6OHASEbrv2jwOdFg9w\ndZFEPb2XdRC40tA5kdBqMzyyAvYYyy1ifJY9FaJEZ7dABKp8yziLT+2M5fP/qSPG\nAjkkdoYV3XYQKJWgoBtwU0Qnt2fhQstStPsBHxEb40/WekoYdqaZwQIDAQABo3Mw\ncTAPBgNVHRMBAf8EBTADAQH/MB4GA1UdEQQXMBWCE2FwaS5jbWwtbGFiLmV4YW1w\nbGUwHwYDVR0jBBgwFoAUVpchf4UW6vz2QNcvBnPxCijinlEwHQYDVR0OBBYEFFaX\nIX+FFur89kDXLwZz8Qoo4p5RMA0GCSqGSIb3DQEBCwUAA4IBgQCqEYSUVxS5vYw6\nEb7QIRvO21fOWZDJ8ua7LNvbP8+UEAIKNkFjwPenq1QeSydqLAk24Q25/9VdM89P\ns0TQhVFR6bFcJU/VzUUTy4IcaWwGwH2VllbVsKJj/DHXpsLE3TT7Omd637oSGfCr\nAs2hbdUFxbI0C4mfIuxZasynRfKH23DLohfp2zWOId6fnQiLSN6L0HmzP8s1p7Oe\nm5U+fOYlrEI+Orlm1amSEklbVlSeOeiJAbnQt5FviY0F15SGKAv3l+MEjxdyQZTx\nSo3zz/GcGJYl2V7JhyFreMG3ClgYGisQp0RicnR3tgZA2eLtF4OAwUYCP/Ozz20f\ngiByOEsuHj2NXfO1kyWXTWQuMQMdDcwkG9jJtk38lqtIF2fZZZ3rI04fET73oFzL\nFponGBukZFJM6K+VvwcZG2sbdKEZII9PqyRHNStpmGMRzKbyfiBxViyGYNLtk8WR\na5Py/68Et9ptNkdGJanJCIgtEWOd5FtvrRZ2OX90lhIBpUbp1/A=\n-----END CERTIFICATE-----\n\n------Trustpoint: SLA-TrustPoint------\n% The specified trustpoint is not enrolled (SLA-TrustPoint).\n% Only export the CA certificate in PEM format.\n% CA certificate:\n-----BEGIN CERTIFICATE-----\nMIIDITCCAgmgAwIBAgIBATANBgkqhkiG9w0BAQsFADAyMQ4wDAYDVQQKEwVDaXNj\nbzEgMB4GA1UEAxMXQ2lzY28gTGljZW5zaW5nIFJvb3QgQ0EwHhcNMTMwNTMwMTk0\nODQ3WhcNMzgwNTMwMTk0ODQ3WjAyMQ4wDAYDVQQKEwVDaXNjbzEgMB4GA1UEAxMX\nQ2lzY28gTGljZW5zaW5nIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw\nggEKAoIBAQCmvL2WEx4F9xRepyws1obmFyIuofHv9k3LtMeYISqhR8ZV2NeUcTgN\nhxFEHhqvBxqcrmOIijjlIBw5TXhGLvI5xln3FbmMCllbu1y9DP6+o3AKi/fY8lbu\nSqToDdtv0clgsf0Y/8aclm+miVeiYX3nEE/cX+opVqxzkKPrK1Q2rchHosXatVPr\naamlNVjp8+PAvSPPWL1xiGjmlJEg8yDnlI5x1647zITxBoTHS8jgD1ObpCtCxou3\nx0eQlrTLLWLqL1Bdx7BipGgR2VvoJQ/EXV1fuI8n0ZHFXw12YfmkzT2ZIyeouwO9\nTm1waXy634vfX0NolRNeRN/Hxs8E3X/RAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIB\nBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBRJ3IVLPTHlGz5qF2Bq8zM9O0xz\n6DANBgkqhkiG9w0BAQsFAAOCAQEAUH8k05MqZoYCXZ/oOK5cbU32sEljHHgkDakF\nYE7c3v9P7St3/EYOzWNv291EaB46VnOrkJPTsWyePYvZiYe/5Ay9nhrsoMIhibtc\nj6hWhs2YtkZVdbFGjfxmqEZ6PfRNVlcAat8PDc+DUBU8BP98Ieh4rBG6nNJVqSMs\nfKe35sGvdPYVLpm3sfz5u+lz3n9b3euGxx47SRdlMItfsNoGuSr+f0lOip4HuFc3\n86WL4RpIoinDfB5pOfCGeIDdzRbWus7K7rx8+YQoeHs1ICzcYORharYjzb0jDjr7\nQYYWqUCT4ElNEKt1J+hvc5MuNbWIYv2uAnUVb3GbsvDWl99/KA==\n-----END CERTIFICATE-----\n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto key mypubkey rsa",
+          "passed": true,
+          "output": "\nAPI#show crypto key mypubkey rsa\n% Key pair was generated at: 18:40:11 UTC Nov 1 2026\nKey name: LABSSH\nKey type: RSA KEYS\n Storage Device: not specified\n Usage: General Purpose Key\n Key is not exportable. Redundancy enabled.\n Key Data:\n  308201A2 300D0609 2A864886 F70D0101 01050003 82018F00 3082018A 02820181 \n  00E07254 EC7C430E 8BF0130C 48748D55 372CE58F DF42989C 55B56125 C405351A \n  EC91E6D4 52130436 CBDE3095 0EC91FC6 99E8CAA3 7E0F1E8B 0A85DB27 07D83554 \n  89005256 363E701A DFC7BE18 41D0C1BA C305D63A 4FD45EE1 7C52B42A 6D42EB6B \n  39D5D9E9 783ACB6F 64BCD4F9 0A4458E1 AE2C1D4C 21A9512E 8D517172 5E8395FC \n  92E770DB 522E6806 14238357 461F74DE 1D52378B 3C96DDB4 4F882415 495DBF49 \n  3EBF01DF AC8AC863 349035B3 9788B1D8 097D31B4 12775CC3 5187A685 789B5F35 \n  88E0F9B7 330747DD 465F56C8 06F4B0AD F4405403 0504180E 8E153EEE A933BCAC \n  C0ACE7F6 85DCFD6A 4B3733DF 4E928698 D2DAA038 C0A51E2B 5E974E5E CD869E42 \n  C799087C 10F71932 DAA0AEDE 46A5F259 8EABC5B9 432F0DFB B7338838 8294F567 \n  EAEA0AAD C6DBD4F5 B02B23E3 8CAFA4BD 84F1F0D6 6E1D33C1 09A8147A C2EB1E17 \n  FC87789A 4F7DB242 BA10B87B C819C01F A7515CD0 FD8076F2 D8CA44D1 81A7F987 \n  0239D33B 9776D806 1A439818 DDEDDAF7 E632AD56 602D89CE DADA436B F7F9918D \n  0F020301 0001\n% Key pair was generated at: 18:40:14 UTC Nov 1 2026\nKey name: LABTLS\nKey type: RSA KEYS\n Storage Device: not specified\n Usage: General Purpose Key\n Key is not exportable. Redundancy enabled.\n Key Data:\n  308201A2 300D0609 2A864886 F70D0101 01050003 82018F00 3082018A 02820181 \n  00B1A8ED D33EA31F F1A99A8E 9390551B B1FD89BE 98975B19 2656DACA 4F74ABB4 \n  4EC7898B AA5E7E7F 64107DE7 941547CB 4D855EB4 7D44168C 00AA3E64 91FBB544 \n  C7CCDA3C 38AEC5D0 FC7C56A4 E6B92C1E EA473211 E0ED8F2B 02A3D3CA DACFA20E \n  296E014D EE0464AF 273A5298 2E07F94B E241372C 7CCCEDDA 369B14DD 7E603BF4 \n  68B6FB43 52951497 65E191A7 30F69F3C 59087E54 1836C1E3 41E4EAD3 DD55021F \n  96D2B7D1 DA16AD51 A5B676EE 2670AB1A 704CB4D0 3B59DEE1 A8FCB3DB 2A894C55 \n  D02432D2 02FFB1A0 2DA8E957 AB954860 97398D49 CDB03907 894D5B37 3E6B0C2A \n  2E8B6ACB 1A00D97B C5F46403 4E0E5C4A 4B4AB2C7 16DE6200 EFEDE0CF 665F1F40 \n  93CED576 47C0CA4D 1F7B114A DFC6E73D 02A5B1EB 068492E6 5F4A7EFE 8E1C0484 \n  6EBBF68F 039D160F 70759144 3DBD9775 10B8D2D0 3991D06A 333CB202 F618CB2D \n  627C963D 15A24467 B74004AA 7CCB388B 4FED8CE5 F3FFA923 C6023924 768615DD \n  76102895 A0A01B70 534427B7 67E142CB 52B4FB01 1F111BE3 4FD67A4A 1876A699 \n  C1020301 0001\n% Key pair was generated at: 18:40:15 UTC Nov 1 2026\nKey name: LABSSH.server\nKey type: RSA KEYS\nTemporary key\n Usage: Encryption Key\n Key is not exportable.\n Key Data:\n  30820132 300D0609 2A864886 F70D0101 01050003 82011F00 3082011A 02820111 \n  00A94FB6 94988C80 07D50D79 A536CF29 18D1947A E0843C29 A4780BAC ACEC1D11 \n  2203B148 B8F81770 277BBFC9 3E5A4145 8DAAF46C 526E75C5 10002EE3 79BF70B9 \n  F452E49E C60345AE D556E11C A76052B4 8B0627F8 09F76823 38DD8BC1 7DEA547C \n  01F982DC 66EAAAEA 288E9BC2 F225BBCE C53F86B9 E9673D00 2A6A58EB 77EB0DA9 \n  DE034C46 64D8195F 646A52D2 CF209903 45717819 DB5CA75E CC1899D1 4347E380 \n  E4A20467 BDB05288 1E2541EF AAB2821E F40F03E3 0930221E C0045F8E 1A0A9067 \n  2C80725F C7D0DEA8 A5FE919B AD160AAA FB79D752 574779AB 72B3598F ED602AD7 \n  CB6828DA 1EA970F5 04079C15 CDA57AD1 145F794A 3EE40BBE 4E4A3DC0 B9A3413B \n  60CE164A A5886C7B CF4A93CC B2A89E6D 97020301 0001\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "preparation",
+          "node": "API",
+          "command": "iosxe-api-v1",
+          "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29",
+          "passed": true
+        },
+        {
+          "phase": "baseline",
+          "node": "TOOLS",
+          "command": "python3 /lab/api_probe.py manage baseline",
+          "expectation": "The unchanged client performs actual peer-verified RESTCONF and pinned NETCONF operations, rejects the declared wrong identities/credentials and observes the expected HTTPS availability.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/api_probe.py manage baseline\n{\"mode\": \"manage\", \"phase\": \"baseline\", \"ssh_key_pinned_from_serial\": true, \"status\": \"passed\", \"tls_hostname_verified\": true, \"wrong_credentials_and_keys_rejected\": true}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "withdraw only the actual HTTPS listener",
+          "kind": "configuration",
+          "node": "API",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nAPI#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nAPI(config)#"
+        },
+        {
+          "phase": "withdraw only the actual HTTPS listener",
+          "kind": "configuration",
+          "node": "API",
+          "command": "no ip http secure-server",
+          "passed": true,
+          "output": "\nAPI(config)#no ip http secure-server\nAPI(config)#"
+        },
+        {
+          "phase": "withdraw only the actual HTTPS listener",
+          "kind": "configuration",
+          "node": "API",
+          "command": "end",
+          "passed": true,
+          "output": "\nAPI(config)#end\nAPI#"
+        },
+        {
+          "phase": "withdraw only the actual HTTPS listener",
+          "node": "TOOLS",
+          "command": "python3 /lab/api_probe.py manage https-off",
+          "expectation": "The unchanged client performs actual peer-verified RESTCONF and pinned NETCONF operations, rejects the declared wrong identities/credentials and observes the expected HTTPS availability.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/api_probe.py manage https-off\n{\"mode\": \"manage\", \"netconf_still_usable\": true, \"phase\": \"https-off\", \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restore peer-verified HTTPS and fresh device evidence",
+          "kind": "configuration",
+          "node": "API",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nAPI#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nAPI(config)#"
+        },
+        {
+          "phase": "restore peer-verified HTTPS and fresh device evidence",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-server",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-server\nAPI(config)#"
+        },
+        {
+          "phase": "restore peer-verified HTTPS and fresh device evidence",
+          "kind": "configuration",
+          "node": "API",
+          "command": "end",
+          "passed": true,
+          "output": "\nAPI(config)#end\nAPI#"
+        },
+        {
+          "phase": "restore peer-verified HTTPS and fresh device evidence",
+          "node": "TOOLS",
+          "command": "python3 /lab/api_probe.py manage recovered",
+          "expectation": "The unchanged client performs actual peer-verified RESTCONF and pinned NETCONF operations, rejects the declared wrong identities/credentials and observes the expected HTTPS availability.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/api_probe.py manage recovered\n{\"mode\": \"manage\", \"phase\": \"recovered\", \"ssh_key_pinned_from_serial\": true, \"status\": \"passed\", \"tls_hostname_verified\": true, \"wrong_credentials_and_keys_rejected\": true}\nroot@TOOLS:~# "
+        }
+      ],
+      "plan_sha256": "e803f7225ed8d322338a571ff6670bfafac1c931685cda177b835902383c135c",
+      "startup_states": {
+        "API": "STARTED",
+        "TOOLS": "BOOTED"
+      },
+      "images": {
+        "API": "csr1000v-17-03-08a",
+        "TOOLS": "cml-labs-toolbox-9f43df961cbe"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "API"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T18:46:06Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/security/037-secure-api-client-threat-model.yaml",
+      "sha256": "7f504eee0296e0449df238e84a2d66ba36e6b6e0e106558b18fdb18d1157c725",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T18:46:07Z",
+      "checks": [
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto key mypubkey rsa",
+          "passed": true,
+          "output": "\nAPI#show crypto key mypubkey rsa\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "clock set 18:42:54 1 Nov 2026",
+          "passed": true,
+          "output": "\nAPI#clock set 18:42:54 1 Nov 2026\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "debug crypto pki transactions",
+          "passed": true,
+          "output": "\nAPI#debug crypto pki transactions\nCrypto PKI Trans debugging is on\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nAPI#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto key generate rsa general-keys label LABSSH modulus 3072",
+          "passed": true,
+          "output": "\nAPI(config)#crypto key generate rsa general-keys label LABSSH modulus 3072\nThe name for the keys will be: LABSSH\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\n[OK] (elapsed time was 3 seconds)\n\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto key generate rsa general-keys label LABTLS modulus 3072",
+          "passed": true,
+          "output": "\nAPI(config)#crypto key generate rsa general-keys label LABTLS modulus 3072\nThe name for the keys will be: LABTLS\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\nNov  1 18:42:59.452: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH has been generated or imported by crypto-engine\nNov  1 18:42:59.468: %SSH-5-ENABLED: SSH 2.0 has been enabled\nNov  1 18:42:59.970: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH.server has been generated or imported by crypto-engine\nNov  1 18:43:02.833: CRYPTO_PKI: Creating trustpoint SLA-TrustPoint\nNov  1 18:43:02.834: %PKI-6-TRUSTPOINT_CREATE: Trustpoint: SLA-TrustPoint created succesfully\nNov  1 18:43:02.834: CRYPTO_PKI: (A0001) Session started - identity selected (SLA-TrustPoint)\nNov  1 18:43:02.834: CRYPTO_PKI: Setting the key_type as RSA\nNov  1 18:43:02.834: CRYPTO_PKI: Rcvd request to end PKI session A0001.\nNov  1 18:43:02.834: CRYPTO_PKI: PKI session A0001 has ended. Freeing all resources.\nNov  1 18:43:02.834: CRYPTO_PKI: unlocked trustpoint SLA-TrustPoint, refcount is 0\nNov  1 18:43:02.834: %PKI-4-NOCONFIGAUTOSAVE: Configuration was modified.  Issue \"write memory\" to save new IOS PKI configuration\nNov  1 18:43:02.834: %SMART_LIC-6-EXPORT_CONTROLLED: Usage of export controlled features is not allowed\n[OK] (elapsed time was 3 seconds)\n\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip ssh rsa keypair-name LABSSH",
+          "passed": true,
+          "output": "\nAPI(config)#ip ssh rsa keypair-name LABSSH\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto pki trustpoint LABTLS",
+          "passed": true,
+          "output": "\nAPI(config)#crypto pki trustpoint LABTLS\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "enrollment selfsigned",
+          "passed": true,
+          "output": " 1 18:43:04.170: %CRYPTO_ENGINE-5-KEY_DELETED: A key named LABSSH.server has been removed from key storage\nNov  1 18:43:04.171: %SSH-5-DISABLED: SSH 2.0 has been disabled\nNov  1 18:43:04.172: %SSH-5-ENABLED: SSH 2.0 has been enabled\nNov  1 18:43:04.297: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH.server has been generated or imported by crypto-engine\nNov  1 18:43:04.662: CRYPTO_PKI: Creating trustpoint LABTLS\nAPI(ca-trustpoint)#enrollment selfsigned\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "subject-name CN=api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#subject-name CN=api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "subject-alt-name api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#subject-alt-name api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "serial-number none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#serial-number none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "fqdn api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#fqdn api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip-address none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#ip-address none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "revocation-check none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#revocation-check none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "rsakeypair LABTLS",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#rsakeypair LABTLS\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "hash sha256",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#hash sha256\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "exit",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#exit\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-trustpoint LABTLS",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-trustpoint LABTLS\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-server",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-server\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "restconf",
+          "passed": true,
+          "output": "\nAPI(config)#restconf\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "netconf-yang",
+          "passed": true,
+          "output": "\nAPI(config)#netconf-yang\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "end",
+          "passed": true,
+          "output": "\nAPI(config)#end\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show platform software yang-management process",
+          "passed": true,
+          "output": "\nAPI#show platform software yang-management process\nconfd            : Not Running\nnesd             : Not Running\nsyncfd           : Not Running\nncsshd           : Not Running\ndmiauthd         : Not Running\nnginx            : Running    \nndbmand          : Not Running\npubd             : Running    \n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show platform software yang-management process",
+          "passed": true,
+          "output": "\nAPI#show platform software yang-management process\nconfd            : Running    \nnesd             : Running    \nsyncfd           : Running    \nncsshd           : Running    \ndmiauthd         : Running    \nnginx            : Running    \nndbmand          : Running    \npubd             : Running    \n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "undebug all",
+          "passed": true,
+          "output": "\nAPI#undebug all\nAll possible debugging has been turned off\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto pki certificates pem",
+          "passed": true,
+          "output": "Lpm3sfz5u+lz3n9b3euGxx47SRdlMItfsNoGuSr+f0lOip4HuFc3\n86WL4RpIoinDfB5pOfCGeIDdzRbWus7K7rx8+YQoeHs1ICzcYORharYjzb0jDjr7\nQYYWqUCT4ElNEKt1J+hvc5MuNbWIYv2uAnUVb3GbsvDWl99/KA==\n-----END CERTIFICATE-----\n\n------Trustpoint: LABTLS------\n% Self-signed CA certificate:\n-----BEGIN CERTIFICATE-----\nMIIEcjCCAtqgAwIBAgIBATANBgkqhkiG9w0BAQsFADBCMRwwGgYDVQQDExNhcGku\nY21sLWxhYi5leGFtcGxlMSIwIAYJKoZIhvcNAQkCFhNhcGkuY21sLWxhYi5leGFt\ncGxlMB4XDTI2MTEwMTE4NDMxMloXDTM2MTAzMTE4NDMxMlowQjEcMBoGA1UEAxMT\nYXBpLmNtbC1sYWIuZXhhbXBsZTEiMCAGCSqGSIb3DQEJAhYTYXBpLmNtbC1sYWIu\nZXhhbXBsZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAMt6gJcnBsao\nNYLrBq5PG80t3chuT37kW1qxFeir3Ii2TDjn72WL0eu6edIsSYMK0DNBnJJq7rCi\noxV+gDO5A8TQoHgtr0kpD3GfLvg/MS1gT6wDlM6u65Dja1HG5zh8e/hmmd4mmf/K\nK0jP+w9dp0mcCOAzlTjQhgByv/lyJpW9JhH6CjXWUb4RelElDtjyddyyOs03Bstn\nbG08hl171LpesrRE7uVNmW9fJl9Dcvh8msklylTJDD8I2BqquPzMEMyi9piToeeX\n0ucsCFPAJc4Re/WDbn0wudKA5V2s9nQazQ8iwA4bZxftcaLcXGlBDxm06xgT7fFl\nBlaiHl9dKq29x0MYLUeCAY5Zu1YNoctSfZuR3HPMyugLGXDSgf2S+iIYBm+QY77/\ngm9dw1QOGBYNwQLJR156AQmXgW6E4EoiZav+pnbnei27ZhdpypfPuQb05SfnrAnO\nA087X6lar5pPnkwFtrHEA/2mFJb+50AqSTQ20r0YjFmOh/WHFL7QbQIDAQABo3Mw\ncTAPBgNVHRMBAf8EBTADAQH/MB4GA1UdEQQXMBWCE2FwaS5jbWwtbGFiLmV4YW1w\nbGUwHwYDVR0jBBgwFoAUDow/ZE3KMRKTsJDyjk+f2Ye/6dgwHQYDVR0OBBYEFA6M\nP2RNyjESk7CQ8o5Pn9mHv+nYMA0GCSqGSIb3DQEBCwUAA4IBgQAprjkqTLr++g6r\noz1OrNxpktwQ/TzyI/R610xbVjOgxgjvkaK29UlTujleJA9O4SOzd0ba7Onn5dnA\neHRfZxbAaqogpvLO9SBN6k9XJQlyiQu30CKBajZE7ZtVMTUx5un8WeESAPKm5lsh\nKd8nnt8kFghAK39N5eX4A4OeQKqZW/jjE1gJZXrY4ac3Q41eNvonZTpgbaGho1gK\nDYybDUOTUHf7xkYxFFAWJ6inv25fx2swtWLuJg8A4AbMjAAe0OKhEEQlmx39kR5c\nMBRK/MIryp7kObgbjM8JE5psN/2LTZbLU5xljQgfJmshKmAqePEs+dV6V1o7i2pW\n6c9A4yeyUJ7y95NH/FI6W18pJazOqUsam3IpnbApoCy6vhPLHNjWLho26IOqzg4f\nx6cMSyTFRgdW0waVN9EQvPJtyNhk7y2hkGtgTNiMOCKWlceXDZLTCNRm031frMrM\nIpAFYjOOW/DfCgyWD8vPAwHyRU9XdduS+uKCyoNC5ppb3owpk/k=\n-----END CERTIFICATE-----\n\n% General Purpose Certificate:\n-----BEGIN CERTIFICATE-----\nMIIEcjCCAtqgAwIBAgIBATANBgkqhkiG9w0BAQsFADBCMRwwGgYDVQQDExNhcGku\nY21sLWxhYi5leGFtcGxlMSIwIAYJKoZIhvcNAQkCFhNhcGkuY21sLWxhYi5leGFt\ncGxlMB4XDTI2MTEwMTE4NDMxMloXDTM2MTAzMTE4NDMxMlowQjEcMBoGA1UEAxMT\nYXBpLmNtbC1sYWIuZXhhbXBsZTEiMCAGCSqGSIb3DQEJAhYTYXBpLmNtbC1sYWIu\nZXhhbXBsZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAMt6gJcnBsao\nNYLrBq5PG80t3chuT37kW1qxFeir3Ii2TDjn72WL0eu6edIsSYMK0DNBnJJq7rCi\noxV+gDO5A8TQoHgtr0kpD3GfLvg/MS1gT6wDlM6u65Dja1HG5zh8e/hmmd4mmf/K\nK0jP+w9dp0mcCOAzlTjQhgByv/lyJpW9JhH6CjXWUb4RelElDtjyddyyOs03Bstn\nbG08hl171LpesrRE7uVNmW9fJl9Dcvh8msklylTJDD8I2BqquPzMEMyi9piToeeX\n0ucsCFPAJc4Re/WDbn0wudKA5V2s9nQazQ8iwA4bZxftcaLcXGlBDxm06xgT7fFl\nBlaiHl9dKq29x0MYLUeCAY5Zu1YNoctSfZuR3HPMyugLGXDSgf2S+iIYBm+QY77/\ngm9dw1QOGBYNwQLJR156AQmXgW6E4EoiZav+pnbnei27ZhdpypfPuQb05SfnrAnO\nA087X6lar5pPnkwFtrHEA/2mFJb+50AqSTQ20r0YjFmOh/WHFL7QbQIDAQABo3Mw\ncTAPBgNVHRMBAf8EBTADAQH/MB4GA1UdEQQXMBWCE2FwaS5jbWwtbGFiLmV4YW1w\nbGUwHwYDVR0jBBgwFoAUDow/ZE3KMRKTsJDyjk+f2Ye/6dgwHQYDVR0OBBYEFA6M\nP2RNyjESk7CQ8o5Pn9mHv+nYMA0GCSqGSIb3DQEBCwUAA4IBgQAprjkqTLr++g6r\noz1OrNxpktwQ/TzyI/R610xbVjOgxgjvkaK29UlTujleJA9O4SOzd0ba7Onn5dnA\neHRfZxbAaqogpvLO9SBN6k9XJQlyiQu30CKBajZE7ZtVMTUx5un8WeESAPKm5lsh\nKd8nnt8kFghAK39N5eX4A4OeQKqZW/jjE1gJZXrY4ac3Q41eNvonZTpgbaGho1gK\nDYybDUOTUHf7xkYxFFAWJ6inv25fx2swtWLuJg8A4AbMjAAe0OKhEEQlmx39kR5c\nMBRK/MIryp7kObgbjM8JE5psN/2LTZbLU5xljQgfJmshKmAqePEs+dV6V1o7i2pW\n6c9A4yeyUJ7y95NH/FI6W18pJazOqUsam3IpnbApoCy6vhPLHNjWLho26IOqzg4f\nx6cMSyTFRgdW0waVN9EQvPJtyNhk7y2hkGtgTNiMOCKWlceXDZLTCNRm031frMrM\nIpAFYjOOW/DfCgyWD8vPAwHyRU9XdduS+uKCyoNC5ppb3owpk/k=\n-----END CERTIFICATE-----\n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto key mypubkey rsa",
+          "passed": true,
+          "output": "\nAPI#show crypto key mypubkey rsa\n% Key pair was generated at: 18:42:59 UTC Nov 1 2026\nKey name: LABSSH\nKey type: RSA KEYS\n Storage Device: not specified\n Usage: General Purpose Key\n Key is not exportable. Redundancy enabled.\n Key Data:\n  308201A2 300D0609 2A864886 F70D0101 01050003 82018F00 3082018A 02820181 \n  00D7535F 3ACF9237 428E706E 7261E80C 8CB7181A 6494F504 BC15A2EE 536FEFC7 \n  8C813545 EA57FD10 A0615539 CCBF500C 7B7A5CB6 1E790FD9 C2DDD122 7942266E \n  6CD76AF6 4D0A7F9C 6C4A9065 7ABF4ADA AD1F92FA 740C2957 D10A0058 8AE3AF41 \n  966F0AF6 58C48D63 9F97D235 520441D4 57C1B6E1 3983109E 3D4873F7 589E3BF3 \n  BFDD0E7F 4181F51E 2E0F030F 1FBD1E32 F10A5D04 F596F6AE 05FE52CD 74E0784B \n  62DAAD15 20709438 BCCFB00B 376824E2 2E36B0A5 1E979EA0 66395DA9 22BDA220 \n  A851C421 F08D0CEC 131CD012 BD42AD4D B7D925EC B5F4C1F9 35CA9191 B0AA7A92 \n  B0843826 516222A6 97C57FAD 4D7C2437 2EB75F39 407CC645 40F56AC1 CA47CE14 \n  0E87D5D5 DB5560A0 CABF39F3 C93D5CEC BC35A212 63168272 7186E6C8 096C9F63 \n  3174591C 6599C195 51562762 4C060D2A 7C74E152 3402BDEA B463B4C9 AEA90988 \n  BBB2DF1F F636AB79 8340858E F5C6B640 9083A091 78566549 DAFDFCEB 5BC715E6 \n  5BEB3696 5B66D28B 176ADE25 F6AC24B1 671D960B F2A5A26B 697C69E2 A5772D8F \n  BB020301 0001\n% Key pair was generated at: 18:43:03 UTC Nov 1 2026\nKey name: LABTLS\nKey type: RSA KEYS\n Storage Device: not specified\n Usage: General Purpose Key\n Key is not exportable. Redundancy enabled.\n Key Data:\n  308201A2 300D0609 2A864886 F70D0101 01050003 82018F00 3082018A 02820181 \n  00CB7A80 972706C6 A83582EB 06AE4F1B CD2DDDC8 6E4F7EE4 5B5AB115 E8ABDC88 \n  B64C38E7 EF658BD1 EBBA79D2 2C49830A D033419C 926AEEB0 A2A3157E 8033B903 \n  C4D0A078 2DAF4929 0F719F2E F83F312D 604FAC03 94CEAEEB 90E36B51 C6E7387C \n  7BF86699 DE2699FF CA2B48CF FB0F5DA7 499C08E0 339538D0 860072BF F9722695 \n  BD2611FA 0A35D651 BE117A51 250ED8F2 75DCB23A CD3706CB 676C6D3C 865D7BD4 \n  BA5EB2B4 44EEE54D 996F5F26 5F4372F8 7C9AC925 CA54C90C 3F08D81A AAB8FCCC \n  10CCA2F6 9893A1E7 97D2E72C 0853C025 CE117BF5 836E7D30 B9D280E5 5DACF674 \n  1ACD0F22 C00E1B67 17ED71A2 DC5C6941 0F19B4EB 1813EDF1 650656A2 1E5F5D2A \n  ADBDC743 182D4782 018E59BB 560DA1CB 527D9B91 DC73CCCA E80B1970 D281FD92 \n  FA221806 6F9063BE FF826F5D C3540E18 160DC102 C9475E7A 01099781 6E84E04A \n  2265ABFE A676E77A 2DBB6617 69CA97CF B906F4E5 27E7AC09 CE034F3B 5FA95AAF \n  9A4F9E4C 05B6B1C4 03FDA614 96FEE740 2A493436 D2BD188C 598E87F5 8714BED0 \n  6D020301 0001\n% Key pair was generated at: 18:43:04 UTC Nov 1 2026\nKey name: LABSSH.server\nKey type: RSA KEYS\nTemporary key\n Usage: Encryption Key\n Key is not exportable.\n Key Data:\n  30820132 300D0609 2A864886 F70D0101 01050003 82011F00 3082011A 02820111 \n  00C56116 070885E9 109102FB 0C1FFC7E F4299C12 7DC4F2AF EBD6D304 D11E6215 \n  B03488BA 873B70EB 8C0002AF 9DB98D24 A8C7C89A 3F0DED12 9D46B17B 5759E73B \n  8D629A7B AF29E507 93C95F50 283246B7 5B6E9E2C 9FACAFC9 918BE8AA 6C750FD2 \n  2C1D24E2 C83CE804 38DE47B7 5A2578D2 489C1347 7103A074 F2E492E3 8A96CB5A \n  29DEB8EC 82C1EEC7 A382B630 5F500075 B909975E 657CF052 132F58B9 2AD396A6 \n  B27B9891 1A6C971F 9D773CD2 E5BEE16C 0D0385EB A21D92DE EC880D5D 03EB411C \n  998600EC FDE112C9 C301E4C2 F73E4031 44CB8AF1 FBC24A24 4C64FD4C 54E0BAEF \n  7DBD469A A909A7E0 512B6DA0 516BBDA9 F64AD6D1 04F1F09D 98ACFDAA 0ED3E8F6 \n  194825FC 32C2CD85 01316E65 B99C00E6 4F020301 0001\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "preparation",
+          "node": "API",
+          "command": "iosxe-api-v1",
+          "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29",
+          "passed": true
+        },
+        {
+          "phase": "baseline",
+          "node": "TOOLS",
+          "command": "python3 /lab/api_probe.py yang baseline",
+          "expectation": "The unchanged client performs actual peer-verified RESTCONF and pinned NETCONF operations, rejects the declared wrong identities/credentials and observes the expected HTTPS availability.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/api_probe.py yang baseline\n{\"mode\": \"yang\", \"phase\": \"baseline\", \"ssh_key_pinned_from_serial\": true, \"status\": \"passed\", \"tls_hostname_verified\": true, \"wrong_credentials_and_keys_rejected\": true}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "withdraw only the actual HTTPS listener",
+          "kind": "configuration",
+          "node": "API",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nAPI#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nAPI(config)#"
+        },
+        {
+          "phase": "withdraw only the actual HTTPS listener",
+          "kind": "configuration",
+          "node": "API",
+          "command": "no ip http secure-server",
+          "passed": true,
+          "output": "\nAPI(config)#no ip http secure-server\nAPI(config)#"
+        },
+        {
+          "phase": "withdraw only the actual HTTPS listener",
+          "kind": "configuration",
+          "node": "API",
+          "command": "end",
+          "passed": true,
+          "output": "\nAPI(config)#end\nAPI#"
+        },
+        {
+          "phase": "withdraw only the actual HTTPS listener",
+          "node": "TOOLS",
+          "command": "python3 /lab/api_probe.py yang https-off",
+          "expectation": "The unchanged client performs actual peer-verified RESTCONF and pinned NETCONF operations, rejects the declared wrong identities/credentials and observes the expected HTTPS availability.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/api_probe.py yang https-off\n{\"mode\": \"yang\", \"netconf_still_usable\": true, \"phase\": \"https-off\", \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restore peer-verified HTTPS and fresh device evidence",
+          "kind": "configuration",
+          "node": "API",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nAPI#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nAPI(config)#"
+        },
+        {
+          "phase": "restore peer-verified HTTPS and fresh device evidence",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-server",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-server\nAPI(config)#"
+        },
+        {
+          "phase": "restore peer-verified HTTPS and fresh device evidence",
+          "kind": "configuration",
+          "node": "API",
+          "command": "end",
+          "passed": true,
+          "output": "\nAPI(config)#end\nAPI#"
+        },
+        {
+          "phase": "restore peer-verified HTTPS and fresh device evidence",
+          "node": "TOOLS",
+          "command": "python3 /lab/api_probe.py yang recovered",
+          "expectation": "The unchanged client performs actual peer-verified RESTCONF and pinned NETCONF operations, rejects the declared wrong identities/credentials and observes the expected HTTPS availability.",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/api_probe.py yang recovered\n{\"mode\": \"yang\", \"phase\": \"recovered\", \"ssh_key_pinned_from_serial\": true, \"status\": \"passed\", \"tls_hostname_verified\": true, \"wrong_credentials_and_keys_rejected\": true}\nroot@TOOLS:~# "
+        }
+      ],
+      "plan_sha256": "8d3eb267b309a27224de7f080f865df3ce5b500ab2616c163360e4af039bbdaf",
+      "startup_states": {
+        "API": "STARTED",
+        "TOOLS": "BOOTED"
+      },
+      "images": {
+        "API": "csr1000v-17-03-08a",
+        "TOOLS": "cml-labs-toolbox-9f43df961cbe"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "API"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T18:48:55Z"
     }
   ]
 }

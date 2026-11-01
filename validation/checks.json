@@ -27184,5 +27184,125 @@
         ]
       }
     ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/022-secure-api-client.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/api_probe.py manage baseline",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"mode\": \"manage\")(?=.*\"phase\": \"baseline\")",
+        "expectation": "The unchanged client performs actual peer-verified RESTCONF and pinned NETCONF operations, rejects the declared wrong identities/credentials and observes the expected HTTPS availability.",
+        "command_timeout": 90,
+        "attempts": 1
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw only the actual HTTPS listener",
+        "node": "API",
+        "commands": [
+          "configure terminal",
+          "no ip http secure-server",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/api_probe.py manage https-off",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"mode\": \"manage\")(?=.*\"phase\": \"https-off\")",
+            "expectation": "The unchanged client performs actual peer-verified RESTCONF and pinned NETCONF operations, rejects the declared wrong identities/credentials and observes the expected HTTPS availability.",
+            "command_timeout": 90,
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "restore peer-verified HTTPS and fresh device evidence",
+        "node": "API",
+        "commands": [
+          "configure terminal",
+          "ip http secure-server",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/api_probe.py manage recovered",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"mode\": \"manage\")(?=.*\"phase\": \"recovered\")",
+            "expectation": "The unchanged client performs actual peer-verified RESTCONF and pinned NETCONF operations, rejects the declared wrong identities/credentials and observes the expected HTTPS availability.",
+            "command_timeout": 90,
+            "attempts": 1
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/security/037-secure-api-client-threat-model.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/api_probe.py yang baseline",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"mode\": \"yang\")(?=.*\"phase\": \"baseline\")",
+        "expectation": "The unchanged client performs actual peer-verified RESTCONF and pinned NETCONF operations, rejects the declared wrong identities/credentials and observes the expected HTTPS availability.",
+        "command_timeout": 90,
+        "attempts": 1
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw only the actual HTTPS listener",
+        "node": "API",
+        "commands": [
+          "configure terminal",
+          "no ip http secure-server",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/api_probe.py yang https-off",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"mode\": \"yang\")(?=.*\"phase\": \"https-off\")",
+            "expectation": "The unchanged client performs actual peer-verified RESTCONF and pinned NETCONF operations, rejects the declared wrong identities/credentials and observes the expected HTTPS availability.",
+            "command_timeout": 90,
+            "attempts": 1
+          }
+        ]
+      },
+      {
+        "name": "restore peer-verified HTTPS and fresh device evidence",
+        "node": "API",
+        "commands": [
+          "configure terminal",
+          "ip http secure-server",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/api_probe.py yang recovered",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"mode\": \"yang\")(?=.*\"phase\": \"recovered\")",
+            "expectation": "The unchanged client performs actual peer-verified RESTCONF and pinned NETCONF operations, rejects the declared wrong identities/credentials and observes the expected HTTPS availability.",
+            "command_timeout": 90,
+            "attempts": 1
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
   }
 }
