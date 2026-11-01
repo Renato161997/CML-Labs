@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **188**.
+Import/export passes: **233/233**. Functional passes: **191**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -106,6 +106,7 @@ Import/export passes: **233/233**. Functional passes: **188**.
 | [DMVPN Hub Spoke Break Fix](../labs/300-410-enarsi-implementing-cisco-enterprise-advanced-routing-and-services/vpn/038-dmvpn-hub-spoke-break-fix.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, iosvl2-2020 | 9 | 0 | 2026-10-28T18:34:07Z |
 | [Campus Two Tier Three Tier HA](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/001-campus-two-three-tier-ha.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02 | 11 | 16 | 2026-10-30T14:25:51Z |
 | [FHRP Design HSRP VRRP](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/002-fhrp-design-hsrp-vrrp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 23 | 16 | 2026-10-30T14:18:58Z |
+| [Control and Data Planes: Independent BGP and Encrypted GRE Paths](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/003-sdwan-control-data-plane.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 55 | 20 | 2026-11-01T11:54:16Z |
 | [Fabric Roles: Routed Underlay and VXLAN Overlay](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/004-sdaccess-fabric-roles.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3 | 35 | 8 | 2026-10-31T23:28:24Z |
 | [QoS Policy Interpretation](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/005-qos-policy-interpretation.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 6 | 8 | 2026-10-30T19:26:06Z |
 | [CEF CAM TCAM RIB FIB](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/006-cef-cam-tcam-rib-fib.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 21 | 18 | 2026-10-26T19:52:51Z |
@@ -137,6 +138,7 @@ Import/export passes: **233/233**. Functional passes: **188**.
 | [Troubleshooting Path](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/network-assurance/028-troubleshooting-path.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 41 | 22 | 2026-10-31T10:24:22Z |
 | [Dual Stack Campus With FHRP](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/042-dual-stack-campus-with-fhrp.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 24 | 14 | 2026-10-31T10:31:14Z |
 | [VRF Lite Shared Services](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/043-vrf-lite-shared-services.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 16 | 8 | 2026-10-28T18:37:46Z |
+| [QoS: Receiver-Verified DSCP and Selective Policing](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/044-qos-marking-and-policing.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3 | 8 | 16 | 2026-11-01T11:55:21Z |
 | [Dual ISP BGP Edge](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/045-dual-isp-bgp-edge.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 14 | 16 | 2026-10-30T14:49:49Z |
 | [ENCOR 029 - RADIUS and TACACS+ authentication](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/029-aaa-radius-tacacs.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 13 | 8 | 2026-10-26T21:19:56Z |
 | [Control Plane Policing](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/031-control-plane-policing.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 12 | 8 | 2026-10-30T18:52:17Z |
@@ -178,6 +180,7 @@ Import/export passes: **233/233**. Functional passes: **188**.
 | [DEVCOR Practical Checkpoint](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/assessment/038-devcor-practical-checkpoint.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 25 | 6 | 2026-10-30T21:01:52Z |
 | [Capstone: Device-Backed Controller Reconciliation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/039-devcor-capstone-controller-integration.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 12 | 32 | 2026-10-31T17:38:27Z |
 | [Capstone: Durable Jobs, Compensation and Concurrent Replay](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/040-devcor-capstone-network-automation-app.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 19 | 34 | 2026-10-31T17:41:46Z |
+| [Secrets: OS Ownership, Scoped Injection and Live Rotation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/021-secrets-management.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 4 | 2 | 2026-11-01T11:55:49Z |
 | [Application Threat Model: API Denial and Backend Failure](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/023-application-threat-model.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 16 | 35 | 2026-10-31T22:46:21Z |
 | [GitOps Network Change Pipeline](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/gitops/031-gitops-network-change-pipeline.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 13 | 33 | 2026-10-28T16:29:07Z |
 | [Ansible Inventory Network](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/025-ansible-inventory-network.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-28T16:08:45Z |

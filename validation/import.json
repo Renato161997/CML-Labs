@@ -443,11 +443,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/003-sdwan-control-data-plane.yaml",
-      "sha256": "6877f6d268258af5f69521456f611bd2b22887bd597d7a6b3dac13fb7baece0c",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/005-qos-policy-interpretation.yaml",
       "sha256": "60918d44d0dad2156d21b469b03e5d9bb6bc99613266e8cc4d61420cc492c0aa",
       "status": "import-export-pass"
@@ -595,11 +590,6 @@
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/043-vrf-lite-shared-services.yaml",
       "sha256": "59aa4d0104306311a2ab29846e437b094881e764c683a799ed48f5b283059357",
-      "status": "import-export-pass"
-    },
-    {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/044-qos-marking-and-policing.yaml",
-      "sha256": "b739c3da539e9857da97b14561ace833ed74a7c922a77492dec955c7b6fb0f46",
       "status": "import-export-pass"
     },
     {
@@ -910,11 +900,6 @@
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/020-ci-cd-for-network-automation.yaml",
       "sha256": "2109e7258b8947fb11bbeb047542232763d263376231eaf0ca267255dd360e7d",
-      "status": "import-export-pass"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/021-secrets-management.yaml",
-      "sha256": "f4d6c836613221567554049755dd8a097a4638fdb320e76a42f500fdd7b8ce8a",
       "status": "import-export-pass"
     },
     {
@@ -1283,11 +1268,6 @@
       "completed_utc": "2026-10-31T23:00:45Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/010-lisp-vxlan-concepts.yaml",
       "sha256": "5af1c2260dba93285512bf23799268e101692a2110f7bb5f749f5a159650a4f3",
       "cml_version": "2.10.1+build.21",
@@ -1306,6 +1286,41 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-10-31T23:25:38Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/003-sdwan-control-data-plane.yaml",
+      "sha256": "d1d9d895ff7c19241cf521723606e17600522864c61ee822672dae204332ba56",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T11:21:55Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T11:21:55Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/044-qos-marking-and-policing.yaml",
+      "sha256": "13aa354f9296b3060b03e37990bf41e51cb8d86da81c35fdd508e42edf2d17a6",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T11:44:55Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T11:44:55Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/021-secrets-management.yaml",
+      "sha256": "824026e31e49396a51b27d90f35afc57431bbb2e4a57647ffe41743301c34d95",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T11:44:57Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T11:44:57Z"
     }
   ]
 }

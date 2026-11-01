@@ -2108,26 +2108,24 @@
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/003-sdwan-control-data-plane.yaml",
-      "title": "Catalyst SD-WAN Control Data Plane",
+      "title": "Control and Data Planes: Independent BGP and Encrypted GRE Paths",
       "track": "350-401",
       "topic": "architecture",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iosv"
       ],
-      "nominal_ram_mib": 1792,
+      "nominal_ram_mib": 1024,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 110,
+      "workbook": "docs/workbooks/350-401-003-sdwan-control-data-plane.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "6877f6d268258af5f69521456f611bd2b22887bd597d7a6b3dac13fb7baece0c"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T11:54:16Z",
+      "sha256": "d1d9d895ff7c19241cf521723606e17600522864c61ee822672dae204332ba56"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/architecture/004-sdaccess-fabric-roles.yaml",
@@ -2826,26 +2824,25 @@
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/044-qos-marking-and-policing.yaml",
-      "title": "QoS Marking And Policing",
+      "title": "QoS: Receiver-Verified DSCP and Selective Policing",
       "track": "350-401",
       "topic": "scenario",
-      "nodes": 6,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe",
+        "net-tools"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 100,
+      "workbook": "docs/workbooks/350-401-044-qos-marking-and-policing.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "b739c3da539e9857da97b14561ace833ed74a7c922a77492dec955c7b6fb0f46"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T11:55:21Z",
+      "sha256": "13aa354f9296b3060b03e37990bf41e51cb8d86da81c35fdd508e42edf2d17a6"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/045-dual-isp-bgp-edge.yaml",
@@ -4505,25 +4502,24 @@
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/021-secrets-management.yaml",
-      "title": "Secrets Management",
+      "title": "Secrets: OS Ownership, Scoped Injection and Live Rotation",
       "track": "350-901",
       "topic": "deployment-security",
-      "nodes": 3,
+      "nodes": 1,
       "node_types": [
-        "desktop",
-        "iosv"
+        "net-tools"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 512,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 85,
+      "workbook": "docs/workbooks/350-901-021-secrets-management.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "f4d6c836613221567554049755dd8a097a4638fdb320e76a42f500fdd7b8ce8a"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T11:55:49Z",
+      "sha256": "824026e31e49396a51b27d90f35afc57431bbb2e4a57647ffe41743301c34d95"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/022-secure-api-client.yaml",

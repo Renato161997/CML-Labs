@@ -1,266 +1,906 @@
 lab:
-  title: QoS Marking And Policing
-  description: 350-401 ENCOR - Implementing and Operating Cisco Enterprise Network Core Technologies scenario-based
-    CML lab.
-  notes: '350-401 ENCOR scenario lab: QoS Marking And Policing
+  title: 'QoS: Receiver-Verified DSCP and Selective Policing'
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# QoS: Receiver-Verified DSCP and Selective Policing
 
 
-    Lab type: design challenge
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Scenario:
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-401-044-qos-marking-and-policing.md
 
-    You are taking over a partially built network. Use the topology, startup configs, and this note as
-    the work order.
+
+    A real IOL-XE router forwards between two native Linux endpoints. UDP destination 9000 is the only
+    selected data class; an egress MQC policy sets its actual DSCP to EF. The receiver obtains each datagram''s
+    real IP_TOS ancillary value, requiring 184 (DSCP 46, ECN 0). Source sockets explicitly send TOS 0.
+    Four independent UDP 9001 controls must all arrive with TOS 0 in every phase. No configured marking
+    string can replace receiver evidence.
+
+
+    Every probe creates an acknowledged fresh evidence generation over an isolated HTTP control fixture,
+    then sends exactly 16 distinct data datagrams of 1000-byte UDP payload and four 100-byte controls,
+    paced 10ms apart. The receiver rejects malformed payloads and duplicate sequence evidence; older generations
+    cannot supply current results. A bounded settling window precedes acceptance. These are small finite
+    correctness probes, not a benchmark or calibrated rate/throughput test.
+
+
+    Remove the marking attachment: all 16 data packets must still arrive but now with observed TOS 0.
+    Restore marking and require actual TOS 184 again. Attach only the ingress data-class policer, CIR
+    8000bit/s and burst 1500bytes, conform transmit/exceed drop. Its fresh exceeded counter must initially
+    be zero. The bounded burst must then deliver some but fewer than 16 data packets, all still EF, while
+    all four unselected controls survive; the actual policer must show both conformed and exceeded packets.
+    Finally detach policing and recover all 16 EF packets and four controls.
+
+
+    The fixture HTTP 8081 interface exists solely for resetting/reading the disposable receiver''s bounded
+    counters. It accepts only the declared client source and exact generation fields; it is not an authenticated
+    production API or a latency/packet-loss monitor. Images, virtual scheduling, IOL-XE software rate
+    behavior and host load constrain observations. No hardware QoS accuracy, queuing fairness, congestion
+    avoidance or service guarantee is inferred. No external connector, installed production policy or
+    credential is required. Stop/wipe only the imported copy to reset.
+
 
 
     Objectives:
 
-    - Classify voice, business, and best-effort traffic.
+    - Observe actual receiver TOS and exact per-generation UDP sequence sets independently of router configuration.
 
-    - Apply marking and policing at the edge.
+    - Remove/restore marking while retaining complete data and control delivery.
 
-    - Explain how congestion would be handled.
+    - Observe real selective ingress policing with fresh counter evidence and unpoliced controls, then
+    recover full delivery.
 
-
-    Suggested verification:
-
-    - show ip interface brief
-
-    - show ip route
-
-    - show running-config
-
-
-    Stretch goals:
-
-    - Document the final design.
-
-    - Add one extra validation command for each requirement.
-
-    - Make one controlled change and prove that the network still works.'
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: HQ-R1
-  node_definition: iosv
+  label: CLIENT
+  node_definition: net-tools
   configuration:
-  - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.10.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.10.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.1.1\
-      \ 255.255.255.255\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 0
-  y: 0
-  priority: 100
-  tags: []
-- id: n1
-  label: ISP-R2
-  node_definition: iosv
-  configuration:
-  - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.11.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.11.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.2.1\
-      \ 255.255.255.255\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 240
-  y: 0
-  priority: 99
-  tags: []
-- id: n2
-  label: BRANCH-R3
-  node_definition: iosv
-  configuration:
-  - name: ios_config.txt
-    content: "hostname R3\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.12.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.12.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.3.1\
-      \ 255.255.255.255\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 480
-  y: 0
-  priority: 98
-  tags: []
-- id: n3
-  label: EDGE-R4
-  node_definition: iosv
-  configuration:
-  - name: ios_config.txt
-    content: "hostname R4\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.13.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.13.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.4.1\
-      \ 255.255.255.255\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 720
-  y: 0
-  priority: 97
-  tags: []
-- id: n4
-  label: HQ-SW
-  node_definition: iosvl2
-  configuration:
-  - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nvlan 20\n name USERS_20\nvlan 30\n name SERVICES_30\n\
-      interface range GigabitEthernet0/0-3\n switchport mode access\n spanning-tree portfast\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 0
-  y: 200
-  priority: 96
-  tags: []
-- id: n5
-  label: BRANCH-PC
-  node_definition: desktop
-  configuration:
-  - name: node.cfg
-    content: '# BRANCH-PC
+  - name: boot.sh
+    content: '#!/bin/bash
 
-      # Use this node as a lightweight endpoint or API/mock server.
+      set -eu
+
+      mkdir -p /lab
+
+      echo CML-QOS-DATAPLANE-V1 > /lab/CML-QOS-FIXTURE
+
+      echo CLIENT > /lab/qos-role
+
+      base64 -d > /lab/q.py <<''CML_EMBED_EXAMPLES_SECURITY_QOS_PROBE_PY''
+
+      IiIiSXNvbGF0ZWQgVURQL1RPUyBvYnNlcnZhdGlvbnMgZm9yIGEgcmVhbCByb3V0ZWQgTVFDIGV4
+
+      ZXJjaXNlLiIiIgoKaW1wb3J0IGFyZ3BhcnNlCmltcG9ydCBodHRwLnNlcnZlcgppbXBvcnQgaXBh
+
+      ZGRyZXNzCmltcG9ydCBqc29uCmltcG9ydCBvcwppbXBvcnQgcmUKaW1wb3J0IHNlY3JldHMKaW1w
+
+      b3J0IHNlbGVjdAppbXBvcnQgc29ja2V0CmltcG9ydCBzdWJwcm9jZXNzCmltcG9ydCB0aHJlYWRp
+
+      bmcKaW1wb3J0IHRpbWUKaW1wb3J0IHVybGxpYi5yZXF1ZXN0CmZyb20gcGF0aGxpYiBpbXBvcnQg
+
+      UGF0aAoKUk9PVCA9IFBhdGgoIi9sYWIiKQpNQVJLRVIgPSAiQ01MLVFPUy1EQVRBUExBTkUtVjEi
+
+      CkNMSUVOVCwgU0VSVkVSID0gIjE5OC4xOC4wLjIiLCAiMTk4LjE4LjEuMiIKTElNSVRTID0geyJk
+
+      YXRhIjogMTYsICJjb250cm9sIjogNH0KUE9SVFMgPSB7ImRhdGEiOiA5MDAwLCAiY29udHJvbCI6
+
+      IDkwMDF9ClNJWkVTID0geyJkYXRhIjogMTAwMCwgImNvbnRyb2wiOiAxMDB9CgoKZGVmIHJ1bihh
+
+      cmdzKToKICAgIHJldHVybiBzdWJwcm9jZXNzLnJ1bihhcmdzLCBjaGVjaz1UcnVlLCBjYXB0dXJl
+
+      X291dHB1dD1UcnVlLCB0ZXh0PVRydWUsIHRpbWVvdXQ9MTUpCgoKZGVmIGNvbmZpZ3VyZShyb2xl
+
+      KToKICAgIG93biwgZ2F0ZXdheSA9IChDTElFTlQsICIxOTguMTguMC4xIikgaWYgcm9sZSA9PSAi
+
+      Q0xJRU5UIiBlbHNlIChTRVJWRVIsICIxOTguMTguMS4xIikKICAgIHJlbW90ZSA9IFNFUlZFUiBp
+
+      ZiByb2xlID09ICJDTElFTlQiIGVsc2UgQ0xJRU5UCiAgICBydW4oWyJpcCIsICJsaW5rIiwgInNl
+
+      dCIsICJldGgxIiwgInVwIl0pCiAgICBydW4oWyJpcCIsICJhZGRyIiwgImFkZCIsIG93biArICIv
+
+      MzAiLCAiZGV2IiwgImV0aDEiXSkKICAgIHByZWZpeCA9IHN0cihpcGFkZHJlc3MuSVB2NE5ldHdv
+
+      cmsocmVtb3RlICsgIi8zMCIsIHN0cmljdD1GYWxzZSkpCiAgICBydW4oWyJpcCIsICJyb3V0ZSIs
+
+      ICJhZGQiLCBwcmVmaXgsICJ2aWEiLCBnYXRld2F5LCAiZGV2IiwgImV0aDEiXSkKICAgIGlmIHJv
+
+      bGUgPT0gIlNFUlZFUiI6CiAgICAgICAgd2l0aCAoUk9PVCAvICJxb3Mtc2VydmVyLmxvZyIpLm9w
+
+      ZW4oImFiIikgYXMgb3V0cHV0OgogICAgICAgICAgICBjaGlsZCA9IHN1YnByb2Nlc3MuUG9wZW4o
+
+      CiAgICAgICAgICAgICAgICBbInB5dGhvbjMiLCBzdHIoUGF0aChfX2ZpbGVfXykucmVzb2x2ZSgp
+
+      KSwgInNlcnZlIl0sCiAgICAgICAgICAgICAgICBzdGRpbj1zdWJwcm9jZXNzLkRFVk5VTEwsCiAg
+
+      ICAgICAgICAgICAgICBzdGRvdXQ9b3V0cHV0LAogICAgICAgICAgICAgICAgc3RkZXJyPXN1YnBy
+
+      b2Nlc3MuU1RET1VULAogICAgICAgICAgICAgICAgc3RhcnRfbmV3X3Nlc3Npb249VHJ1ZSwKICAg
+
+      ICAgICAgICAgKQogICAgICAgIChST09UIC8gInFvcy1zZXJ2ZXIucGlkIikud3JpdGVfdGV4dChz
+
+      dHIoY2hpbGQucGlkKSkKICAgIHJldHVybiB7InN0YXR1cyI6ICJwYXNzZWQiLCAicm9sZSI6IHJv
+
+      bGV9CgoKZGVmIHBhY2tldChub25jZSwga2luZCwgc2VxdWVuY2UpOgogICAgYXNzZXJ0IHJlLmZ1
+
+      bGxtYXRjaCgiWzAtOWEtZl17MjR9Iiwgbm9uY2UpIGFuZCBraW5kIGluIExJTUlUUwogICAgYXNz
+
+      ZXJ0IHR5cGUoc2VxdWVuY2UpIGlzIGludCBhbmQgMCA8PSBzZXF1ZW5jZSA8IExJTUlUU1traW5k
+
+      XQogICAgdmFsdWUgPSBqc29uLmR1bXBzKAogICAgICAgIHsibm9uY2UiOiBub25jZSwgImtpbmQi
+
+      OiBraW5kLCAic2VxdWVuY2UiOiBzZXF1ZW5jZX0sIHNlcGFyYXRvcnM9KCIsIiwgIjoiKQogICAg
+
+      KS5lbmNvZGUoImFzY2lpIikKICAgIHJldHVybiB2YWx1ZS5sanVzdChTSVpFU1traW5kXSwgYiIg
+
+      IikKCgpkZWYgZGVjb2RlKHJhdywga2luZCk6CiAgICBpZiBraW5kIG5vdCBpbiBMSU1JVFMgb3Ig
+
+      bGVuKHJhdykgIT0gU0laRVNba2luZF06CiAgICAgICAgcmFpc2UgVmFsdWVFcnJvcigiVW5leHBl
+
+      Y3RlZCBraW5kIG9yIFVEUCBwYXlsb2FkIHNpemUiKQogICAgdmFsdWUgPSBqc29uLmxvYWRzKHJh
+
+      dykKICAgIGlmIG5vdCBpc2luc3RhbmNlKHZhbHVlLCBkaWN0KSBvciBzZXQodmFsdWUpICE9IHsi
+
+      bm9uY2UiLCAia2luZCIsICJzZXF1ZW5jZSJ9OgogICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoIlVu
+
+      ZXhwZWN0ZWQgcGF5bG9hZCBmaWVsZHMiKQogICAgaWYgbm90IGlzaW5zdGFuY2UodmFsdWVbIm5v
+
+      bmNlIl0sIHN0cikgb3Igbm90IHJlLmZ1bGxtYXRjaCgiWzAtOWEtZl17MjR9IiwgdmFsdWVbIm5v
+
+      bmNlIl0pOgogICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoIkludmFsaWQgZXZpZGVuY2UgZ2VuZXJh
+
+      dGlvbiIpCiAgICBpZiAoCiAgICAgICAgdmFsdWVbImtpbmQiXSAhPSBraW5kCiAgICAgICAgb3Ig
+
+      dHlwZSh2YWx1ZVsic2VxdWVuY2UiXSkgaXMgbm90IGludAogICAgICAgIG9yIG5vdCAwIDw9IHZh
+
+      bHVlWyJzZXF1ZW5jZSJdIDwgTElNSVRTW2tpbmRdCiAgICApOgogICAgICAgIHJhaXNlIFZhbHVl
+
+      RXJyb3IoIkludmFsaWQgdHJhZmZpYyBjbGFzcyBvciBzZXF1ZW5jZSIpCiAgICByZXR1cm4gdmFs
+
+      dWUKCgpjbGFzcyBPYnNlcnZhdGlvbnM6CiAgICBkZWYgX19pbml0X18oc2VsZik6CiAgICAgICAg
+
+      c2VsZi5sb2NrID0gdGhyZWFkaW5nLkxvY2soKQogICAgICAgIHNlbGYucmVzZXQoIjAiICogMjQp
+
+      CgogICAgZGVmIHJlc2V0KHNlbGYsIG5vbmNlKToKICAgICAgICBpZiBub3QgcmUuZnVsbG1hdGNo
+
+      KCJbMC05YS1mXXsyNH0iLCBub25jZSk6CiAgICAgICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoIklu
+
+      dmFsaWQgZ2VuZXJhdGlvbiIpCiAgICAgICAgd2l0aCBzZWxmLmxvY2s6CiAgICAgICAgICAgIHNl
+
+      bGYubm9uY2UgPSBub25jZQogICAgICAgICAgICBzZWxmLnNlcXVlbmNlcyA9IHtuYW1lOiBzZXQo
+
+      KSBmb3IgbmFtZSBpbiBMSU1JVFN9CiAgICAgICAgICAgIHNlbGYudG9zID0ge25hbWU6IHNldCgp
+
+      IGZvciBuYW1lIGluIExJTUlUU30KICAgICAgICAgICAgc2VsZi5tYWxmb3JtZWQgPSBzZWxmLmR1
+
+      cGxpY2F0ZXMgPSAwCgogICAgZGVmIHJlY2VpdmUoc2VsZiwgcmF3LCBraW5kLCB0b3MpOgogICAg
+
+      ICAgIHdpdGggc2VsZi5sb2NrOgogICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICB2YWx1
+
+      ZSA9IGRlY29kZShyYXcsIGtpbmQpCiAgICAgICAgICAgICAgICBpZiB0eXBlKHRvcykgaXMgbm90
+
+      IGludCBvciBub3QgMCA8PSB0b3MgPD0gMjU1OgogICAgICAgICAgICAgICAgICAgIHJhaXNlIFZh
+
+      bHVlRXJyb3IoIk1pc3Npbmcgb3IgaW52YWxpZCByZWNlaXZlZCBUT1MiKQogICAgICAgICAgICBl
+
+      eGNlcHQgKFZhbHVlRXJyb3IsIFR5cGVFcnJvciwgVW5pY29kZUVycm9yKToKICAgICAgICAgICAg
+
+      ICAgIHNlbGYubWFsZm9ybWVkICs9IDEKICAgICAgICAgICAgICAgIHJldHVybgogICAgICAgICAg
+
+      ICBpZiB2YWx1ZVsibm9uY2UiXSAhPSBzZWxmLm5vbmNlOgogICAgICAgICAgICAgICAgcmV0dXJu
+
+      CiAgICAgICAgICAgIHNlcXVlbmNlID0gdmFsdWVbInNlcXVlbmNlIl0KICAgICAgICAgICAgaWYg
+
+      c2VxdWVuY2UgaW4gc2VsZi5zZXF1ZW5jZXNba2luZF06CiAgICAgICAgICAgICAgICBzZWxmLmR1
+
+      cGxpY2F0ZXMgKz0gMQogICAgICAgICAgICBzZWxmLnNlcXVlbmNlc1traW5kXS5hZGQoc2VxdWVu
+
+      Y2UpCiAgICAgICAgICAgIHNlbGYudG9zW2tpbmRdLmFkZCh0b3MpCgogICAgZGVmIHNuYXBzaG90
+
+      KHNlbGYsIG5vbmNlKToKICAgICAgICB3aXRoIHNlbGYubG9jazoKICAgICAgICAgICAgaWYgbm9u
+
+      Y2UgIT0gc2VsZi5ub25jZToKICAgICAgICAgICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoIlN0YWxl
+
+      IGdlbmVyYXRpb24iKQogICAgICAgICAgICByZXR1cm4gewogICAgICAgICAgICAgICAgInNlcXVl
+
+      bmNlcyI6IHtrOiBzb3J0ZWQodikgZm9yIGssIHYgaW4gc2VsZi5zZXF1ZW5jZXMuaXRlbXMoKX0s
+
+      CiAgICAgICAgICAgICAgICAidG9zIjoge2s6IHNvcnRlZCh2KSBmb3IgaywgdiBpbiBzZWxmLnRv
+
+      cy5pdGVtcygpfSwKICAgICAgICAgICAgICAgICJtYWxmb3JtZWQiOiBzZWxmLm1hbGZvcm1lZCwK
+
+      ICAgICAgICAgICAgICAgICJkdXBsaWNhdGVzIjogc2VsZi5kdXBsaWNhdGVzLAogICAgICAgICAg
+
+      ICB9CgoKZGVmIHNlcnZlKCk6CiAgICBzdGF0ZSA9IE9ic2VydmF0aW9ucygpCgogICAgY2xhc3Mg
+
+      SGFuZGxlcihodHRwLnNlcnZlci5CYXNlSFRUUFJlcXVlc3RIYW5kbGVyKToKICAgICAgICBkZWYg
+
+      ZG9fUE9TVChzZWxmKToKICAgICAgICAgICAgaWYgKAogICAgICAgICAgICAgICAgc2VsZi5jbGll
+
+      bnRfYWRkcmVzc1swXSAhPSBDTElFTlQKICAgICAgICAgICAgICAgIG9yIHNlbGYucGF0aCAhPSAi
+
+      L3dpbmRvdyIKICAgICAgICAgICAgICAgIG9yIHNlbGYuaGVhZGVycy5nZXQoIkNvbnRlbnQtTGVu
+
+      Z3RoIikgIT0gIjI0IgogICAgICAgICAgICApOgogICAgICAgICAgICAgICAgc2VsZi5zZW5kX2Vy
+
+      cm9yKDQwMCkKICAgICAgICAgICAgICAgIHJldHVybgogICAgICAgICAgICB0cnk6CiAgICAgICAg
+
+      ICAgICAgICBzdGF0ZS5yZXNldChzZWxmLnJmaWxlLnJlYWQoMjQpLmRlY29kZSgiYXNjaWkiKSkK
+
+      ICAgICAgICAgICAgZXhjZXB0IChWYWx1ZUVycm9yLCBVbmljb2RlRXJyb3IpOgogICAgICAgICAg
+
+      ICAgICAgc2VsZi5zZW5kX2Vycm9yKDQwMCkKICAgICAgICAgICAgICAgIHJldHVybgogICAgICAg
+
+      ICAgICBzZWxmLnNlbmRfcmVzcG9uc2UoMjA0KQogICAgICAgICAgICBzZWxmLmVuZF9oZWFkZXJz
+
+      KCkKCiAgICAgICAgZGVmIGRvX0dFVChzZWxmKToKICAgICAgICAgICAgaWYgc2VsZi5jbGllbnRf
+
+      YWRkcmVzc1swXSAhPSBDTElFTlQgb3Igbm90IHJlLmZ1bGxtYXRjaCgKICAgICAgICAgICAgICAg
+
+      ICIvd2luZG93L1swLTlhLWZdezI0fSIsIHNlbGYucGF0aAogICAgICAgICAgICApOgogICAgICAg
+
+      ICAgICAgICAgc2VsZi5zZW5kX2Vycm9yKDQwMCkKICAgICAgICAgICAgICAgIHJldHVybgogICAg
+
+      ICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICBib2R5ID0ganNvbi5kdW1wcyhzdGF0ZS5zbmFw
+
+      c2hvdChzZWxmLnBhdGgucnNwbGl0KCIvIiwgMSlbMV0pKS5lbmNvZGUoKQogICAgICAgICAgICBl
+
+      eGNlcHQgVmFsdWVFcnJvcjoKICAgICAgICAgICAgICAgIHNlbGYuc2VuZF9lcnJvcig0MDkpCiAg
+
+      ICAgICAgICAgICAgICByZXR1cm4KICAgICAgICAgICAgc2VsZi5zZW5kX3Jlc3BvbnNlKDIwMCkK
+
+      ICAgICAgICAgICAgc2VsZi5zZW5kX2hlYWRlcigiQ29udGVudC1UeXBlIiwgImFwcGxpY2F0aW9u
+
+      L2pzb24iKQogICAgICAgICAgICBzZWxmLnNlbmRfaGVhZGVyKCJDb250ZW50LUxlbmd0aCIsIHN0
+
+      cihsZW4oYm9keSkpKQogICAgICAgICAgICBzZWxmLnNlbmRfaGVhZGVyKCJDYWNoZS1Db250cm9s
+
+      IiwgIm5vLXN0b3JlIikKICAgICAgICAgICAgc2VsZi5lbmRfaGVhZGVycygpCiAgICAgICAgICAg
+
+      IHNlbGYud2ZpbGUud3JpdGUoYm9keSkKCiAgICAgICAgZGVmIGxvZ19tZXNzYWdlKHNlbGYsICph
+
+      cmdzKToKICAgICAgICAgICAgcGFzcwoKICAgIGh0dHBkID0gaHR0cC5zZXJ2ZXIuVGhyZWFkaW5n
+
+      SFRUUFNlcnZlcigoU0VSVkVSLCA4MDgxKSwgSGFuZGxlcikKICAgIHRocmVhZGluZy5UaHJlYWQo
+
+      dGFyZ2V0PWh0dHBkLnNlcnZlX2ZvcmV2ZXIsIGRhZW1vbj1UcnVlKS5zdGFydCgpCiAgICByZWNl
+
+      aXZlcnMgPSB7fQogICAgZm9yIGtpbmQsIHBvcnQgaW4gUE9SVFMuaXRlbXMoKToKICAgICAgICBy
+
+      ZWNlaXZlciA9IHNvY2tldC5zb2NrZXQoc29ja2V0LkFGX0lORVQsIHNvY2tldC5TT0NLX0RHUkFN
+
+      KQogICAgICAgIHJlY2VpdmVyLnNldHNvY2tvcHQoc29ja2V0LklQUFJPVE9fSVAsIHNvY2tldC5J
+
+      UF9SRUNWVE9TLCAxKQogICAgICAgIHJlY2VpdmVyLmJpbmQoKFNFUlZFUiwgcG9ydCkpCiAgICAg
+
+      ICAgcmVjZWl2ZXJzW3JlY2VpdmVyXSA9IGtpbmQKICAgIHRyeToKICAgICAgICB3aGlsZSBUcnVl
+
+      OgogICAgICAgICAgICBmb3IgcmVjZWl2ZXIgaW4gc2VsZWN0LnNlbGVjdChsaXN0KHJlY2VpdmVy
+
+      cyksIFtdLCBbXSwgMC4yKVswXToKICAgICAgICAgICAgICAgIHJhdywgYW5jaWxsYXJ5LCBmbGFn
+
+      cywgcGVlciA9IHJlY2VpdmVyLnJlY3Ztc2coNDA5NiwgNjQpCiAgICAgICAgICAgICAgICBpZiBw
+
+      ZWVyWzBdICE9IENMSUVOVDoKICAgICAgICAgICAgICAgICAgICBjb250aW51ZQogICAgICAgICAg
+
+      ICAgICAgb2JzZXJ2ZWQgPSBbCiAgICAgICAgICAgICAgICAgICAgZGF0YVswXQogICAgICAgICAg
+
+      ICAgICAgICAgIGZvciBsZXZlbCwgb3B0aW9uLCBkYXRhIGluIGFuY2lsbGFyeQogICAgICAgICAg
+
+      ICAgICAgICAgIGlmIGxldmVsID09IHNvY2tldC5JUFBST1RPX0lQIGFuZCBvcHRpb24gPT0gc29j
+
+      a2V0LklQX1RPUyBhbmQgbGVuKGRhdGEpID09IDEKICAgICAgICAgICAgICAgIF0KICAgICAgICAg
+
+      ICAgICAgIHN0YXRlLnJlY2VpdmUoCiAgICAgICAgICAgICAgICAgICAgcmF3LAogICAgICAgICAg
+
+      ICAgICAgICAgIHJlY2VpdmVyc1tyZWNlaXZlcl0sCiAgICAgICAgICAgICAgICAgICAgb2JzZXJ2
+
+      ZWRbMF0gaWYgbGVuKG9ic2VydmVkKSA9PSAxIGFuZCBmbGFncyA9PSAwIGVsc2UgTm9uZSwKICAg
+
+      ICAgICAgICAgICAgICkKICAgIGZpbmFsbHk6CiAgICAgICAgaHR0cGQuc2h1dGRvd24oKQogICAg
+
+      ICAgIGh0dHBkLnNlcnZlcl9jbG9zZSgpCiAgICAgICAgZm9yIHJlY2VpdmVyIGluIHJlY2VpdmVy
+
+      czoKICAgICAgICAgICAgcmVjZWl2ZXIuY2xvc2UoKQoKCmRlZiBhY2NlcHRlZCh2YWx1ZSwgbW9k
+
+      ZSk6CiAgICBpZiBtb2RlIG5vdCBpbiAoIm1hcmtlZCIsICJ1bm1hcmtlZCIsICJsaW1pdGVkIik6
+
+      CiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICBpZiB2YWx1ZVsibWFsZm9ybWVkIl0gIT0gMCBvciB2
+
+      YWx1ZVsiZHVwbGljYXRlcyJdICE9IDA6CiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICBpZiB2YWx1
+
+      ZVsic2VxdWVuY2VzIl1bImNvbnRyb2wiXSAhPSBsaXN0KHJhbmdlKExJTUlUU1siY29udHJvbCJd
+
+      KSkgb3IgdmFsdWVbInRvcyJdWwogICAgICAgICJjb250cm9sIgogICAgXSAhPSBbMF06CiAgICAg
+
+      ICAgcmV0dXJuIEZhbHNlCiAgICBhY3R1YWwgPSB2YWx1ZVsic2VxdWVuY2VzIl1bImRhdGEiXQog
+
+      ICAgaWYgbW9kZSA9PSAibGltaXRlZCI6CiAgICAgICAgZW5vdWdoID0gKAogICAgICAgICAgICAw
+
+      IDwgbGVuKGFjdHVhbCkgPCBMSU1JVFNbImRhdGEiXQogICAgICAgICAgICBhbmQgbGVuKHNldChh
+
+      Y3R1YWwpKSA9PSBsZW4oYWN0dWFsKQogICAgICAgICAgICBhbmQgYWxsKHR5cGUodikgaXMgaW50
+
+      IGFuZCAwIDw9IHYgPCBMSU1JVFNbImRhdGEiXSBmb3IgdiBpbiBhY3R1YWwpCiAgICAgICAgKQog
+
+      ICAgZWxzZToKICAgICAgICBlbm91Z2ggPSBhY3R1YWwgPT0gbGlzdChyYW5nZShMSU1JVFNbImRh
+
+      dGEiXSkpCiAgICByZXR1cm4gZW5vdWdoIGFuZCB2YWx1ZVsidG9zIl1bImRhdGEiXSA9PSAoWzBd
+
+      IGlmIG1vZGUgPT0gInVubWFya2VkIiBlbHNlIFsxODRdKQoKCmRlZiBwcm9iZShtb2RlKToKICAg
+
+      IGFzc2VydCBtb2RlIGluICgibWFya2VkIiwgInVubWFya2VkIiwgImxpbWl0ZWQiKQogICAgbm9u
+
+      Y2UgPSBzZWNyZXRzLnRva2VuX2hleCgxMikKICAgIGJhc2UgPSAiaHR0cDovLyIgKyBTRVJWRVIg
+
+      KyAiOjgwODEvd2luZG93IgogICAgd2l0aCB1cmxsaWIucmVxdWVzdC51cmxvcGVuKAogICAgICAg
+
+      IHVybGxpYi5yZXF1ZXN0LlJlcXVlc3QoYmFzZSwgZGF0YT1ub25jZS5lbmNvZGUoKSwgbWV0aG9k
+
+      PSJQT1NUIiksIHRpbWVvdXQ9NQogICAgKSBhcyByZXNwb25zZToKICAgICAgICBhc3NlcnQgcmVz
+
+      cG9uc2Uuc3RhdHVzID09IDIwNAogICAgd2l0aCBzb2NrZXQuc29ja2V0KHNvY2tldC5BRl9JTkVU
+
+      LCBzb2NrZXQuU09DS19ER1JBTSkgYXMgc2VuZGVyOgogICAgICAgIHNlbmRlci5iaW5kKChDTElF
+
+      TlQsIDApKQogICAgICAgIHNlbmRlci5zZXRzb2Nrb3B0KHNvY2tldC5JUFBST1RPX0lQLCBzb2Nr
+
+      ZXQuSVBfVE9TLCAwKQogICAgICAgIGZvciBraW5kLCBjb3VudCBpbiBMSU1JVFMuaXRlbXMoKToK
+
+      ICAgICAgICAgICAgZm9yIHNlcXVlbmNlIGluIHJhbmdlKGNvdW50KToKICAgICAgICAgICAgICAg
+
+      IHNlbmRlci5zZW5kdG8ocGFja2V0KG5vbmNlLCBraW5kLCBzZXF1ZW5jZSksIChTRVJWRVIsIFBP
+
+      UlRTW2tpbmRdKSkKICAgICAgICAgICAgICAgIHRpbWUuc2xlZXAoMC4wMSkKICAgIGRlYWRsaW5l
+
+      ID0gdGltZS5tb25vdG9uaWMoKSArIDMKICAgIHNldHRsZWRfc2luY2UsIHByaW9yID0gTm9uZSwg
+
+      Tm9uZQogICAgd2hpbGUgVHJ1ZToKICAgICAgICB3aXRoIHVybGxpYi5yZXF1ZXN0LnVybG9wZW4o
+
+      YmFzZSArICIvIiArIG5vbmNlLCB0aW1lb3V0PTUpIGFzIHJlc3BvbnNlOgogICAgICAgICAgICB2
+
+      YWx1ZSA9IGpzb24ubG9hZChyZXNwb25zZSkKICAgICAgICBpZiB2YWx1ZSA9PSBwcmlvcjoKICAg
+
+      ICAgICAgICAgaWYgKAogICAgICAgICAgICAgICAgc2V0dGxlZF9zaW5jZSBpcyBub3QgTm9uZQog
+
+      ICAgICAgICAgICAgICAgYW5kIHRpbWUubW9ub3RvbmljKCkgLSBzZXR0bGVkX3NpbmNlID49IDAu
+
+      NQogICAgICAgICAgICAgICAgYW5kIHZhbHVlWyJzZXF1ZW5jZXMiXVsiY29udHJvbCJdID09IGxp
+
+      c3QocmFuZ2UoNCkpCiAgICAgICAgICAgICk6CiAgICAgICAgICAgICAgICBicmVhawogICAgICAg
+
+      IGVsc2U6CiAgICAgICAgICAgIHByaW9yLCBzZXR0bGVkX3NpbmNlID0gdmFsdWUsIHRpbWUubW9u
+
+      b3RvbmljKCkKICAgICAgICBpZiB0aW1lLm1vbm90b25pYygpID49IGRlYWRsaW5lOgogICAgICAg
+
+      ICAgICBicmVhawogICAgICAgIHRpbWUuc2xlZXAoMC4xKQogICAgYXNzZXJ0IGFjY2VwdGVkKHZh
+
+      bHVlLCBtb2RlKSwgdmFsdWUKICAgIHJldHVybiB7CiAgICAgICAgInN0YXR1cyI6ICJwYXNzZWQi
+
+      LAogICAgICAgICJtb2RlIjogbW9kZSwKICAgICAgICAiZGF0YV9yZWNlaXZlZCI6IGxlbih2YWx1
+
+      ZVsic2VxdWVuY2VzIl1bImRhdGEiXSksCiAgICAgICAgImNvbnRyb2xfcmVjZWl2ZWQiOiA0LAog
+
+      ICAgICAgICJvYnNlcnZlZF9kYXRhX3RvcyI6IHZhbHVlWyJ0b3MiXVsiZGF0YSJdLAogICAgICAg
+
+      ICJvYnNlcnZlZF9jb250cm9sX3RvcyI6IHZhbHVlWyJ0b3MiXVsiY29udHJvbCJdLAogICAgICAg
+
+      ICJmcmVzaF9nZW5lcmF0aW9uIjogVHJ1ZSwKICAgIH0KCgpkZWYgbWFpbigpOgogICAgcGFyc2Vy
+
+      ID0gYXJncGFyc2UuQXJndW1lbnRQYXJzZXIoZGVzY3JpcHRpb249X19kb2NfXykKICAgIHBhcnNl
+
+      ci5hZGRfYXJndW1lbnQoImFjdGlvbiIsIGNob2ljZXM9WyJjb25maWd1cmUiLCAic2VydmUiLCAi
+
+      bWFya2VkIiwgInVubWFya2VkIiwgImxpbWl0ZWQiXSkKICAgIGFjdGlvbiA9IHBhcnNlci5wYXJz
+
+      ZV9hcmdzKCkuYWN0aW9uCiAgICBpZiBvcy5nZXRldWlkKCkgIT0gMCBvciAoUk9PVCAvICJDTUwt
+
+      UU9TLUZJWFRVUkUiKS5yZWFkX3RleHQoKS5zdHJpcCgpICE9IE1BUktFUjoKICAgICAgICByYWlz
+
+      ZSBQZXJtaXNzaW9uRXJyb3IoIk9ubHkgdGhlIGlzb2xhdGVkIG1hcmtlZCBRb1MgZml4dHVyZSBp
+
+      cyBhY2NlcHRlZCIpCiAgICByb2xlID0gKFJPT1QgLyAicW9zLXJvbGUiKS5yZWFkX3RleHQoKS5z
+
+      dHJpcCgpCiAgICBhc3NlcnQgcm9sZSBpbiAoIkNMSUVOVCIsICJTRVJWRVIiKQogICAgaWYgYWN0
+
+      aW9uID09ICJjb25maWd1cmUiOgogICAgICAgIHZhbHVlID0gY29uZmlndXJlKHJvbGUpCiAgICBl
+
+      bGlmIGFjdGlvbiA9PSAic2VydmUiOgogICAgICAgIGFzc2VydCByb2xlID09ICJTRVJWRVIiCiAg
+
+      ICAgICAgc2VydmUoKQogICAgICAgIHJldHVybgogICAgZWxzZToKICAgICAgICBhc3NlcnQgcm9s
+
+      ZSA9PSAiQ0xJRU5UIgogICAgICAgIHZhbHVlID0gcHJvYmUoYWN0aW9uKQogICAgcHJpbnQoanNv
+
+      bi5kdW1wcyh2YWx1ZSwgc29ydF9rZXlzPVRydWUpKQoKCmlmIF9fbmFtZV9fID09ICJfX21haW5f
+
+      XyI6CiAgICBtYWluKCkK
+
+      CML_EMBED_EXAMPLES_SECURITY_QOS_PROBE_PY
+
+      python3 /lab/q.py configure
+
+      echo READY >/dev/console
+
+      exit 0
 
       '
+  cpu_limit: 100
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
-  - id: i0
+  - id: i1
     label: eth0
     type: physical
     slot: 0
-  x: 240
-  y: 200
-  priority: 95
+  - id: i2
+    label: eth1
+    type: physical
+    slot: 1
+  - id: i3
+    label: eth2
+    type: physical
+    slot: 2
+  - id: i4
+    label: eth3
+    type: physical
+    slot: 3
   tags: []
+  ram: 512
+  cpus: 1
+- id: n1
+  label: R1
+  node_definition: iol-xe
+  configuration:
+  - name: ios_config.txt
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\nno logging console\nip access-list extended CML-QOS-DATA\n permit udp host 198.18.0.2 host\
+      \ 198.18.1.2 eq 9000\n exit\nclass-map match-all CML-DATA\n match access-group name CML-QOS-DATA\n\
+      \ exit\npolicy-map CML-MARK\n class CML-DATA\n  set dscp ef\n exit\n exit\npolicy-map CML-POLICE\n\
+      \ class CML-DATA\n  police 8000 1500 conform-action transmit exceed-action drop\n exit\n exit\n\
+      interface Ethernet0/0\n ip address 198.18.0.1 255.255.255.252\n no shutdown\n exit\ninterface Ethernet0/1\n\
+      \ ip address 198.18.1.1 255.255.255.252\n no shutdown\n service-policy output CML-MARK\n exit\n\
+      end\n"
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
+  interfaces:
+  - id: i0
+    label: Loopback0
+    type: loopback
+  - id: i1
+    label: Ethernet0/0
+    type: physical
+    slot: 0
+  - id: i2
+    label: Ethernet0/1
+    type: physical
+    slot: 1
+  - id: i3
+    label: Ethernet0/2
+    type: physical
+    slot: 2
+  - id: i4
+    label: Ethernet0/3
+    type: physical
+    slot: 3
+  tags: []
+  ram: 1024
+  cpus: 1
+- id: n2
+  label: SERVER
+  node_definition: net-tools
+  configuration:
+  - name: boot.sh
+    content: '#!/bin/bash
+
+      set -eu
+
+      mkdir -p /lab
+
+      echo CML-QOS-DATAPLANE-V1 > /lab/CML-QOS-FIXTURE
+
+      echo SERVER > /lab/qos-role
+
+      base64 -d > /lab/q.py <<''CML_EMBED_EXAMPLES_SECURITY_QOS_PROBE_PY''
+
+      IiIiSXNvbGF0ZWQgVURQL1RPUyBvYnNlcnZhdGlvbnMgZm9yIGEgcmVhbCByb3V0ZWQgTVFDIGV4
+
+      ZXJjaXNlLiIiIgoKaW1wb3J0IGFyZ3BhcnNlCmltcG9ydCBodHRwLnNlcnZlcgppbXBvcnQgaXBh
+
+      ZGRyZXNzCmltcG9ydCBqc29uCmltcG9ydCBvcwppbXBvcnQgcmUKaW1wb3J0IHNlY3JldHMKaW1w
+
+      b3J0IHNlbGVjdAppbXBvcnQgc29ja2V0CmltcG9ydCBzdWJwcm9jZXNzCmltcG9ydCB0aHJlYWRp
+
+      bmcKaW1wb3J0IHRpbWUKaW1wb3J0IHVybGxpYi5yZXF1ZXN0CmZyb20gcGF0aGxpYiBpbXBvcnQg
+
+      UGF0aAoKUk9PVCA9IFBhdGgoIi9sYWIiKQpNQVJLRVIgPSAiQ01MLVFPUy1EQVRBUExBTkUtVjEi
+
+      CkNMSUVOVCwgU0VSVkVSID0gIjE5OC4xOC4wLjIiLCAiMTk4LjE4LjEuMiIKTElNSVRTID0geyJk
+
+      YXRhIjogMTYsICJjb250cm9sIjogNH0KUE9SVFMgPSB7ImRhdGEiOiA5MDAwLCAiY29udHJvbCI6
+
+      IDkwMDF9ClNJWkVTID0geyJkYXRhIjogMTAwMCwgImNvbnRyb2wiOiAxMDB9CgoKZGVmIHJ1bihh
+
+      cmdzKToKICAgIHJldHVybiBzdWJwcm9jZXNzLnJ1bihhcmdzLCBjaGVjaz1UcnVlLCBjYXB0dXJl
+
+      X291dHB1dD1UcnVlLCB0ZXh0PVRydWUsIHRpbWVvdXQ9MTUpCgoKZGVmIGNvbmZpZ3VyZShyb2xl
+
+      KToKICAgIG93biwgZ2F0ZXdheSA9IChDTElFTlQsICIxOTguMTguMC4xIikgaWYgcm9sZSA9PSAi
+
+      Q0xJRU5UIiBlbHNlIChTRVJWRVIsICIxOTguMTguMS4xIikKICAgIHJlbW90ZSA9IFNFUlZFUiBp
+
+      ZiByb2xlID09ICJDTElFTlQiIGVsc2UgQ0xJRU5UCiAgICBydW4oWyJpcCIsICJsaW5rIiwgInNl
+
+      dCIsICJldGgxIiwgInVwIl0pCiAgICBydW4oWyJpcCIsICJhZGRyIiwgImFkZCIsIG93biArICIv
+
+      MzAiLCAiZGV2IiwgImV0aDEiXSkKICAgIHByZWZpeCA9IHN0cihpcGFkZHJlc3MuSVB2NE5ldHdv
+
+      cmsocmVtb3RlICsgIi8zMCIsIHN0cmljdD1GYWxzZSkpCiAgICBydW4oWyJpcCIsICJyb3V0ZSIs
+
+      ICJhZGQiLCBwcmVmaXgsICJ2aWEiLCBnYXRld2F5LCAiZGV2IiwgImV0aDEiXSkKICAgIGlmIHJv
+
+      bGUgPT0gIlNFUlZFUiI6CiAgICAgICAgd2l0aCAoUk9PVCAvICJxb3Mtc2VydmVyLmxvZyIpLm9w
+
+      ZW4oImFiIikgYXMgb3V0cHV0OgogICAgICAgICAgICBjaGlsZCA9IHN1YnByb2Nlc3MuUG9wZW4o
+
+      CiAgICAgICAgICAgICAgICBbInB5dGhvbjMiLCBzdHIoUGF0aChfX2ZpbGVfXykucmVzb2x2ZSgp
+
+      KSwgInNlcnZlIl0sCiAgICAgICAgICAgICAgICBzdGRpbj1zdWJwcm9jZXNzLkRFVk5VTEwsCiAg
+
+      ICAgICAgICAgICAgICBzdGRvdXQ9b3V0cHV0LAogICAgICAgICAgICAgICAgc3RkZXJyPXN1YnBy
+
+      b2Nlc3MuU1RET1VULAogICAgICAgICAgICAgICAgc3RhcnRfbmV3X3Nlc3Npb249VHJ1ZSwKICAg
+
+      ICAgICAgICAgKQogICAgICAgIChST09UIC8gInFvcy1zZXJ2ZXIucGlkIikud3JpdGVfdGV4dChz
+
+      dHIoY2hpbGQucGlkKSkKICAgIHJldHVybiB7InN0YXR1cyI6ICJwYXNzZWQiLCAicm9sZSI6IHJv
+
+      bGV9CgoKZGVmIHBhY2tldChub25jZSwga2luZCwgc2VxdWVuY2UpOgogICAgYXNzZXJ0IHJlLmZ1
+
+      bGxtYXRjaCgiWzAtOWEtZl17MjR9Iiwgbm9uY2UpIGFuZCBraW5kIGluIExJTUlUUwogICAgYXNz
+
+      ZXJ0IHR5cGUoc2VxdWVuY2UpIGlzIGludCBhbmQgMCA8PSBzZXF1ZW5jZSA8IExJTUlUU1traW5k
+
+      XQogICAgdmFsdWUgPSBqc29uLmR1bXBzKAogICAgICAgIHsibm9uY2UiOiBub25jZSwgImtpbmQi
+
+      OiBraW5kLCAic2VxdWVuY2UiOiBzZXF1ZW5jZX0sIHNlcGFyYXRvcnM9KCIsIiwgIjoiKQogICAg
+
+      KS5lbmNvZGUoImFzY2lpIikKICAgIHJldHVybiB2YWx1ZS5sanVzdChTSVpFU1traW5kXSwgYiIg
+
+      IikKCgpkZWYgZGVjb2RlKHJhdywga2luZCk6CiAgICBpZiBraW5kIG5vdCBpbiBMSU1JVFMgb3Ig
+
+      bGVuKHJhdykgIT0gU0laRVNba2luZF06CiAgICAgICAgcmFpc2UgVmFsdWVFcnJvcigiVW5leHBl
+
+      Y3RlZCBraW5kIG9yIFVEUCBwYXlsb2FkIHNpemUiKQogICAgdmFsdWUgPSBqc29uLmxvYWRzKHJh
+
+      dykKICAgIGlmIG5vdCBpc2luc3RhbmNlKHZhbHVlLCBkaWN0KSBvciBzZXQodmFsdWUpICE9IHsi
+
+      bm9uY2UiLCAia2luZCIsICJzZXF1ZW5jZSJ9OgogICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoIlVu
+
+      ZXhwZWN0ZWQgcGF5bG9hZCBmaWVsZHMiKQogICAgaWYgbm90IGlzaW5zdGFuY2UodmFsdWVbIm5v
+
+      bmNlIl0sIHN0cikgb3Igbm90IHJlLmZ1bGxtYXRjaCgiWzAtOWEtZl17MjR9IiwgdmFsdWVbIm5v
+
+      bmNlIl0pOgogICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoIkludmFsaWQgZXZpZGVuY2UgZ2VuZXJh
+
+      dGlvbiIpCiAgICBpZiAoCiAgICAgICAgdmFsdWVbImtpbmQiXSAhPSBraW5kCiAgICAgICAgb3Ig
+
+      dHlwZSh2YWx1ZVsic2VxdWVuY2UiXSkgaXMgbm90IGludAogICAgICAgIG9yIG5vdCAwIDw9IHZh
+
+      bHVlWyJzZXF1ZW5jZSJdIDwgTElNSVRTW2tpbmRdCiAgICApOgogICAgICAgIHJhaXNlIFZhbHVl
+
+      RXJyb3IoIkludmFsaWQgdHJhZmZpYyBjbGFzcyBvciBzZXF1ZW5jZSIpCiAgICByZXR1cm4gdmFs
+
+      dWUKCgpjbGFzcyBPYnNlcnZhdGlvbnM6CiAgICBkZWYgX19pbml0X18oc2VsZik6CiAgICAgICAg
+
+      c2VsZi5sb2NrID0gdGhyZWFkaW5nLkxvY2soKQogICAgICAgIHNlbGYucmVzZXQoIjAiICogMjQp
+
+      CgogICAgZGVmIHJlc2V0KHNlbGYsIG5vbmNlKToKICAgICAgICBpZiBub3QgcmUuZnVsbG1hdGNo
+
+      KCJbMC05YS1mXXsyNH0iLCBub25jZSk6CiAgICAgICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoIklu
+
+      dmFsaWQgZ2VuZXJhdGlvbiIpCiAgICAgICAgd2l0aCBzZWxmLmxvY2s6CiAgICAgICAgICAgIHNl
+
+      bGYubm9uY2UgPSBub25jZQogICAgICAgICAgICBzZWxmLnNlcXVlbmNlcyA9IHtuYW1lOiBzZXQo
+
+      KSBmb3IgbmFtZSBpbiBMSU1JVFN9CiAgICAgICAgICAgIHNlbGYudG9zID0ge25hbWU6IHNldCgp
+
+      IGZvciBuYW1lIGluIExJTUlUU30KICAgICAgICAgICAgc2VsZi5tYWxmb3JtZWQgPSBzZWxmLmR1
+
+      cGxpY2F0ZXMgPSAwCgogICAgZGVmIHJlY2VpdmUoc2VsZiwgcmF3LCBraW5kLCB0b3MpOgogICAg
+
+      ICAgIHdpdGggc2VsZi5sb2NrOgogICAgICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICB2YWx1
+
+      ZSA9IGRlY29kZShyYXcsIGtpbmQpCiAgICAgICAgICAgICAgICBpZiB0eXBlKHRvcykgaXMgbm90
+
+      IGludCBvciBub3QgMCA8PSB0b3MgPD0gMjU1OgogICAgICAgICAgICAgICAgICAgIHJhaXNlIFZh
+
+      bHVlRXJyb3IoIk1pc3Npbmcgb3IgaW52YWxpZCByZWNlaXZlZCBUT1MiKQogICAgICAgICAgICBl
+
+      eGNlcHQgKFZhbHVlRXJyb3IsIFR5cGVFcnJvciwgVW5pY29kZUVycm9yKToKICAgICAgICAgICAg
+
+      ICAgIHNlbGYubWFsZm9ybWVkICs9IDEKICAgICAgICAgICAgICAgIHJldHVybgogICAgICAgICAg
+
+      ICBpZiB2YWx1ZVsibm9uY2UiXSAhPSBzZWxmLm5vbmNlOgogICAgICAgICAgICAgICAgcmV0dXJu
+
+      CiAgICAgICAgICAgIHNlcXVlbmNlID0gdmFsdWVbInNlcXVlbmNlIl0KICAgICAgICAgICAgaWYg
+
+      c2VxdWVuY2UgaW4gc2VsZi5zZXF1ZW5jZXNba2luZF06CiAgICAgICAgICAgICAgICBzZWxmLmR1
+
+      cGxpY2F0ZXMgKz0gMQogICAgICAgICAgICBzZWxmLnNlcXVlbmNlc1traW5kXS5hZGQoc2VxdWVu
+
+      Y2UpCiAgICAgICAgICAgIHNlbGYudG9zW2tpbmRdLmFkZCh0b3MpCgogICAgZGVmIHNuYXBzaG90
+
+      KHNlbGYsIG5vbmNlKToKICAgICAgICB3aXRoIHNlbGYubG9jazoKICAgICAgICAgICAgaWYgbm9u
+
+      Y2UgIT0gc2VsZi5ub25jZToKICAgICAgICAgICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoIlN0YWxl
+
+      IGdlbmVyYXRpb24iKQogICAgICAgICAgICByZXR1cm4gewogICAgICAgICAgICAgICAgInNlcXVl
+
+      bmNlcyI6IHtrOiBzb3J0ZWQodikgZm9yIGssIHYgaW4gc2VsZi5zZXF1ZW5jZXMuaXRlbXMoKX0s
+
+      CiAgICAgICAgICAgICAgICAidG9zIjoge2s6IHNvcnRlZCh2KSBmb3IgaywgdiBpbiBzZWxmLnRv
+
+      cy5pdGVtcygpfSwKICAgICAgICAgICAgICAgICJtYWxmb3JtZWQiOiBzZWxmLm1hbGZvcm1lZCwK
+
+      ICAgICAgICAgICAgICAgICJkdXBsaWNhdGVzIjogc2VsZi5kdXBsaWNhdGVzLAogICAgICAgICAg
+
+      ICB9CgoKZGVmIHNlcnZlKCk6CiAgICBzdGF0ZSA9IE9ic2VydmF0aW9ucygpCgogICAgY2xhc3Mg
+
+      SGFuZGxlcihodHRwLnNlcnZlci5CYXNlSFRUUFJlcXVlc3RIYW5kbGVyKToKICAgICAgICBkZWYg
+
+      ZG9fUE9TVChzZWxmKToKICAgICAgICAgICAgaWYgKAogICAgICAgICAgICAgICAgc2VsZi5jbGll
+
+      bnRfYWRkcmVzc1swXSAhPSBDTElFTlQKICAgICAgICAgICAgICAgIG9yIHNlbGYucGF0aCAhPSAi
+
+      L3dpbmRvdyIKICAgICAgICAgICAgICAgIG9yIHNlbGYuaGVhZGVycy5nZXQoIkNvbnRlbnQtTGVu
+
+      Z3RoIikgIT0gIjI0IgogICAgICAgICAgICApOgogICAgICAgICAgICAgICAgc2VsZi5zZW5kX2Vy
+
+      cm9yKDQwMCkKICAgICAgICAgICAgICAgIHJldHVybgogICAgICAgICAgICB0cnk6CiAgICAgICAg
+
+      ICAgICAgICBzdGF0ZS5yZXNldChzZWxmLnJmaWxlLnJlYWQoMjQpLmRlY29kZSgiYXNjaWkiKSkK
+
+      ICAgICAgICAgICAgZXhjZXB0IChWYWx1ZUVycm9yLCBVbmljb2RlRXJyb3IpOgogICAgICAgICAg
+
+      ICAgICAgc2VsZi5zZW5kX2Vycm9yKDQwMCkKICAgICAgICAgICAgICAgIHJldHVybgogICAgICAg
+
+      ICAgICBzZWxmLnNlbmRfcmVzcG9uc2UoMjA0KQogICAgICAgICAgICBzZWxmLmVuZF9oZWFkZXJz
+
+      KCkKCiAgICAgICAgZGVmIGRvX0dFVChzZWxmKToKICAgICAgICAgICAgaWYgc2VsZi5jbGllbnRf
+
+      YWRkcmVzc1swXSAhPSBDTElFTlQgb3Igbm90IHJlLmZ1bGxtYXRjaCgKICAgICAgICAgICAgICAg
+
+      ICIvd2luZG93L1swLTlhLWZdezI0fSIsIHNlbGYucGF0aAogICAgICAgICAgICApOgogICAgICAg
+
+      ICAgICAgICAgc2VsZi5zZW5kX2Vycm9yKDQwMCkKICAgICAgICAgICAgICAgIHJldHVybgogICAg
+
+      ICAgICAgICB0cnk6CiAgICAgICAgICAgICAgICBib2R5ID0ganNvbi5kdW1wcyhzdGF0ZS5zbmFw
+
+      c2hvdChzZWxmLnBhdGgucnNwbGl0KCIvIiwgMSlbMV0pKS5lbmNvZGUoKQogICAgICAgICAgICBl
+
+      eGNlcHQgVmFsdWVFcnJvcjoKICAgICAgICAgICAgICAgIHNlbGYuc2VuZF9lcnJvcig0MDkpCiAg
+
+      ICAgICAgICAgICAgICByZXR1cm4KICAgICAgICAgICAgc2VsZi5zZW5kX3Jlc3BvbnNlKDIwMCkK
+
+      ICAgICAgICAgICAgc2VsZi5zZW5kX2hlYWRlcigiQ29udGVudC1UeXBlIiwgImFwcGxpY2F0aW9u
+
+      L2pzb24iKQogICAgICAgICAgICBzZWxmLnNlbmRfaGVhZGVyKCJDb250ZW50LUxlbmd0aCIsIHN0
+
+      cihsZW4oYm9keSkpKQogICAgICAgICAgICBzZWxmLnNlbmRfaGVhZGVyKCJDYWNoZS1Db250cm9s
+
+      IiwgIm5vLXN0b3JlIikKICAgICAgICAgICAgc2VsZi5lbmRfaGVhZGVycygpCiAgICAgICAgICAg
+
+      IHNlbGYud2ZpbGUud3JpdGUoYm9keSkKCiAgICAgICAgZGVmIGxvZ19tZXNzYWdlKHNlbGYsICph
+
+      cmdzKToKICAgICAgICAgICAgcGFzcwoKICAgIGh0dHBkID0gaHR0cC5zZXJ2ZXIuVGhyZWFkaW5n
+
+      SFRUUFNlcnZlcigoU0VSVkVSLCA4MDgxKSwgSGFuZGxlcikKICAgIHRocmVhZGluZy5UaHJlYWQo
+
+      dGFyZ2V0PWh0dHBkLnNlcnZlX2ZvcmV2ZXIsIGRhZW1vbj1UcnVlKS5zdGFydCgpCiAgICByZWNl
+
+      aXZlcnMgPSB7fQogICAgZm9yIGtpbmQsIHBvcnQgaW4gUE9SVFMuaXRlbXMoKToKICAgICAgICBy
+
+      ZWNlaXZlciA9IHNvY2tldC5zb2NrZXQoc29ja2V0LkFGX0lORVQsIHNvY2tldC5TT0NLX0RHUkFN
+
+      KQogICAgICAgIHJlY2VpdmVyLnNldHNvY2tvcHQoc29ja2V0LklQUFJPVE9fSVAsIHNvY2tldC5J
+
+      UF9SRUNWVE9TLCAxKQogICAgICAgIHJlY2VpdmVyLmJpbmQoKFNFUlZFUiwgcG9ydCkpCiAgICAg
+
+      ICAgcmVjZWl2ZXJzW3JlY2VpdmVyXSA9IGtpbmQKICAgIHRyeToKICAgICAgICB3aGlsZSBUcnVl
+
+      OgogICAgICAgICAgICBmb3IgcmVjZWl2ZXIgaW4gc2VsZWN0LnNlbGVjdChsaXN0KHJlY2VpdmVy
+
+      cyksIFtdLCBbXSwgMC4yKVswXToKICAgICAgICAgICAgICAgIHJhdywgYW5jaWxsYXJ5LCBmbGFn
+
+      cywgcGVlciA9IHJlY2VpdmVyLnJlY3Ztc2coNDA5NiwgNjQpCiAgICAgICAgICAgICAgICBpZiBw
+
+      ZWVyWzBdICE9IENMSUVOVDoKICAgICAgICAgICAgICAgICAgICBjb250aW51ZQogICAgICAgICAg
+
+      ICAgICAgb2JzZXJ2ZWQgPSBbCiAgICAgICAgICAgICAgICAgICAgZGF0YVswXQogICAgICAgICAg
+
+      ICAgICAgICAgIGZvciBsZXZlbCwgb3B0aW9uLCBkYXRhIGluIGFuY2lsbGFyeQogICAgICAgICAg
+
+      ICAgICAgICAgIGlmIGxldmVsID09IHNvY2tldC5JUFBST1RPX0lQIGFuZCBvcHRpb24gPT0gc29j
+
+      a2V0LklQX1RPUyBhbmQgbGVuKGRhdGEpID09IDEKICAgICAgICAgICAgICAgIF0KICAgICAgICAg
+
+      ICAgICAgIHN0YXRlLnJlY2VpdmUoCiAgICAgICAgICAgICAgICAgICAgcmF3LAogICAgICAgICAg
+
+      ICAgICAgICAgIHJlY2VpdmVyc1tyZWNlaXZlcl0sCiAgICAgICAgICAgICAgICAgICAgb2JzZXJ2
+
+      ZWRbMF0gaWYgbGVuKG9ic2VydmVkKSA9PSAxIGFuZCBmbGFncyA9PSAwIGVsc2UgTm9uZSwKICAg
+
+      ICAgICAgICAgICAgICkKICAgIGZpbmFsbHk6CiAgICAgICAgaHR0cGQuc2h1dGRvd24oKQogICAg
+
+      ICAgIGh0dHBkLnNlcnZlcl9jbG9zZSgpCiAgICAgICAgZm9yIHJlY2VpdmVyIGluIHJlY2VpdmVy
+
+      czoKICAgICAgICAgICAgcmVjZWl2ZXIuY2xvc2UoKQoKCmRlZiBhY2NlcHRlZCh2YWx1ZSwgbW9k
+
+      ZSk6CiAgICBpZiBtb2RlIG5vdCBpbiAoIm1hcmtlZCIsICJ1bm1hcmtlZCIsICJsaW1pdGVkIik6
+
+      CiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICBpZiB2YWx1ZVsibWFsZm9ybWVkIl0gIT0gMCBvciB2
+
+      YWx1ZVsiZHVwbGljYXRlcyJdICE9IDA6CiAgICAgICAgcmV0dXJuIEZhbHNlCiAgICBpZiB2YWx1
+
+      ZVsic2VxdWVuY2VzIl1bImNvbnRyb2wiXSAhPSBsaXN0KHJhbmdlKExJTUlUU1siY29udHJvbCJd
+
+      KSkgb3IgdmFsdWVbInRvcyJdWwogICAgICAgICJjb250cm9sIgogICAgXSAhPSBbMF06CiAgICAg
+
+      ICAgcmV0dXJuIEZhbHNlCiAgICBhY3R1YWwgPSB2YWx1ZVsic2VxdWVuY2VzIl1bImRhdGEiXQog
+
+      ICAgaWYgbW9kZSA9PSAibGltaXRlZCI6CiAgICAgICAgZW5vdWdoID0gKAogICAgICAgICAgICAw
+
+      IDwgbGVuKGFjdHVhbCkgPCBMSU1JVFNbImRhdGEiXQogICAgICAgICAgICBhbmQgbGVuKHNldChh
+
+      Y3R1YWwpKSA9PSBsZW4oYWN0dWFsKQogICAgICAgICAgICBhbmQgYWxsKHR5cGUodikgaXMgaW50
+
+      IGFuZCAwIDw9IHYgPCBMSU1JVFNbImRhdGEiXSBmb3IgdiBpbiBhY3R1YWwpCiAgICAgICAgKQog
+
+      ICAgZWxzZToKICAgICAgICBlbm91Z2ggPSBhY3R1YWwgPT0gbGlzdChyYW5nZShMSU1JVFNbImRh
+
+      dGEiXSkpCiAgICByZXR1cm4gZW5vdWdoIGFuZCB2YWx1ZVsidG9zIl1bImRhdGEiXSA9PSAoWzBd
+
+      IGlmIG1vZGUgPT0gInVubWFya2VkIiBlbHNlIFsxODRdKQoKCmRlZiBwcm9iZShtb2RlKToKICAg
+
+      IGFzc2VydCBtb2RlIGluICgibWFya2VkIiwgInVubWFya2VkIiwgImxpbWl0ZWQiKQogICAgbm9u
+
+      Y2UgPSBzZWNyZXRzLnRva2VuX2hleCgxMikKICAgIGJhc2UgPSAiaHR0cDovLyIgKyBTRVJWRVIg
+
+      KyAiOjgwODEvd2luZG93IgogICAgd2l0aCB1cmxsaWIucmVxdWVzdC51cmxvcGVuKAogICAgICAg
+
+      IHVybGxpYi5yZXF1ZXN0LlJlcXVlc3QoYmFzZSwgZGF0YT1ub25jZS5lbmNvZGUoKSwgbWV0aG9k
+
+      PSJQT1NUIiksIHRpbWVvdXQ9NQogICAgKSBhcyByZXNwb25zZToKICAgICAgICBhc3NlcnQgcmVz
+
+      cG9uc2Uuc3RhdHVzID09IDIwNAogICAgd2l0aCBzb2NrZXQuc29ja2V0KHNvY2tldC5BRl9JTkVU
+
+      LCBzb2NrZXQuU09DS19ER1JBTSkgYXMgc2VuZGVyOgogICAgICAgIHNlbmRlci5iaW5kKChDTElF
+
+      TlQsIDApKQogICAgICAgIHNlbmRlci5zZXRzb2Nrb3B0KHNvY2tldC5JUFBST1RPX0lQLCBzb2Nr
+
+      ZXQuSVBfVE9TLCAwKQogICAgICAgIGZvciBraW5kLCBjb3VudCBpbiBMSU1JVFMuaXRlbXMoKToK
+
+      ICAgICAgICAgICAgZm9yIHNlcXVlbmNlIGluIHJhbmdlKGNvdW50KToKICAgICAgICAgICAgICAg
+
+      IHNlbmRlci5zZW5kdG8ocGFja2V0KG5vbmNlLCBraW5kLCBzZXF1ZW5jZSksIChTRVJWRVIsIFBP
+
+      UlRTW2tpbmRdKSkKICAgICAgICAgICAgICAgIHRpbWUuc2xlZXAoMC4wMSkKICAgIGRlYWRsaW5l
+
+      ID0gdGltZS5tb25vdG9uaWMoKSArIDMKICAgIHNldHRsZWRfc2luY2UsIHByaW9yID0gTm9uZSwg
+
+      Tm9uZQogICAgd2hpbGUgVHJ1ZToKICAgICAgICB3aXRoIHVybGxpYi5yZXF1ZXN0LnVybG9wZW4o
+
+      YmFzZSArICIvIiArIG5vbmNlLCB0aW1lb3V0PTUpIGFzIHJlc3BvbnNlOgogICAgICAgICAgICB2
+
+      YWx1ZSA9IGpzb24ubG9hZChyZXNwb25zZSkKICAgICAgICBpZiB2YWx1ZSA9PSBwcmlvcjoKICAg
+
+      ICAgICAgICAgaWYgKAogICAgICAgICAgICAgICAgc2V0dGxlZF9zaW5jZSBpcyBub3QgTm9uZQog
+
+      ICAgICAgICAgICAgICAgYW5kIHRpbWUubW9ub3RvbmljKCkgLSBzZXR0bGVkX3NpbmNlID49IDAu
+
+      NQogICAgICAgICAgICAgICAgYW5kIHZhbHVlWyJzZXF1ZW5jZXMiXVsiY29udHJvbCJdID09IGxp
+
+      c3QocmFuZ2UoNCkpCiAgICAgICAgICAgICk6CiAgICAgICAgICAgICAgICBicmVhawogICAgICAg
+
+      IGVsc2U6CiAgICAgICAgICAgIHByaW9yLCBzZXR0bGVkX3NpbmNlID0gdmFsdWUsIHRpbWUubW9u
+
+      b3RvbmljKCkKICAgICAgICBpZiB0aW1lLm1vbm90b25pYygpID49IGRlYWRsaW5lOgogICAgICAg
+
+      ICAgICBicmVhawogICAgICAgIHRpbWUuc2xlZXAoMC4xKQogICAgYXNzZXJ0IGFjY2VwdGVkKHZh
+
+      bHVlLCBtb2RlKSwgdmFsdWUKICAgIHJldHVybiB7CiAgICAgICAgInN0YXR1cyI6ICJwYXNzZWQi
+
+      LAogICAgICAgICJtb2RlIjogbW9kZSwKICAgICAgICAiZGF0YV9yZWNlaXZlZCI6IGxlbih2YWx1
+
+      ZVsic2VxdWVuY2VzIl1bImRhdGEiXSksCiAgICAgICAgImNvbnRyb2xfcmVjZWl2ZWQiOiA0LAog
+
+      ICAgICAgICJvYnNlcnZlZF9kYXRhX3RvcyI6IHZhbHVlWyJ0b3MiXVsiZGF0YSJdLAogICAgICAg
+
+      ICJvYnNlcnZlZF9jb250cm9sX3RvcyI6IHZhbHVlWyJ0b3MiXVsiY29udHJvbCJdLAogICAgICAg
+
+      ICJmcmVzaF9nZW5lcmF0aW9uIjogVHJ1ZSwKICAgIH0KCgpkZWYgbWFpbigpOgogICAgcGFyc2Vy
+
+      ID0gYXJncGFyc2UuQXJndW1lbnRQYXJzZXIoZGVzY3JpcHRpb249X19kb2NfXykKICAgIHBhcnNl
+
+      ci5hZGRfYXJndW1lbnQoImFjdGlvbiIsIGNob2ljZXM9WyJjb25maWd1cmUiLCAic2VydmUiLCAi
+
+      bWFya2VkIiwgInVubWFya2VkIiwgImxpbWl0ZWQiXSkKICAgIGFjdGlvbiA9IHBhcnNlci5wYXJz
+
+      ZV9hcmdzKCkuYWN0aW9uCiAgICBpZiBvcy5nZXRldWlkKCkgIT0gMCBvciAoUk9PVCAvICJDTUwt
+
+      UU9TLUZJWFRVUkUiKS5yZWFkX3RleHQoKS5zdHJpcCgpICE9IE1BUktFUjoKICAgICAgICByYWlz
+
+      ZSBQZXJtaXNzaW9uRXJyb3IoIk9ubHkgdGhlIGlzb2xhdGVkIG1hcmtlZCBRb1MgZml4dHVyZSBp
+
+      cyBhY2NlcHRlZCIpCiAgICByb2xlID0gKFJPT1QgLyAicW9zLXJvbGUiKS5yZWFkX3RleHQoKS5z
+
+      dHJpcCgpCiAgICBhc3NlcnQgcm9sZSBpbiAoIkNMSUVOVCIsICJTRVJWRVIiKQogICAgaWYgYWN0
+
+      aW9uID09ICJjb25maWd1cmUiOgogICAgICAgIHZhbHVlID0gY29uZmlndXJlKHJvbGUpCiAgICBl
+
+      bGlmIGFjdGlvbiA9PSAic2VydmUiOgogICAgICAgIGFzc2VydCByb2xlID09ICJTRVJWRVIiCiAg
+
+      ICAgICAgc2VydmUoKQogICAgICAgIHJldHVybgogICAgZWxzZToKICAgICAgICBhc3NlcnQgcm9s
+
+      ZSA9PSAiQ0xJRU5UIgogICAgICAgIHZhbHVlID0gcHJvYmUoYWN0aW9uKQogICAgcHJpbnQoanNv
+
+      bi5kdW1wcyh2YWx1ZSwgc29ydF9rZXlzPVRydWUpKQoKCmlmIF9fbmFtZV9fID09ICJfX21haW5f
+
+      XyI6CiAgICBtYWluKCkK
+
+      CML_EMBED_EXAMPLES_SECURITY_QOS_PROBE_PY
+
+      python3 /lab/q.py configure
+
+      echo READY >/dev/console
+
+      exit 0
+
+      '
+  cpu_limit: 100
+  priority: 98
+  x: 520
+  y: 0
+  interfaces:
+  - id: i1
+    label: eth0
+    type: physical
+    slot: 0
+  - id: i2
+    label: eth1
+    type: physical
+    slot: 1
+  - id: i3
+    label: eth2
+    type: physical
+    slot: 2
+  - id: i4
+    label: eth3
+    type: physical
+    slot: 3
+  tags: []
+  ram: 512
+  cpus: 1
 links:
-- n1: n0
-  i1: i1
+- id: l0
+  n1: n0
+  i1: i2
   n2: n1
   i2: i1
-  id: l0
-- n1: n1
-  i1: i2
-  n2: n2
-  i2: i1
-  id: l1
-- n1: n0
-  i1: i2
-  n2: n3
-  i2: i1
-  id: l2
-- n1: n3
+- id: l1
+  n1: n1
   i1: i2
   n2: n2
   i2: i2
-  id: l3
-- n1: n0
-  i1: i3
-  n2: n4
-  i2: i1
-  id: l4
-- n1: n2
-  i1: i3
-  n2: n5
-  i2: i0
-  id: l5
 annotations: []
 smart_annotations: []
