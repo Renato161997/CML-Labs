@@ -47372,6 +47372,363 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T13:37:13Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/012-api-contract-openapi.yaml",
+      "sha256": "180eb05ce5760b129c828a4873771cff05b245268e5a7d86fa1486dd7ec80edb",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T18:28:50Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py baseline",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py baseline\n{\"contract_accepted\": true, \"phase\": \"baseline\", \"reason\": null, \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py auth-errors",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py auth-errors\n{\"documented_errors_validated\": 3, \"phase\": \"auth-errors\", \"status\": \"passed\", \"undocumented_method_rejected\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "SERVER",
+          "command": "cat /sys/class/net/eth1/carrier",
+          "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# cat /sys/class/net/eth1/carrier\n1\nroot@SERVER:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.173 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.375 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.362 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2087ms\nrtt min/avg/max/mdev = 0.173/0.303/0.375/0.092 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "return an invalid response field type",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/a.py schema",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/a.py schema\n{\"source_mode\": \"schema\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "return an invalid response field type",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py schema-bad",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py schema-bad\n{\"contract_accepted\": false, \"phase\": \"schema-bad\", \"reason\": \"schema_violation\", \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "return an invalid response field type",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.168 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.554 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=1.07 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2060ms\nrtt min/avg/max/mdev = 0.168/0.596/1.067/0.368 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "return an invalid response field type",
+          "node": "SERVER",
+          "command": "cat /sys/class/net/eth1/carrier",
+          "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# cat /sys/class/net/eth1/carrier\n1\nroot@SERVER:~# "
+        },
+        {
+          "phase": "recover after schema fault",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/a.py good",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/a.py good\n{\"source_mode\": \"good\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "recover after schema fault",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py baseline",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py baseline\n{\"contract_accepted\": true, \"phase\": \"baseline\", \"reason\": null, \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "recover after schema fault",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.311 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.520 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.400 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2071ms\nrtt min/avg/max/mdev = 0.311/0.410/0.520/0.085 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "return an undeclared response status",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/a.py status",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/a.py status\n{\"source_mode\": \"status\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "return an undeclared response status",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py status-bad",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py status-bad\n{\"contract_accepted\": false, \"phase\": \"status-bad\", \"reason\": \"undocumented_status\", \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 201}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "return an undeclared response status",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.145 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.474 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.312 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2084ms\nrtt min/avg/max/mdev = 0.145/0.310/0.474/0.134 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "return an undeclared response status",
+          "node": "SERVER",
+          "command": "cat /sys/class/net/eth1/carrier",
+          "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# cat /sys/class/net/eth1/carrier\n1\nroot@SERVER:~# "
+        },
+        {
+          "phase": "recover after status fault",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/a.py good",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/a.py good\n{\"source_mode\": \"good\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "recover after status fault",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py baseline",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py baseline\n{\"contract_accepted\": true, \"phase\": \"baseline\", \"reason\": null, \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "recover after status fault",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.240 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.513 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.520 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2038ms\nrtt min/avg/max/mdev = 0.240/0.424/0.520/0.130 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "return an incorrect media type",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/a.py media",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/a.py media\n{\"source_mode\": \"media\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "return an incorrect media type",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py media-bad",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py media-bad\n{\"contract_accepted\": false, \"phase\": \"media-bad\", \"reason\": \"unexpected_media\", \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "return an incorrect media type",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.210 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.423 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.432 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2037ms\nrtt min/avg/max/mdev = 0.210/0.355/0.432/0.102 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "return an incorrect media type",
+          "node": "SERVER",
+          "command": "cat /sys/class/net/eth1/carrier",
+          "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# cat /sys/class/net/eth1/carrier\n1\nroot@SERVER:~# "
+        },
+        {
+          "phase": "recover after media fault",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/a.py good",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/a.py good\n{\"source_mode\": \"good\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "recover after media fault",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py baseline",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py baseline\n{\"contract_accepted\": true, \"phase\": \"baseline\", \"reason\": null, \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "recover after media fault",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.215 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.671 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.435 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2047ms\nrtt min/avg/max/mdev = 0.215/0.440/0.671/0.186 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "change the remote agreed document",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/a.py contract",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/a.py contract\n{\"source_mode\": \"contract\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "change the remote agreed document",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py contract-bad",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py contract-bad\n{\"contract_accepted\": false, \"phase\": \"contract-bad\", \"reason\": \"document_changed\", \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": null}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "change the remote agreed document",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.211 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.279 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.427 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2028ms\nrtt min/avg/max/mdev = 0.211/0.305/0.427/0.090 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "change the remote agreed document",
+          "node": "SERVER",
+          "command": "cat /sys/class/net/eth1/carrier",
+          "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# cat /sys/class/net/eth1/carrier\n1\nroot@SERVER:~# "
+        },
+        {
+          "phase": "recover after contract fault",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/a.py good",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/a.py good\n{\"source_mode\": \"good\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "recover after contract fault",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py baseline",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py baseline\n{\"contract_accepted\": true, \"phase\": \"baseline\", \"reason\": null, \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "recover after contract fault",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.162 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.394 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.255 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2039ms\nrtt min/avg/max/mdev = 0.162/0.270/0.394/0.095 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "demonstrate a schema-valid but factually false claim",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/a.py lie",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/a.py lie\n{\"source_mode\": \"lie\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "demonstrate a schema-valid but factually false claim",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py semantic-lie",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py semantic-lie\n{\"contract_accepted\": true, \"phase\": \"semantic-lie\", \"reason\": null, \"schema_only_does_not_prove_truth\": true, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "demonstrate a schema-valid but factually false claim",
+          "node": "SERVER",
+          "command": "cat /sys/class/net/eth1/carrier",
+          "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# cat /sys/class/net/eth1/carrier\n1\nroot@SERVER:~# "
+        },
+        {
+          "phase": "demonstrate a schema-valid but factually false claim",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.228 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.239 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.664 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2066ms\nrtt min/avg/max/mdev = 0.228/0.377/0.664/0.202 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore actual interface facts",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/a.py good",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/a.py good\n{\"source_mode\": \"good\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restore actual interface facts",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py baseline",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py baseline\n{\"contract_accepted\": true, \"phase\": \"baseline\", \"reason\": null, \"schema_only_does_not_prove_truth\": false, \"status\": \"passed\", \"wire_status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore actual interface facts",
+          "node": "CLIENT",
+          "command": "python3 /lab/a.py auth-errors",
+          "expectation": "The actual HTTP response is classified against the pinned operation/status/media agreement and real Draft202012 schema validation.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/a.py auth-errors\n{\"documented_errors_validated\": 3, \"phase\": \"auth-errors\", \"status\": \"passed\", \"undocumented_method_rejected\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore actual interface facts",
+          "node": "SERVER",
+          "command": "cat /sys/class/net/eth1/carrier",
+          "expectation": "An independent guest-kernel read observes actual carrier up, even during the schema-valid false API claim.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# cat /sys/class/net/eth1/carrier\n1\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restore actual interface facts",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 2 198.18.0.1",
+          "expectation": "Independent IP reachability stays healthy during contract, status, media and schema faults.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.318 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.467 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.453 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2024ms\nrtt min/avg/max/mdev = 0.318/0.412/0.467/0.067 ms\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "c599697fd5e05564bebcdf4b1311560e51984672a9d4484cab2f6b95cee8ed81",
+      "startup_states": {
+        "SERVER": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "SERVER": null,
+        "CLIENT": null
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T18:30:13Z"
     }
   ]
 }

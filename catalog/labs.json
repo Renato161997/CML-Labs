@@ -4999,25 +4999,24 @@
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/012-api-contract-openapi.yaml",
-      "title": "API Contract OpenAPI",
+      "title": "OpenAPI: Pinned Contracts, Response Drift and Factual Limits",
       "track": "350-901",
       "topic": "using-apis",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-services"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 100,
+      "workbook": "docs/workbooks/350-901-012-api-contract-openapi.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "5aea9f20e2367e25ba8b03ddb5f57e9b226b49f6606256b301eb3f2ca4a17408"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T18:30:13Z",
+      "sha256": "180eb05ce5760b129c828a4873771cff05b245268e5a7d86fa1486dd7ec80edb"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/validation/036-pyats-genie-style-validation.yaml",

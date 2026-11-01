@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **198**.
+Import/export passes: **233/233**. Functional passes: **199**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -204,6 +204,7 @@ Import/export passes: **233/233**. Functional passes: **198**.
 | [HTTP Cache Controls](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/009-http-cache-controls.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 3 | 2 | 2026-10-27T17:45:38Z |
 | [Authorization Code and PKCE with Synthetic Consent](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/010-oauth2-three-legged-flow.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 3 | 2 | 2026-10-31T11:24:02Z |
 | [Webhook Receiver](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/011-webhook-receiver.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:46:46Z |
+| [OpenAPI: Pinned Contracts, Response Drift and Factual Limits](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/012-api-contract-openapi.yaml) | passed | 2.10.1+build.21 | controller default (unresolved) | 31 | 10 | 2026-11-01T18:30:13Z |
 | [pyATS Genie Style Validation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/validation/036-pyats-genie-style-validation.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 4 | 30 | 2026-10-27T18:57:24Z |
 | [Webhook Receiver Config Validation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/webhooks/035-webhook-receiver-config-validation.yaml) | passed | 2.10.1+build.21 | ubuntu-24-04-20260307 | 2 | 0 | 2026-10-24T18:37:45Z |
 

@@ -37,13 +37,20 @@ PHYSICAL.update(
             "tacplus",
             "cml-labs-toolbox",
             "cml-labs-inspection",
+            "cml-labs-services",
         )
     }
 )
 RAM_MIB = {"iosv": 512, "iosvl2": 768, "desktop": 512, "alpine": 512, "ubuntu": 2048}
 RAM_MIB.update({"wireless-ap": 2048, "wireless-client": 2048})
 RAM_MIB.update(
-    {"iol-xe": 1024, "ioll2-xe": 1024, "cml-labs-toolbox": 1024, "cml-labs-inspection": 1024}
+    {
+        "iol-xe": 1024,
+        "ioll2-xe": 1024,
+        "cml-labs-toolbox": 1024,
+        "cml-labs-inspection": 1024,
+        "cml-labs-services": 1024,
+    }
 )
 RAM_MIB.update(
     {

@@ -1269,5 +1269,12 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-701-032-firewall-policy-as-code.md",
     "example_profile": "native-policy-as-code"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/using-apis/012-api-contract-openapi.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-012-api-contract-openapi.md",
+    "example_profile": "native-openapi-contract"
   }
 }
