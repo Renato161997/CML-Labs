@@ -1248,5 +1248,19 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-701-034-threat-intel-enrichment.md",
     "example_profile": "native-indicator-feed"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/assessment/049-encor-practical-checkpoint.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 140,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-049-encor-practical-checkpoint.md",
+    "example_profile": "native-firewall-traffic"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/assessment/044-scor-practical-checkpoint.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 140,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-044-scor-practical-checkpoint.md",
+    "example_profile": "native-firewall-traffic"
   }
 }

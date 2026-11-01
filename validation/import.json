@@ -453,11 +453,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/assessment/049-encor-practical-checkpoint.yaml",
-      "sha256": "72ffceb58e3e614f6d0f1a554bd1449573742475a733fc8a68f2abf704bfdd43",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/037-restconf-netconf-yang.yaml",
       "sha256": "1388deaa4340ab8e07dd83ac95a4c03749e6383a062a903d224f93a6eb879efd",
       "status": "import-export-pass"
@@ -635,11 +630,6 @@
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/009-ipsec-gre-design.yaml",
       "sha256": "2e2f819d261be77df9bcf89d0dd574569fec3a0cd0baaf06ae4b8765fe0dca99",
-      "status": "import-export-pass"
-    },
-    {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/assessment/044-scor-practical-checkpoint.yaml",
-      "sha256": "34a685e55411ba5ca4d7597e205a1f048bbe04ead642480bec2aa8ca656bea10",
       "status": "import-export-pass"
     },
     {
@@ -1328,11 +1318,6 @@
       "completed_utc": "2026-11-01T12:34:43Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/034-threat-intel-enrichment.yaml",
       "sha256": "fae20c9ccdffca61b8166b85560c38ada6b4800167fdb5ff72d14b3d00046aad",
       "cml_version": "2.10.1+build.21",
@@ -1341,6 +1326,31 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T12:59:32Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/assessment/049-encor-practical-checkpoint.yaml",
+      "sha256": "84ed2d8dae2187054663b88fbb390a5c20e0d28d4c6f4d6a0e9b438f4294c230",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T13:08:28Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T13:08:28Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/assessment/044-scor-practical-checkpoint.yaml",
+      "sha256": "dd111e1eb1b88aa32ec52e596fba6879515a8fe29caf55791817531f3343cd49",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T13:08:30Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T13:08:30Z"
     }
   ]
 }

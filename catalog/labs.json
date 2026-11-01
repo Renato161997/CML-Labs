@@ -2195,26 +2195,25 @@
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/assessment/049-encor-practical-checkpoint.yaml",
-      "title": "ENCOR Practical Checkpoint",
+      "title": "ENCOR Checkpoint: OSPF, BGP and Scoped Application Access",
       "track": "350-401",
       "topic": "assessment",
-      "nodes": 6,
+      "nodes": 5,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe",
+        "net-tools"
       ],
-      "nominal_ram_mib": 3584,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 140,
+      "workbook": "docs/workbooks/350-401-049-encor-practical-checkpoint.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "72ffceb58e3e614f6d0f1a554bd1449573742475a733fc8a68f2abf704bfdd43"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T13:17:42Z",
+      "sha256": "84ed2d8dae2187054663b88fbb390a5c20e0d28d4c6f4d6a0e9b438f4294c230"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/automation/037-restconf-netconf-yang.yaml",
@@ -3174,26 +3173,25 @@
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/assessment/044-scor-practical-checkpoint.yaml",
-      "title": "SCOR Practical Checkpoint",
+      "title": "SCOR Checkpoint: Exposure, Policy and Routing Evidence",
       "track": "350-701",
       "topic": "assessment",
-      "nodes": 6,
+      "nodes": 5,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "iol-xe",
+        "net-tools"
       ],
-      "nominal_ram_mib": 3328,
+      "nominal_ram_mib": 4096,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 140,
+      "workbook": "docs/workbooks/350-701-044-scor-practical-checkpoint.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "34a685e55411ba5ca4d7597e205a1f048bbe04ead642480bec2aa8ca656bea10"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T13:20:30Z",
+      "sha256": "dd111e1eb1b88aa32ec52e596fba6879515a8fe29caf55791817531f3343cd49"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/031-security-api-python.yaml",
