@@ -43999,6 +43999,471 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T11:55:49Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/firewall/038-firewall-policy-review-cleanup.yaml",
+      "sha256": "e2a2c2a9165a5980d1b67a363c62bf747910e83e60046955c27a7b6db9fe6e72",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T12:04:14Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 198.18.20.20",
+          "expectation": "The independent routed ICMP control continues to receive all three replies.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=0.742 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.64 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.68 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2045ms\nrtt min/avg/max/mdev = 0.742/1.353/1.678/0.432 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "FW",
+          "command": "show running-config | include ip access-group",
+          "expectation": "The actual ingress remains bound to the reviewed policy; the legacy fixture is not applied.",
+          "passed": true,
+          "output": "\nFW#show running-config | include ip access-group\n ip access-group REVIEW-IN in\nFW#"
+        },
+        {
+          "phase": "baseline",
+          "node": "FW",
+          "command": "show access-lists REVIEW-IN",
+          "expectation": "The first broader rules count actual allowed/denied traffic; the later narrower rules are present but cannot be reached for their covered tuple.",
+          "passed": true,
+          "output": "\nFW#show access-lists REVIEW-IN\nExtended IP access list REVIEW-IN\n    10 permit tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 8080 (5 matches)\n    20 permit tcp host 198.18.10.10 host 198.18.20.20 eq 8080\n    30 deny tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 9090 (1 match)\n    40 deny tcp host 198.18.10.10 host 198.18.20.20 eq 9090\n    50 permit icmp any any (3 matches)\n    60 deny ip any any\nFW#"
+        },
+        {
+          "phase": "baseline",
+          "node": "FW",
+          "command": "show ip access-lists",
+          "expectation": "Both reviewed and explicitly unbound legacy ACL objects exist in the initial source.",
+          "passed": true,
+          "output": "\nFW#show ip access-lists\nExtended IP access list LEGACY-NOT-BOUND\n    10 permit ip host 192.0.2.1 host 192.0.2.2\nExtended IP access list REVIEW-IN\n    10 permit tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 8080 (5 matches)\n    20 permit tcp host 198.18.10.10 host 198.18.20.20 eq 8080\n    30 deny tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 9090 (1 match)\n    40 deny tcp host 198.18.10.10 host 198.18.20.20 eq 9090\n    50 permit icmp any any (3 matches)\n    60 deny ip any any\nFW#"
+        },
+        {
+          "phase": "remove only the explicitly unbound legacy ACL",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "remove only the explicitly unbound legacy ACL",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no ip access-list extended LEGACY-NOT-BOUND",
+          "passed": true,
+          "output": "\nFW(config)#no ip access-list extended LEGACY-NOT-BOUND\nFW(config)#"
+        },
+        {
+          "phase": "remove only the explicitly unbound legacy ACL",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config)#end\nFW#"
+        },
+        {
+          "phase": "remove only the explicitly unbound legacy ACL",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "remove only the explicitly unbound legacy ACL",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "remove only the explicitly unbound legacy ACL",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove only the explicitly unbound legacy ACL",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove only the explicitly unbound legacy ACL",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 198.18.20.20",
+          "expectation": "The independent routed ICMP control continues to receive all three replies.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=0.906 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.02 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.30 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2021ms\nrtt min/avg/max/mdev = 0.906/1.074/1.299/0.165 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove only the explicitly unbound legacy ACL",
+          "node": "FW",
+          "command": "show running-config | include ip access-group",
+          "expectation": "The actual ingress remains bound to the reviewed policy; the legacy fixture is not applied.",
+          "passed": true,
+          "output": "\nFW#show running-config | include ip access-group\n ip access-group REVIEW-IN in\nFW#"
+        },
+        {
+          "phase": "remove only the explicitly unbound legacy ACL",
+          "node": "FW",
+          "command": "show ip access-lists",
+          "expectation": "The live reviewed policy remains while only the unbound legacy object disappears.",
+          "passed": true,
+          "output": "\nFW#show ip access-lists\nExtended IP access list REVIEW-IN\n    10 permit tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 8080 (10 matches)\n    20 permit tcp host 198.18.10.10 host 198.18.20.20 eq 8080\n    30 deny tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 9090 (2 matches)\n    40 deny tcp host 198.18.10.10 host 198.18.20.20 eq 9090\n    50 permit icmp any any (6 matches)\n    60 deny ip any any\nFW#"
+        },
+        {
+          "phase": "remove only the two known shadowed sequences",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "remove only the two known shadowed sequences",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "ip access-list extended REVIEW-IN",
+          "passed": true,
+          "output": "\nFW(config)#ip access-list extended REVIEW-IN\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "remove only the two known shadowed sequences",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no 20",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#no 20\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "remove only the two known shadowed sequences",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no 40",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#no 40\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "remove only the two known shadowed sequences",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#end\nFW#"
+        },
+        {
+          "phase": "remove only the two known shadowed sequences",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "remove only the two known shadowed sequences",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "remove only the two known shadowed sequences",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove only the two known shadowed sequences",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove only the two known shadowed sequences",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 198.18.20.20",
+          "expectation": "The independent routed ICMP control continues to receive all three replies.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=0.955 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.55 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.78 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 0.955/1.426/1.776/0.346 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove only the two known shadowed sequences",
+          "node": "FW",
+          "command": "show running-config | include ip access-group",
+          "expectation": "The actual ingress remains bound to the reviewed policy; the legacy fixture is not applied.",
+          "passed": true,
+          "output": "\nFW#show running-config | include ip access-group\n ip access-group REVIEW-IN in\nFW#"
+        },
+        {
+          "phase": "remove only the two known shadowed sequences",
+          "node": "FW",
+          "command": "show ip access-lists",
+          "expectation": "The live reviewed policy remains while only the unbound legacy object disappears.",
+          "passed": true,
+          "output": "\nFW#show ip access-lists\nExtended IP access list REVIEW-IN\n    10 permit tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 8080 (15 matches)\n    30 deny tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 9090 (3 matches)\n    50 permit icmp any any (9 matches)\n    60 deny ip any any\nFW#"
+        },
+        {
+          "phase": "remove only the two known shadowed sequences",
+          "node": "FW",
+          "command": "show access-lists REVIEW-IN",
+          "expectation": "The retained allow, deny, control and default-deny entries remain; only the known shadowed sequences were removed.",
+          "passed": true,
+          "output": "\nFW#show access-lists REVIEW-IN\nExtended IP access list REVIEW-IN\n    10 permit tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 8080 (15 matches)\n    30 deny tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 9090 (3 matches)\n    50 permit icmp any any (9 matches)\n    60 deny ip any any\nFW#"
+        },
+        {
+          "phase": "withdraw a retained necessary application permit",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "withdraw a retained necessary application permit",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "ip access-list extended REVIEW-IN",
+          "passed": true,
+          "output": "\nFW(config)#ip access-list extended REVIEW-IN\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "withdraw a retained necessary application permit",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no 10",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#no 10\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "withdraw a retained necessary application permit",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#end\nFW#"
+        },
+        {
+          "phase": "withdraw a retained necessary application permit",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "withdraw a retained necessary application permit",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "withdraw a retained necessary application permit",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "withdraw a retained necessary application permit",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "withdraw a retained necessary application permit",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 198.18.20.20",
+          "expectation": "The independent routed ICMP control continues to receive all three replies.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=1.02 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=0.992 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=0.785 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2002ms\nrtt min/avg/max/mdev = 0.785/0.930/1.015/0.103 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "withdraw a retained necessary application permit",
+          "node": "FW",
+          "command": "show running-config | include ip access-group",
+          "expectation": "The actual ingress remains bound to the reviewed policy; the legacy fixture is not applied.",
+          "passed": true,
+          "output": "\nFW#show running-config | include ip access-group\n ip access-group REVIEW-IN in\nFW#"
+        },
+        {
+          "phase": "withdraw a retained necessary application permit",
+          "node": "FW",
+          "command": "show access-lists REVIEW-IN",
+          "expectation": "The actual default-deny counter observes the application requests after the required permit disappears.",
+          "passed": true,
+          "output": "\nFW#show access-lists REVIEW-IN\nExtended IP access list REVIEW-IN\n    30 deny tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 9090 (4 matches)\n    50 permit icmp any any (12 matches)\n    60 deny ip any any (1 match)\nFW#"
+        },
+        {
+          "phase": "restore the clean required application behavior",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "restore the clean required application behavior",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "ip access-list extended REVIEW-IN",
+          "passed": true,
+          "output": "\nFW(config)#ip access-list extended REVIEW-IN\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "restore the clean required application behavior",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "10 permit tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 8080",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#10 permit tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 8080\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "restore the clean required application behavior",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#end\nFW#"
+        },
+        {
+          "phase": "restore the clean required application behavior",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the clean required application behavior",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the clean required application behavior",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the clean required application behavior",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the clean required application behavior",
+          "node": "INSIDE",
+          "command": "ping -c 3 -W 1 198.18.20.20",
+          "expectation": "The independent routed ICMP control continues to receive all three replies.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -c 3 -W 1 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=0.713 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.38 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.33 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2063ms\nrtt min/avg/max/mdev = 0.713/1.138/1.376/0.301 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the clean required application behavior",
+          "node": "FW",
+          "command": "show running-config | include ip access-group",
+          "expectation": "The actual ingress remains bound to the reviewed policy; the legacy fixture is not applied.",
+          "passed": true,
+          "output": "\nFW#show running-config | include ip access-group\n ip access-group REVIEW-IN in\nFW#"
+        },
+        {
+          "phase": "restore the clean required application behavior",
+          "node": "FW",
+          "command": "show ip access-lists",
+          "expectation": "The live reviewed policy remains while only the unbound legacy object disappears.",
+          "passed": true,
+          "output": "\nFW#show ip access-lists\nExtended IP access list REVIEW-IN\n    10 permit tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 8080 (5 matches)\n    30 deny tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 9090 (5 matches)\n    50 permit icmp any any (15 matches)\n    60 deny ip any any (1 match)\nFW#"
+        },
+        {
+          "phase": "restore the clean required application behavior",
+          "node": "FW",
+          "command": "show access-lists REVIEW-IN",
+          "expectation": "The retained allow, deny, control and default-deny entries remain; only the known shadowed sequences were removed.",
+          "passed": true,
+          "output": "\nFW#show access-lists REVIEW-IN\nExtended IP access list REVIEW-IN\n    10 permit tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 8080 (5 matches)\n    30 deny tcp 198.18.10.0 0.0.0.255 host 198.18.20.20 eq 9090 (5 matches)\n    50 permit icmp any any (15 matches)\n    60 deny ip any any (1 match)\nFW#"
+        }
+      ],
+      "plan_sha256": "781f6e09257b9f0ad3e80c848f000845adcbb41993cbadf2f582be8acbb1162c",
+      "startup_states": {
+        "FW": "BOOTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "STARTED"
+      },
+      "images": {
+        "FW": "iol-xe-17-18-02",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "OUTSIDE"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T12:05:43Z"
     }
   ]
 }

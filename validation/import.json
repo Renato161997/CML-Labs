@@ -718,11 +718,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/firewall/038-firewall-policy-review-cleanup.yaml",
-      "sha256": "21132bf2c0503ef67a0240dde4861a9fa49213ce2a00147db7c445e451d773a6",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/incident-response/041-suspicious-host-containment.yaml",
       "sha256": "d7ecbfe2c29aab88a19929a090d6a8098dd6de63a4a20185122b59d749e9eb1a",
       "status": "import-export-pass"
@@ -1298,11 +1293,6 @@
       "completed_utc": "2026-11-01T11:21:55Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/scenario/044-qos-marking-and-policing.yaml",
       "sha256": "13aa354f9296b3060b03e37990bf41e51cb8d86da81c35fdd508e42edf2d17a6",
       "cml_version": "2.10.1+build.21",
@@ -1321,6 +1311,21 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T11:44:57Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/firewall/038-firewall-policy-review-cleanup.yaml",
+      "sha256": "e2a2c2a9165a5980d1b67a363c62bf747910e83e60046955c27a7b6db9fe6e72",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T12:02:17Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T12:02:17Z"
     }
   ]
 }

@@ -1220,5 +1220,12 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-901-021-secrets-management.md",
     "example_profile": "native-secret-files"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/firewall/038-firewall-policy-review-cleanup.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-038-firewall-policy-review-cleanup.md",
+    "example_profile": "native-firewall-traffic"
   }
 }
