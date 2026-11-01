@@ -277,6 +277,11 @@ NATIVE_PROFILES["native-controller-events"] = {
 }
 
 
+NATIVE_PROFILES["native-indicator-feed"] = {
+    role: {"/lab/ti.py": "examples/security/intel_fixture.py"} for role in ("SOURCE", "ANALYST")
+}
+
+
 def native_sources(data, metadata):
     """Validate registered source payloads without executing a shell or guest code."""
     profile = NATIVE_PROFILES.get(metadata.get("example_profile"))

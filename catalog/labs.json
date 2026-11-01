@@ -3263,25 +3263,24 @@
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/034-threat-intel-enrichment.yaml",
-      "title": "Threat Intel Enrichment",
+      "title": "Indicator Feed: Revalidation, Revocation and Cache Integrity",
       "track": "350-701",
       "topic": "automation",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "net-tools"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 1024,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 90,
+      "workbook": "docs/workbooks/350-701-034-threat-intel-enrichment.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "d3418295252500d1fb8a26de2436ff18b9a1c4fbabc5a717e38f8d7ecbbb21e3"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T13:04:54Z",
+      "sha256": "fae20c9ccdffca61b8166b85560c38ada6b4800167fdb5ff72d14b3d00046aad"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/035-secure-access-automation.yaml",

@@ -25095,5 +25095,184 @@
         "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
       }
     ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/034-threat-intel-enrichment.yaml": {
+    "checks": [
+      {
+        "node": "ANALYST",
+        "command": "ping -n -c 3 -W 2 198.18.0.1",
+        "pattern": "3 packets transmitted, 3 received",
+        "expectation": "All three independent packets reach the source even while its feed is unavailable or invalid.",
+        "command_timeout": 15
+      },
+      {
+        "node": "ANALYST",
+        "command": "python3 /lab/ti.py baseline",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"baseline\")",
+        "expectation": "Observe a real source HTTP response and validate the bounded indicator/cache profile; uncertainty is never converted into a clean verdict.",
+        "command_timeout": 30,
+        "attempts": 3,
+        "interval_seconds": 2
+      },
+      {
+        "node": "ANALYST",
+        "command": "python3 /lab/ti.py cached",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"cached\")",
+        "expectation": "Observe a real source HTTP response and validate the bounded indicator/cache profile; uncertainty is never converted into a clean verdict.",
+        "command_timeout": 30,
+        "attempts": 1,
+        "interval_seconds": 2
+      }
+    ],
+    "transitions": [
+      {
+        "name": "make only the feed temporarily unavailable",
+        "node": "SOURCE",
+        "commands": [
+          "python3 /lab/ti.py unavailable"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "ANALYST",
+            "command": "python3 /lab/ti.py offline",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"offline\")",
+            "expectation": "Observe a real source HTTP response and validate the bounded indicator/cache profile; uncertainty is never converted into a clean verdict.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "ANALYST",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "All three independent packets reach the source even while its feed is unavailable or invalid.",
+            "command_timeout": 15
+          }
+        ]
+      },
+      {
+        "name": "recover the valid matching representation",
+        "node": "SOURCE",
+        "commands": [
+          "python3 /lab/ti.py healthy"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "ANALYST",
+            "command": "python3 /lab/ti.py recovered",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"recovered\")",
+            "expectation": "Observe a real source HTTP response and validate the bounded indicator/cache profile; uncertainty is never converted into a clean verdict.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "ANALYST",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "All three independent packets reach the source even while its feed is unavailable or invalid.",
+            "command_timeout": 15
+          }
+        ]
+      },
+      {
+        "name": "publish invalid content with HTTP 200",
+        "node": "SOURCE",
+        "commands": [
+          "python3 /lab/ti.py malformed"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "ANALYST",
+            "command": "python3 /lab/ti.py invalid-feed",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"invalid-feed\")",
+            "expectation": "Observe a real source HTTP response and validate the bounded indicator/cache profile; uncertainty is never converted into a clean verdict.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "ANALYST",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "All three independent packets reach the source even while its feed is unavailable or invalid.",
+            "command_timeout": 15
+          }
+        ]
+      },
+      {
+        "name": "recover structurally accepted content",
+        "node": "SOURCE",
+        "commands": [
+          "python3 /lab/ti.py healthy"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "ANALYST",
+            "command": "python3 /lab/ti.py recovered",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"recovered\")",
+            "expectation": "Observe a real source HTTP response and validate the bounded indicator/cache profile; uncertainty is never converted into a clean verdict.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "publish an explicit revocation",
+        "node": "SOURCE",
+        "commands": [
+          "python3 /lab/ti.py withdraw"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "ANALYST",
+            "command": "python3 /lab/ti.py withdrawn",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"withdrawn\")",
+            "expectation": "Observe a real source HTTP response and validate the bounded indicator/cache profile; uncertainty is never converted into a clean verdict.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "ANALYST",
+            "command": "ping -n -c 3 -W 2 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "All three independent packets reach the source even while its feed is unavailable or invalid.",
+            "command_timeout": 15
+          }
+        ]
+      },
+      {
+        "name": "detect locally corrupted cache and fetch a full representation",
+        "node": "ANALYST",
+        "commands": [
+          "python3 /lab/ti.py corrupt-cache"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"cache_corruption_detected\": true)(?=.*\"wire_status\": 200)",
+        "checks": [
+          {
+            "node": "ANALYST",
+            "command": "python3 /lab/ti.py cached-withdrawn",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"cached-withdrawn\")",
+            "expectation": "Observe a real source HTTP response and validate the bounded indicator/cache profile; uncertainty is never converted into a clean verdict.",
+            "command_timeout": 30,
+            "attempts": 1,
+            "interval_seconds": 2
+          }
+        ]
+      }
+    ]
   }
 }
