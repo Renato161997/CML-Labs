@@ -45535,6 +45535,1372 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T13:04:54Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/assessment/049-encor-practical-checkpoint.yaml",
+      "sha256": "84ed2d8dae2187054663b88fbb390a5c20e0d28d4c6f4d6a0e9b438f4294c230",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T13:14:10Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:39    198.18.0.2      Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+          "passed": true,
+          "output": "\nR2#show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65001\nBGP table version is 3, main routing table version 3\n2 network entries using 496 bytes of memory\n2 path entries using 272 bytes of memory\n2/2 BGP path/bestpath attribute entries using 608 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 1400 total bytes of memory\nBGP activity 2/0 prefixes, 2/0 paths, scan interval 60 secs\n2 networks peaked at 13:14:55 Nov 1 2026 UTC (00:00:20.308 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.6      4        65002      20      20        3    0    0 00:00:50        1\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip bgp 198.18.20.0",
+          "expectation": "The border learns the service from the directly connected external BGP peer.",
+          "passed": true,
+          "output": "\nR2#show ip bgp 198.18.20.0\nBGP routing table entry for 198.18.20.0/24, version 2\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65002\n    198.18.0.6 from 198.18.0.6 (192.0.2.3)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Nov 1 2026 13:14:28 UTC\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 198.18.20.20",
+          "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+          "passed": true,
+          "output": "\nR1#show ip route 198.18.20.20\nRouting entry for 198.18.20.0/24\n  Known via \"ospf 10\", distance 110, metric 30\n  Tag 65002, type extern 1\n  Last update from 198.18.0.2 on Ethernet0/1, 00:00:21 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 192.0.2.2, 00:00:21 ago, via Ethernet0/1\n      Route metric is 30, traffic share count is 1\n      Route tag 65002\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R3",
+          "command": "show ip route 198.18.10.10",
+          "expectation": "The actual service-side router learns the client return route through BGP.",
+          "passed": true,
+          "output": "\nR3#show ip route 198.18.10.10\nRouting entry for 198.18.10.0/24\n  Known via \"bgp 65002\", distance 20, metric 20\n  Tag 65001, type external\n  Last update from 198.18.0.5 00:00:34 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.5, from 198.18.0.5, 00:00:34 ago\n      opaque_ptr 0x76C96A577508 \n      Route metric is 20, traffic share count is 1\n      AS Hops 1\n      Route tag 65001\n      MPLS label: none\nR3#"
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=61 time=1.79 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=61 time=1.99 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=61 time=2.05 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 1.792/1.944/2.051/0.110 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The exact client ingress ACL remains bound.",
+          "passed": true,
+          "output": "\nR1#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Multicast reserved groups joined: 224.0.0.5 224.0.0.6\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is CHECKPOINT-IN\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        },
+        {
+          "phase": "mismatch only the frontend transit area",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "mismatch only the frontend transit area",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/1",
+          "passed": true,
+          "output": "\nR1(config)#interface Ethernet0/1\nR1(config-if)#"
+        },
+        {
+          "phase": "mismatch only the frontend transit area",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip ospf 10 area 1",
+          "passed": true,
+          "output": "\nR1(config-if)#ip ospf 10 area 1\nR1(config-if)#"
+        },
+        {
+          "phase": "mismatch only the frontend transit area",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "mismatch only the frontend transit area",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The deliberately mismatched OSPF area removes the neighbor.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\nR1#"
+        },
+        {
+          "phase": "mismatch only the frontend transit area",
+          "node": "R2",
+          "command": "show ip bgp 198.18.20.0",
+          "expectation": "The border learns the service from the directly connected external BGP peer.",
+          "passed": true,
+          "output": "\nR2#show ip bgp 198.18.20.0\nBGP routing table entry for 198.18.20.0/24, version 2\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65002\n    198.18.0.6 from 198.18.0.6 (192.0.2.3)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Nov 1 2026 13:14:28 UTC\nR2#"
+        },
+        {
+          "phase": "mismatch only the frontend transit area",
+          "node": "R1",
+          "command": "show ip route 198.18.20.20",
+          "expectation": "The actual frontend RIB has no usable service route.",
+          "passed": true,
+          "output": "\nR1#show ip route 198.18.20.20\n% Network not in table\nR1#"
+        },
+        {
+          "phase": "mismatch only the frontend transit area",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "mismatch only the frontend transit area",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "mismatch only the frontend transit area",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "interface Ethernet0/1",
+          "passed": true,
+          "output": "\nR1(config)#interface Ethernet0/1\nR1(config-if)#"
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip ospf 10 area 0",
+          "passed": true,
+          "output": "\nR1(config-if)#ip ospf 10 area 0\nR1(config-if)#"
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-if)#end\nR1#"
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:38    198.18.0.2      Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+          "passed": true,
+          "output": "\nR2#show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65001\nBGP table version is 5, main routing table version 5\n2 network entries using 496 bytes of memory\n2 path entries using 272 bytes of memory\n2/2 BGP path/bestpath attribute entries using 608 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 1400 total bytes of memory\nBGP activity 2/0 prefixes, 3/1 paths, scan interval 60 secs\n2 networks peaked at 13:14:55 Nov 1 2026 UTC (00:01:17.338 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.6      4        65002      39      39        4    0    0 00:01:47        1\nR2#"
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "node": "R2",
+          "command": "show ip bgp 198.18.20.0",
+          "expectation": "The border learns the service from the directly connected external BGP peer.",
+          "passed": true,
+          "output": "\nR2#show ip bgp 198.18.20.0\nBGP routing table entry for 198.18.20.0/24, version 2\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65002\n    198.18.0.6 from 198.18.0.6 (192.0.2.3)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Nov 1 2026 13:14:28 UTC\nR2#"
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "node": "R1",
+          "command": "show ip route 198.18.20.20",
+          "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+          "passed": true,
+          "output": "\nR1#show ip route 198.18.20.20\nRouting entry for 198.18.20.0/24\n  Known via \"ospf 10\", distance 110, metric 30\n  Tag 65002, type extern 1\n  Last update from 198.18.0.2 on Ethernet0/1, 00:00:03 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 192.0.2.2, 00:00:03 ago, via Ethernet0/1\n      Route metric is 30, traffic share count is 1\n      Route tag 65002\nR1#"
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "node": "R3",
+          "command": "show ip route 198.18.10.10",
+          "expectation": "The actual service-side router learns the client return route through BGP.",
+          "passed": true,
+          "output": "\nR3#show ip route 198.18.10.10\nRouting entry for 198.18.10.0/24\n  Known via \"bgp 65002\", distance 20, metric 20\n  Tag 65001, type external\n  Last update from 198.18.0.5 00:00:03 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.5, from 198.18.0.5, 00:00:03 ago\n      opaque_ptr 0x76C96A577508 \n      Route metric is 20, traffic share count is 1\n      AS Hops 1\n      Route tag 65001\n      MPLS label: none\nR3#"
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=61 time=1.86 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=61 time=1.99 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=61 time=2.01 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 1.858/1.950/2.006/0.065 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the intended OSPF area",
+          "node": "R1",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The exact client ingress ACL remains bound.",
+          "passed": true,
+          "output": "\nR1#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Multicast reserved groups joined: 224.0.0.5 224.0.0.6\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is CHECKPOINT-IN\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router bgp 65001",
+          "passed": true,
+          "output": "\nR2(config)#router bgp 65001\nR2(config-router)#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "neighbor 198.18.0.6 prefix-list DROP-SERVICE in",
+          "passed": true,
+          "output": "\nR2(config-router)#neighbor 198.18.0.6 prefix-list DROP-SERVICE in\nR2(config-router)#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(config-router)#exit\nR2(config)#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear ip bgp 198.18.0.6 soft in",
+          "passed": true,
+          "output": "\nR2(config)#do clear ip bgp 198.18.0.6 soft in\nR2(config)#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config)#end\nR2#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:39    198.18.0.2      Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+          "passed": true,
+          "output": "\nR2#show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65001\nBGP table version is 6, main routing table version 6\n1 network entries using 248 bytes of memory\n1 path entries using 136 bytes of memory\n2/1 BGP path/bestpath attribute entries using 608 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 1016 total bytes of memory\nBGP activity 2/0 prefixes, 3/2 paths, scan interval 60 secs\n2 networks peaked at 13:14:55 Nov 1 2026 UTC (00:02:00.602 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.6      4        65002      55      55        5    0    0 00:02:31        0\nR2#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "node": "R1",
+          "command": "show ip route 198.18.20.20",
+          "expectation": "The actual frontend RIB has no usable service route.",
+          "passed": true,
+          "output": "\nR1#show ip route 198.18.20.20\n% Network not in table\nR1#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "node": "R1",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The exact client ingress ACL remains bound.",
+          "passed": true,
+          "output": "\nR1#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Multicast reserved groups joined: 224.0.0.5 224.0.0.6\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is CHECKPOINT-IN\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router bgp 65001",
+          "passed": true,
+          "output": "\nR2(config)#router bgp 65001\nR2(config-router)#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no neighbor 198.18.0.6 prefix-list DROP-SERVICE in",
+          "passed": true,
+          "output": "\nR2(config-router)#no neighbor 198.18.0.6 prefix-list DROP-SERVICE in\nR2(config-router)#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(config-router)#exit\nR2(config)#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear ip bgp 198.18.0.6 soft in",
+          "passed": true,
+          "output": "\nR2(config)#do clear ip bgp 198.18.0.6 soft in\nR2(config)#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config)#end\nR2#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:39    198.18.0.2      Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+          "passed": true,
+          "output": "\nR2#show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65001\nBGP table version is 7, main routing table version 7\n2 network entries using 496 bytes of memory\n2 path entries using 272 bytes of memory\n2/2 BGP path/bestpath attribute entries using 608 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 1400 total bytes of memory\nBGP activity 2/0 prefixes, 4/2 paths, scan interval 60 secs\n2 networks peaked at 13:14:55 Nov 1 2026 UTC (00:02:09.643 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.6      4        65002      61      59        5    0    0 00:02:40        1\nR2#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "R2",
+          "command": "show ip bgp 198.18.20.0",
+          "expectation": "The border learns the service from the directly connected external BGP peer.",
+          "passed": true,
+          "output": "\nR2#show ip bgp 198.18.20.0\nBGP routing table entry for 198.18.20.0/24, version 7\nPaths: (1 available, best #1, table default)\n  Flag: 0x8100\n  Not advertised to any peer\n  Refresh Epoch 3\n  65002\n    198.18.0.6 from 198.18.0.6 (192.0.2.3)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Nov 1 2026 13:17:03 UTC\nR2#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "R1",
+          "command": "show ip route 198.18.20.20",
+          "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+          "passed": true,
+          "output": "\nR1#show ip route 198.18.20.20\nRouting entry for 198.18.20.0/24\n  Known via \"ospf 10\", distance 110, metric 30\n  Tag 65002, type extern 1\n  Last update from 198.18.0.2 on Ethernet0/1, 00:00:02 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 192.0.2.2, 00:00:02 ago, via Ethernet0/1\n      Route metric is 30, traffic share count is 1\n      Route tag 65002\nR1#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "R3",
+          "command": "show ip route 198.18.10.10",
+          "expectation": "The actual service-side router learns the client return route through BGP.",
+          "passed": true,
+          "output": "\nR3#show ip route 198.18.10.10\nRouting entry for 198.18.10.0/24\n  Known via \"bgp 65002\", distance 20, metric 20\n  Tag 65001, type external\n  Last update from 198.18.0.5 00:00:26 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.5, from 198.18.0.5, 00:00:26 ago\n      opaque_ptr 0x76C96A577508 \n      Route metric is 20, traffic share count is 1\n      AS Hops 1\n      Route tag 65001\n      MPLS label: none\nR3#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=61 time=2.06 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=61 time=1.93 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=61 time=2.32 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 1.929/2.103/2.320/0.162 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "R1",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The exact client ingress ACL remains bound.",
+          "passed": true,
+          "output": "\nR1#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Multicast reserved groups joined: 224.0.0.5 224.0.0.6\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is CHECKPOINT-IN\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        },
+        {
+          "phase": "remove only the necessary application permit",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "remove only the necessary application permit",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip access-list extended CHECKPOINT-IN",
+          "passed": true,
+          "output": "\nR1(config)#ip access-list extended CHECKPOINT-IN\nR1(config-ext-nacl)#"
+        },
+        {
+          "phase": "remove only the necessary application permit",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no 10",
+          "passed": true,
+          "output": "\nR1(config-ext-nacl)#no 10\nR1(config-ext-nacl)#"
+        },
+        {
+          "phase": "remove only the necessary application permit",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-ext-nacl)#end\nR1#"
+        },
+        {
+          "phase": "remove only the necessary application permit",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:38    198.18.0.2      Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "remove only the necessary application permit",
+          "node": "R1",
+          "command": "show ip route 198.18.20.20",
+          "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+          "passed": true,
+          "output": "\nR1#show ip route 198.18.20.20\nRouting entry for 198.18.20.0/24\n  Known via \"ospf 10\", distance 110, metric 30\n  Tag 65002, type extern 1\n  Last update from 198.18.0.2 on Ethernet0/1, 00:00:13 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 192.0.2.2, 00:00:13 ago, via Ethernet0/1\n      Route metric is 30, traffic share count is 1\n      Route tag 65002\nR1#"
+        },
+        {
+          "phase": "remove only the necessary application permit",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "remove only the necessary application permit",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "remove only the necessary application permit",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove only the necessary application permit",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove only the necessary application permit",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=61 time=2.03 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=61 time=2.78 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=61 time=1.87 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 1.870/2.225/2.777/0.395 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove only the necessary application permit",
+          "node": "R1",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The exact client ingress ACL remains bound.",
+          "passed": true,
+          "output": "\nR1#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Multicast reserved groups joined: 224.0.0.5 224.0.0.6\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is CHECKPOINT-IN\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip access-list extended CHECKPOINT-IN",
+          "passed": true,
+          "output": "\nR1(config)#ip access-list extended CHECKPOINT-IN\nR1(config-ext-nacl)#"
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "10 permit tcp host 198.18.10.10 host 198.18.20.20 eq 8080",
+          "passed": true,
+          "output": "\nR1(config-ext-nacl)#10 permit tcp host 198.18.10.10 host 198.18.20.20 eq 8080\nR1(config-ext-nacl)#"
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-ext-nacl)#end\nR1#"
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:38    198.18.0.2      Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+          "passed": true,
+          "output": "\nR2#show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65001\nBGP table version is 7, main routing table version 7\n2 network entries using 496 bytes of memory\n2 path entries using 272 bytes of memory\n2/2 BGP path/bestpath attribute entries using 608 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 1400 total bytes of memory\nBGP activity 2/0 prefixes, 4/2 paths, scan interval 60 secs\n2 networks peaked at 13:14:55 Nov 1 2026 UTC (00:02:32.124 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.6      4        65002      71      66        7    0    0 00:03:02        1\nR2#"
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "node": "R2",
+          "command": "show ip bgp 198.18.20.0",
+          "expectation": "The border learns the service from the directly connected external BGP peer.",
+          "passed": true,
+          "output": "\nR2#show ip bgp 198.18.20.0\nBGP routing table entry for 198.18.20.0/24, version 7\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 4\n  65002\n    198.18.0.6 from 198.18.0.6 (192.0.2.3)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Nov 1 2026 13:17:24 UTC\nR2#"
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "node": "R1",
+          "command": "show ip route 198.18.20.20",
+          "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+          "passed": true,
+          "output": "\nR1#show ip route 198.18.20.20\nRouting entry for 198.18.20.0/24\n  Known via \"ospf 10\", distance 110, metric 30\n  Tag 65002, type extern 1\n  Last update from 198.18.0.2 on Ethernet0/1, 00:00:25 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 192.0.2.2, 00:00:25 ago, via Ethernet0/1\n      Route metric is 30, traffic share count is 1\n      Route tag 65002\nR1#"
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "node": "R3",
+          "command": "show ip route 198.18.10.10",
+          "expectation": "The actual service-side router learns the client return route through BGP.",
+          "passed": true,
+          "output": "\nR3#show ip route 198.18.10.10\nRouting entry for 198.18.10.0/24\n  Known via \"bgp 65002\", distance 20, metric 20\n  Tag 65001, type external\n  Last update from 198.18.0.5 00:00:48 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.5, from 198.18.0.5, 00:00:48 ago\n      opaque_ptr 0x76C96A577508 \n      Route metric is 20, traffic share count is 1\n      AS Hops 1\n      Route tag 65001\n      MPLS label: none\nR3#"
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=61 time=1.96 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=61 time=2.15 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=61 time=2.05 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2002ms\nrtt min/avg/max/mdev = 1.960/2.052/2.149/0.077 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "recover the scoped application permit",
+          "node": "R1",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The exact client ingress ACL remains bound.",
+          "passed": true,
+          "output": "\nR1#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Multicast reserved groups joined: 224.0.0.5 224.0.0.6\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is CHECKPOINT-IN\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        }
+      ],
+      "plan_sha256": "e42b931ac0aaeb0e05d6f1f6e29d31ccdad28d84458585ee04226b4e49e56ad6",
+      "startup_states": {
+        "R1": "BOOTED",
+        "R2": "BOOTED",
+        "R3": "BOOTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "BOOTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T13:17:42Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/assessment/044-scor-practical-checkpoint.yaml",
+      "sha256": "dd111e1eb1b88aa32ec52e596fba6879515a8fe29caf55791817531f3343cd49",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T13:17:45Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:37    198.18.0.2      Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+          "passed": true,
+          "output": "\nR2#show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65001\nBGP table version is 3, main routing table version 3\n2 network entries using 496 bytes of memory\n2 path entries using 272 bytes of memory\n2/2 BGP path/bestpath attribute entries using 608 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 1400 total bytes of memory\nBGP activity 2/0 prefixes, 2/0 paths, scan interval 60 secs\n2 networks peaked at 13:18:30 Nov 1 2026 UTC (00:00:19.911 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.6      4        65002      20      20        3    0    0 00:00:53        1\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R2",
+          "command": "show ip bgp 198.18.20.0",
+          "expectation": "The border learns the service from the directly connected external BGP peer.",
+          "passed": true,
+          "output": "\nR2#show ip bgp 198.18.20.0\nBGP routing table entry for 198.18.20.0/24, version 2\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65002\n    198.18.0.6 from 198.18.0.6 (192.0.2.3)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Nov 1 2026 13:18:00 UTC\nR2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip route 198.18.20.20",
+          "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+          "passed": true,
+          "output": "\nR1#show ip route 198.18.20.20\nRouting entry for 198.18.20.0/24\n  Known via \"ospf 10\", distance 110, metric 30\n  Tag 65002, type extern 1\n  Last update from 198.18.0.2 on Ethernet0/1, 00:00:20 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 192.0.2.2, 00:00:20 ago, via Ethernet0/1\n      Route metric is 30, traffic share count is 1\n      Route tag 65002\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "R3",
+          "command": "show ip route 198.18.10.10",
+          "expectation": "The actual service-side router learns the client return route through BGP.",
+          "passed": true,
+          "output": "\nR3#show ip route 198.18.10.10\nRouting entry for 198.18.10.0/24\n  Known via \"bgp 65002\", distance 20, metric 20\n  Tag 65001, type external\n  Last update from 198.18.0.5 00:00:36 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.5, from 198.18.0.5, 00:00:36 ago\n      opaque_ptr 0x711513B8DD78 \n      Route metric is 20, traffic share count is 1\n      AS Hops 1\n      Route tag 65001\n      MPLS label: none\nR3#"
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=61 time=2.33 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=61 time=2.10 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=61 time=2.10 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 2.095/2.172/2.325/0.108 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The exact client ingress ACL remains bound.",
+          "passed": true,
+          "output": "\nR1#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Multicast reserved groups joined: 224.0.0.5 224.0.0.6\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is CHECKPOINT-IN\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        },
+        {
+          "phase": "introduce an unsafe administration-port exception",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "introduce an unsafe administration-port exception",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip access-list extended CHECKPOINT-IN",
+          "passed": true,
+          "output": "\nR1(config)#ip access-list extended CHECKPOINT-IN\nR1(config-ext-nacl)#"
+        },
+        {
+          "phase": "introduce an unsafe administration-port exception",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "5 permit tcp host 198.18.10.10 host 198.18.20.20 eq 9090",
+          "passed": true,
+          "output": "\nR1(config-ext-nacl)#5 permit tcp host 198.18.10.10 host 198.18.20.20 eq 9090\nR1(config-ext-nacl)#"
+        },
+        {
+          "phase": "introduce an unsafe administration-port exception",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-ext-nacl)#end\nR1#"
+        },
+        {
+          "phase": "introduce an unsafe administration-port exception",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:38    198.18.0.2      Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "introduce an unsafe administration-port exception",
+          "node": "R2",
+          "command": "show ip bgp 198.18.20.0",
+          "expectation": "The border learns the service from the directly connected external BGP peer.",
+          "passed": true,
+          "output": "\nR2#show ip bgp 198.18.20.0\nBGP routing table entry for 198.18.20.0/24, version 2\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65002\n    198.18.0.6 from 198.18.0.6 (192.0.2.3)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Nov 1 2026 13:18:00 UTC\nR2#"
+        },
+        {
+          "phase": "introduce an unsafe administration-port exception",
+          "node": "R1",
+          "command": "show ip route 198.18.20.20",
+          "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+          "passed": true,
+          "output": "\nR1#show ip route 198.18.20.20\nRouting entry for 198.18.20.0/24\n  Known via \"ospf 10\", distance 110, metric 30\n  Tag 65002, type extern 1\n  Last update from 198.18.0.2 on Ethernet0/1, 00:01:11 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 192.0.2.2, 00:01:11 ago, via Ethernet0/1\n      Route metric is 30, traffic share count is 1\n      Route tag 65002\nR1#"
+        },
+        {
+          "phase": "introduce an unsafe administration-port exception",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "introduce an unsafe administration-port exception",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "introduce an unsafe administration-port exception",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "introduce an unsafe administration-port exception",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "introduce an unsafe administration-port exception",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=61 time=1.54 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=61 time=2.41 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=61 time=2.53 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 1.536/2.159/2.528/0.443 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "introduce an unsafe administration-port exception",
+          "node": "R1",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The exact client ingress ACL remains bound.",
+          "passed": true,
+          "output": "\nR1#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Multicast reserved groups joined: 224.0.0.5 224.0.0.6\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is CHECKPOINT-IN\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip access-list extended CHECKPOINT-IN",
+          "passed": true,
+          "output": "\nR1(config)#ip access-list extended CHECKPOINT-IN\nR1(config-ext-nacl)#"
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no 5",
+          "passed": true,
+          "output": "\nR1(config-ext-nacl)#no 5\nR1(config-ext-nacl)#"
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-ext-nacl)#end\nR1#"
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:37    198.18.0.2      Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+          "passed": true,
+          "output": "\nR2#show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65001\nBGP table version is 3, main routing table version 3\n2 network entries using 496 bytes of memory\n2 path entries using 272 bytes of memory\n2/2 BGP path/bestpath attribute entries using 608 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 1400 total bytes of memory\nBGP activity 2/0 prefixes, 2/0 paths, scan interval 60 secs\n2 networks peaked at 13:18:30 Nov 1 2026 UTC (00:01:21.763 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.6      4        65002      41      40        3    0    0 00:01:55        1\nR2#"
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "node": "R2",
+          "command": "show ip bgp 198.18.20.0",
+          "expectation": "The border learns the service from the directly connected external BGP peer.",
+          "passed": true,
+          "output": "\nR2#show ip bgp 198.18.20.0\nBGP routing table entry for 198.18.20.0/24, version 2\nPaths: (1 available, best #1, table default)\n  Not advertised to any peer\n  Refresh Epoch 1\n  65002\n    198.18.0.6 from 198.18.0.6 (192.0.2.3)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Nov 1 2026 13:18:00 UTC\nR2#"
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "node": "R1",
+          "command": "show ip route 198.18.20.20",
+          "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+          "passed": true,
+          "output": "\nR1#show ip route 198.18.20.20\nRouting entry for 198.18.20.0/24\n  Known via \"ospf 10\", distance 110, metric 30\n  Tag 65002, type extern 1\n  Last update from 198.18.0.2 on Ethernet0/1, 00:01:22 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 192.0.2.2, 00:01:22 ago, via Ethernet0/1\n      Route metric is 30, traffic share count is 1\n      Route tag 65002\nR1#"
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "node": "R3",
+          "command": "show ip route 198.18.10.10",
+          "expectation": "The actual service-side router learns the client return route through BGP.",
+          "passed": true,
+          "output": "\nR3#show ip route 198.18.10.10\nRouting entry for 198.18.10.0/24\n  Known via \"bgp 65002\", distance 20, metric 20\n  Tag 65001, type external\n  Last update from 198.18.0.5 00:01:21 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.5, from 198.18.0.5, 00:01:21 ago\n      opaque_ptr 0x711513B8DD78 \n      Route metric is 20, traffic share count is 1\n      AS Hops 1\n      Route tag 65001\n      MPLS label: none\nR3#"
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=61 time=2.04 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=61 time=2.31 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=61 time=2.64 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 2.039/2.330/2.641/0.246 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove only the unsafe exception",
+          "node": "R1",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The exact client ingress ACL remains bound.",
+          "passed": true,
+          "output": "\nR1#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Multicast reserved groups joined: 224.0.0.5 224.0.0.6\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is CHECKPOINT-IN\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router bgp 65001",
+          "passed": true,
+          "output": "\nR2(config)#router bgp 65001\nR2(config-router)#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "neighbor 198.18.0.6 prefix-list DROP-SERVICE in",
+          "passed": true,
+          "output": "\nR2(config-router)#neighbor 198.18.0.6 prefix-list DROP-SERVICE in\nR2(config-router)#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(config-router)#exit\nR2(config)#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear ip bgp 198.18.0.6 soft in",
+          "passed": true,
+          "output": "\nR2(config)#do clear ip bgp 198.18.0.6 soft in\nR2(config)#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config)#end\nR2#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:39    198.18.0.2      Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+          "passed": true,
+          "output": "\nR2#show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65001\nBGP table version is 4, main routing table version 4\n1 network entries using 248 bytes of memory\n1 path entries using 136 bytes of memory\n2/1 BGP path/bestpath attribute entries using 608 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 1016 total bytes of memory\nBGP activity 2/0 prefixes, 2/1 paths, scan interval 60 secs\n2 networks peaked at 13:18:30 Nov 1 2026 UTC (00:01:35.324 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.6      4        65002      48      45        4    0    0 00:02:09        0\nR2#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "node": "R1",
+          "command": "show ip route 198.18.20.20",
+          "expectation": "The actual frontend RIB has no usable service route.",
+          "passed": true,
+          "output": "\nR1#show ip route 198.18.20.20\n% Network not in table\nR1#"
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "reject only the external service announcement",
+          "node": "R1",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The exact client ingress ACL remains bound.",
+          "passed": true,
+          "output": "\nR1#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Multicast reserved groups joined: 224.0.0.5 224.0.0.6\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is CHECKPOINT-IN\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR2(config)#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "router bgp 65001",
+          "passed": true,
+          "output": "\nR2(config)#router bgp 65001\nR2(config-router)#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "no neighbor 198.18.0.6 prefix-list DROP-SERVICE in",
+          "passed": true,
+          "output": "\nR2(config-router)#no neighbor 198.18.0.6 prefix-list DROP-SERVICE in\nR2(config-router)#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nR2(config-router)#exit\nR2(config)#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "do clear ip bgp 198.18.0.6 soft in",
+          "passed": true,
+          "output": "\nR2(config)#do clear ip bgp 198.18.0.6 soft in\nR2(config)#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "kind": "configuration",
+          "node": "R2",
+          "command": "end",
+          "passed": true,
+          "output": "\nR2(config)#end\nR2#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "R1",
+          "command": "show ip ospf neighbor",
+          "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+          "passed": true,
+          "output": "\nR1#show ip ospf neighbor\n\nNeighbor ID     Pri   State           Dead Time   Address         Interface\n192.0.2.2         1   FULL/DR         00:00:39    198.18.0.2      Ethernet0/1\nR1#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "R2",
+          "command": "show ip bgp summary",
+          "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+          "passed": true,
+          "output": "\nR2#show ip bgp summary\nBGP router identifier 192.0.2.2, local AS number 65001\nBGP table version is 5, main routing table version 5\n2 network entries using 496 bytes of memory\n2 path entries using 272 bytes of memory\n2/2 BGP path/bestpath attribute entries using 608 bytes of memory\n1 BGP AS-PATH entries using 24 bytes of memory\n0 BGP route-map cache entries using 0 bytes of memory\n0 BGP filter-list cache entries using 0 bytes of memory\nBGP using 1400 total bytes of memory\nBGP activity 2/0 prefixes, 3/1 paths, scan interval 60 secs\n2 networks peaked at 13:18:30 Nov 1 2026 UTC (00:01:44.274 ago)\n\nNeighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd\n198.18.0.6      4        65002      53      48        4    0    0 00:02:18        1\nR2#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "R2",
+          "command": "show ip bgp 198.18.20.0",
+          "expectation": "The border learns the service from the directly connected external BGP peer.",
+          "passed": true,
+          "output": "\nR2#show ip bgp 198.18.20.0\nBGP routing table entry for 198.18.20.0/24, version 5\nPaths: (1 available, best #1, table default)\n  Flag: 0x8100\n  Not advertised to any peer\n  Refresh Epoch 3\n  65002\n    198.18.0.6 from 198.18.0.6 (192.0.2.3)\n      Origin IGP, metric 0, localpref 100, valid, external, best\n      rx pathid: 0, tx pathid: 0x0\n      Updated on Nov 1 2026 13:20:12 UTC\nR2#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "R1",
+          "command": "show ip route 198.18.20.20",
+          "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+          "passed": true,
+          "output": "\nR1#show ip route 198.18.20.20\nRouting entry for 198.18.20.0/24\n  Known via \"ospf 10\", distance 110, metric 30\n  Tag 65002, type extern 1\n  Last update from 198.18.0.2 on Ethernet0/1, 00:00:03 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.2, from 192.0.2.2, 00:00:03 ago, via Ethernet0/1\n      Route metric is 30, traffic share count is 1\n      Route tag 65002\nR1#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "R3",
+          "command": "show ip route 198.18.10.10",
+          "expectation": "The actual service-side router learns the client return route through BGP.",
+          "passed": true,
+          "output": "\nR3#show ip route 198.18.10.10\nRouting entry for 198.18.10.0/24\n  Known via \"bgp 65002\", distance 20, metric 20\n  Tag 65001, type external\n  Last update from 198.18.0.5 00:01:44 ago\n  Routing Descriptor Blocks:\n  * 198.18.0.5, from 198.18.0.5, 00:01:44 ago\n      opaque_ptr 0x711513B8DD78 \n      Route metric is 20, traffic share count is 1\n      AS Hops 1\n      Route tag 65001\n      MPLS label: none\nR3#"
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 2 198.18.20.20",
+          "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 2 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=61 time=2.26 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=61 time=2.33 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=61 time=2.48 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2002ms\nrtt min/avg/max/mdev = 2.255/2.353/2.480/0.094 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the specific accepted BGP service",
+          "node": "R1",
+          "command": "show ip interface Ethernet0/0",
+          "expectation": "The exact client ingress ACL remains bound.",
+          "passed": true,
+          "output": "\nR1#show ip interface Ethernet0/0\nEthernet0/0 is up, line protocol is up\n  Internet address is 198.18.10.1/24\n  Broadcast address is 255.255.255.255\n  Address determined by configuration file\n  MTU is 1500 bytes\n  Helper address is not set\n  Directed broadcast forwarding is disabled\n  Multicast reserved groups joined: 224.0.0.5 224.0.0.6\n  Outgoing Common access list is not set \n  Outgoing access list is not set\n  Inbound Common access list is not set \n  Inbound  access list is CHECKPOINT-IN\n  Proxy ARP is enabled\n  Local Proxy ARP is disabled\n  Security level is default\n  Split horizon is enabled\n  ICMP redirects are always sent\n  ICMP unreachables are always sent\n  ICMP mask replies are never sent\n  IP fast switching is enabled\n  IP Flow switching is disabled\n  IP CEF switching is enabled\n  IP CEF switching turbo vector\n  IP Null turbo vector\n  Associated unicast routing topologies:\n        Topology \"base\", operation state is UP\n  IP multicast fast switching is enabled\n  IP multicast distributed fast switching is disabled\n  IP route-cache flags are Fast, CEF\n  Router Discovery is disabled\n  IP output packet accounting is disabled\n  IP access violation accounting is disabled\n  TCP/IP header compression is disabled\n  RTP/IP header compression is disabled\n  Probe proxy name replies are disabled\n  Policy routing is disabled\n  Network address translation is disabled\n  BGP Policy Mapping is disabled\n  Input features: Access List, MCI Check\n  IPv4 WCCP Redirect outbound is disabled\n  IPv4 WCCP Redirect inbound is disabled\n  IPv4 WCCP Redirect exclude is disabled\n  IP Clear Dont Fragment is disabled\nR1#"
+        }
+      ],
+      "plan_sha256": "69a82794ad18cb6f532475e1455035c31985bed4ab775ef68838bf79b5fd9d4b",
+      "startup_states": {
+        "R1": "BOOTED",
+        "R2": "BOOTED",
+        "R3": "BOOTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "BOOTED"
+      },
+      "images": {
+        "R1": "iol-xe-17-18-02",
+        "R2": "iol-xe-17-18-02",
+        "R3": "iol-xe-17-18-02",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T13:20:30Z"
     }
   ]
 }

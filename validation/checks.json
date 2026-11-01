@@ -25274,5 +25274,1080 @@
         ]
       }
     ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/assessment/049-encor-practical-checkpoint.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip ospf neighbor",
+        "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+        "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R2",
+        "command": "show ip bgp summary",
+        "pattern": "(?m)^198\\.18\\.0\\.6\\s+4\\s+65002\\s+.+\\s+[0-9]+\\s*$",
+        "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R2",
+        "command": "show ip bgp 198.18.20.0",
+        "pattern": "(?s)(?=.*BGP routing table entry for 198\\.18\\.20\\.0/24)(?=.*198\\.18\\.0\\.6)",
+        "expectation": "The border learns the service from the directly connected external BGP peer.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 198.18.20.20",
+        "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.20\\.0/24)(?=.*Known via \"ospf 10\")(?=.*198\\.18\\.0\\.2)",
+        "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R3",
+        "command": "show ip route 198.18.10.10",
+        "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.10\\.0/24)(?=.*Known via \"bgp 65002\")(?=.*198\\.18\\.0\\.5)",
+        "expectation": "The actual service-side router learns the client return route through BGP.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+        "pattern": "(?s)(?=.*\"reachable\": false)",
+        "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "ping -n -c 3 -W 2 198.18.20.20",
+        "pattern": "3 packets transmitted, 3 received",
+        "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+        "attempts": 10,
+        "interval_seconds": 2
+      },
+      {
+        "node": "R1",
+        "command": "show ip interface Ethernet0/0",
+        "pattern": "Inbound\\s+access list is CHECKPOINT-IN",
+        "expectation": "The exact client ingress ACL remains bound."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "mismatch only the frontend transit area",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "ip ospf 10 area 1",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "(?s)^(?!.*192\\.0\\.2\\.2.*FULL).*$",
+            "expectation": "The deliberately mismatched OSPF area removes the neighbor.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp 198.18.20.0",
+            "pattern": "(?s)(?=.*BGP routing table entry for 198\\.18\\.20\\.0/24)(?=.*198\\.18\\.0\\.6)",
+            "expectation": "The border learns the service from the directly connected external BGP peer.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 198.18.20.20",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The actual frontend RIB has no usable service route.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore the intended OSPF area",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "ip ospf 10 area 0",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp summary",
+            "pattern": "(?m)^198\\.18\\.0\\.6\\s+4\\s+65002\\s+.+\\s+[0-9]+\\s*$",
+            "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp 198.18.20.0",
+            "pattern": "(?s)(?=.*BGP routing table entry for 198\\.18\\.20\\.0/24)(?=.*198\\.18\\.0\\.6)",
+            "expectation": "The border learns the service from the directly connected external BGP peer.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 198.18.20.20",
+            "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.20\\.0/24)(?=.*Known via \"ospf 10\")(?=.*198\\.18\\.0\\.2)",
+            "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R3",
+            "command": "show ip route 198.18.10.10",
+            "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.10\\.0/24)(?=.*Known via \"bgp 65002\")(?=.*198\\.18\\.0\\.5)",
+            "expectation": "The actual service-side router learns the client return route through BGP.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 2 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+            "attempts": 10,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is CHECKPOINT-IN",
+            "expectation": "The exact client ingress ACL remains bound."
+          }
+        ]
+      },
+      {
+        "name": "reject only the external service announcement",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router bgp 65001",
+          "neighbor 198.18.0.6 prefix-list DROP-SERVICE in",
+          "exit",
+          "do clear ip bgp 198.18.0.6 soft in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp summary",
+            "pattern": "(?m)^198\\.18\\.0\\.6\\s+4\\s+65002\\s+.+\\s+[0-9]+\\s*$",
+            "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 198.18.20.20",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The actual frontend RIB has no usable service route.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "R1",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is CHECKPOINT-IN",
+            "expectation": "The exact client ingress ACL remains bound."
+          }
+        ]
+      },
+      {
+        "name": "restore the specific accepted BGP service",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router bgp 65001",
+          "no neighbor 198.18.0.6 prefix-list DROP-SERVICE in",
+          "exit",
+          "do clear ip bgp 198.18.0.6 soft in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp summary",
+            "pattern": "(?m)^198\\.18\\.0\\.6\\s+4\\s+65002\\s+.+\\s+[0-9]+\\s*$",
+            "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp 198.18.20.0",
+            "pattern": "(?s)(?=.*BGP routing table entry for 198\\.18\\.20\\.0/24)(?=.*198\\.18\\.0\\.6)",
+            "expectation": "The border learns the service from the directly connected external BGP peer.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 198.18.20.20",
+            "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.20\\.0/24)(?=.*Known via \"ospf 10\")(?=.*198\\.18\\.0\\.2)",
+            "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R3",
+            "command": "show ip route 198.18.10.10",
+            "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.10\\.0/24)(?=.*Known via \"bgp 65002\")(?=.*198\\.18\\.0\\.5)",
+            "expectation": "The actual service-side router learns the client return route through BGP.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 2 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+            "attempts": 10,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is CHECKPOINT-IN",
+            "expectation": "The exact client ingress ACL remains bound."
+          }
+        ]
+      },
+      {
+        "name": "remove only the necessary application permit",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended CHECKPOINT-IN",
+          "no 10",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 198.18.20.20",
+            "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.20\\.0/24)(?=.*Known via \"ospf 10\")(?=.*198\\.18\\.0\\.2)",
+            "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 2 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+            "attempts": 10,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is CHECKPOINT-IN",
+            "expectation": "The exact client ingress ACL remains bound."
+          }
+        ]
+      },
+      {
+        "name": "recover the scoped application permit",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended CHECKPOINT-IN",
+          "10 permit tcp host 198.18.10.10 host 198.18.20.20 eq 8080",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp summary",
+            "pattern": "(?m)^198\\.18\\.0\\.6\\s+4\\s+65002\\s+.+\\s+[0-9]+\\s*$",
+            "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp 198.18.20.0",
+            "pattern": "(?s)(?=.*BGP routing table entry for 198\\.18\\.20\\.0/24)(?=.*198\\.18\\.0\\.6)",
+            "expectation": "The border learns the service from the directly connected external BGP peer.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 198.18.20.20",
+            "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.20\\.0/24)(?=.*Known via \"ospf 10\")(?=.*198\\.18\\.0\\.2)",
+            "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R3",
+            "command": "show ip route 198.18.10.10",
+            "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.10\\.0/24)(?=.*Known via \"bgp 65002\")(?=.*198\\.18\\.0\\.5)",
+            "expectation": "The actual service-side router learns the client return route through BGP.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 2 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+            "attempts": 10,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is CHECKPOINT-IN",
+            "expectation": "The exact client ingress ACL remains bound."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/assessment/044-scor-practical-checkpoint.yaml": {
+    "checks": [
+      {
+        "node": "R1",
+        "command": "show ip ospf neighbor",
+        "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+        "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R2",
+        "command": "show ip bgp summary",
+        "pattern": "(?m)^198\\.18\\.0\\.6\\s+4\\s+65002\\s+.+\\s+[0-9]+\\s*$",
+        "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R2",
+        "command": "show ip bgp 198.18.20.0",
+        "pattern": "(?s)(?=.*BGP routing table entry for 198\\.18\\.20\\.0/24)(?=.*198\\.18\\.0\\.6)",
+        "expectation": "The border learns the service from the directly connected external BGP peer.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R1",
+        "command": "show ip route 198.18.20.20",
+        "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.20\\.0/24)(?=.*Known via \"ospf 10\")(?=.*198\\.18\\.0\\.2)",
+        "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "R3",
+        "command": "show ip route 198.18.10.10",
+        "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.10\\.0/24)(?=.*Known via \"bgp 65002\")(?=.*198\\.18\\.0\\.5)",
+        "expectation": "The actual service-side router learns the client return route through BGP.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+        "pattern": "(?s)(?=.*\"reachable\": false)",
+        "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "ping -n -c 3 -W 2 198.18.20.20",
+        "pattern": "3 packets transmitted, 3 received",
+        "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+        "attempts": 10,
+        "interval_seconds": 2
+      },
+      {
+        "node": "R1",
+        "command": "show ip interface Ethernet0/0",
+        "pattern": "Inbound\\s+access list is CHECKPOINT-IN",
+        "expectation": "The exact client ingress ACL remains bound."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "introduce an unsafe administration-port exception",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended CHECKPOINT-IN",
+          "5 permit tcp host 198.18.10.10 host 198.18.20.20 eq 9090",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp 198.18.20.0",
+            "pattern": "(?s)(?=.*BGP routing table entry for 198\\.18\\.20\\.0/24)(?=.*198\\.18\\.0\\.6)",
+            "expectation": "The border learns the service from the directly connected external BGP peer.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 198.18.20.20",
+            "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.20\\.0/24)(?=.*Known via \"ospf 10\")(?=.*198\\.18\\.0\\.2)",
+            "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 2 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+            "attempts": 10,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is CHECKPOINT-IN",
+            "expectation": "The exact client ingress ACL remains bound."
+          }
+        ]
+      },
+      {
+        "name": "remove only the unsafe exception",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended CHECKPOINT-IN",
+          "no 5",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp summary",
+            "pattern": "(?m)^198\\.18\\.0\\.6\\s+4\\s+65002\\s+.+\\s+[0-9]+\\s*$",
+            "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp 198.18.20.0",
+            "pattern": "(?s)(?=.*BGP routing table entry for 198\\.18\\.20\\.0/24)(?=.*198\\.18\\.0\\.6)",
+            "expectation": "The border learns the service from the directly connected external BGP peer.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 198.18.20.20",
+            "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.20\\.0/24)(?=.*Known via \"ospf 10\")(?=.*198\\.18\\.0\\.2)",
+            "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R3",
+            "command": "show ip route 198.18.10.10",
+            "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.10\\.0/24)(?=.*Known via \"bgp 65002\")(?=.*198\\.18\\.0\\.5)",
+            "expectation": "The actual service-side router learns the client return route through BGP.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 2 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+            "attempts": 10,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is CHECKPOINT-IN",
+            "expectation": "The exact client ingress ACL remains bound."
+          }
+        ]
+      },
+      {
+        "name": "reject only the external service announcement",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router bgp 65001",
+          "neighbor 198.18.0.6 prefix-list DROP-SERVICE in",
+          "exit",
+          "do clear ip bgp 198.18.0.6 soft in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp summary",
+            "pattern": "(?m)^198\\.18\\.0\\.6\\s+4\\s+65002\\s+.+\\s+[0-9]+\\s*$",
+            "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 198.18.20.20",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The actual frontend RIB has no usable service route.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "R1",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is CHECKPOINT-IN",
+            "expectation": "The exact client ingress ACL remains bound."
+          }
+        ]
+      },
+      {
+        "name": "restore the specific accepted BGP service",
+        "node": "R2",
+        "commands": [
+          "configure terminal",
+          "router bgp 65001",
+          "no neighbor 198.18.0.6 prefix-list DROP-SERVICE in",
+          "exit",
+          "do clear ip bgp 198.18.0.6 soft in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "R1",
+            "command": "show ip ospf neighbor",
+            "pattern": "192\\.0\\.2\\.2\\s+\\d+\\s+FULL",
+            "expectation": "The actual R1/R2 OSPF neighbor is FULL.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp summary",
+            "pattern": "(?m)^198\\.18\\.0\\.6\\s+4\\s+65002\\s+.+\\s+[0-9]+\\s*$",
+            "expectation": "The actual external BGP session remains established even when its service prefix is filtered.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R2",
+            "command": "show ip bgp 198.18.20.0",
+            "pattern": "(?s)(?=.*BGP routing table entry for 198\\.18\\.20\\.0/24)(?=.*198\\.18\\.0\\.6)",
+            "expectation": "The border learns the service from the directly connected external BGP peer.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R1",
+            "command": "show ip route 198.18.20.20",
+            "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.20\\.0/24)(?=.*Known via \"ospf 10\")(?=.*198\\.18\\.0\\.2)",
+            "expectation": "The actual frontend RIB learns the service through OSPF, not a default/static fallback.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "R3",
+            "command": "show ip route 198.18.10.10",
+            "pattern": "(?s)(?=.*Routing entry for 198\\.18\\.10\\.0/24)(?=.*Known via \"bgp 65002\")(?=.*198\\.18\\.0\\.5)",
+            "expectation": "The actual service-side router learns the client return route through BGP.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 2 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "All three actual end-to-end ICMP control packets cross the complete routed path.",
+            "attempts": 10,
+            "interval_seconds": 2
+          },
+          {
+            "node": "R1",
+            "command": "show ip interface Ethernet0/0",
+            "pattern": "Inbound\\s+access list is CHECKPOINT-IN",
+            "expectation": "The exact client ingress ACL remains bound."
+          }
+        ]
+      }
+    ]
   }
 }

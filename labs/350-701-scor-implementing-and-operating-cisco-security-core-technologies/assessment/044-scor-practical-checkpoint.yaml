@@ -1,245 +1,514 @@
 lab:
-  title: SCOR Practical Checkpoint
-  description: 350-701 SCOR - Implementing and Operating Cisco Security Core Technologies scenario-based
-    CML lab.
-  notes: '350-701 SCOR scenario lab: SCOR Practical Checkpoint
+  title: 'SCOR Checkpoint: Exposure, Policy and Routing Evidence'
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# SCOR Checkpoint: Exposure, Policy and Routing Evidence
 
 
-    Lab type: assessment
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Scenario:
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-701-044-scor-practical-checkpoint.md
 
-    You are taking over a partially built network. Use the topology, startup configs, and this note as
-    the work order.
+
+    Three actual IOL-XE routers connect two native HTTP peers. The only client route to 198.18.20.0/24
+    comes from R2''s controlled redistribution of its externally learned BGP service into OSPF. R3 learns
+    the client return prefix from R2''s BGP network statement backed by an actual OSPF RIB entry. There
+    are no router static/default fallback routes. Hosts have only the necessary remote fixture subnet
+    route through their local router. Independent RIB, adjacency and actual end-to-end HTTP/ICMP establish
+    both directions.
+
+
+    Two actual service listeners on OUTSIDE use TCP 8080 as application and TCP 9090 as an administration-port
+    fixture; the latter is not a real administrative product. Client ingress CHECKPOINT-IN permits only
+    the fixed application flow, denies the administration-port request, permits ICMP and then denies everything
+    else. Local positive controls prove both listeners exist before a denial can be called an access-policy
+    outcome. All addresses are isolated exercise networks. The shared packet/peer implementation remains
+    unchanged.
+
+
+    These checkpoints combine the explicitly listed routing and stateless IPv4 ACL behaviors. They are
+    not complete exam simulations, stateful NGFW, malware detection, endpoint posture, a vendor controller
+    or a production topology. A finite traffic matrix is not a universal policy-equivalence proof. Nominal
+    RAM is 4096MiB; no real credentials, Internet connector or existing user lab is needed. Stop/wipe
+    only the imported copy.
+
+
+    Insert a deliberately unsafe administration-port permit before the existing deny: the actual remote
+    9090 request must now succeed with its observed client peer, while application, routes and ICMP remain
+    healthy. Remove only that permit and prove the remote administration request is denied again without
+    losing its local listener or the allowed application. Then withdraw the service through BGP policy
+    while OSPF and the bound ACL remain healthy: the resulting application failure is an availability
+    failure, not evidence of improved filtering. Restore the service and recover the original safe matrix.
 
 
     Objectives:
 
-    - Secure an edge and inside network from partial configs.
+    - Trace real OSPF/BGP service and return routes plus actual endpoint packets without static/default
+    fallbacks.
 
-    - Validate firewall, VPN, management, and logging controls.
+    - Distinguish routing unavailability from an access-policy denial by preserving independent positive
+    controls.
 
-    - Identify two residual risks.
+    - Apply one bounded fault at a time and restore the measured clean traffic matrix.
 
-
-    Suggested verification:
-
-    - show ip interface brief
-
-    - show ip route
-
-    - show running-config
-
-
-    Stretch goals:
-
-    - Document the final design.
-
-    - Add one extra validation command for each requirement.
-
-    - Make one controlled change and prove that the network still works.'
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
-  label: OUTSIDE-R1
-  node_definition: iosv
+  label: R1
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.10.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.10.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.1.1\
-      \ 255.255.255.255\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 0
-  y: 0
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\nno logging console\ninterface Ethernet0/0\n ip address 198.18.10.1 255.255.255.0\n no shutdown\n\
+      \ ip access-group CHECKPOINT-IN in\n exit\ninterface Ethernet0/1\n ip address 198.18.0.1 255.255.255.252\n\
+      \ no shutdown\n ip ospf 10 area 0\n exit\nip access-list extended CHECKPOINT-IN\n 10 permit tcp\
+      \ host 198.18.10.10 host 198.18.20.20 eq 8080\n 20 deny tcp any host 198.18.20.20 eq 9090\n 30 permit\
+      \ icmp any any\n 40 deny ip any any\n exit\nrouter ospf 10\n router-id 192.0.2.1\n passive-interface\
+      \ Ethernet0/0\n network 198.18.10.0 0.0.0.255 area 0\n exit\nend\n"
+  cpu_limit: 100
   priority: 100
-  tags: []
-- id: n1
-  label: EDGE-FW-R2
-  node_definition: iosv
-  configuration:
-  - name: ios_config.txt
-    content: "hostname R2\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.11.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.11.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.2.1\
-      \ 255.255.255.255\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 240
-  y: 0
-  priority: 99
-  tags: []
-- id: n2
-  label: INSIDE-R3
-  node_definition: iosv
-  configuration:
-  - name: ios_config.txt
-    content: "hostname R3\nno ip domain-lookup\nip domain-name cml.local\nusername admin privilege 15\
-      \ secret cisco123\ncrypto key generate rsa modulus 1024\nline vty 0 4\n login local\n transport\
-      \ input ssh\ninterface GigabitEthernet0/0\n description Lab transit segment A\n ip address 10.12.0.1\
-      \ 255.255.255.0\n no shutdown\ninterface GigabitEthernet0/1\n description Lab transit segment B\n\
-      \ ip address 10.12.1.1 255.255.255.0\n no shutdown\ninterface Loopback0\n ip address 172.16.3.1\
-      \ 255.255.255.255\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 480
-  y: 0
-  priority: 98
-  tags: []
-- id: n3
-  label: DMZ-SW
-  node_definition: iosvl2
-  configuration:
-  - name: ios_config.txt
-    content: "hostname SW1\nno ip domain-lookup\nvlan 20\n name USERS_20\nvlan 30\n name SERVICES_30\n\
-      interface range GigabitEthernet0/0-3\n switchport mode access\n spanning-tree portfast\n"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
-  - id: i2
-    label: GigabitEthernet0/1
-    type: physical
-    slot: 1
-  - id: i3
-    label: GigabitEthernet0/2
-    type: physical
-    slot: 2
-  - id: i4
-    label: GigabitEthernet0/3
-    type: physical
-    slot: 3
-  x: 720
-  y: 0
-  priority: 97
-  tags: []
-- id: n4
-  label: SIEM
-  node_definition: desktop
-  configuration:
-  - name: node.cfg
-    content: '# SIEM
-
-      # Use this node as a lightweight endpoint or API/mock server.
-
-      '
-  interfaces:
-  - id: i0
-    label: eth0
-    type: physical
-    slot: 0
   x: 0
-  y: 200
-  priority: 96
-  tags: []
-- id: n5
-  label: WEB-SERVER
-  node_definition: desktop
-  configuration:
-  - name: node.cfg
-    content: '# WEB-SERVER
-
-      # Use this node as a lightweight endpoint or API/mock server.
-
-      '
+  y: 0
   interfaces:
   - id: i0
+    label: Loopback0
+    type: loopback
+  - id: i1
+    label: Ethernet0/0
+    type: physical
+    slot: 0
+  - id: i2
+    label: Ethernet0/1
+    type: physical
+    slot: 1
+  - id: i3
+    label: Ethernet0/2
+    type: physical
+    slot: 2
+  - id: i4
+    label: Ethernet0/3
+    type: physical
+    slot: 3
+  tags: []
+  ram: 1024
+  cpus: 1
+- id: n1
+  label: R2
+  node_definition: iol-xe
+  configuration:
+  - name: ios_config.txt
+    content: "hostname R2\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\nno logging console\ninterface Ethernet0/0\n ip address 198.18.0.2 255.255.255.252\n no shutdown\n\
+      \ ip ospf 10 area 0\n exit\ninterface Ethernet0/1\n ip address 198.18.0.5 255.255.255.252\n no shutdown\n\
+      \ exit\nip prefix-list SERVICE seq 10 permit 198.18.20.0/24\nip prefix-list DROP-SERVICE seq 10\
+      \ deny 198.18.20.0/24\nip prefix-list DROP-SERVICE seq 20 permit 0.0.0.0/0 le 32\nroute-map BGP-SERVICE-TO-OSPF\
+      \ permit 10\n match ip address prefix-list SERVICE\n exit\nrouter ospf 10\n router-id 192.0.2.2\n\
+      \ redistribute bgp 65001 metric 20 metric-type 1 subnets route-map BGP-SERVICE-TO-OSPF\n exit\n\
+      router bgp 65001\n bgp router-id 192.0.2.2\n neighbor 198.18.0.6 remote-as 65002\n neighbor 198.18.0.6\
+      \ timers 3 9\n network 198.18.10.0 mask 255.255.255.0\n exit\nend\n"
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
+  interfaces:
+  - id: i0
+    label: Loopback0
+    type: loopback
+  - id: i1
+    label: Ethernet0/0
+    type: physical
+    slot: 0
+  - id: i2
+    label: Ethernet0/1
+    type: physical
+    slot: 1
+  - id: i3
+    label: Ethernet0/2
+    type: physical
+    slot: 2
+  - id: i4
+    label: Ethernet0/3
+    type: physical
+    slot: 3
+  tags: []
+  ram: 1024
+  cpus: 1
+- id: n2
+  label: R3
+  node_definition: iol-xe
+  configuration:
+  - name: ios_config.txt
+    content: "hostname R3\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\nno logging console\ninterface Ethernet0/0\n ip address 198.18.0.6 255.255.255.252\n no shutdown\n\
+      \ exit\ninterface Ethernet0/1\n ip address 198.18.20.1 255.255.255.0\n no shutdown\n exit\nrouter\
+      \ bgp 65002\n bgp router-id 192.0.2.3\n neighbor 198.18.0.5 remote-as 65001\n neighbor 198.18.0.5\
+      \ timers 3 9\n network 198.18.20.0 mask 255.255.255.0\n exit\nend\n"
+  cpu_limit: 100
+  priority: 98
+  x: 520
+  y: 0
+  interfaces:
+  - id: i0
+    label: Loopback0
+    type: loopback
+  - id: i1
+    label: Ethernet0/0
+    type: physical
+    slot: 0
+  - id: i2
+    label: Ethernet0/1
+    type: physical
+    slot: 1
+  - id: i3
+    label: Ethernet0/2
+    type: physical
+    slot: 2
+  - id: i4
+    label: Ethernet0/3
+    type: physical
+    slot: 3
+  tags: []
+  ram: 1024
+  cpus: 1
+- id: n3
+  label: INSIDE
+  node_definition: net-tools
+  configuration:
+  - name: boot.sh
+    content: '#!/bin/bash
+
+      set -eu
+
+      ip address add 198.18.10.10/24 dev eth1
+
+      ip link set eth1 up
+
+      ip route add 198.18.20.0/24 via 198.18.10.1 dev eth1
+
+      mkdir -p /lab
+
+      base64 -d > /lab/t.py <<''CML_EMBED_EXAMPLES_SECURITY_TRAFFIC_FIXTURE_PY''
+
+      IiIiUGxhaW4gSFRUUCBwYWNrZXQvcGVlciBmaXh0dXJlIHJlc3RyaWN0ZWQgdG8gaXNvbGF0ZWQg
+
+      YmVuY2htYXJrIG9yIGxvb3BiYWNrIElQcy4iIiIKCmZyb20gX19mdXR1cmVfXyBpbXBvcnQgYW5u
+
+      b3RhdGlvbnMKCmltcG9ydCBhcmdwYXJzZQppbXBvcnQgaHR0cC5jbGllbnQKaW1wb3J0IGh0dHAu
+
+      c2VydmVyCmltcG9ydCBpcGFkZHJlc3MKaW1wb3J0IGpzb24KCgpkZWYgZml4dHVyZV9hZGRyZXNz
+
+      KHZhbHVlKToKICAgIGFkZHJlc3MgPSBpcGFkZHJlc3MuSVB2NEFkZHJlc3ModmFsdWUpCiAgICBp
+
+      ZiBub3QgKGFkZHJlc3MgaW4gaXBhZGRyZXNzLklQdjROZXR3b3JrKCIxOTguMTguMC4wLzE1Iikg
+
+      b3IgYWRkcmVzcy5pc19sb29wYmFjayk6CiAgICAgICAgcmFpc2UgVmFsdWVFcnJvcigiT25seSBi
+
+      ZW5jaG1hcmsvbG9vcGJhY2sgZml4dHVyZSBJUHY0IHRhcmdldHMgYXJlIGFjY2VwdGVkIikKICAg
+
+      IHJldHVybiBzdHIoYWRkcmVzcykKCgpjbGFzcyBIYW5kbGVyKGh0dHAuc2VydmVyLkJhc2VIVFRQ
+
+      UmVxdWVzdEhhbmRsZXIpOgogICAgZGVmIGxvZ19tZXNzYWdlKHNlbGYsICpfYXJncyk6CiAgICAg
+
+      ICAgcGFzcwoKICAgIGRlZiBkb19HRVQoc2VsZik6CiAgICAgICAgaWYgc2VsZi5wYXRoICE9ICIv
+
+      aGVhbHRoIjoKICAgICAgICAgICAgc2VsZi5zZW5kX2Vycm9yKDQwNCkKICAgICAgICAgICAgcmV0
+
+      dXJuCiAgICAgICAgZGF0YSA9IGpzb24uZHVtcHMoCiAgICAgICAgICAgIHsic2VydmVyIjogc2Vs
+
+      Zi5zZXJ2ZXIuZml4dHVyZV9sYWJlbCwgInBlZXIiOiBzZWxmLmNsaWVudF9hZGRyZXNzWzBdfSwK
+
+      ICAgICAgICAgICAgc29ydF9rZXlzPVRydWUsCiAgICAgICAgKS5lbmNvZGUoInV0Zi04IikKICAg
+
+      ICAgICBzZWxmLnNlbmRfcmVzcG9uc2UoMjAwKQogICAgICAgIHNlbGYuc2VuZF9oZWFkZXIoIkNv
+
+      bnRlbnQtVHlwZSIsICJhcHBsaWNhdGlvbi9qc29uIikKICAgICAgICBzZWxmLnNlbmRfaGVhZGVy
+
+      KCJDb250ZW50LUxlbmd0aCIsIHN0cihsZW4oZGF0YSkpKQogICAgICAgIHNlbGYuZW5kX2hlYWRl
+
+      cnMoKQogICAgICAgIHNlbGYud2ZpbGUud3JpdGUoZGF0YSkKCgpkZWYgc2VydmVyKGFkZHJlc3Ms
+
+      IHBvcnQsIGxhYmVsKToKICAgIHZhbHVlID0gaHR0cC5zZXJ2ZXIuVGhyZWFkaW5nSFRUUFNlcnZl
+
+      cigoZml4dHVyZV9hZGRyZXNzKGFkZHJlc3MpLCBwb3J0KSwgSGFuZGxlcikKICAgIHZhbHVlLmZp
+
+      eHR1cmVfbGFiZWwgPSBsYWJlbAogICAgdmFsdWUuZGFlbW9uX3RocmVhZHMgPSBUcnVlCiAgICBy
+
+      ZXR1cm4gdmFsdWUKCgpkZWYgcHJvYmUoYWRkcmVzcywgcG9ydD04MDgwLCB0aW1lb3V0PTMpOgog
+
+      ICAgYWRkcmVzcyA9IGZpeHR1cmVfYWRkcmVzcyhhZGRyZXNzKQogICAgY29ubmVjdGlvbiA9IGh0
+
+      dHAuY2xpZW50LkhUVFBDb25uZWN0aW9uKGFkZHJlc3MsIHBvcnQsIHRpbWVvdXQ9dGltZW91dCkK
+
+      ICAgIHRyeToKICAgICAgICBjb25uZWN0aW9uLnJlcXVlc3QoIkdFVCIsICIvaGVhbHRoIikKICAg
+
+      ICAgICByZXNwb25zZSA9IGNvbm5lY3Rpb24uZ2V0cmVzcG9uc2UoKQogICAgICAgIGJvZHkgPSBy
+
+      ZXNwb25zZS5yZWFkKDQwOTcpCiAgICAgICAgaWYgbGVuKGJvZHkpID4gNDA5NjoKICAgICAgICAg
+
+      ICAgcmFpc2UgVmFsdWVFcnJvcigiT3ZlcnNpemVkIGZpeHR1cmUgcmVzcG9uc2UiKQogICAgICAg
+
+      IHZhbHVlID0ganNvbi5sb2Fkcyhib2R5KQogICAgICAgIGlmIHNldCh2YWx1ZSkgIT0geyJwZWVy
+
+      IiwgInNlcnZlciJ9OgogICAgICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJVbmV4cGVjdGVkIGZp
+
+      eHR1cmUgc2NoZW1hIikKICAgICAgICByZXR1cm4geyJyZWFjaGFibGUiOiBUcnVlLCAic3RhdHVz
+
+      IjogcmVzcG9uc2Uuc3RhdHVzLCAqKnZhbHVlfQogICAgZXhjZXB0IFRpbWVvdXRFcnJvcjoKICAg
+
+      ICAgICByZXR1cm4geyJyZWFjaGFibGUiOiBGYWxzZSwgInJlYXNvbiI6ICJ0aW1lb3V0In0KICAg
+
+      IGV4Y2VwdCBDb25uZWN0aW9uUmVmdXNlZEVycm9yOgogICAgICAgIHJldHVybiB7InJlYWNoYWJs
+
+      ZSI6IEZhbHNlLCAicmVhc29uIjogImNvbm5lY3Rpb25fcmVmdXNlZCJ9CiAgICBleGNlcHQgT1NF
+
+      cnJvcjoKICAgICAgICByZXR1cm4geyJyZWFjaGFibGUiOiBGYWxzZSwgInJlYXNvbiI6ICJuZXR3
+
+      b3JrX3JlamVjdGVkIn0KICAgIGZpbmFsbHk6CiAgICAgICAgY29ubmVjdGlvbi5jbG9zZSgpCgoK
+
+      ZGVmIG1haW4oKToKICAgIHBhcnNlciA9IGFyZ3BhcnNlLkFyZ3VtZW50UGFyc2VyKGRlc2NyaXB0
+
+      aW9uPV9fZG9jX18pCiAgICBwYXJzZXIuYWRkX2FyZ3VtZW50KCJhY3Rpb24iLCBjaG9pY2VzPSgi
+
+      c2VydmUiLCAicHJvYmUiKSkKICAgIHBhcnNlci5hZGRfYXJndW1lbnQoImFkZHJlc3MiLCB0eXBl
+
+      PWZpeHR1cmVfYWRkcmVzcykKICAgIHBhcnNlci5hZGRfYXJndW1lbnQoIi0tcG9ydCIsIHR5cGU9
+
+      aW50LCBkZWZhdWx0PTgwODApCiAgICBwYXJzZXIuYWRkX2FyZ3VtZW50KCItLWxhYmVsIiwgY2hv
+
+      aWNlcz0oIklOU0lERSIsICJPVVRTSURFIiksIGRlZmF1bHQ9Ik9VVFNJREUiKQogICAgYXJncyA9
+
+      IHBhcnNlci5wYXJzZV9hcmdzKCkKICAgIGlmIG5vdCAxMDI0IDw9IGFyZ3MucG9ydCA8PSA2NTUz
+
+      NToKICAgICAgICBwYXJzZXIuZXJyb3IoIlVzZSBhbiB1bnByaXZpbGVnZWQgZml4dHVyZSBwb3J0
+
+      IikKICAgIGlmIGFyZ3MuYWN0aW9uID09ICJzZXJ2ZSI6CiAgICAgICAgd2l0aCBzZXJ2ZXIoYXJn
+
+      cy5hZGRyZXNzLCBhcmdzLnBvcnQsIGFyZ3MubGFiZWwpIGFzIGxpc3RlbmVyOgogICAgICAgICAg
+
+      ICBsaXN0ZW5lci5zZXJ2ZV9mb3JldmVyKHBvbGxfaW50ZXJ2YWw9MC4xKQogICAgZWxzZToKICAg
+
+      ICAgICBwcmludChqc29uLmR1bXBzKHByb2JlKGFyZ3MuYWRkcmVzcywgYXJncy5wb3J0KSwgc29y
+
+      dF9rZXlzPVRydWUpKQoKCmlmIF9fbmFtZV9fID09ICJfX21haW5fXyI6CiAgICBtYWluKCkK
+
+      CML_EMBED_EXAMPLES_SECURITY_TRAFFIC_FIXTURE_PY
+
+      python3 /lab/t.py serve 198.18.10.10 --label INSIDE >/lab/http.log 2>&1 &
+
+      echo READY >/dev/console
+
+      exit 0
+
+      '
+  cpu_limit: 100
+  priority: 97
+  x: 780
+  y: 160
+  interfaces:
+  - id: i1
     label: eth0
     type: physical
     slot: 0
-  x: 240
-  y: 200
-  priority: 95
+  - id: i2
+    label: eth1
+    type: physical
+    slot: 1
+  - id: i3
+    label: eth2
+    type: physical
+    slot: 2
+  - id: i4
+    label: eth3
+    type: physical
+    slot: 3
   tags: []
+  ram: 512
+  cpus: 1
+- id: n4
+  label: OUTSIDE
+  node_definition: net-tools
+  configuration:
+  - name: boot.sh
+    content: '#!/bin/bash
+
+      set -eu
+
+      ip address add 198.18.20.20/24 dev eth1
+
+      ip link set eth1 up
+
+      ip route add 198.18.10.0/24 via 198.18.20.1 dev eth1
+
+      mkdir -p /lab
+
+      base64 -d > /lab/t.py <<''CML_EMBED_EXAMPLES_SECURITY_TRAFFIC_FIXTURE_PY''
+
+      IiIiUGxhaW4gSFRUUCBwYWNrZXQvcGVlciBmaXh0dXJlIHJlc3RyaWN0ZWQgdG8gaXNvbGF0ZWQg
+
+      YmVuY2htYXJrIG9yIGxvb3BiYWNrIElQcy4iIiIKCmZyb20gX19mdXR1cmVfXyBpbXBvcnQgYW5u
+
+      b3RhdGlvbnMKCmltcG9ydCBhcmdwYXJzZQppbXBvcnQgaHR0cC5jbGllbnQKaW1wb3J0IGh0dHAu
+
+      c2VydmVyCmltcG9ydCBpcGFkZHJlc3MKaW1wb3J0IGpzb24KCgpkZWYgZml4dHVyZV9hZGRyZXNz
+
+      KHZhbHVlKToKICAgIGFkZHJlc3MgPSBpcGFkZHJlc3MuSVB2NEFkZHJlc3ModmFsdWUpCiAgICBp
+
+      ZiBub3QgKGFkZHJlc3MgaW4gaXBhZGRyZXNzLklQdjROZXR3b3JrKCIxOTguMTguMC4wLzE1Iikg
+
+      b3IgYWRkcmVzcy5pc19sb29wYmFjayk6CiAgICAgICAgcmFpc2UgVmFsdWVFcnJvcigiT25seSBi
+
+      ZW5jaG1hcmsvbG9vcGJhY2sgZml4dHVyZSBJUHY0IHRhcmdldHMgYXJlIGFjY2VwdGVkIikKICAg
+
+      IHJldHVybiBzdHIoYWRkcmVzcykKCgpjbGFzcyBIYW5kbGVyKGh0dHAuc2VydmVyLkJhc2VIVFRQ
+
+      UmVxdWVzdEhhbmRsZXIpOgogICAgZGVmIGxvZ19tZXNzYWdlKHNlbGYsICpfYXJncyk6CiAgICAg
+
+      ICAgcGFzcwoKICAgIGRlZiBkb19HRVQoc2VsZik6CiAgICAgICAgaWYgc2VsZi5wYXRoICE9ICIv
+
+      aGVhbHRoIjoKICAgICAgICAgICAgc2VsZi5zZW5kX2Vycm9yKDQwNCkKICAgICAgICAgICAgcmV0
+
+      dXJuCiAgICAgICAgZGF0YSA9IGpzb24uZHVtcHMoCiAgICAgICAgICAgIHsic2VydmVyIjogc2Vs
+
+      Zi5zZXJ2ZXIuZml4dHVyZV9sYWJlbCwgInBlZXIiOiBzZWxmLmNsaWVudF9hZGRyZXNzWzBdfSwK
+
+      ICAgICAgICAgICAgc29ydF9rZXlzPVRydWUsCiAgICAgICAgKS5lbmNvZGUoInV0Zi04IikKICAg
+
+      ICAgICBzZWxmLnNlbmRfcmVzcG9uc2UoMjAwKQogICAgICAgIHNlbGYuc2VuZF9oZWFkZXIoIkNv
+
+      bnRlbnQtVHlwZSIsICJhcHBsaWNhdGlvbi9qc29uIikKICAgICAgICBzZWxmLnNlbmRfaGVhZGVy
+
+      KCJDb250ZW50LUxlbmd0aCIsIHN0cihsZW4oZGF0YSkpKQogICAgICAgIHNlbGYuZW5kX2hlYWRl
+
+      cnMoKQogICAgICAgIHNlbGYud2ZpbGUud3JpdGUoZGF0YSkKCgpkZWYgc2VydmVyKGFkZHJlc3Ms
+
+      IHBvcnQsIGxhYmVsKToKICAgIHZhbHVlID0gaHR0cC5zZXJ2ZXIuVGhyZWFkaW5nSFRUUFNlcnZl
+
+      cigoZml4dHVyZV9hZGRyZXNzKGFkZHJlc3MpLCBwb3J0KSwgSGFuZGxlcikKICAgIHZhbHVlLmZp
+
+      eHR1cmVfbGFiZWwgPSBsYWJlbAogICAgdmFsdWUuZGFlbW9uX3RocmVhZHMgPSBUcnVlCiAgICBy
+
+      ZXR1cm4gdmFsdWUKCgpkZWYgcHJvYmUoYWRkcmVzcywgcG9ydD04MDgwLCB0aW1lb3V0PTMpOgog
+
+      ICAgYWRkcmVzcyA9IGZpeHR1cmVfYWRkcmVzcyhhZGRyZXNzKQogICAgY29ubmVjdGlvbiA9IGh0
+
+      dHAuY2xpZW50LkhUVFBDb25uZWN0aW9uKGFkZHJlc3MsIHBvcnQsIHRpbWVvdXQ9dGltZW91dCkK
+
+      ICAgIHRyeToKICAgICAgICBjb25uZWN0aW9uLnJlcXVlc3QoIkdFVCIsICIvaGVhbHRoIikKICAg
+
+      ICAgICByZXNwb25zZSA9IGNvbm5lY3Rpb24uZ2V0cmVzcG9uc2UoKQogICAgICAgIGJvZHkgPSBy
+
+      ZXNwb25zZS5yZWFkKDQwOTcpCiAgICAgICAgaWYgbGVuKGJvZHkpID4gNDA5NjoKICAgICAgICAg
+
+      ICAgcmFpc2UgVmFsdWVFcnJvcigiT3ZlcnNpemVkIGZpeHR1cmUgcmVzcG9uc2UiKQogICAgICAg
+
+      IHZhbHVlID0ganNvbi5sb2Fkcyhib2R5KQogICAgICAgIGlmIHNldCh2YWx1ZSkgIT0geyJwZWVy
+
+      IiwgInNlcnZlciJ9OgogICAgICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJVbmV4cGVjdGVkIGZp
+
+      eHR1cmUgc2NoZW1hIikKICAgICAgICByZXR1cm4geyJyZWFjaGFibGUiOiBUcnVlLCAic3RhdHVz
+
+      IjogcmVzcG9uc2Uuc3RhdHVzLCAqKnZhbHVlfQogICAgZXhjZXB0IFRpbWVvdXRFcnJvcjoKICAg
+
+      ICAgICByZXR1cm4geyJyZWFjaGFibGUiOiBGYWxzZSwgInJlYXNvbiI6ICJ0aW1lb3V0In0KICAg
+
+      IGV4Y2VwdCBDb25uZWN0aW9uUmVmdXNlZEVycm9yOgogICAgICAgIHJldHVybiB7InJlYWNoYWJs
+
+      ZSI6IEZhbHNlLCAicmVhc29uIjogImNvbm5lY3Rpb25fcmVmdXNlZCJ9CiAgICBleGNlcHQgT1NF
+
+      cnJvcjoKICAgICAgICByZXR1cm4geyJyZWFjaGFibGUiOiBGYWxzZSwgInJlYXNvbiI6ICJuZXR3
+
+      b3JrX3JlamVjdGVkIn0KICAgIGZpbmFsbHk6CiAgICAgICAgY29ubmVjdGlvbi5jbG9zZSgpCgoK
+
+      ZGVmIG1haW4oKToKICAgIHBhcnNlciA9IGFyZ3BhcnNlLkFyZ3VtZW50UGFyc2VyKGRlc2NyaXB0
+
+      aW9uPV9fZG9jX18pCiAgICBwYXJzZXIuYWRkX2FyZ3VtZW50KCJhY3Rpb24iLCBjaG9pY2VzPSgi
+
+      c2VydmUiLCAicHJvYmUiKSkKICAgIHBhcnNlci5hZGRfYXJndW1lbnQoImFkZHJlc3MiLCB0eXBl
+
+      PWZpeHR1cmVfYWRkcmVzcykKICAgIHBhcnNlci5hZGRfYXJndW1lbnQoIi0tcG9ydCIsIHR5cGU9
+
+      aW50LCBkZWZhdWx0PTgwODApCiAgICBwYXJzZXIuYWRkX2FyZ3VtZW50KCItLWxhYmVsIiwgY2hv
+
+      aWNlcz0oIklOU0lERSIsICJPVVRTSURFIiksIGRlZmF1bHQ9Ik9VVFNJREUiKQogICAgYXJncyA9
+
+      IHBhcnNlci5wYXJzZV9hcmdzKCkKICAgIGlmIG5vdCAxMDI0IDw9IGFyZ3MucG9ydCA8PSA2NTUz
+
+      NToKICAgICAgICBwYXJzZXIuZXJyb3IoIlVzZSBhbiB1bnByaXZpbGVnZWQgZml4dHVyZSBwb3J0
+
+      IikKICAgIGlmIGFyZ3MuYWN0aW9uID09ICJzZXJ2ZSI6CiAgICAgICAgd2l0aCBzZXJ2ZXIoYXJn
+
+      cy5hZGRyZXNzLCBhcmdzLnBvcnQsIGFyZ3MubGFiZWwpIGFzIGxpc3RlbmVyOgogICAgICAgICAg
+
+      ICBsaXN0ZW5lci5zZXJ2ZV9mb3JldmVyKHBvbGxfaW50ZXJ2YWw9MC4xKQogICAgZWxzZToKICAg
+
+      ICAgICBwcmludChqc29uLmR1bXBzKHByb2JlKGFyZ3MuYWRkcmVzcywgYXJncy5wb3J0KSwgc29y
+
+      dF9rZXlzPVRydWUpKQoKCmlmIF9fbmFtZV9fID09ICJfX21haW5fXyI6CiAgICBtYWluKCkK
+
+      CML_EMBED_EXAMPLES_SECURITY_TRAFFIC_FIXTURE_PY
+
+      python3 /lab/t.py serve 198.18.20.20 --label OUTSIDE >/lab/http.log 2>&1 &
+
+      python3 /lab/t.py serve 198.18.20.20 --port 9090 --label OUTSIDE >/lab/admin-http.log 2>&1 &
+
+      echo READY >/dev/console
+
+      exit 0
+
+      '
+  cpu_limit: 100
+  priority: 96
+  x: 1040
+  y: 0
+  interfaces:
+  - id: i1
+    label: eth0
+    type: physical
+    slot: 0
+  - id: i2
+    label: eth1
+    type: physical
+    slot: 1
+  - id: i3
+    label: eth2
+    type: physical
+    slot: 2
+  - id: i4
+    label: eth3
+    type: physical
+    slot: 3
+  tags: []
+  ram: 512
+  cpus: 1
 links:
-- n1: n0
-  i1: i1
+- id: l0
+  n1: n3
+  i1: i2
+  n2: n0
+  i2: i1
+- id: l1
+  n1: n0
+  i1: i2
   n2: n1
   i2: i1
-  id: l0
-- n1: n1
+- id: l2
+  n1: n1
   i1: i2
   n2: n2
   i2: i1
-  id: l1
-- n1: n1
-  i1: i3
-  n2: n3
-  i2: i1
-  id: l2
-- n1: n3
-  i1: i2
-  n2: n5
-  i2: i0
-  id: l3
-- n1: n2
+- id: l3
+  n1: n2
   i1: i2
   n2: n4
-  i2: i0
-  id: l4
+  i2: i2
 annotations: []
 smart_annotations: []
