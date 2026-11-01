@@ -3240,25 +3240,26 @@
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/033-soar-webhook-remediation.yaml",
-      "title": "SOAR Webhook Remediation",
+      "title": "SOAR Events: Signature, Approval and Verified Route Remediation",
       "track": "350-701",
       "topic": "automation",
       "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-toolbox",
+        "csr1000v",
+        "net-tools"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 4608,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 120,
+      "workbook": "docs/workbooks/350-701-033-soar-webhook-remediation.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "aa5f76c8b58e2a41c7860ca2f1c39ce0ea573af11030b88eb1dd4b7faef5dacf"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T12:49:56Z",
+      "sha256": "03432040ed149a73d779dcc727f9e97ac24157a74bc81e838741a057a87f3418"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/034-threat-intel-enrichment.yaml",
@@ -4677,25 +4678,26 @@
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/028-event-driven-remediation.yaml",
-      "title": "Event Driven Remediation",
+      "title": "Event Automation: Gateway Restart and Retry-Safe Jobs",
       "track": "350-901",
       "topic": "infrastructure-automation",
       "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-toolbox",
+        "csr1000v",
+        "net-tools"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 4608,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 120,
+      "workbook": "docs/workbooks/350-901-028-event-driven-remediation.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "22bf74f2677116b4092270e60c3c6fd23d45309960b8897b5b7519eb4593ee22"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T12:53:14Z",
+      "sha256": "f3c48f9491aad23ecde0329f38d46753632199fc48f7a87e0365c241d684bb88"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/029-ai-assisted-automation-guardrails.yaml",

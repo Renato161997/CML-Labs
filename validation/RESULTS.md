@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **192**.
+Import/export passes: **233/233**. Functional passes: **194**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -153,6 +153,7 @@ Import/export passes: **233/233**. Functional passes: **192**.
 | [VXLAN: Encapsulation, VNI Mismatch and Recovery](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/010-lisp-vxlan-concepts.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 35 | 8 | 2026-10-31T23:30:16Z |
 | [Virtual Switching: VLAN Isolation and Dynamic MAC Learning](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/virtualization/011-virtual-switching-paths.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 11 | 2 | 2026-10-31T23:04:07Z |
 | [Security API Python](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/031-security-api-python.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 16 | 5 | 2026-10-30T15:16:18Z |
+| [SOAR Events: Signature, Approval and Verified Route Remediation](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/033-soar-webhook-remediation.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 20 | 33 | 2026-11-01T12:49:56Z |
 | [SCOR Capstone Secure Edge](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/045-scor-capstone-secure-edge.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 23 | 18 | 2026-10-30T16:02:32Z |
 | [Firewall Policy Review: Shadowed Rules, Cleanup and Rollback](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/firewall/038-firewall-policy-review-cleanup.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3 | 38 | 16 | 2026-11-01T12:05:43Z |
 | [Suspicious Host Containment](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/incident-response/041-suspicious-host-containment.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 15 | 16 | 2026-10-30T15:35:00Z |
@@ -186,6 +187,7 @@ Import/export passes: **233/233**. Functional passes: **192**.
 | [GitOps Network Change Pipeline](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/gitops/031-gitops-network-change-pipeline.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 13 | 33 | 2026-10-28T16:29:07Z |
 | [Ansible Inventory Network](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/025-ansible-inventory-network.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-28T16:08:45Z |
 | [YANG Model Interface Change](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/027-yang-model-interface-change.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-27T19:45:41Z |
+| [Event Automation: Gateway Restart and Retry-Safe Jobs](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/028-event-driven-remediation.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 18 | 32 | 2026-11-01T12:53:14Z |
 | [GitOps Network Change](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/030-gitops-network-change.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 10 | 32 | 2026-10-28T16:24:11Z |
 | [Distributed App Front Back Load Balancer](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/001-distributed-app-front-back-loadbalancer.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02, net-tools-2-10-1-3 | 3 | 2 | 2026-10-27T18:25:47Z |
 | [Scalability Modularity](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/002-scalability-modularity.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02, net-tools-2-10-1-3 | 4 | 2 | 2026-10-27T18:26:57Z |

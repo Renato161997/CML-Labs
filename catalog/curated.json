@@ -1227,5 +1227,19 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-701-038-firewall-policy-review-cleanup.md",
     "example_profile": "native-firewall-traffic"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/033-soar-webhook-remediation.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 120,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-033-soar-webhook-remediation.md",
+    "example_profile": "native-controller-events"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/028-event-driven-remediation.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 120,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-028-event-driven-remediation.md",
+    "example_profile": "native-controller-events"
   }
 }

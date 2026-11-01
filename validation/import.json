@@ -653,11 +653,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/033-soar-webhook-remediation.yaml",
-      "sha256": "aa5f76c8b58e2a41c7860ca2f1c39ce0ea573af11030b88eb1dd4b7faef5dacf",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/034-threat-intel-enrichment.yaml",
       "sha256": "d3418295252500d1fb8a26de2436ff18b9a1c4fbabc5a717e38f8d7ecbbb21e3",
       "status": "import-export-pass"
@@ -925,11 +920,6 @@
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/027-yang-model-interface-change.yaml",
       "sha256": "d75496e189ca12cd73b1a5a58bc39e5508183dc9dd20ee2995148ee6752ca373",
-      "status": "import-export-pass"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/028-event-driven-remediation.yaml",
-      "sha256": "22bf74f2677116b4092270e60c3c6fd23d45309960b8897b5b7519eb4593ee22",
       "status": "import-export-pass"
     },
     {
@@ -1313,11 +1303,6 @@
       "completed_utc": "2026-11-01T11:44:57Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/firewall/038-firewall-policy-review-cleanup.yaml",
       "sha256": "e2a2c2a9165a5980d1b67a363c62bf747910e83e60046955c27a7b6db9fe6e72",
       "cml_version": "2.10.1+build.21",
@@ -1326,6 +1311,31 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T12:02:17Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/033-soar-webhook-remediation.yaml",
+      "sha256": "03432040ed149a73d779dcc727f9e97ac24157a74bc81e838741a057a87f3418",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T12:34:41Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T12:34:41Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/028-event-driven-remediation.yaml",
+      "sha256": "f3c48f9491aad23ecde0329f38d46753632199fc48f7a87e0365c241d684bb88",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T12:34:43Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T12:34:43Z"
     }
   ]
 }
