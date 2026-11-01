@@ -262,6 +262,21 @@ NATIVE_PROFILES["native-iosxe-api-security"] = {
 }
 
 
+NATIVE_PROFILES["native-controller-events"] = {
+    "TOOLS": {
+        **NATIVE_PROFILES["native-iosxe-controller"]["TOOLS"],
+        "/lab/client.py": "examples/automation/controller_client.py",
+        "/lab/api_security.py": "examples/automation/api_security.py",
+        "/lab/event_gateway.py": "examples/automation/event_gateway.py",
+    },
+    "CLIENT": {
+        **NATIVE_PROFILES["native-iosxe-controller"]["CLIENT"],
+        "/lab/event_gateway.py": "examples/automation/event_gateway.py",
+        "/lab/event_client.py": "examples/automation/event_client.py",
+    },
+}
+
+
 def native_sources(data, metadata):
     """Validate registered source payloads without executing a shell or guest code."""
     profile = NATIVE_PROFILES.get(metadata.get("example_profile"))

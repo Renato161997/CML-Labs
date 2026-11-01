@@ -44464,6 +44464,896 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T12:05:43Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/033-soar-webhook-remediation.yaml",
+      "sha256": "03432040ed149a73d779dcc727f9e97ac24157a74bc81e838741a057a87f3418",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T12:46:39Z",
+      "checks": [
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto key mypubkey rsa",
+          "passed": true,
+          "output": "\nAPI#show crypto key mypubkey rsa\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "clock set 12:43:29 1 Nov 2026",
+          "passed": true,
+          "output": "\nAPI#clock set 12:43:29 1 Nov 2026\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "debug crypto pki transactions",
+          "passed": true,
+          "output": "\nAPI#debug crypto pki transactions\nCrypto PKI Trans debugging is on\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nAPI#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto key generate rsa general-keys label LABSSH modulus 3072",
+          "passed": true,
+          "output": "\nAPI(config)#crypto key generate rsa general-keys label LABSSH modulus 3072\nThe name for the keys will be: LABSSH\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\n[OK] (elapsed time was 2 seconds)\n\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto key generate rsa general-keys label LABTLS modulus 3072",
+          "passed": true,
+          "output": "\nAPI(config)#crypto key generate rsa general-keys label LABTLS modulus 3072\nThe name for the keys will be: LABTLS\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\n[OK] (elapsed time was 1 seconds)\n\nAPI(config)#\nNov  1 12:43:33.468: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH has been generated or imported by crypto-engine\nNov  1 12:43:33.477: %SSH-5-ENABLED: SSH 2.0 has been enabled\nNov  1 12:43:33.926: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH.server has been generated or imported by crypto-engine\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip ssh rsa keypair-name LABSSH",
+          "passed": true,
+          "output": "\nAPI(config)#ip ssh rsa keypair-name LABSSH\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto pki trustpoint LABTLS",
+          "passed": true,
+          "output": "\nAPI(config)#crypto pki trustpoint LABTLS\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "enrollment selfsigned",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#enrollment selfsigned\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "subject-name CN=api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#subject-name CN=api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "subject-alt-name api.cml-lab.example",
+          "passed": true,
+          "output": " Creating trustpoint SLA-TrustPoint\nNov  1 12:43:37.957: %PKI-6-TRUSTPOINT_CREATE: Trustpoint: SLA-TrustPoint created succesfully\nNov  1 12:43:37.957: CRYPTO_PKI: (A0001) Session started - identity selected (SLA-TrustPoint)\nNov  1 12:43:37.957: CRYPTO_PKI: Setting the key_type as RSA\nNov  1 12:43:37.958: CRYPTO_PKI: Rcvd request to end PKI session A0001.\nNov  1 12:43:37.958: CRYPTO_PKI: PKI session A0001 has ended. Freeing all resources.\nNov  1 12:43:37.958: CRYPTO_PKI: unlocked trustpoint SLA-TrustPoint, refcount is 0\nNov  1 12:43:37.958: %PKI-4-NOCONFIGAUTOSAVE: Configuration was modified.  Issue \"write memory\" to save new IOS PKI configuration\nNov  1 12:43:37.958: %SMART_LIC-6-EXPORT_CONTROLLED: Usage of export controlled features is not allowed\nAPI(ca-trustpoint)#subject-alt-name api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "serial-number none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#serial-number none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "fqdn api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#fqdn api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip-address none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#ip-address none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "revocation-check none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#revocation-check none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "rsakeypair LABTLS",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#rsakeypair LABTLS\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "hash sha256",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#hash sha256\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "exit",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#exit\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-trustpoint LABTLS",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-trustpoint LABTLS\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-server",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-server\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "restconf",
+          "passed": true,
+          "output": "KI: using private key LABTLS for enrollmentPublic key in cert and stored public key LABTLS match\n\nNov  1 12:43:44.547: CRYPTO_PKI: pubkey_name : LABTLS\nAPI(config)#restconf\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "netconf-yang",
+          "passed": true,
+          "output": "\nAPI(config)#netconf-yang\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "end",
+          "passed": true,
+          "output": "\nAPI(config)#end\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show platform software yang-management process",
+          "passed": true,
+          "output": " 12:43:47.214: CRYPTO_PKI: Rcvd request to end PKI session A0002.\nNov  1 12:43:47.214: CRYPTO_PKI: PKI session A0002 has ended. Freeing all resources.\nNov  1 12:43:47.214: CRYPTO_PKI: unlocked trustpoint LABTLS, refcount is 0\nNov  1 12:43:47.214: CRYPTO_PKI: PKI session A0000 has ended. Freeing all resources completed\nNov  1 12:43:47.528: %PSD_MOD-5-DMI_NOTIFY_RESTCONF_START: R0/0: psd: PSD/DMI: restconf server has been notified to start\nNov  1 12:43:47.566: %PSD_MOD-5-DMI_NOTIFY_NETCONF_START: R0/0: psd: PSD/DMI: netconf-yang server has been notified to start\nNov  1 12:43:47.933: %SYS-5-CONFIG_I: Configured from console by console\nAPI#show platform software yang-management process\nconfd            : Not Running\nnesd             : Not Running\nsyncfd           : Not Running\nncsshd           : Not Running\ndmiauthd         : Not Running\nnginx            : Running    \nndbmand          : Not Running\npubd             : Running    \n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show platform software yang-management process",
+          "passed": true,
+          "output": "\nAPI#show platform software yang-management process\nconfd            : Running    \nnesd             : Running    \nsyncfd           : Running    \nncsshd           : Running    \ndmiauthd         : Running    \nnginx            : Running    \nndbmand          : Running    \npubd             : Running    \n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "undebug all",
+          "passed": true,
+          "output": "\nAPI#undebug all\nAll possible debugging has been turned off\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto pki certificates pem",
+          "passed": true,
+          "output": "OM61SC2zLYFN\nR1ElkkOkkXIKyRFQT6zveXKreCe2iGwDa03zhfabDW4pVPqMHJt9nfuPUgPOK5ew\ntUU/RjcCJXzrTfoRH8e1raeJ1pHJY3vGXI4cSfsn1DGJBUijM6RjSkNIaTcF5CQP\n0Xo2+1DEYAu90RFE+hi5pqh33rGzwG0rJI4oPwDqRUNGYz81T92fhD/y2y/E/xhS\nthC4atuPzasqct7Ft0DwiP2fdAxCZTrl5WX2vxJ9JBUFp4uNxfMqovwema8kV1mS\nUEYX0x3wOuw1wrUUp2EnEr9rM3W2oCIrcsQOxs0WNZlxB3O9hMsjSCWmEVlMFtNP\nJAbJmFL3v/SlkTWKLt/i33ifH9sU+5nX8iaac/mVLbYoatvCRzE0gP+EyWN4PU13\nALrM2Y0vdKQgoq/nQPS0ijkKpeydVLKk3BESva9wO5TwCff56tsqK9JEG0WuE+4F\nltpaFJUGFHGx69LgWZdoNQNxORvadLepNFHxRjeyC6RtZ2xkR4E=\n-----END CERTIFICATE-----\n\n% General Purpose Certificate:\n-----BEGIN CERTIFICATE-----\nMIIEcjCCAtqgAwIBAgIBATANBgkqhkiG9w0BAQsFADBCMRwwGgYDVQQDExNhcGku\nY21sLWxhYi5leGFtcGxlMSIwIAYJKoZIhvcNAQkCFhNhcGkuY21sLWxhYi5leGFt\ncGxlMB4XDTI2MTEwMTEyNDM0NFoXDTM2MTAzMTEyNDM0NFowQjEcMBoGA1UEAxMT\nYXBpLmNtbC1sYWIuZXhhbXBsZTEiMCAGCSqGSIb3DQEJAhYTYXBpLmNtbC1sYWIu\nZXhhbXBsZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAMcG4GWzuvZU\nD7Q16eXnIurHS7aKgWyHzHdG/zdeT1XAzLgoJwvMnBE/8teMVwV55twKro1ZEwPG\nnmtV7jawk16exPl6DClY6VcuP4ciAJpwOwMlcSTzlI3g24QmwJV07tb8Mfx3YUbU\nBIz4OO1DwCe44uW7dyb4vCOX/lU1YE4NFUWdap+w3TsWb0Bwh25OJHmystwruW9o\nu+wpHqPg6jK/xxVoLzlNvXoxk3MbcVrA0uyWQgRP7Qswr8v2fUlNp/5XGTDmPCXq\nBQqSJrHGElVZRggR8am3NtAJyk+YPgy2ardf6sfFJyQiac78fu3htvwIRSgH1wVn\nfT9puShK0w4ysjYhGJiFpmkIAc6SvkG7P5G8Zw7g8MwSPhI1IeaSIpTgdyKc/QgM\nCqKxZ8wr9Puf+oYnvMcAyYbMET36DQLe4rrr0mQqX4cwSg0Y2nNLYQ6rkkRTnvgU\nM0MvoH8Zu+0makbFk94Us5glNOEeop3b81dr18e01ws/ObgCr6bl+QIDAQABo3Mw\ncTAPBgNVHRMBAf8EBTADAQH/MB4GA1UdEQQXMBWCE2FwaS5jbWwtbGFiLmV4YW1w\nbGUwHwYDVR0jBBgwFoAU63Wf5UrN7hlsZhSAJHAuFB0VpHwwHQYDVR0OBBYEFOt1\nn+VKze4ZbGYUgCRwLhQdFaR8MA0GCSqGSIb3DQEBCwUAA4IBgQC8OM61SC2zLYFN\nR1ElkkOkkXIKyRFQT6zveXKreCe2iGwDa03zhfabDW4pVPqMHJt9nfuPUgPOK5ew\ntUU/RjcCJXzrTfoRH8e1raeJ1pHJY3vGXI4cSfsn1DGJBUijM6RjSkNIaTcF5CQP\n0Xo2+1DEYAu90RFE+hi5pqh33rGzwG0rJI4oPwDqRUNGYz81T92fhD/y2y/E/xhS\nthC4atuPzasqct7Ft0DwiP2fdAxCZTrl5WX2vxJ9JBUFp4uNxfMqovwema8kV1mS\nUEYX0x3wOuw1wrUUp2EnEr9rM3W2oCIrcsQOxs0WNZlxB3O9hMsjSCWmEVlMFtNP\nJAbJmFL3v/SlkTWKLt/i33ifH9sU+5nX8iaac/mVLbYoatvCRzE0gP+EyWN4PU13\nALrM2Y0vdKQgoq/nQPS0ijkKpeydVLKk3BESva9wO5TwCff56tsqK9JEG0WuE+4F\nltpaFJUGFHGx69LgWZdoNQNxORvadLepNFHxRjeyC6RtZ2xkR4E=\n-----END CERTIFICATE-----\n\n------Trustpoint: SLA-TrustPoint------\n% The specified trustpoint is not enrolled (SLA-TrustPoint).\n% Only export the CA certificate in PEM format.\n% CA certificate:\n-----BEGIN CERTIFICATE-----\nMIIDITCCAgmgAwIBAgIBATANBgkqhkiG9w0BAQsFADAyMQ4wDAYDVQQKEwVDaXNj\nbzEgMB4GA1UEAxMXQ2lzY28gTGljZW5zaW5nIFJvb3QgQ0EwHhcNMTMwNTMwMTk0\nODQ3WhcNMzgwNTMwMTk0ODQ3WjAyMQ4wDAYDVQQKEwVDaXNjbzEgMB4GA1UEAxMX\nQ2lzY28gTGljZW5zaW5nIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw\nggEKAoIBAQCmvL2WEx4F9xRepyws1obmFyIuofHv9k3LtMeYISqhR8ZV2NeUcTgN\nhxFEHhqvBxqcrmOIijjlIBw5TXhGLvI5xln3FbmMCllbu1y9DP6+o3AKi/fY8lbu\nSqToDdtv0clgsf0Y/8aclm+miVeiYX3nEE/cX+opVqxzkKPrK1Q2rchHosXatVPr\naamlNVjp8+PAvSPPWL1xiGjmlJEg8yDnlI5x1647zITxBoTHS8jgD1ObpCtCxou3\nx0eQlrTLLWLqL1Bdx7BipGgR2VvoJQ/EXV1fuI8n0ZHFXw12YfmkzT2ZIyeouwO9\nTm1waXy634vfX0NolRNeRN/Hxs8E3X/RAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIB\nBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBRJ3IVLPTHlGz5qF2Bq8zM9O0xz\n6DANBgkqhkiG9w0BAQsFAAOCAQEAUH8k05MqZoYCXZ/oOK5cbU32sEljHHgkDakF\nYE7c3v9P7St3/EYOzWNv291EaB46VnOrkJPTsWyePYvZiYe/5Ay9nhrsoMIhibtc\nj6hWhs2YtkZVdbFGjfxmqEZ6PfRNVlcAat8PDc+DUBU8BP98Ieh4rBG6nNJVqSMs\nfKe35sGvdPYVLpm3sfz5u+lz3n9b3euGxx47SRdlMItfsNoGuSr+f0lOip4HuFc3\n86WL4RpIoinDfB5pOfCGeIDdzRbWus7K7rx8+YQoeHs1ICzcYORharYjzb0jDjr7\nQYYWqUCT4ElNEKt1J+hvc5MuNbWIYv2uAnUVb3GbsvDWl99/KA==\n-----END CERTIFICATE-----\n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto key mypubkey rsa",
+          "passed": true,
+          "output": "\nAPI#show crypto key mypubkey rsa\n% Key pair was generated at: 12:43:33 UTC Nov 1 2026\nKey name: LABSSH\nKey type: RSA KEYS\n Storage Device: not specified\n Usage: General Purpose Key\n Key is not exportable. Redundancy enabled.\n Key Data:\n  308201A2 300D0609 2A864886 F70D0101 01050003 82018F00 3082018A 02820181 \n  009444E7 CFF0E46A 0E08C881 3638405B 15D3AF80 2021F113 A86566F3 E2AA256C \n  53CE63CE 9AEF09CE B3B20423 0A119EC5 A6BA619B 6BA52A41 63BBC1F0 05FF53E1 \n  25CA1A05 7531F774 15AD1F0E 79836BC9 257ECDA7 D7B984BF 559ABD03 759859D7 \n  148254F4 4C5409A9 11938EB0 F4073587 330E4093 E88CA5D0 61C06C9C 0D325DDB \n  103E2FEF 7C14682A 6C380E80 6C1709A7 A06A93CE 1169A4A0 E15108D2 3D916D0E \n  423E0C28 AE22B542 F5C1D121 6D89450E B6F24D40 B52C89AA 88BE813E 3A16CB1B \n  15DAECEB E0473F35 D2353195 4EF34324 BCD9D770 C99E2BE7 8E4404B0 7A055948 \n  370F8127 5A6D96C0 8D688AA9 9825A42D 066BBBE5 28A84B20 C588CC4B FA8FBC5B \n  E15F9279 2C170B3C 657C6A08 F959879B C5EF261E 78957245 1C6E22F4 F4D1640C \n  EF49227D 381710FA D2DC1581 E6E28574 31A4396F 1299EB5D 0FAEBC86 960B84B1 \n  C45E129C E7BAC3BF C6FA506C 93FDB82A A6720B97 7E0D662F 051E6F68 17C2DFF7 \n  D9FC5663 CD708FDD 3CC2D6DA 221F8F8E 47DB7D7C 561604B2 3F5ED8EA A82E4EBC \n  71020301 0001\n% Key pair was generated at: 12:43:35 UTC Nov 1 2026\nKey name: LABTLS\nKey type: RSA KEYS\n Storage Device: not specified\n Usage: General Purpose Key\n Key is not exportable. Redundancy enabled.\n Key Data:\n  308201A2 300D0609 2A864886 F70D0101 01050003 82018F00 3082018A 02820181 \n  00C706E0 65B3BAF6 540FB435 E9E5E722 EAC74BB6 8A816C87 CC7746FF 375E4F55 \n  C0CCB828 270BCC9C 113FF2D7 8C570579 E6DC0AAE 8D591303 C69E6B55 EE36B093 \n  5E9EC4F9 7A0C2958 E9572E3F 8722009A 703B0325 7124F394 8DE0DB84 26C09574 \n  EED6FC31 FC776146 D4048CF8 38ED43C0 27B8E2E5 BB7726F8 BC2397FE 5535604E \n  0D15459D 6A9FB0DD 3B166F40 70876E4E 2479B2B2 DC2BB96F 68BBEC29 1EA3E0EA \n  32BFC715 682F394D BD7A3193 731B715A C0D2EC96 42044FED 0B30AFCB F67D494D \n  A7FE5719 30E63C25 EA050A92 26B1C612 55594608 11F1A9B7 36D009CA 4F983E0C \n  B66AB75F EAC7C527 242269CE FC7EEDE1 B6FC0845 2807D705 677D3F69 B9284AD3 \n  0E32B236 21189885 A6690801 CE92BE41 BB3F91BC 670EE0F0 CC123E12 3521E692 \n  2294E077 229CFD08 0C0AA2B1 67CC2BF4 FB9FFA86 27BCC700 C986CC11 3DFA0D02 \n  DEE2BAEB D2642A5F 87304A0D 18DA734B 610EAB92 44539EF8 1433432F A07F19BB \n  ED266A46 C593DE14 B3982534 E11EA29D DBF3576B D7C7B4D7 0B3F39B8 02AFA6E5 \n  F9020301 0001\n% Key pair was generated at: 12:43:36 UTC Nov 1 2026\nKey name: LABSSH.server\nKey type: RSA KEYS\nTemporary key\n Usage: Encryption Key\n Key is not exportable.\n Key Data:\n  30820132 300D0609 2A864886 F70D0101 01050003 82011F00 3082011A 02820111 \n  00B75F89 8A72B9E8 FA511C97 34091930 CFB7A844 28E647DF 15E49530 CEF8751E \n  5772984B C337786F 6DF0742E E56E8521 84648BBD F0591463 1BCD4E7C 9252022F \n  BB169F3F A9E60158 6FB675A7 EDB043A7 055A8681 34A31149 E551ED99 138BA0C2 \n  996F0476 BC149366 E065897C 0E6BFFAF 89A52BB0 140FCF08 DB3FE549 A69FBFD0 \n  EBDDD242 99715C12 338D8E2C 12FD3819 B7F7EC75 24BE13BB CD8C5DA5 20D2F2E8 \n  6C170EEE D1736C90 2B98A1E8 E79A4A27 9C126B23 2B4A5ABC 89019924 70489BFA \n  A32CC6FA 38537BC4 2FFFBBA6 E3E5B1E0 A271FC0C 3020076B 3DBBC298 B6B31D79 \n  880D8198 5F11B8EE B1E50028 8CE706C7 28F9AAD1 B52BD20B CD49196E D1BF5863 \n  8451282F BFB6DA49 88BAA3A8 5B2C6513 CD020301 0001\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "preparation",
+          "node": "API",
+          "command": "iosxe-api-v1",
+          "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29",
+          "passed": true
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/event_client.py seed",
+          "expectation": "The real network publisher verifies seed against the actual gateway, durable controller jobs and certificate/key-verified device adapter.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/event_client.py seed\n{\"jobs\": 1, \"phase\": \"seed\", \"real_route_seeded\": true, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/event_client.py invalids",
+          "expectation": "The real network publisher verifies invalids against the actual gateway, durable controller jobs and certificate/key-verified device adapter.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/event_client.py invalids\n{\"history_unchanged\": true, \"phase\": \"invalids\", \"status\": \"passed\", \"wire_rejections\": 6}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent IOS RIB contains the intended installed static route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\nRouting entry for 192.0.2.42/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nAPI#"
+        },
+        {
+          "phase": "baseline",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests reach the Linux loopback through the installed route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/2/6 ms\nAPI#"
+        },
+        {
+          "phase": "baseline",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "withdraw only the separate fixture approval",
+          "kind": "configuration",
+          "node": "TOOLS",
+          "command": "python3 /lab/event_gateway.py approval-off",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/event_gateway.py approval-off\n{\"policy_enabled\": false, \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "withdraw only the separate fixture approval",
+          "node": "CLIENT",
+          "command": "python3 /lab/event_client.py approval-denied",
+          "expectation": "The real network publisher verifies approval-denied against the actual gateway, durable controller jobs and certificate/key-verified device adapter.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/event_client.py approval-denied\n{\"history_unchanged\": true, \"phase\": \"approval-denied\", \"status\": \"passed\", \"valid_signature_is_not_approval\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "withdraw only the separate fixture approval",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent IOS RIB contains the intended installed static route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\nRouting entry for 192.0.2.42/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nAPI#"
+        },
+        {
+          "phase": "withdraw only the separate fixture approval",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests reach the Linux loopback through the installed route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "withdraw only the separate fixture approval",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "restore exact root fixture approval",
+          "kind": "configuration",
+          "node": "TOOLS",
+          "command": "python3 /lab/event_gateway.py approval-on",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/event_gateway.py approval-on\n{\"policy_enabled\": true, \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restore exact root fixture approval",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent IOS RIB contains the intended installed static route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\nRouting entry for 192.0.2.42/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nAPI#"
+        },
+        {
+          "phase": "restore exact root fixture approval",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests reach the Linux loopback through the installed route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "deliver the approved signed quarantine",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/event_client.py quarantine",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/event_client.py quarantine\n{\"actual_route_withdrawn\": true, \"jobs\": 2, \"phase\": \"quarantine\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "deliver the approved signed quarantine",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent device RIB actually lacks the withdrawn service host route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\n% Network not in table\nAPI#"
+        },
+        {
+          "phase": "deliver the approved signed quarantine",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests cannot reach the loopback while its usable route is absent.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n...\nSuccess rate is 0 percent (0/3)\nAPI#"
+        },
+        {
+          "phase": "deliver the approved signed quarantine",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "redeliver the committed event concurrently",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/event_client.py repeat",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/event_client.py repeat\n{\"committed_event_replayed_without_write\": true, \"duplicate_deliveries\": 2, \"history_unchanged\": true, \"phase\": \"repeat\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "redeliver the committed event concurrently",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent device RIB actually lacks the withdrawn service host route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\n% Network not in table\nAPI#"
+        },
+        {
+          "phase": "redeliver the committed event concurrently",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "deliver the approved signed release",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/event_client.py release",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/event_client.py release\n{\"actual_route_recovered\": true, \"jobs\": 3, \"phase\": \"release\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "deliver the approved signed release",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent IOS RIB contains the intended installed static route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\nRouting entry for 192.0.2.42/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nAPI#"
+        },
+        {
+          "phase": "deliver the approved signed release",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests reach the Linux loopback through the installed route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "deliver the approved signed release",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        }
+      ],
+      "plan_sha256": "406b15a2537e7930049544eec5abb2c8ddb5f4fd9feab34109c6beab9ad3b9ff",
+      "startup_states": {
+        "API": "STARTED",
+        "TOOLS": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "API": "csr1000v-17-03-08a",
+        "TOOLS": "cml-labs-toolbox-9f43df961cbe",
+        "CLIENT": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "API"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T12:49:56Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/028-event-driven-remediation.yaml",
+      "sha256": "f3c48f9491aad23ecde0329f38d46753632199fc48f7a87e0365c241d684bb88",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T12:49:59Z",
+      "checks": [
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto key mypubkey rsa",
+          "passed": true,
+          "output": "\nAPI#show crypto key mypubkey rsa\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "clock set 12:46:48 1 Nov 2026",
+          "passed": true,
+          "output": "\nAPI#clock set 12:46:48 1 Nov 2026\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "debug crypto pki transactions",
+          "passed": true,
+          "output": "\nAPI#debug crypto pki transactions\nCrypto PKI Trans debugging is on\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nAPI#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto key generate rsa general-keys label LABSSH modulus 3072",
+          "passed": true,
+          "output": "\nAPI(config)#crypto key generate rsa general-keys label LABSSH modulus 3072\nThe name for the keys will be: LABSSH\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\n[OK] (elapsed time was 1 seconds)\n\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto key generate rsa general-keys label LABTLS modulus 3072",
+          "passed": true,
+          "output": "\nAPI(config)#crypto key generate rsa general-keys label LABTLS modulus 3072\nThe name for the keys will be: LABTLS\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\nNov  1 12:46:51.704: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH has been generated or imported by crypto-engine\nNov  1 12:46:51.713: %SSH-5-ENABLED: SSH 2.0 has been enabled\nNov  1 12:46:52.345: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH.server has been generated or imported by crypto-engine\n[OK] (elapsed time was 2 seconds)\n\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip ssh rsa keypair-name LABSSH",
+          "passed": true,
+          "output": "\nAPI(config)#ip ssh rsa keypair-name LABSSH\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto pki trustpoint LABTLS",
+          "passed": true,
+          "output": "\nAPI(config)#crypto pki trustpoint LABTLS\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "enrollment selfsigned",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#enrollment selfsigned\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "subject-name CN=api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#subject-name CN=api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "subject-alt-name api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#subject-alt-name api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "serial-number none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#serial-number none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "fqdn api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#fqdn api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip-address none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#ip-address none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "revocation-check none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#revocation-check none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "rsakeypair LABTLS",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#rsakeypair LABTLS\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "hash sha256",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#hash sha256\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "exit",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#exit\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-trustpoint LABTLS",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-trustpoint LABTLS\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-server",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-server\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "restconf",
+          "passed": true,
+          "output": "\nAPI(config)#restconf\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "netconf-yang",
+          "passed": true,
+          "output": "\nAPI(config)#netconf-yang\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "end",
+          "passed": true,
+          "output": "\nAPI(config)#end\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show platform software yang-management process",
+          "passed": true,
+          "output": "\nAPI#show platform software yang-management process\nconfd            : Not Running\nnesd             : Not Running\nsyncfd           : Not Running\nncsshd           : Not Running\ndmiauthd         : Not Running\nnginx            : Running    \nndbmand          : Not Running\npubd             : Running    \n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show platform software yang-management process",
+          "passed": true,
+          "output": "\nAPI#show platform software yang-management process\nconfd            : Running    \nnesd             : Running    \nsyncfd           : Running    \nncsshd           : Running    \ndmiauthd         : Running    \nnginx            : Running    \nndbmand          : Running    \npubd             : Running    \n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "undebug all",
+          "passed": true,
+          "output": "\nAPI#undebug all\nAll possible debugging has been turned off\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto pki certificates pem",
+          "passed": true,
+          "output": "SQVtj0eLGUjp\nPMbAbt5wpuJNGjYEStyk8iVCYR66soFz98p4WU2jfOs8Dgqbz0OF70MIDXskK/3e\naGZoIXb8fNY6ZgFIdkJUe6EwF4vZnOUXHkslWXlcAe43qM69w3Xwllu3drbKcTLX\n9uQoMuwEh1llWnSye2uYpG6gbAf65h3z/R9PPBnnTHUlqfUYqc9GJAC00XoNZLC6\niQ3uj6o99M2UNv9PNLi3i6AOYSQZwIfifiAkWGxDQyRsrw6Z3MpfHHN79sPNsc6+\nGYfol/T2L4S5OBZpGbk6qB47VGnAPafCVa2+t1mmYaWUFok405qXTZ+Xa0TA9aQn\nbSIPkwmWD8mqexl8uR8EdpXSLWkSduOrwOx8SShnuu/Ztb1eBTimGp8gsb9LCMgG\nHqUq2SYEABOmdioDUw5669gQbRMrLmx+X/mQI3/ywPnus8O3RFTPcTFBYglOguOI\nSXHyh1sgoN2ica6b5YRV+5Y5mg2CnZieka9ib4q9mvnSqEdbfWk=\n-----END CERTIFICATE-----\n\n% General Purpose Certificate:\n-----BEGIN CERTIFICATE-----\nMIIEcjCCAtqgAwIBAgIBATANBgkqhkiG9w0BAQsFADBCMRwwGgYDVQQDExNhcGku\nY21sLWxhYi5leGFtcGxlMSIwIAYJKoZIhvcNAQkCFhNhcGkuY21sLWxhYi5leGFt\ncGxlMB4XDTI2MTEwMTEyNDcwNFoXDTM2MTAzMTEyNDcwNFowQjEcMBoGA1UEAxMT\nYXBpLmNtbC1sYWIuZXhhbXBsZTEiMCAGCSqGSIb3DQEJAhYTYXBpLmNtbC1sYWIu\nZXhhbXBsZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAJVkeNJKTC9Q\n0Ikt4pCdRuFR07FH7GkOaSUhaN5kVYbUhqnqLD4pg5Jc8ND4w7crlEq0PvoHmt3i\n+Qqhw7CH+b1C04qyy8GyrPSFcPneWLD22fqXwuANLGVyif0wwAm55cWejmHnBSQW\nQ94U6WaCFDQdsiEBxZ9PnLAsqPHYSopHD99MD1xy2jK6D4KRfix6pVfkPMt89NCq\nWJU7QLeUHFVNQw6Ip0sR3+NusoYzSyxoXuqUsIhzLbKAdkMKa4/4xR4f+LvlTQBf\nnp6uXqYCGrxG86HsGI8u70dfJGctZaW4uC/+XSkUDuSK3XjrfCfJpuaXs/HqX7Ls\nlCbLjTL9+8nhRT4T2TYg+HnPyJKngD3s/PKBChufXAHBxzeVSegDXt9ZI7DaioZU\nRlEEGYAo/SVXOBbWgsJ0O0bCIlm0urVomEjwgpFnrQ7PaQ2lfbDN6IkEU1if5gni\nOvhxB9ix5XjsWzUk5HRvy/LuF6E+wO1QUgBpofpYLlhQAmx1hOCh6QIDAQABo3Mw\ncTAPBgNVHRMBAf8EBTADAQH/MB4GA1UdEQQXMBWCE2FwaS5jbWwtbGFiLmV4YW1w\nbGUwHwYDVR0jBBgwFoAUObd+wwseWQgXWEohEvm3HAY0JiowHQYDVR0OBBYEFDm3\nfsMLHlkIF1hKIRL5txwGNCYqMA0GCSqGSIb3DQEBCwUAA4IBgQA/SQVtj0eLGUjp\nPMbAbt5wpuJNGjYEStyk8iVCYR66soFz98p4WU2jfOs8Dgqbz0OF70MIDXskK/3e\naGZoIXb8fNY6ZgFIdkJUe6EwF4vZnOUXHkslWXlcAe43qM69w3Xwllu3drbKcTLX\n9uQoMuwEh1llWnSye2uYpG6gbAf65h3z/R9PPBnnTHUlqfUYqc9GJAC00XoNZLC6\niQ3uj6o99M2UNv9PNLi3i6AOYSQZwIfifiAkWGxDQyRsrw6Z3MpfHHN79sPNsc6+\nGYfol/T2L4S5OBZpGbk6qB47VGnAPafCVa2+t1mmYaWUFok405qXTZ+Xa0TA9aQn\nbSIPkwmWD8mqexl8uR8EdpXSLWkSduOrwOx8SShnuu/Ztb1eBTimGp8gsb9LCMgG\nHqUq2SYEABOmdioDUw5669gQbRMrLmx+X/mQI3/ywPnus8O3RFTPcTFBYglOguOI\nSXHyh1sgoN2ica6b5YRV+5Y5mg2CnZieka9ib4q9mvnSqEdbfWk=\n-----END CERTIFICATE-----\n\n------Trustpoint: SLA-TrustPoint------\n% The specified trustpoint is not enrolled (SLA-TrustPoint).\n% Only export the CA certificate in PEM format.\n% CA certificate:\n-----BEGIN CERTIFICATE-----\nMIIDITCCAgmgAwIBAgIBATANBgkqhkiG9w0BAQsFADAyMQ4wDAYDVQQKEwVDaXNj\nbzEgMB4GA1UEAxMXQ2lzY28gTGljZW5zaW5nIFJvb3QgQ0EwHhcNMTMwNTMwMTk0\nODQ3WhcNMzgwNTMwMTk0ODQ3WjAyMQ4wDAYDVQQKEwVDaXNjbzEgMB4GA1UEAxMX\nQ2lzY28gTGljZW5zaW5nIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw\nggEKAoIBAQCmvL2WEx4F9xRepyws1obmFyIuofHv9k3LtMeYISqhR8ZV2NeUcTgN\nhxFEHhqvBxqcrmOIijjlIBw5TXhGLvI5xln3FbmMCllbu1y9DP6+o3AKi/fY8lbu\nSqToDdtv0clgsf0Y/8aclm+miVeiYX3nEE/cX+opVqxzkKPrK1Q2rchHosXatVPr\naamlNVjp8+PAvSPPWL1xiGjmlJEg8yDnlI5x1647zITxBoTHS8jgD1ObpCtCxou3\nx0eQlrTLLWLqL1Bdx7BipGgR2VvoJQ/EXV1fuI8n0ZHFXw12YfmkzT2ZIyeouwO9\nTm1waXy634vfX0NolRNeRN/Hxs8E3X/RAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIB\nBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBRJ3IVLPTHlGz5qF2Bq8zM9O0xz\n6DANBgkqhkiG9w0BAQsFAAOCAQEAUH8k05MqZoYCXZ/oOK5cbU32sEljHHgkDakF\nYE7c3v9P7St3/EYOzWNv291EaB46VnOrkJPTsWyePYvZiYe/5Ay9nhrsoMIhibtc\nj6hWhs2YtkZVdbFGjfxmqEZ6PfRNVlcAat8PDc+DUBU8BP98Ieh4rBG6nNJVqSMs\nfKe35sGvdPYVLpm3sfz5u+lz3n9b3euGxx47SRdlMItfsNoGuSr+f0lOip4HuFc3\n86WL4RpIoinDfB5pOfCGeIDdzRbWus7K7rx8+YQoeHs1ICzcYORharYjzb0jDjr7\nQYYWqUCT4ElNEKt1J+hvc5MuNbWIYv2uAnUVb3GbsvDWl99/KA==\n-----END CERTIFICATE-----\n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto key mypubkey rsa",
+          "passed": true,
+          "output": "\nAPI#show crypto key mypubkey rsa\n% Key pair was generated at: 12:46:51 UTC Nov 1 2026\nKey name: LABSSH\nKey type: RSA KEYS\n Storage Device: not specified\n Usage: General Purpose Key\n Key is not exportable. Redundancy enabled.\n Key Data:\n  308201A2 300D0609 2A864886 F70D0101 01050003 82018F00 3082018A 02820181 \n  00A36524 A5FDD488 F81E3C24 8E5B9C11 DDDD7AFB 2EC6F603 EB6DE838 2247BC07 \n  D6B5382A DC476D20 419A1405 AD8712C9 AEEB8DCD 0033E0A0 1481557A BF90CD7D \n  21D6AB07 55E2503E EE1B1456 B69F0491 80B6D36B 9810F8DB 56BB0BA4 EB6892BC \n  7D5D6B6E 89838233 C95CC9BD 9609AD21 FBFA7F01 F4299FF0 3A0FDD3E 5AEB8BEC \n  28DBC923 ACD16946 7D506D40 EC586E72 EEE78381 08E50D30 F64A7160 A4F7791E \n  E1677B7C B785A219 7C07EE5B 339AEA9A BBEB6CC0 A80501FC FD6EE01F 9D02D2FC \n  7942BD4F C10CA044 E0BBB2BF 94EB3AC9 0E82FF38 0B5B25A6 51F6F886 428304BD \n  09BC0B5A 1E399DBF 01E97C4B 3FF52CBE FCC51E62 71829E98 F666187C 0F0E8830 \n  70AAF33F 807B5286 AFB7B070 C0AAAF94 2C18DB03 AD7808C4 A5DF6092 CC3CF9D7 \n  1D11D36B BCB30F2C 2D6D080C 9B2C1C57 F7B2B679 A0CDBA06 8D325780 0914331E \n  6EC4D34B 55A41893 BFBE4C27 6BC2A9FF 39CA0FC4 44B2A353 2A4E31FA C5473275 \n  F81CF876 1FEA9B81 DA1BDD90 86233980 9E614EC8 6D0DB30F 93C9392F B4935A4C \n  C7020301 0001\n% Key pair was generated at: 12:46:54 UTC Nov 1 2026\nKey name: LABTLS\nKey type: RSA KEYS\n Storage Device: not specified\n Usage: General Purpose Key\n Key is not exportable. Redundancy enabled.\n Key Data:\n  308201A2 300D0609 2A864886 F70D0101 01050003 82018F00 3082018A 02820181 \n  00956478 D24A4C2F 50D0892D E2909D46 E151D3B1 47EC690E 69252168 DE645586 \n  D486A9EA 2C3E2983 925CF0D0 F8C3B72B 944AB43E FA079ADD E2F90AA1 C3B087F9 \n  BD42D38A B2CBC1B2 ACF48570 F9DE58B0 F6D9FA97 C2E00D2C 657289FD 30C009B9 \n  E5C59E8E 61E70524 1643DE14 E9668214 341DB221 01C59F4F 9CB02CA8 F1D84A8A \n  470FDF4C 0F5C72DA 32BA0F82 917E2C7A A557E43C CB7CF4D0 AA58953B 40B7941C \n  554D430E 88A74B11 DFE36EB2 86334B2C 685EEA94 B088732D B2807643 0A6B8FF8 \n  C51E1FF8 BBE54D00 5F9E9EAE 5EA6021A BC46F3A1 EC188F2E EF475F24 672D65A5 \n  B8B82FFE 5D29140E E48ADD78 EB7C27C9 A6E697B3 F1EA5FB2 EC9426CB 8D32FDFB \n  C9E1453E 13D93620 F879CFC8 92A7803D ECFCF281 0A1B9F5C 01C1C737 9549E803 \n  5EDF5923 B0DA8A86 54465104 198028FD 25573816 D682C274 3B46C222 59B4BAB5 \n  689848F0 829167AD 0ECF690D A57DB0CD E8890453 589FE609 E23AF871 07D8B1E5 \n  78EC5B35 24E4746F CBF2EE17 A13EC0ED 50520069 A1FA582E 5850026C 7584E0A1 \n  E9020301 0001\n% Key pair was generated at: 12:46:55 UTC Nov 1 2026\nKey name: LABSSH.server\nKey type: RSA KEYS\nTemporary key\n Usage: Encryption Key\n Key is not exportable.\n Key Data:\n  30820132 300D0609 2A864886 F70D0101 01050003 82011F00 3082011A 02820111 \n  009DF597 AE306608 0269B8F7 97BA51BD 7603CECE CE91BD4D 11C3D2C6 F56AA104 \n  86014C53 6A7CCEDE 4D2AFAE1 2BD44EC6 2A7C0309 752D5124 E8339209 90F54382 \n  FF3F0530 6FCFBF9D 2AAB614D 898C9E44 D29118F5 3EE41143 2B5DC1D8 8ACAB5B5 \n  63684358 079303B3 3ED254A9 CA440EFC 0F36E13D AC7C7DAE 7943A78F 234A2C75 \n  BC8A05C7 C4BDE3C8 D7553741 F74982A3 392C8089 E4643EF7 A711A603 6524D287 \n  588C4B0E BBCCDEBE DB1E104E A102FE40 9BDE7B69 73C3423E AD1D73B2 129DC498 \n  264FD20D 2C3C9714 0CA151EE 7ADBD315 CAB8DECB 6C5354DE 48D71CC7 1B9F361D \n  7EB095A2 A19D739A 2E2DC820 493F783A 6DC4CA10 1F000988 3A043478 73433BAD \n  EF5799A2 071AC014 E77C8D31 CF954194 C7020301 0001\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "preparation",
+          "node": "API",
+          "command": "iosxe-api-v1",
+          "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29",
+          "passed": true
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/event_client.py seed",
+          "expectation": "The real network publisher verifies seed against the actual gateway, durable controller jobs and certificate/key-verified device adapter.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/event_client.py seed\n{\"jobs\": 1, \"phase\": \"seed\", \"real_route_seeded\": true, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/event_client.py invalids",
+          "expectation": "The real network publisher verifies invalids against the actual gateway, durable controller jobs and certificate/key-verified device adapter.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/event_client.py invalids\n{\"history_unchanged\": true, \"phase\": \"invalids\", \"status\": \"passed\", \"wire_rejections\": 6}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent IOS RIB contains the intended installed static route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\nRouting entry for 192.0.2.42/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nAPI#"
+        },
+        {
+          "phase": "baseline",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests reach the Linux loopback through the installed route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/2/6 ms\nAPI#"
+        },
+        {
+          "phase": "baseline",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "deliver the initial approved event",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/event_client.py quarantine",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/event_client.py quarantine\n{\"actual_route_withdrawn\": true, \"jobs\": 2, \"phase\": \"quarantine\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "deliver the initial approved event",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent device RIB actually lacks the withdrawn service host route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\n% Network not in table\nAPI#"
+        },
+        {
+          "phase": "deliver the initial approved event",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests cannot reach the loopback while its usable route is absent.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n...\nSuccess rate is 0 percent (0/3)\nAPI#"
+        },
+        {
+          "phase": "deliver the initial approved event",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/2 ms\nAPI#"
+        },
+        {
+          "phase": "stop only the frontend gateway",
+          "kind": "configuration",
+          "node": "TOOLS",
+          "command": "python3 /lab/event_gateway.py stop",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/event_gateway.py stop\n{\"gateway_stopped\": true, \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "stop only the frontend gateway",
+          "node": "CLIENT",
+          "command": "python3 /lab/event_client.py gateway-down",
+          "expectation": "The real network publisher verifies gateway-down against the actual gateway, durable controller jobs and certificate/key-verified device adapter.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/event_client.py gateway-down\n{\"controller_and_device_preserved\": true, \"gateway_listener_refused\": true, \"phase\": \"gateway-down\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "stop only the frontend gateway",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent device RIB actually lacks the withdrawn service host route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\n% Network not in table\nAPI#"
+        },
+        {
+          "phase": "stop only the frontend gateway",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "restart only the frontend gateway",
+          "kind": "configuration",
+          "node": "TOOLS",
+          "command": "python3 /lab/event_gateway.py start",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/event_gateway.py start\n{\"gateway_started\": true, \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restart only the frontend gateway",
+          "node": "CLIENT",
+          "command": "python3 /lab/event_client.py repeat-after-restart",
+          "expectation": "The real network publisher verifies repeat-after-restart against the actual gateway, durable controller jobs and certificate/key-verified device adapter.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/event_client.py repeat-after-restart\n{\"committed_event_replayed_without_write\": true, \"duplicate_deliveries\": 2, \"history_unchanged\": true, \"phase\": \"repeat-after-restart\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restart only the frontend gateway",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent device RIB actually lacks the withdrawn service host route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\n% Network not in table\nAPI#"
+        },
+        {
+          "phase": "restart only the frontend gateway",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "deliver approved recovery",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/event_client.py release",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/event_client.py release\n{\"actual_route_recovered\": true, \"jobs\": 3, \"phase\": \"release\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "deliver approved recovery",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent IOS RIB contains the intended installed static route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\nRouting entry for 192.0.2.42/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nAPI#"
+        },
+        {
+          "phase": "deliver approved recovery",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests reach the Linux loopback through the installed route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "deliver approved recovery",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        }
+      ],
+      "plan_sha256": "5ab8ffa2a728b9848fbe2ef346950c4351a67a1a64b615ef18436fe8e8deb82d",
+      "startup_states": {
+        "API": "STARTED",
+        "TOOLS": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "API": "csr1000v-17-03-08a",
+        "TOOLS": "cml-labs-toolbox-9f43df961cbe",
+        "CLIENT": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "API"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T12:53:14Z"
     }
   ]
 }

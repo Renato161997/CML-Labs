@@ -24738,5 +24738,362 @@
         ]
       }
     ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/033-soar-webhook-remediation.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/event_client.py seed",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"seed\")",
+        "expectation": "The real network publisher verifies seed against the actual gateway, durable controller jobs and certificate/key-verified device adapter.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/event_client.py invalids",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"invalids\")",
+        "expectation": "The real network publisher verifies invalids against the actual gateway, durable controller jobs and certificate/key-verified device adapter.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "API",
+        "command": "show ip route 192.0.2.42",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+        "expectation": "The independent IOS RIB contains the intended installed static route."
+      },
+      {
+        "node": "API",
+        "command": "ping 192.0.2.42 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three real requests reach the Linux loopback through the installed route."
+      },
+      {
+        "node": "API",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The connected device-management path remains healthy."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "withdraw only the separate fixture approval",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/event_gateway.py approval-off"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"policy_enabled\": false",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/event_client.py approval-denied",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"approval-denied\")",
+            "expectation": "The real network publisher verifies approval-denied against the actual gateway, durable controller jobs and certificate/key-verified device adapter.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "restore exact root fixture approval",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/event_gateway.py approval-on"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"policy_enabled\": true",
+        "checks": [
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          }
+        ]
+      },
+      {
+        "name": "deliver the approved signed quarantine",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/event_client.py quarantine"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"actual_route_withdrawn\": true",
+        "checks": [
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The independent device RIB actually lacks the withdrawn service host route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Three real requests cannot reach the loopback while its usable route is absent."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "redeliver the committed event concurrently",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/event_client.py repeat"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"committed_event_replayed_without_write\": true",
+        "checks": [
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The independent device RIB actually lacks the withdrawn service host route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "deliver the approved signed release",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/event_client.py release"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"actual_route_recovered\": true",
+        "checks": [
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/028-event-driven-remediation.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/event_client.py seed",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"seed\")",
+        "expectation": "The real network publisher verifies seed against the actual gateway, durable controller jobs and certificate/key-verified device adapter.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/event_client.py invalids",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"invalids\")",
+        "expectation": "The real network publisher verifies invalids against the actual gateway, durable controller jobs and certificate/key-verified device adapter.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "API",
+        "command": "show ip route 192.0.2.42",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+        "expectation": "The independent IOS RIB contains the intended installed static route."
+      },
+      {
+        "node": "API",
+        "command": "ping 192.0.2.42 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three real requests reach the Linux loopback through the installed route."
+      },
+      {
+        "node": "API",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The connected device-management path remains healthy."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "deliver the initial approved event",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/event_client.py quarantine"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"actual_route_withdrawn\": true",
+        "checks": [
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The independent device RIB actually lacks the withdrawn service host route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Three real requests cannot reach the loopback while its usable route is absent."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "stop only the frontend gateway",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/event_gateway.py stop"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"gateway_stopped\": true",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/event_client.py gateway-down",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"gateway-down\")",
+            "expectation": "The real network publisher verifies gateway-down against the actual gateway, durable controller jobs and certificate/key-verified device adapter.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The independent device RIB actually lacks the withdrawn service host route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "restart only the frontend gateway",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/event_gateway.py start"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"gateway_started\": true",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/event_client.py repeat-after-restart",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"repeat-after-restart\")",
+            "expectation": "The real network publisher verifies repeat-after-restart against the actual gateway, durable controller jobs and certificate/key-verified device adapter.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "The independent device RIB actually lacks the withdrawn service host route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      },
+      {
+        "name": "deliver approved recovery",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/event_client.py release"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "\"actual_route_recovered\": true",
+        "checks": [
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ]
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
   }
 }
