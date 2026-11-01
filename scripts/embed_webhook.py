@@ -296,6 +296,13 @@ NATIVE_PROFILES["native-openapi-contract"] = {
 }
 
 
+NATIVE_PROFILES["native-wired-nac"] = {
+    "AUTH": {"/lab/n.py": "examples/security/wired_nac.py"},
+    "CLIENT": {"/lab/n.py": "examples/security/wired_nac.py"},
+    "SERVER": {"/lab/t.py": "examples/security/traffic_fixture.py"},
+}
+
+
 def native_sources(data, metadata):
     """Validate registered source payloads without executing a shell or guest code."""
     profile = NATIVE_PROFILES.get(metadata.get("example_profile"))

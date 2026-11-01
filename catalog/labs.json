@@ -2889,26 +2889,25 @@
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/030-8021x-mab-concepts.yaml",
-      "title": "802.1X MAB Concepts",
+      "title": "Wired 802.1X: EAP-TLS and Locked Ingress Admission",
       "track": "350-401",
       "topic": "security",
-      "nodes": 5,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "cml-labs-services",
+        "net-tools"
       ],
-      "nominal_ram_mib": 3072,
+      "nominal_ram_mib": 2560,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 130,
+      "workbook": "docs/workbooks/350-401-030-8021x-mab-concepts.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "e85e31416873ab748296d402dbbf6e96af1b91bc9c6f98bb64c7e659ac795cb5"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T19:30:22Z",
+      "sha256": "054a915dd3454f42a2c1ccf65c4a70bfc3edd0ac8db79e32a2e9a3f6a3798914"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/031-control-plane-policing.yaml",
@@ -3747,25 +3746,25 @@
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/012-8021x-mab-nac.yaml",
-      "title": "802.1X MAB NAC",
+      "title": "NAC Concepts: Certificate Identity and Weaker MAC Fallback",
       "track": "350-701",
       "topic": "network-security",
       "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosvl2"
+        "cml-labs-services",
+        "net-tools"
       ],
-      "nominal_ram_mib": 1792,
+      "nominal_ram_mib": 2560,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 130,
+      "workbook": "docs/workbooks/350-701-012-8021x-mab-nac.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "cc1e61bde88f835f76772e3de82d2f39ea77344ae18b3e00d127d48f4e1272bc"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-01T19:32:42Z",
+      "sha256": "eac6ef78a8785db4ddbb36535a0d836c83ed1c36d293a7e384dc62c6e187bce1"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/013-segmentation-vrf-acl.yaml",

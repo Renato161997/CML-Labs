@@ -48399,6 +48399,646 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T18:48:55Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/030-8021x-mab-concepts.yaml",
+      "sha256": "054a915dd3454f42a2c1ccf65c4a70bfc3edd0ac8db79e32a2e9a3f6a3798914",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T19:27:58Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py client-good",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py client-good\n{\"actual_eap_success\": true, \"bootstrap_certificate_available\": true, \"domain_mismatch_observed\": false, \"phase\": \"client-good\", \"received\": 3, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py control-no-bypass",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py control-no-bypass\n{\"actual_management_path_blocked\": true, \"consecutive_recovery_samples\": 2, \"normal_data_recovered\": true, \"phase\": \"control-no-bypass\", \"received_per_recovery_sample\": 3, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py auth-good",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py auth-good\n{\"actual_fdb_admission\": true, \"actual_peer_authorized\": true, \"gate_alive\": true, \"kernel_locked\": true, \"phase\": \"auth-good\", \"policy\": \"strict\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "AUTH",
+          "command": "stat -c %a /lab/identity.key",
+          "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# stat -c %a /lab/identity.key\n600\nroot@AUTH:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "stat -c %a /lab/identity.key",
+          "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# stat -c %a /lab/identity.key\n600\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "stop only the admission heartbeat",
+          "kind": "configuration",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py gate-off",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py gate-off\n{\"gate_stopped\": true, \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "stop only the admission heartbeat",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py auth-gate-expired",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py auth-gate-expired\n{\"actual_fdb_admission\": false, \"actual_peer_authorized\": true, \"gate_alive\": false, \"kernel_locked\": true, \"phase\": \"auth-gate-expired\", \"policy\": \"strict\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "stop only the admission heartbeat",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py client-gate-expired",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py client-gate-expired\n{\"actual_eap_success\": true, \"bootstrap_certificate_available\": true, \"domain_mismatch_observed\": false, \"phase\": \"client-gate-expired\", \"received\": 0, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "stop only the admission heartbeat",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restart admission with the existing authenticated peer",
+          "kind": "configuration",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py gate-on",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py gate-on\n{\"gate_restarted\": true, \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "restart admission with the existing authenticated peer",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py client-good",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py client-good\n{\"actual_eap_success\": true, \"bootstrap_certificate_available\": true, \"domain_mismatch_observed\": false, \"phase\": \"client-good\", \"received\": 3, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restart admission with the existing authenticated peer",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py control-no-bypass",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py control-no-bypass\n{\"actual_management_path_blocked\": true, \"consecutive_recovery_samples\": 2, \"normal_data_recovered\": true, \"phase\": \"control-no-bypass\", \"received_per_recovery_sample\": 3, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restart admission with the existing authenticated peer",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py auth-good",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py auth-good\n{\"actual_fdb_admission\": true, \"actual_peer_authorized\": true, \"gate_alive\": true, \"kernel_locked\": true, \"phase\": \"auth-good\", \"policy\": \"strict\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "restart admission with the existing authenticated peer",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restart admission with the existing authenticated peer",
+          "node": "AUTH",
+          "command": "stat -c %a /lab/identity.key",
+          "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# stat -c %a /lab/identity.key\n600\nroot@AUTH:~# "
+        },
+        {
+          "phase": "restart admission with the existing authenticated peer",
+          "node": "CLIENT",
+          "command": "stat -c %a /lab/identity.key",
+          "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# stat -c %a /lab/identity.key\n600\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "reject an incorrect authenticator certificate name",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py bad-domain",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py bad-domain\n{\"domain_fault\": true, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "reject an incorrect authenticator certificate name",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py client-bad",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py client-bad\n{\"actual_eap_success\": false, \"bootstrap_certificate_available\": true, \"domain_mismatch_observed\": true, \"phase\": \"client-bad\", \"received\": 0, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "reject an incorrect authenticator certificate name",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py auth-bad",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py auth-bad\n{\"actual_fdb_admission\": false, \"actual_peer_authorized\": false, \"gate_alive\": true, \"kernel_locked\": true, \"phase\": \"auth-bad\", \"policy\": \"strict\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "reject an incorrect authenticator certificate name",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "enable the explicit weaker local MAC fallback",
+          "kind": "configuration",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py mac",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py mac\n{\"policy\": \"mac\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "enable the explicit weaker local MAC fallback",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py client-mac",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py client-mac\n{\"actual_eap_success\": false, \"bootstrap_certificate_available\": true, \"domain_mismatch_observed\": true, \"phase\": \"client-mac\", \"received\": 3, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "enable the explicit weaker local MAC fallback",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py auth-mac",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py auth-mac\n{\"actual_fdb_admission\": true, \"actual_peer_authorized\": false, \"gate_alive\": true, \"kernel_locked\": true, \"phase\": \"auth-mac\", \"policy\": \"mac\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "enable the explicit weaker local MAC fallback",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restore strict certificate-based admission",
+          "kind": "configuration",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py strict",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py strict\n{\"policy\": \"strict\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "restore strict certificate-based admission",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py client-bad",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py client-bad\n{\"actual_eap_success\": false, \"bootstrap_certificate_available\": true, \"domain_mismatch_observed\": true, \"phase\": \"client-bad\", \"received\": 0, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore strict certificate-based admission",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py auth-bad",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py auth-bad\n{\"actual_fdb_admission\": false, \"actual_peer_authorized\": false, \"gate_alive\": true, \"kernel_locked\": true, \"phase\": \"auth-bad\", \"policy\": \"strict\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "restore strict certificate-based admission",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restore the exact expected server name",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py good-domain",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py good-domain\n{\"domain_fault\": false, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the exact expected server name",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py client-good",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py client-good\n{\"actual_eap_success\": true, \"bootstrap_certificate_available\": true, \"domain_mismatch_observed\": false, \"phase\": \"client-good\", \"received\": 3, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the exact expected server name",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py control-no-bypass",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py control-no-bypass\n{\"actual_management_path_blocked\": true, \"consecutive_recovery_samples\": 2, \"normal_data_recovered\": true, \"phase\": \"control-no-bypass\", \"received_per_recovery_sample\": 3, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the exact expected server name",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py auth-good",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py auth-good\n{\"actual_fdb_admission\": true, \"actual_peer_authorized\": true, \"gate_alive\": true, \"kernel_locked\": true, \"phase\": \"auth-good\", \"policy\": \"strict\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "restore the exact expected server name",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restore the exact expected server name",
+          "node": "AUTH",
+          "command": "stat -c %a /lab/identity.key",
+          "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# stat -c %a /lab/identity.key\n600\nroot@AUTH:~# "
+        },
+        {
+          "phase": "restore the exact expected server name",
+          "node": "CLIENT",
+          "command": "stat -c %a /lab/identity.key",
+          "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# stat -c %a /lab/identity.key\n600\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "1fa6d1740a8551055e2e391d5ec1d1692e0eeab612db673846b771651fc9b498",
+      "startup_states": {
+        "AUTH": "BOOTED",
+        "CLIENT": "BOOTED",
+        "SERVER": "BOOTED"
+      },
+      "images": {
+        "AUTH": null,
+        "CLIENT": null,
+        "SERVER": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T19:30:22Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/012-8021x-mab-nac.yaml",
+      "sha256": "eac6ef78a8785db4ddbb36535a0d836c83ed1c36d293a7e384dc62c6e187bce1",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-01T19:30:23Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py client-good",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py client-good\n{\"actual_eap_success\": true, \"bootstrap_certificate_available\": true, \"domain_mismatch_observed\": false, \"phase\": \"client-good\", \"received\": 3, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py control-no-bypass",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py control-no-bypass\n{\"actual_management_path_blocked\": true, \"consecutive_recovery_samples\": 2, \"normal_data_recovered\": true, \"phase\": \"control-no-bypass\", \"received_per_recovery_sample\": 3, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py auth-good",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py auth-good\n{\"actual_fdb_admission\": true, \"actual_peer_authorized\": true, \"gate_alive\": true, \"kernel_locked\": true, \"phase\": \"auth-good\", \"policy\": \"strict\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "AUTH",
+          "command": "stat -c %a /lab/identity.key",
+          "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# stat -c %a /lab/identity.key\n600\nroot@AUTH:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "stat -c %a /lab/identity.key",
+          "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# stat -c %a /lab/identity.key\n600\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "reject an incorrect authenticator certificate name",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py bad-domain",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py bad-domain\n{\"domain_fault\": true, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "reject an incorrect authenticator certificate name",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py client-bad",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py client-bad\n{\"actual_eap_success\": false, \"bootstrap_certificate_available\": true, \"domain_mismatch_observed\": true, \"phase\": \"client-bad\", \"received\": 0, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "reject an incorrect authenticator certificate name",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py auth-bad",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py auth-bad\n{\"actual_fdb_admission\": false, \"actual_peer_authorized\": false, \"gate_alive\": true, \"kernel_locked\": true, \"phase\": \"auth-bad\", \"policy\": \"strict\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "reject an incorrect authenticator certificate name",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "enable the explicit weaker local MAC fallback",
+          "kind": "configuration",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py mac",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py mac\n{\"policy\": \"mac\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "enable the explicit weaker local MAC fallback",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py client-mac",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py client-mac\n{\"actual_eap_success\": false, \"bootstrap_certificate_available\": true, \"domain_mismatch_observed\": true, \"phase\": \"client-mac\", \"received\": 3, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "enable the explicit weaker local MAC fallback",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py auth-mac",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py auth-mac\n{\"actual_fdb_admission\": true, \"actual_peer_authorized\": false, \"gate_alive\": true, \"kernel_locked\": true, \"phase\": \"auth-mac\", \"policy\": \"mac\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "enable the explicit weaker local MAC fallback",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restore strict certificate-based admission",
+          "kind": "configuration",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py strict",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py strict\n{\"policy\": \"strict\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "restore strict certificate-based admission",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py client-bad",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py client-bad\n{\"actual_eap_success\": false, \"bootstrap_certificate_available\": true, \"domain_mismatch_observed\": true, \"phase\": \"client-bad\", \"received\": 0, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore strict certificate-based admission",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py auth-bad",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py auth-bad\n{\"actual_fdb_admission\": false, \"actual_peer_authorized\": false, \"gate_alive\": true, \"kernel_locked\": true, \"phase\": \"auth-bad\", \"policy\": \"strict\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "restore strict certificate-based admission",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restore the exact expected server name",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py good-domain",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py good-domain\n{\"domain_fault\": false, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the exact expected server name",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py client-good",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py client-good\n{\"actual_eap_success\": true, \"bootstrap_certificate_available\": true, \"domain_mismatch_observed\": false, \"phase\": \"client-good\", \"received\": 3, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the exact expected server name",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py control-no-bypass",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py control-no-bypass\n{\"actual_management_path_blocked\": true, \"consecutive_recovery_samples\": 2, \"normal_data_recovered\": true, \"phase\": \"control-no-bypass\", \"received_per_recovery_sample\": 3, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore the exact expected server name",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py auth-good",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py auth-good\n{\"actual_fdb_admission\": true, \"actual_peer_authorized\": true, \"gate_alive\": true, \"kernel_locked\": true, \"phase\": \"auth-good\", \"policy\": \"strict\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "restore the exact expected server name",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restore the exact expected server name",
+          "node": "AUTH",
+          "command": "stat -c %a /lab/identity.key",
+          "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# stat -c %a /lab/identity.key\n600\nroot@AUTH:~# "
+        },
+        {
+          "phase": "restore the exact expected server name",
+          "node": "CLIENT",
+          "command": "stat -c %a /lab/identity.key",
+          "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# stat -c %a /lab/identity.key\n600\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "stop only the admission heartbeat",
+          "kind": "configuration",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py gate-off",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py gate-off\n{\"gate_stopped\": true, \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "stop only the admission heartbeat",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py auth-gate-expired",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py auth-gate-expired\n{\"actual_fdb_admission\": false, \"actual_peer_authorized\": true, \"gate_alive\": false, \"kernel_locked\": true, \"phase\": \"auth-gate-expired\", \"policy\": \"strict\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "stop only the admission heartbeat",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py client-gate-expired",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py client-gate-expired\n{\"actual_eap_success\": true, \"bootstrap_certificate_available\": true, \"domain_mismatch_observed\": false, \"phase\": \"client-gate-expired\", \"received\": 0, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "stop only the admission heartbeat",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restart admission with the existing authenticated peer",
+          "kind": "configuration",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py gate-on",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py gate-on\n{\"gate_restarted\": true, \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "restart admission with the existing authenticated peer",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py client-good",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py client-good\n{\"actual_eap_success\": true, \"bootstrap_certificate_available\": true, \"domain_mismatch_observed\": false, \"phase\": \"client-good\", \"received\": 3, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restart admission with the existing authenticated peer",
+          "node": "CLIENT",
+          "command": "python3 /lab/n.py control-no-bypass",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/n.py control-no-bypass\n{\"actual_management_path_blocked\": true, \"consecutive_recovery_samples\": 2, \"normal_data_recovered\": true, \"phase\": \"control-no-bypass\", \"received_per_recovery_sample\": 3, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restart admission with the existing authenticated peer",
+          "node": "AUTH",
+          "command": "python3 /lab/n.py auth-good",
+          "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# python3 /lab/n.py auth-good\n{\"actual_fdb_admission\": true, \"actual_peer_authorized\": true, \"gate_alive\": true, \"kernel_locked\": true, \"phase\": \"auth-good\", \"policy\": \"strict\", \"status\": \"passed\"}\nroot@AUTH:~# "
+        },
+        {
+          "phase": "restart admission with the existing authenticated peer",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restart admission with the existing authenticated peer",
+          "node": "AUTH",
+          "command": "stat -c %a /lab/identity.key",
+          "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed.",
+          "passed": true,
+          "output": "\nroot@AUTH:~# stat -c %a /lab/identity.key\n600\nroot@AUTH:~# "
+        },
+        {
+          "phase": "restart admission with the existing authenticated peer",
+          "node": "CLIENT",
+          "command": "stat -c %a /lab/identity.key",
+          "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# stat -c %a /lab/identity.key\n600\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "42f62c1bbf2a0386182450e6fd7caf5234f6e0f40b0ae52e88b844feb4eeff6c",
+      "startup_states": {
+        "AUTH": "BOOTED",
+        "CLIENT": "BOOTED",
+        "SERVER": "STARTED"
+      },
+      "images": {
+        "AUTH": null,
+        "CLIENT": null,
+        "SERVER": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "SERVER"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-01T19:32:42Z"
     }
   ]
 }

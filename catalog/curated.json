@@ -1290,5 +1290,19 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-901-037-secure-api-client-threat-model.md",
     "example_profile": "native-iosxe-api"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/030-8021x-mab-concepts.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 130,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-030-8021x-mab-concepts.md",
+    "example_profile": "native-wired-nac"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/012-8021x-mab-nac.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 130,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-012-8021x-mab-nac.md",
+    "example_profile": "native-wired-nac"
   }
 }

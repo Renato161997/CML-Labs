@@ -27304,5 +27304,619 @@
         "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
       }
     ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/030-8021x-mab-concepts.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/n.py client-good",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"client-good\")",
+        "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/n.py control-no-bypass",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"control-no-bypass\")",
+        "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "AUTH",
+        "command": "python3 /lab/n.py auth-good",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-good\")",
+        "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "SERVER",
+        "command": "python3 /lab/t.py probe 198.18.10.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "AUTH",
+        "command": "stat -c %a /lab/identity.key",
+        "pattern": "(?m)^600\\s*$",
+        "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed."
+      },
+      {
+        "node": "CLIENT",
+        "command": "stat -c %a /lab/identity.key",
+        "pattern": "(?m)^600\\s*$",
+        "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "stop only the admission heartbeat",
+        "node": "AUTH",
+        "commands": [
+          "python3 /lab/n.py gate-off"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"gate_stopped\": true",
+        "checks": [
+          {
+            "node": "AUTH",
+            "command": "python3 /lab/n.py auth-gate-expired",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-gate-expired\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py client-gate-expired",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"client-gate-expired\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restart admission with the existing authenticated peer",
+        "node": "AUTH",
+        "commands": [
+          "python3 /lab/n.py gate-on"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"gate_restarted\": true",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py client-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"client-good\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py control-no-bypass",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"control-no-bypass\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "AUTH",
+            "command": "python3 /lab/n.py auth-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-good\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "AUTH",
+            "command": "stat -c %a /lab/identity.key",
+            "pattern": "(?m)^600\\s*$",
+            "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed."
+          },
+          {
+            "node": "CLIENT",
+            "command": "stat -c %a /lab/identity.key",
+            "pattern": "(?m)^600\\s*$",
+            "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed."
+          }
+        ]
+      },
+      {
+        "name": "reject an incorrect authenticator certificate name",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/n.py bad-domain"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"domain_fault\": true",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py client-bad",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"client-bad\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "AUTH",
+            "command": "python3 /lab/n.py auth-bad",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-bad\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "enable the explicit weaker local MAC fallback",
+        "node": "AUTH",
+        "commands": [
+          "python3 /lab/n.py mac"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"policy\": \"mac\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py client-mac",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"client-mac\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "AUTH",
+            "command": "python3 /lab/n.py auth-mac",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-mac\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore strict certificate-based admission",
+        "node": "AUTH",
+        "commands": [
+          "python3 /lab/n.py strict"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"policy\": \"strict\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py client-bad",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"client-bad\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "AUTH",
+            "command": "python3 /lab/n.py auth-bad",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-bad\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore the exact expected server name",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/n.py good-domain"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"domain_fault\": false",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py client-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"client-good\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py control-no-bypass",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"control-no-bypass\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "AUTH",
+            "command": "python3 /lab/n.py auth-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-good\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "AUTH",
+            "command": "stat -c %a /lab/identity.key",
+            "pattern": "(?m)^600\\s*$",
+            "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed."
+          },
+          {
+            "node": "CLIENT",
+            "command": "stat -c %a /lab/identity.key",
+            "pattern": "(?m)^600\\s*$",
+            "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed."
+          }
+        ]
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/012-8021x-mab-nac.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/n.py client-good",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"client-good\")",
+        "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/n.py control-no-bypass",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"control-no-bypass\")",
+        "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "AUTH",
+        "command": "python3 /lab/n.py auth-good",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-good\")",
+        "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "SERVER",
+        "command": "python3 /lab/t.py probe 198.18.10.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "AUTH",
+        "command": "stat -c %a /lab/identity.key",
+        "pattern": "(?m)^600\\s*$",
+        "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed."
+      },
+      {
+        "node": "CLIENT",
+        "command": "stat -c %a /lab/identity.key",
+        "pattern": "(?m)^600\\s*$",
+        "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "reject an incorrect authenticator certificate name",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/n.py bad-domain"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"domain_fault\": true",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py client-bad",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"client-bad\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "AUTH",
+            "command": "python3 /lab/n.py auth-bad",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-bad\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "enable the explicit weaker local MAC fallback",
+        "node": "AUTH",
+        "commands": [
+          "python3 /lab/n.py mac"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"policy\": \"mac\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py client-mac",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"client-mac\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "AUTH",
+            "command": "python3 /lab/n.py auth-mac",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-mac\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore strict certificate-based admission",
+        "node": "AUTH",
+        "commands": [
+          "python3 /lab/n.py strict"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"policy\": \"strict\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py client-bad",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"client-bad\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "AUTH",
+            "command": "python3 /lab/n.py auth-bad",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-bad\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore the exact expected server name",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/n.py good-domain"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"domain_fault\": false",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py client-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"client-good\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py control-no-bypass",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"control-no-bypass\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "AUTH",
+            "command": "python3 /lab/n.py auth-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-good\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "AUTH",
+            "command": "stat -c %a /lab/identity.key",
+            "pattern": "(?m)^600\\s*$",
+            "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed."
+          },
+          {
+            "node": "CLIENT",
+            "command": "stat -c %a /lab/identity.key",
+            "pattern": "(?m)^600\\s*$",
+            "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed."
+          }
+        ]
+      },
+      {
+        "name": "stop only the admission heartbeat",
+        "node": "AUTH",
+        "commands": [
+          "python3 /lab/n.py gate-off"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"gate_stopped\": true",
+        "checks": [
+          {
+            "node": "AUTH",
+            "command": "python3 /lab/n.py auth-gate-expired",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-gate-expired\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py client-gate-expired",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"client-gate-expired\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restart admission with the existing authenticated peer",
+        "node": "AUTH",
+        "commands": [
+          "python3 /lab/n.py gate-on"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"gate_restarted\": true",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py client-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"client-good\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/n.py control-no-bypass",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"control-no-bypass\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "AUTH",
+            "command": "python3 /lab/n.py auth-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"auth-good\")",
+            "expectation": "Require actual EAP/daemon status, kernel locked-port/FDB observations and the specified real packet outcome; a configured string or a root-looking prompt is insufficient.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "AUTH",
+            "command": "stat -c %a /lab/identity.key",
+            "pattern": "(?m)^600\\s*$",
+            "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed."
+          },
+          {
+            "node": "CLIENT",
+            "command": "stat -c %a /lab/identity.key",
+            "pattern": "(?m)^600\\s*$",
+            "expectation": "The generated private key remains mode 0600 inside its own disposable guest; key contents are not printed."
+          }
+        ]
+      }
+    ]
   }
 }
