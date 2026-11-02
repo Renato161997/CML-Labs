@@ -658,11 +658,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/018-umbrella-dns-security.yaml",
-      "sha256": "868d5bb333a8fb86c1aac0753ec47bd3d47942efa04344ceefb178227648e8ab",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/019-casb-sase-concepts.yaml",
       "sha256": "c8b8cafefdf4675df59bf8fcba03dab97d4d1401ea2954b5505d14be596ec04c",
       "status": "import-export-pass"
@@ -1416,6 +1411,16 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-11-02T19:52:31Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/018-umbrella-dns-security.yaml",
+      "sha256": "11834da9a9adf7ec3cb45de6af9a944ee3641af54390ae79cc13ec576b811fde",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-02T20:05:19Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-02T20:05:19Z"
     }
   ]
 }

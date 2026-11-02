@@ -51483,6 +51483,227 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-11-02T19:56:28Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/018-umbrella-dns-security.yaml",
+      "sha256": "11834da9a9adf7ec3cb45de6af9a944ee3641af54390ae79cc13ec576b811fde",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-02T20:06:49Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/d.py probe-enforce",
+          "expectation": "The real dig client must observe all eight expected DNS response outcomes over UDP and TCP; no answer, refusal, policy denial and unavailability have distinct statuses.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/d.py probe-enforce\n{\"independent_client\": \"dig\", \"observations\": [{\"answers\": 1, \"name\": \"allowed.lab.example\", \"rcode\": \"NOERROR\", \"transport\": \"udp\"}, {\"answers\": 0, \"name\": \"blocked.lab.example\", \"rcode\": \"NXDOMAIN\", \"transport\": \"udp\"}, {\"answers\": 0, \"name\": \"outside.lab.example\", \"rcode\": \"REFUSED\", \"transport\": \"udp\"}, {\"answers\": 1, \"name\": \"allowed.lab.example\", \"rcode\": \"NOERROR\", \"transport\": \"tcp\"}, {\"answers\": 0, \"name\": \"blocked.lab.example\", \"rcode\": \"NXDOMAIN\", \"transport\": \"tcp\"}, {\"answers\": 0, \"name\": \"outside.lab.example\", \"rcode\": \"REFUSED\", \"transport\": \"tcp\"}], \"phase\": \"enforce\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 1 198.18.0.1",
+          "expectation": "The guest and IP path remain healthy independently of DNS policy.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 1 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.268 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.834 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.353 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2034ms\nrtt min/avg/max/mdev = 0.268/0.485/0.834/0.249 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "DNS",
+          "command": "python3 /lab/t.py probe 198.18.0.1",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@DNS:~# python3 /lab/t.py probe 198.18.0.1\n{\"peer\": \"198.18.0.1\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@DNS:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/t.py probe 198.18.0.1",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/t.py probe 198.18.0.1\n{\"peer\": \"198.18.0.2\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "observe removal of only the domain block",
+          "kind": "configuration",
+          "node": "DNS",
+          "command": "python3 /lab/d.py bypass",
+          "passed": true,
+          "output": "\nroot@DNS:~# python3 /lab/d.py bypass\n{\"policy\": \"bypass\", \"status\": \"passed\"}\nroot@DNS:~# "
+        },
+        {
+          "phase": "observe removal of only the domain block",
+          "node": "CLIENT",
+          "command": "python3 /lab/d.py probe-bypass",
+          "expectation": "The real dig client must observe all eight expected DNS response outcomes over UDP and TCP; no answer, refusal, policy denial and unavailability have distinct statuses.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/d.py probe-bypass\n{\"independent_client\": \"dig\", \"observations\": [{\"answers\": 1, \"name\": \"allowed.lab.example\", \"rcode\": \"NOERROR\", \"transport\": \"udp\"}, {\"answers\": 1, \"name\": \"blocked.lab.example\", \"rcode\": \"NOERROR\", \"transport\": \"udp\"}, {\"answers\": 0, \"name\": \"outside.lab.example\", \"rcode\": \"REFUSED\", \"transport\": \"udp\"}, {\"answers\": 1, \"name\": \"allowed.lab.example\", \"rcode\": \"NOERROR\", \"transport\": \"tcp\"}, {\"answers\": 1, \"name\": \"blocked.lab.example\", \"rcode\": \"NOERROR\", \"transport\": \"tcp\"}, {\"answers\": 0, \"name\": \"outside.lab.example\", \"rcode\": \"REFUSED\", \"transport\": \"tcp\"}], \"phase\": \"bypass\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "observe removal of only the domain block",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 1 198.18.0.1",
+          "expectation": "The guest and IP path remain healthy independently of DNS policy.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 1 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.193 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.621 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.333 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2061ms\nrtt min/avg/max/mdev = 0.193/0.382/0.621/0.178 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "observe removal of only the domain block",
+          "node": "DNS",
+          "command": "python3 /lab/t.py probe 198.18.0.1",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@DNS:~# python3 /lab/t.py probe 198.18.0.1\n{\"peer\": \"198.18.0.1\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@DNS:~# "
+        },
+        {
+          "phase": "observe removal of only the domain block",
+          "node": "CLIENT",
+          "command": "python3 /lab/t.py probe 198.18.0.1",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/t.py probe 198.18.0.1\n{\"peer\": \"198.18.0.2\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore explicit DNS denial",
+          "kind": "configuration",
+          "node": "DNS",
+          "command": "python3 /lab/d.py enforce",
+          "passed": true,
+          "output": "\nroot@DNS:~# python3 /lab/d.py enforce\n{\"policy\": \"enforce\", \"status\": \"passed\"}\nroot@DNS:~# "
+        },
+        {
+          "phase": "restore explicit DNS denial",
+          "node": "CLIENT",
+          "command": "python3 /lab/d.py probe-recovered",
+          "expectation": "The real dig client must observe all eight expected DNS response outcomes over UDP and TCP; no answer, refusal, policy denial and unavailability have distinct statuses.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/d.py probe-recovered\n{\"independent_client\": \"dig\", \"observations\": [{\"answers\": 1, \"name\": \"allowed.lab.example\", \"rcode\": \"NOERROR\", \"transport\": \"udp\"}, {\"answers\": 0, \"name\": \"blocked.lab.example\", \"rcode\": \"NXDOMAIN\", \"transport\": \"udp\"}, {\"answers\": 0, \"name\": \"outside.lab.example\", \"rcode\": \"REFUSED\", \"transport\": \"udp\"}, {\"answers\": 1, \"name\": \"allowed.lab.example\", \"rcode\": \"NOERROR\", \"transport\": \"tcp\"}, {\"answers\": 0, \"name\": \"blocked.lab.example\", \"rcode\": \"NXDOMAIN\", \"transport\": \"tcp\"}, {\"answers\": 0, \"name\": \"outside.lab.example\", \"rcode\": \"REFUSED\", \"transport\": \"tcp\"}], \"phase\": \"recovered\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore explicit DNS denial",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 1 198.18.0.1",
+          "expectation": "The guest and IP path remain healthy independently of DNS policy.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 1 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.193 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.160 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.384 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2032ms\nrtt min/avg/max/mdev = 0.160/0.245/0.384/0.098 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore explicit DNS denial",
+          "node": "DNS",
+          "command": "python3 /lab/t.py probe 198.18.0.1",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@DNS:~# python3 /lab/t.py probe 198.18.0.1\n{\"peer\": \"198.18.0.1\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@DNS:~# "
+        },
+        {
+          "phase": "restore explicit DNS denial",
+          "node": "CLIENT",
+          "command": "python3 /lab/t.py probe 198.18.0.1",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/t.py probe 198.18.0.1\n{\"peer\": \"198.18.0.2\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "distinguish policy service unavailability",
+          "kind": "configuration",
+          "node": "DNS",
+          "command": "python3 /lab/d.py unavailable",
+          "passed": true,
+          "output": "\nroot@DNS:~# python3 /lab/d.py unavailable\n{\"policy\": \"unavailable\", \"status\": \"passed\"}\nroot@DNS:~# "
+        },
+        {
+          "phase": "distinguish policy service unavailability",
+          "node": "CLIENT",
+          "command": "python3 /lab/d.py probe-unavailable",
+          "expectation": "The real dig client must observe all eight expected DNS response outcomes over UDP and TCP; no answer, refusal, policy denial and unavailability have distinct statuses.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/d.py probe-unavailable\n{\"independent_client\": \"dig\", \"observations\": [{\"answers\": 0, \"name\": \"allowed.lab.example\", \"rcode\": \"SERVFAIL\", \"transport\": \"udp\"}, {\"answers\": 0, \"name\": \"blocked.lab.example\", \"rcode\": \"SERVFAIL\", \"transport\": \"udp\"}, {\"answers\": 0, \"name\": \"outside.lab.example\", \"rcode\": \"REFUSED\", \"transport\": \"udp\"}, {\"answers\": 0, \"name\": \"allowed.lab.example\", \"rcode\": \"SERVFAIL\", \"transport\": \"tcp\"}, {\"answers\": 0, \"name\": \"blocked.lab.example\", \"rcode\": \"SERVFAIL\", \"transport\": \"tcp\"}, {\"answers\": 0, \"name\": \"outside.lab.example\", \"rcode\": \"REFUSED\", \"transport\": \"tcp\"}], \"phase\": \"unavailable\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "distinguish policy service unavailability",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 1 198.18.0.1",
+          "expectation": "The guest and IP path remain healthy independently of DNS policy.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 1 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.206 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.397 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.546 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2049ms\nrtt min/avg/max/mdev = 0.206/0.383/0.546/0.139 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "distinguish policy service unavailability",
+          "node": "DNS",
+          "command": "python3 /lab/t.py probe 198.18.0.1",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@DNS:~# python3 /lab/t.py probe 198.18.0.1\n{\"peer\": \"198.18.0.1\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@DNS:~# "
+        },
+        {
+          "phase": "distinguish policy service unavailability",
+          "node": "CLIENT",
+          "command": "python3 /lab/t.py probe 198.18.0.1",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/t.py probe 198.18.0.1\n{\"peer\": \"198.18.0.2\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "recover legitimate resolution and domain denial",
+          "kind": "configuration",
+          "node": "DNS",
+          "command": "python3 /lab/d.py enforce",
+          "passed": true,
+          "output": "\nroot@DNS:~# python3 /lab/d.py enforce\n{\"policy\": \"enforce\", \"status\": \"passed\"}\nroot@DNS:~# "
+        },
+        {
+          "phase": "recover legitimate resolution and domain denial",
+          "node": "CLIENT",
+          "command": "python3 /lab/d.py probe-recovered",
+          "expectation": "The real dig client must observe all eight expected DNS response outcomes over UDP and TCP; no answer, refusal, policy denial and unavailability have distinct statuses.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/d.py probe-recovered\n{\"independent_client\": \"dig\", \"observations\": [{\"answers\": 1, \"name\": \"allowed.lab.example\", \"rcode\": \"NOERROR\", \"transport\": \"udp\"}, {\"answers\": 0, \"name\": \"blocked.lab.example\", \"rcode\": \"NXDOMAIN\", \"transport\": \"udp\"}, {\"answers\": 0, \"name\": \"outside.lab.example\", \"rcode\": \"REFUSED\", \"transport\": \"udp\"}, {\"answers\": 1, \"name\": \"allowed.lab.example\", \"rcode\": \"NOERROR\", \"transport\": \"tcp\"}, {\"answers\": 0, \"name\": \"blocked.lab.example\", \"rcode\": \"NXDOMAIN\", \"transport\": \"tcp\"}, {\"answers\": 0, \"name\": \"outside.lab.example\", \"rcode\": \"REFUSED\", \"transport\": \"tcp\"}], \"phase\": \"recovered\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "recover legitimate resolution and domain denial",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 1 198.18.0.1",
+          "expectation": "The guest and IP path remain healthy independently of DNS policy.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 1 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=64 time=0.209 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=64 time=0.611 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=64 time=0.495 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2073ms\nrtt min/avg/max/mdev = 0.209/0.438/0.611/0.168 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "recover legitimate resolution and domain denial",
+          "node": "DNS",
+          "command": "python3 /lab/t.py probe 198.18.0.1",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@DNS:~# python3 /lab/t.py probe 198.18.0.1\n{\"peer\": \"198.18.0.1\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@DNS:~# "
+        },
+        {
+          "phase": "recover legitimate resolution and domain denial",
+          "node": "CLIENT",
+          "command": "python3 /lab/t.py probe 198.18.0.1",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/t.py probe 198.18.0.1\n{\"peer\": \"198.18.0.2\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@CLIENT:~# "
+        }
+      ],
+      "plan_sha256": "dc2e47228d22c514a86a555f7eeb39f49dde4b1558d12926773b448a8ce3f7ac",
+      "startup_states": {
+        "DNS": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "DNS": "cml-labs-toolbox-9f43df961cbe",
+        "CLIENT": "cml-labs-toolbox-9f43df961cbe"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-02T20:07:48Z"
     }
   ]
 }
