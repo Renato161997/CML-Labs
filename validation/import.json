@@ -1398,11 +1398,6 @@
       "completed_utc": "2026-11-02T18:53:56Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/036-security-dashboard-telemetry.yaml",
       "sha256": "ebaa7a2079e20bf480bd5f8478af65d01976d0c1e3ba36e3769717f5aa0d28ae",
       "cml_version": "2.10.1+build.21",
@@ -1411,6 +1406,16 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-11-02T19:13:22Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "3a94840007a9aa52aea58be4a18c80b6c9956a77ccd1ebee72f999f448c28294",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-02T19:52:30Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-02T19:52:31Z"
     }
   ]
 }

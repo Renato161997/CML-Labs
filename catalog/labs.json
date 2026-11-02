@@ -2979,26 +2979,24 @@
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "title": "DHCP Snooping DAI IPSG",
+      "title": "Software First-Hop: DHCP Bindings, ARP and Source Inspection",
       "track": "350-401",
       "topic": "security",
-      "nodes": 5,
+      "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv",
-        "iosvl2"
+        "cml-labs-services"
       ],
       "nominal_ram_mib": 3072,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 130,
+      "workbook": "docs/workbooks/350-401-034-dhcp-snooping-dai-ipsg.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-02T19:56:28Z",
+      "sha256": "3a94840007a9aa52aea58be4a18c80b6c9956a77ccd1ebee72f999f448c28294"
     },
     {
       "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/035-macsec-concepts.yaml",

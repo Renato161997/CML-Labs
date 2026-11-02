@@ -29334,5 +29334,340 @@
         ]
       }
     ]
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml": {
+    "checks": [
+      {
+        "node": "SERVER",
+        "command": "python3 /lab/h.py decode-wire",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"decode-wire\")",
+        "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+        "command_timeout": 40,
+        "attempts": 1
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/h.py acquire",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"actual_dhcp_ack\": true)(?=.*\"kernel_address_confirmed\": true)(?=.*\"lease\": 600[,}])",
+        "expectation": "Receive a matching real selecting DHCP ACK and confirm the received address in the actual kernel.",
+        "command_timeout": 40,
+        "attempts": 1
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/h.py data-good",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"data-good\")",
+        "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+        "command_timeout": 40,
+        "attempts": 1
+      },
+      {
+        "node": "GUARD",
+        "command": "python3 /lab/h.py bound",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"bound\")",
+        "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+        "command_timeout": 40,
+        "attempts": 1
+      },
+      {
+        "node": "SERVER",
+        "command": "python3 /lab/h.py neighbor-safe",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"neighbor-safe\")",
+        "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+        "command_timeout": 40,
+        "attempts": 1
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping -n -c 3 -W 1 198.18.99.1",
+        "pattern": "3 packets transmitted, 3 received",
+        "expectation": "The separate control link remains healthy.",
+        "command_timeout": 15
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/h.py control-no-bypass",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"control-no-bypass\")",
+        "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+        "command_timeout": 40,
+        "attempts": 1
+      },
+      {
+        "node": "SERVER",
+        "command": "python3 /lab/t.py probe 198.18.10.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      }
+    ],
+    "transitions": [
+      {
+        "name": "reject server messages from the untrusted ingress",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/h.py rogue"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "GUARD",
+            "command": "python3 /lab/h.py rogue-blocked",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"rogue-blocked\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/h.py data-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"data-good\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/h.py neighbor-safe",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"neighbor-safe\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "reject coherent forged ARP sender bindings",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/h.py arp-spoof"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "GUARD",
+            "command": "python3 /lab/h.py arp-blocked",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"arp-blocked\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/h.py data-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"data-good\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/h.py neighbor-safe",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"neighbor-safe\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "reject a real unauthorized kernel source address",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/h.py spoof-ip"
+        ],
+        "command_timeout": 30,
+        "command_pattern": "\"status\": \"passed\"",
+        "checks": [
+          {
+            "node": "GUARD",
+            "command": "python3 /lab/h.py ip-blocked",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"ip-blocked\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/h.py data-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"data-good\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/h.py neighbor-safe",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"neighbor-safe\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "select a short real server lease",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/h.py short"
+        ],
+        "command_pattern": "\"lease_policy\": 3",
+        "checks": [
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "observe wire lease expiry with a deliberately stale client",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/h.py acquire"
+        ],
+        "command_timeout": 40,
+        "command_pattern": "(?s)(?=.*\"actual_dhcp_ack\": true)(?=.*\"lease\": 3[,}])",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/h.py expired-data",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"expired-data\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "GUARD",
+            "command": "python3 /lab/h.py expired",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"expired\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 1 198.18.99.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The separate control link remains healthy.",
+            "command_timeout": 15
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore the trusted long-lease policy",
+        "node": "SERVER",
+        "commands": [
+          "python3 /lab/h.py long"
+        ],
+        "command_pattern": "\"lease_policy\": 600",
+        "checks": [
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "relearn from a new wire exchange and recover admission",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/h.py acquire"
+        ],
+        "command_timeout": 40,
+        "command_pattern": "(?s)(?=.*\"actual_dhcp_ack\": true)(?=.*\"lease\": 600[,}])",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/h.py data-good",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"data-good\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "GUARD",
+            "command": "python3 /lab/h.py recovered",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"recovered\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/h.py neighbor-safe",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"neighbor-safe\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/h.py control-no-bypass",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"control-no-bypass\")",
+            "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+            "command_timeout": 40,
+            "attempts": 1
+          },
+          {
+            "node": "SERVER",
+            "command": "python3 /lab/t.py probe 198.18.10.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      }
+    ]
   }
 }

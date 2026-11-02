@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **209**.
+Import/export passes: **233/233**. Functional passes: **210**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -146,6 +146,7 @@ Import/export passes: **233/233**. Functional passes: **209**.
 | [Control Plane Policing](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/031-control-plane-policing.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 12 | 8 | 2026-10-30T18:52:17Z |
 | [ACL VACL PACL](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/032-acl-vacl-pacl.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 26 | 14 | 2026-10-30T20:47:49Z |
 | [Infrastructure Hardening: AAA, Accounting and VTY Policy](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/033-infrastructure-device-hardening.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, iol-xe-17-18-02, radius-3-2-7-dfsg-1-deb13u2, tacplus-f4-0-4-28 | 28 | 45 | 2026-10-31T22:11:46Z |
+| [Software First-Hop: DHCP Bindings, ARP and Source Inspection](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml) | passed | 2.10.1+build.21 | controller default (unresolved) | 31 | 7 | 2026-11-02T19:56:28Z |
 | [MACsec: Kernel Encryption, Wrong-Key Drops and Recovery](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/035-macsec-concepts.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 9 | 2 | 2026-10-31T21:19:07Z |
 | [Secure Management Plane](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/036-secure-management-plane.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3, ubuntu-24-04-20260307 | 17 | 18 | 2026-10-30T13:42:50Z |
 | [Campus Routing Blackhole](../labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/troubleshooting/047-campus-routing-blackhole.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02 | 18 | 18 | 2026-10-30T14:25:45Z |

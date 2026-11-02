@@ -332,6 +332,17 @@ NATIVE_PROFILES["native-telemetry-board"] = {
 }
 
 
+NATIVE_PROFILES["native-first-hop-bindings"] = {
+    label: {
+        "/lab/first_hop_wire.py": "examples/security/first_hop_wire.py",
+        "/lab/first_hop_policy.py": "examples/security/first_hop_policy.py",
+        "/lab/h.py": "examples/security/first_hop_runtime.py",
+        **({"/lab/t.py": "examples/security/traffic_fixture.py"} if label == "SERVER" else {}),
+    }
+    for label in ("GUARD", "CLIENT", "SERVER")
+}
+
+
 def native_sources(data, metadata):
     """Validate registered source payloads without executing a shell or guest code."""
     profile = NATIVE_PROFILES.get(metadata.get("example_profile"))
