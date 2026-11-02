@@ -29088,5 +29088,251 @@
         ]
       }
     ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/036-security-dashboard-telemetry.yaml": {
+    "checks": [
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/d.py healthy",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"healthy\")",
+        "expectation": "Require an actual authenticated/encrypted SNMP sample, exact interface state or explicitly unavailable data; rate acceptance requires positive deltas from two real matching fresh Counter32 samples.",
+        "command_timeout": 45,
+        "attempts": 8,
+        "interval_seconds": 3
+      },
+      {
+        "node": "TOOLS",
+        "command": "python3 /lab/snmp_probe.py healthy",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The unchanged independent authPriv probe verifies real uptime/sysName and wrong-key rejection while the board is healthy, down or deliberately miscredentialed.",
+        "command_timeout": 45
+      },
+      {
+        "node": "TOOLS",
+        "command": "ping -n -c 3 -W 1 198.18.0.1",
+        "pattern": "3 packets transmitted, 3 received",
+        "expectation": "Collector-to-agent management IP connectivity is an independent positive control.",
+        "command_timeout": 15
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping -n -c 3 -W 1 192.0.2.1",
+        "pattern": "3 packets transmitted, 3 received",
+        "expectation": "The actual data interface carries successful service-loopback traffic.",
+        "command_timeout": 15,
+        "attempts": 10,
+        "interval_seconds": 2
+      }
+    ],
+    "transitions": [
+      {
+        "name": "generate observed traffic and require real byte-rate deltas",
+        "node": "CLIENT",
+        "commands": [
+          "ping -n -c 8 -i 0.2 -W 1 192.0.2.1"
+        ],
+        "command_timeout": 20,
+        "command_pattern": "8 packets transmitted, 8 received",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/d.py rates",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"rates\")",
+            "expectation": "Require an actual authenticated/encrypted SNMP sample, exact interface state or explicitly unavailable data; rate acceptance requires positive deltas from two real matching fresh Counter32 samples.",
+            "command_timeout": 45,
+            "attempts": 8,
+            "interval_seconds": 3
+          },
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_probe.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The unchanged independent authPriv probe verifies real uptime/sysName and wrong-key rejection while the board is healthy, down or deliberately miscredentialed.",
+            "command_timeout": 45
+          },
+          {
+            "node": "TOOLS",
+            "command": "ping -n -c 3 -W 1 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Collector-to-agent management IP connectivity is an independent positive control.",
+            "command_timeout": 15
+          }
+        ]
+      },
+      {
+        "name": "shut only the monitored data interface",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/d.py down",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"down\")",
+            "expectation": "Require an actual authenticated/encrypted SNMP sample, exact interface state or explicitly unavailable data; rate acceptance requires positive deltas from two real matching fresh Counter32 samples.",
+            "command_timeout": 45,
+            "attempts": 8,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 1 192.0.2.1",
+            "pattern": "3 packets transmitted, 0 received",
+            "expectation": "The administratively shut data interface actually prevents service packets.",
+            "command_timeout": 15
+          },
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_probe.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The unchanged independent authPriv probe verifies real uptime/sysName and wrong-key rejection while the board is healthy, down or deliberately miscredentialed.",
+            "command_timeout": 45
+          },
+          {
+            "node": "TOOLS",
+            "command": "ping -n -c 3 -W 1 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Collector-to-agent management IP connectivity is an independent positive control.",
+            "command_timeout": 15
+          }
+        ]
+      },
+      {
+        "name": "restore real interface and service availability",
+        "node": "R1",
+        "commands": [
+          "configure terminal",
+          "interface Ethernet0/1",
+          "no shutdown",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/d.py healthy",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"healthy\")",
+            "expectation": "Require an actual authenticated/encrypted SNMP sample, exact interface state or explicitly unavailable data; rate acceptance requires positive deltas from two real matching fresh Counter32 samples.",
+            "command_timeout": 45,
+            "attempts": 8,
+            "interval_seconds": 3
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 1 192.0.2.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The actual data interface carries successful service-loopback traffic.",
+            "command_timeout": 15,
+            "attempts": 10,
+            "interval_seconds": 2
+          },
+          {
+            "node": "TOOLS",
+            "command": "ping -n -c 3 -W 1 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Collector-to-agent management IP connectivity is an independent positive control.",
+            "command_timeout": 15
+          }
+        ]
+      },
+      {
+        "name": "select only a wrong public fixture authentication key",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/d.py bad-auth"
+        ],
+        "command_pattern": "\"wrong_auth\": true",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/d.py unavailable",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"unavailable\")",
+            "expectation": "Require an actual authenticated/encrypted SNMP sample, exact interface state or explicitly unavailable data; rate acceptance requires positive deltas from two real matching fresh Counter32 samples.",
+            "command_timeout": 45,
+            "attempts": 1,
+            "interval_seconds": 3
+          },
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_probe.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The unchanged independent authPriv probe verifies real uptime/sysName and wrong-key rejection while the board is healthy, down or deliberately miscredentialed.",
+            "command_timeout": 45
+          },
+          {
+            "node": "TOOLS",
+            "command": "ping -n -c 3 -W 1 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Collector-to-agent management IP connectivity is an independent positive control.",
+            "command_timeout": 15
+          }
+        ]
+      },
+      {
+        "name": "restore authenticated live observations",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/d.py good-auth"
+        ],
+        "command_pattern": "\"wrong_auth\": false",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/d.py healthy",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"healthy\")",
+            "expectation": "Require an actual authenticated/encrypted SNMP sample, exact interface state or explicitly unavailable data; rate acceptance requires positive deltas from two real matching fresh Counter32 samples.",
+            "command_timeout": 45,
+            "attempts": 8,
+            "interval_seconds": 3
+          },
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/snmp_probe.py healthy",
+            "pattern": "\"status\": \"passed\"",
+            "expectation": "The unchanged independent authPriv probe verifies real uptime/sysName and wrong-key rejection while the board is healthy, down or deliberately miscredentialed.",
+            "command_timeout": 45
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 1 192.0.2.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The actual data interface carries successful service-loopback traffic.",
+            "command_timeout": 15,
+            "attempts": 10,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "verify fresh positive rates after full recovery",
+        "node": "CLIENT",
+        "commands": [
+          "ping -n -c 8 -i 0.2 -W 1 192.0.2.1"
+        ],
+        "command_timeout": 20,
+        "command_pattern": "8 packets transmitted, 8 received",
+        "checks": [
+          {
+            "node": "TOOLS",
+            "command": "python3 /lab/d.py rates",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"rates\")",
+            "expectation": "Require an actual authenticated/encrypted SNMP sample, exact interface state or explicitly unavailable data; rate acceptance requires positive deltas from two real matching fresh Counter32 samples.",
+            "command_timeout": 45,
+            "attempts": 8,
+            "interval_seconds": 3
+          },
+          {
+            "node": "TOOLS",
+            "command": "ping -n -c 3 -W 1 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "Collector-to-agent management IP connectivity is an independent positive control.",
+            "command_timeout": 15
+          }
+        ]
+      }
+    ]
   }
 }

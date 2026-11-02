@@ -3303,25 +3303,25 @@
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/036-security-dashboard-telemetry.yaml",
-      "title": "Security Dashboard Telemetry",
+      "title": "Telemetry: Fresh State and Honest Byte Rates",
       "track": "350-701",
       "topic": "automation",
       "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv"
+        "iol-xe",
+        "net-tools"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 115,
+      "workbook": "docs/workbooks/350-701-036-security-dashboard-telemetry.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "a1adbe901b28c5715ae5cffb754b406cf54f2acf744a85b9b862c803592cdad7"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-02T19:20:34Z",
+      "sha256": "ebaa7a2079e20bf480bd5f8478af65d01976d0c1e3ba36e3769717f5aa0d28ae"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/045-scor-capstone-secure-edge.yaml",

@@ -1338,5 +1338,12 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-701-001-threats-vulnerabilities.md",
     "example_profile": "switch-management-source"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/036-security-dashboard-telemetry.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 115,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-036-security-dashboard-telemetry.md",
+    "example_profile": "native-telemetry-board"
   }
 }

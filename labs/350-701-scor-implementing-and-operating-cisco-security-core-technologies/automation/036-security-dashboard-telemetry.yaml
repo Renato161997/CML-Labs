@@ -1,129 +1,572 @@
 lab:
-  title: Security Dashboard Telemetry
-  description: 350-701 SCOR - Implementing and Operating Cisco Security Core Technologies importable CML
-    topology.
-  notes: '350-701 SCOR blueprint lab: Security Dashboard Telemetry
+  title: 'Telemetry: Fresh State and Honest Byte Rates'
+  description: Working baseline with addressing, tasks, acceptance and recovery. Live status is recorded
+    separately.
+  notes: '# Telemetry: Fresh State and Honest Byte Rates
 
 
-    Topics:
-
-    - dashboard
-
-    - telemetry
-
-    - visibility
+    Working isolated reference baseline. No external connector or real credentials.
 
 
-    Tasks:
-
-    1. Collect metrics
-
-    2. Render dashboard
-
-    3. Alert on policy drift
+    Workbook: https://github.com/Renato161997/CML-Labs/blob/main/docs/workbooks/350-701-036-security-dashboard-telemetry.md
 
 
-    Useful checks:
+    An IOL-XE router exposes a separate management link to TOOLS and data link to CLIENT. The new status-board
+    collector uses the unchanged real Net-SNMP authPriv request implementation, not preconfigured metric
+    strings. It verifies exact OID/type/value responses, actual agent R1 identity, discovers only the
+    declared Ethernet0/1 within the fixed agent''s first sixteen interface rows, and reads actual ifOperStatus/ifInOctets/ifOutOctets
+    plus uptime. A second uptime read rejects an agent restart during collection. Counter32 and uptime
+    values are bounded unsigned values; sequential reads are not claimed to be an atomic hardware snapshot.
 
-    - show ip interface brief
 
-    - show running-config
+    The console board keeps a last valid sample inside the disposable collector and labels actual fresh
+    availability, operational state and RX/TX bytes from the router interface''s perspective. Rates are
+    bytes per elapsed collector-monotonic second, calculated only from two matching interface/agent series
+    within sixty seconds. A counter decrease/wrap, agent-uptime reset, identity change or invalid/stale
+    interval produces unknown rate metadata, not a fabricated large or zero rate. Authenticated idle counters
+    may legitimately produce zero; an unavailable response instead has no fresh sample and no rates. Failed
+    positive-rate acceptance does not advance its reference sample. No clock-to-UTC accuracy, hardware
+    throughput or exclusive attribution of all background bytes to test pings is inferred.
 
-    - show ip route
 
-    - show ip protocols
+    Actual CLIENT traffic must succeed and both interface byte counters must increase between the measured
+    samples. Shutting only the data port must produce a fresh available/down state and failed data pings,
+    while encrypted management SNMP and management IP controls remain healthy. Deliberately selecting
+    the wrong public fixture auth key must produce explicit unavailable/null metrics, with the last valid
+    cache retained; an independent correctly credentialed Net-SNMP probe must still work. Restoring the
+    key and data path must recover real samples and positive measured rates. The optional `python3 /lab/d.py
+    watch` provides a live terminal status board with a two-second pause after each collection; stop it
+    before acceptance because the exercise uses one collector cache, not a concurrent dashboard service.
+    No graphical browser UI, alerting platform or production monitoring deployment is claimed.
 
-    - ping and traceroute between endpoints'
+
+    All addresses/engine IDs/passwords are public classroom fixtures on closed links. SNMPv3 SHA1/AES128
+    are the reference-image interoperability settings already verified by the separate SNMP exercise,
+    not a production crypto recommendation. Collection is read-only and fixed to one agent; there is no
+    external discovery, cloud account, Internet connector or real credential. Wiping only this imported
+    lab removes the cache and all state.
+
+
+
+    Objectives:
+
+    - Read actual SNMPv3 interface/identity/counter observations and display their explicit freshness
+    and availability.
+
+    - Calculate defensible byte rates from matching measured samples while rejecting stale/reset/discontinuous
+    series.
+
+    - Distinguish real data-port down from collection/authentication failure, retain positive management
+    controls and recover.
+
+    '
   version: 0.3.1
+  node_staging:
+    enabled: false
+    start_remaining: true
+    abort_on_failure: true
 nodes:
 - id: n0
   label: R1
-  node_definition: iosv
-  x: -180
-  y: 0
+  node_definition: iol-xe
   configuration:
   - name: ios_config.txt
-    content: "hostname R1\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR Security Dashboard Telemetry\
-      \ ^C\ninterface GigabitEthernet0/0\n description SECCORE-SCOR Security Dashboard Telemetry\n ip\
-      \ address 10.255.0.1 255.255.255.0\n no shutdown\ninterface Loopback0\n description SECCORE-SCOR\
-      \ Security Dashboard Telemetry\n ip address 10.255.255.1 255.255.255.255\n no shutdown\nend"
+    content: "hostname R1\nno ip domain-lookup\nno service config\nip cef\nline console 0\n exec-timeout\
+      \ 0 0\n logging synchronous\n exit\ninterface range Ethernet0/0 - 3\n no ip address\n shutdown\n\
+      \ exit\nno logging console\ninterface Loopback0\n ip address 192.0.2.1 255.255.255.255\n no shutdown\n\
+      \ exit\ninterface Ethernet0/0\n ip address 198.18.0.1 255.255.255.252\n no shutdown\n exit\ninterface\
+      \ Ethernet0/1\n ip address 198.18.1.1 255.255.255.252\n no shutdown\n exit\nip access-list standard\
+      \ SNMP-SOURCES\n permit 198.18.0.2\n exit\nsnmp-server engineID local 8000000903AABBCC000001\nsnmp-server\
+      \ view LABVIEW iso included\nsnmp-server view LABVIEW 1.3.6.1.2.1.1.5 included\nsnmp-server group\
+      \ LAB v3 priv read LABVIEW access SNMP-SOURCES\nsnmp-server user CML-SNMP LAB v3 auth sha Cml-Snmp-Auth-Only-983\
+      \ priv aes 128 Cml-Snmp-Priv-Only-984\nsnmp-server location ISOLATED-CML-LAB\nend\n"
+  cpu_limit: 100
+  priority: 100
+  x: 0
+  y: 0
   interfaces:
   - id: i0
     label: Loopback0
     type: loopback
   - id: i1
-    label: GigabitEthernet0/0
+    label: Ethernet0/0
     type: physical
     slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: Ethernet0/1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: Ethernet0/2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: Ethernet0/3
     type: physical
     slot: 3
-  priority: 100
   tags: []
 - id: n1
-  label: DEVBOX
-  node_definition: desktop
-  x: 180
-  y: 0
+  label: TOOLS
+  node_definition: net-tools
+  configuration:
+  - name: boot.sh
+    content: '#!/bin/bash
+
+      set -eu
+
+      ip address add 198.18.0.2/30 dev eth1
+
+      ip link set eth1 up
+
+      mkdir -p /lab
+
+      echo CML-TELEMETRY-V1 > /lab/CML-TELEMETRY-BOARD
+
+      echo ''{"target":"198.18.0.1"}'' > /lab/snmp.json
+
+      base64 -d > /lab/snmp_probe.py <<''CML_EMBED_EXAMPLES_MANAGEMENT_SNMP_PROBE_PY''
+
+      IiIiUmVhbCBOZXQtU05NUCBwcm9iZXMgZm9yIHRoZSBpc29sYXRlZCBTTk1QdjMgYXV0aFByaXYg
+
+      ZXhlcmNpc2UuCgpBbGwgY3JlZGVudGlhbHMgYmVsb3cgYXJlIGRlbGliZXJhdGVseSBwdWJsaWMg
+
+      dGVhY2hpbmcgZml4dHVyZXMuIE5vIGluc3RhbGxhdGlvbiwKbmV0d29yayBzY2FuIG9yIHByb2R1
+
+      Y3Rpb24gZW5kcG9pbnQgZGlzY292ZXJ5IGlzIHBlcmZvcm1lZCBieSB0aGlzIGNsaWVudC4KIiIi
+
+      CgppbXBvcnQgYXJncGFyc2UKaW1wb3J0IGpzb24KaW1wb3J0IHJlCmltcG9ydCBzdWJwcm9jZXNz
+
+      CmltcG9ydCBzeXMKZnJvbSBwYXRobGliIGltcG9ydCBQYXRoCgpTWVNOQU1FID0gIi4xLjMuNi4x
+
+      LjIuMS4xLjUuMCIKVVBUSU1FID0gIi4xLjMuNi4xLjIuMS4xLjMuMCIKQVVUSCA9ICJDbWwtU25t
+
+      cC1BdXRoLU9ubHktOTgzIgpQUklWID0gIkNtbC1Tbm1wLVByaXYtT25seS05ODQiCgoKZGVmIHJl
+
+      cXVlc3QodGFyZ2V0LCBvaWQsICosIHdyb25nX2F1dGg9RmFsc2UpOgogICAgY29tbWFuZCA9IFsK
+
+      ICAgICAgICAic25tcGdldCIsCiAgICAgICAgIi12MyIsCiAgICAgICAgIi1sIiwKICAgICAgICAi
+
+      YXV0aFByaXYiLAogICAgICAgICItdSIsCiAgICAgICAgIkNNTC1TTk1QIiwKICAgICAgICAiLWEi
+
+      LAogICAgICAgICJTSEEiLAogICAgICAgICItQSIsCiAgICAgICAgIldyb25nLWF1dGgtb25seS05
+
+      OTkiIGlmIHdyb25nX2F1dGggZWxzZSBBVVRILAogICAgICAgICIteCIsCiAgICAgICAgIkFFUyIs
+
+      CiAgICAgICAgIi1YIiwKICAgICAgICBQUklWLAogICAgICAgICItdCIsCiAgICAgICAgIjIiLAog
+
+      ICAgICAgICItciIsCiAgICAgICAgIjAiLAogICAgICAgICItT24iLAogICAgICAgIHRhcmdldCwK
+
+      ICAgICAgICBvaWQsCiAgICBdCiAgICByZXN1bHQgPSBzdWJwcm9jZXNzLnJ1bihjb21tYW5kLCBj
+
+      YXB0dXJlX291dHB1dD1UcnVlLCB0ZXh0PVRydWUsIHRpbWVvdXQ9OCwgY2hlY2s9RmFsc2UpCiAg
+
+      ICByZXR1cm4gcmVzdWx0LnJldHVybmNvZGUsIChyZXN1bHQuc3Rkb3V0ICsgcmVzdWx0LnN0ZGVy
+
+      cikuc3RyaXAoKQoKCmRlZiBwcm9iZSh0YXJnZXQsIG1vZGUpOgogICAgb2JzZXJ2YXRpb25zID0g
+
+      W10KCiAgICBkZWYgb2JzZXJ2ZShvaWQsIHByZWRpY2F0ZSwgbGFiZWwsICoqb3B0aW9ucyk6CiAg
+
+      ICAgICAgY29kZSwgb3V0cHV0ID0gcmVxdWVzdCh0YXJnZXQsIG9pZCwgKipvcHRpb25zKQogICAg
+
+      ICAgIHBhc3NlZCA9IGJvb2wocHJlZGljYXRlKGNvZGUsIG91dHB1dCkpCiAgICAgICAgb2JzZXJ2
+
+      YXRpb25zLmFwcGVuZCgKICAgICAgICAgICAgeyJjaGVjayI6IGxhYmVsLCAicGFzc2VkIjogcGFz
+
+      c2VkLCAicmV0dXJuY29kZSI6IGNvZGUsICJyZXNwb25zZSI6IG91dHB1dH0KICAgICAgICApCiAg
+
+      ICAgICAgaWYgbm90IHBhc3NlZDoKICAgICAgICAgICAgcmFpc2UgUnVudGltZUVycm9yKCJOZXR3
+
+      b3JrIGFzc2VydGlvbiBmYWlsZWQ6ICIgKyBsYWJlbCkKCiAgICBvYnNlcnZlKAogICAgICAgIFVQ
+
+      VElNRSwKICAgICAgICBsYW1iZGEgYywgczogYyA9PSAwIGFuZCBib29sKHJlLnNlYXJjaChyIlRp
+
+      bWV0aWNrczpccypcKFxkK1wpIiwgcykpLAogICAgICAgICJhdXRoZW50aWNhdGVkIGVuY3J5cHRl
+
+      ZCB1cHRpbWUiLAogICAgKQogICAgaWYgbW9kZSA9PSAiaGVhbHRoeSI6CiAgICAgICAgb2JzZXJ2
+
+      ZSgKICAgICAgICAgICAgU1lTTkFNRSwKICAgICAgICAgICAgbGFtYmRhIGMsIHM6IGMgPT0gMCBh
+
+      bmQgYm9vbChyZS5zZWFyY2gocidTVFJJTkc6XHMqIj9SMSI/XHMqJCcsIHMpKSwKICAgICAgICAg
+
+      ICAgInZpc2libGUgc3lzTmFtZSIsCiAgICAgICAgKQogICAgZWxzZToKICAgICAgICBvYnNlcnZl
+
+      KAogICAgICAgICAgICBTWVNOQU1FLAogICAgICAgICAgICBsYW1iZGEgYywgczogKAogICAgICAg
+
+      ICAgICAgICAgYyA9PSAwIGFuZCBib29sKHJlLnNlYXJjaChyIk5vIFN1Y2ggKD86T2JqZWN0fElu
+
+      c3RhbmNlKSIsIHMsIHJlLklHTk9SRUNBU0UpKQogICAgICAgICAgICApLAogICAgICAgICAgICAi
+
+      dmlldyBleGNsdWRlcyBzeXNOYW1lIiwKICAgICAgICApCiAgICBvYnNlcnZlKAogICAgICAgIFVQ
+
+      VElNRSwKICAgICAgICBsYW1iZGEgYywgczogKAogICAgICAgICAgICBjICE9IDAKICAgICAgICAg
+
+      ICAgYW5kIGJvb2wocmUuc2VhcmNoKHIiYXV0aGVudGljYXRpb24gZmFpbHVyZXxUaW1lb3V0OiBO
+
+      byBSZXNwb25zZSIsIHMsIHJlLklHTk9SRUNBU0UpKQogICAgICAgICksCiAgICAgICAgIndyb25n
+
+      IGF1dGhlbnRpY2F0aW9uIGtleSBpcyByZWplY3RlZCIsCiAgICAgICAgd3JvbmdfYXV0aD1UcnVl
+
+      LAogICAgKQogICAgb2JzZXJ2ZSgKICAgICAgICBVUFRJTUUsCiAgICAgICAgbGFtYmRhIGMsIHM6
+
+      IGMgPT0gMCBhbmQgYm9vbChyZS5zZWFyY2gociJUaW1ldGlja3M6XHMqXChcZCtcKSIsIHMpKSwK
+
+      ICAgICAgICAiYWdlbnQgc3RpbGwgYW5zd2VycyB2YWxpZCBjcmVkZW50aWFscyIsCiAgICApCiAg
+
+      ICByZXR1cm4geyJzdGF0dXMiOiAicGFzc2VkIiwgIm1vZGUiOiBtb2RlLCAidGFyZ2V0IjogdGFy
+
+      Z2V0LCAib2JzZXJ2YXRpb25zIjogb2JzZXJ2YXRpb25zfQoKCmRlZiBtYWluKCk6CiAgICBwYXJz
+
+      ZXIgPSBhcmdwYXJzZS5Bcmd1bWVudFBhcnNlcihkZXNjcmlwdGlvbj1fX2RvY19fKQogICAgcGFy
+
+      c2VyLmFkZF9hcmd1bWVudCgibW9kZSIsIGNob2ljZXM9KCJoZWFsdGh5IiwgInJlc3RyaWN0ZWQi
+
+      KSkKICAgIGFyZ3MgPSBwYXJzZXIucGFyc2VfYXJncygpCiAgICBjb25maWcgPSBqc29uLmxvYWRz
+
+      KFBhdGgoIi9sYWIvc25tcC5qc29uIikucmVhZF90ZXh0KGVuY29kaW5nPSJ1dGYtOCIpKQogICAg
+
+      dHJ5OgogICAgICAgIHJlcG9ydCA9IHByb2JlKGNvbmZpZ1sidGFyZ2V0Il0sIGFyZ3MubW9kZSkK
+
+      ICAgIGV4Y2VwdCAoT1NFcnJvciwgUnVudGltZUVycm9yLCBzdWJwcm9jZXNzLlRpbWVvdXRFeHBp
+
+      cmVkKSBhcyBleGM6CiAgICAgICAgcHJpbnQoanNvbi5kdW1wcyh7InN0YXR1cyI6ICJmYWlsZWQi
+
+      LCAiZXJyb3IiOiBzdHIoZXhjKX0pKQogICAgICAgIHJldHVybiAxCiAgICBwcmludChqc29uLmR1
+
+      bXBzKHJlcG9ydCwgc29ydF9rZXlzPVRydWUpKQogICAgcmV0dXJuIDAKCgppZiBfX25hbWVfXyA9
+
+      PSAiX19tYWluX18iOgogICAgc3lzLmV4aXQobWFpbigpKQo=
+
+      CML_EMBED_EXAMPLES_MANAGEMENT_SNMP_PROBE_PY
+
+      base64 -d > /lab/d.py <<''CML_EMBED_EXAMPLES_MANAGEMENT_TELEMETRY_BOARD_PY''
+
+      IiIiRmluaXRlIFNOTVB2MyBzdGF0dXMgYm9hcmQ6IG1lYXN1cmVkIGludGVyZmFjZSBzdGF0ZSwg
+
+      ZnJlc2huZXNzIGFuZCBieXRlIHJhdGVzLiIiIgoKaW1wb3J0IGFyZ3BhcnNlCmltcG9ydCBqc29u
+
+      CmltcG9ydCBtYXRoCmltcG9ydCBvcwppbXBvcnQgcmUKaW1wb3J0IHRpbWUKZnJvbSBwYXRobGli
+
+      IGltcG9ydCBQYXRoCgppbXBvcnQgc25tcF9wcm9iZSBhcyB3aXJlCgpST09UID0gUGF0aCgiL2xh
+
+      YiIpClRBUkdFVCA9ICIxOTguMTguMC4xIgpJTlRFUkZBQ0UgPSAiRXRoZXJuZXQwLzEiClRBQkxF
+
+      ID0gIi4xLjMuNi4xLjIuMS4yLjIuMS4iCgoKY2xhc3MgVW5hdmFpbGFibGUoVmFsdWVFcnJvcik6
+
+      CiAgICBwYXNzCgoKZGVmIHZhbHVlX29mKG9pZCwgb3V0cHV0LCBraW5kKToKICAgIGlmIGxlbihv
+
+      dXRwdXQpID4gMjA0ODoKICAgICAgICByYWlzZSBVbmF2YWlsYWJsZSgib3ZlcnNpemVkX3Jlc3Bv
+
+      bnNlIikKICAgIHByZWZpeCA9IHJlLmVzY2FwZShvaWQpICsgciJccyo9XHMqIgogICAgcGF0dGVy
+
+      bnMgPSB7CiAgICAgICAgInVwdGltZSI6IHIiVGltZXRpY2tzOlxzKlwoKFswLTldKylcKVteXG5d
+
+      KiIsCiAgICAgICAgImNvdW50ZXIiOiByIkNvdW50ZXIzMjpccyooWzAtOV0rKSIsCiAgICAgICAg
+
+      InN0YXRlIjogciJJTlRFR0VSOlxzKig/OltBLVphLXpdW0EtWmEtel8tXSpcKCk/KFsxLTddKVwp
+
+      PyIsCiAgICAgICAgInRleHQiOiByJ1NUUklORzpccyoiPyhbQS1aYS16MC05L18tXSspIj8nLAog
+
+      ICAgfQogICAgbWF0Y2ggPSByZS5mdWxsbWF0Y2gocHJlZml4ICsgcGF0dGVybnNba2luZF0gKyBy
+
+      IlxzKiIsIG91dHB1dCkKICAgIGlmIG5vdCBtYXRjaDoKICAgICAgICByYWlzZSBVbmF2YWlsYWJs
+
+      ZSgidW5leHBlY3RlZF9vaWRfb3JfdHlwZSIpCiAgICB2YWx1ZSA9IG1hdGNoWzFdIGlmIGtpbmQg
+
+      PT0gInRleHQiIGVsc2UgaW50KG1hdGNoWzFdKQogICAgaWYga2luZCBpbiAoImNvdW50ZXIiLCAi
+
+      dXB0aW1lIikgYW5kIG5vdCAwIDw9IHZhbHVlIDw9IDIqKjMyIC0gMToKICAgICAgICByYWlzZSBV
+
+      bmF2YWlsYWJsZSgiY291bnRlcl9vdXRfb2ZfcmFuZ2UiKQogICAgcmV0dXJuIHZhbHVlCgoKZGVm
+
+      IGNvbGxlY3Qod3JvbmdfYXV0aD1GYWxzZSk6CiAgICBkZWYgZ2V0KG9pZCwga2luZCk6CiAgICAg
+
+      ICAgY29kZSwgb3V0cHV0ID0gd2lyZS5yZXF1ZXN0KFRBUkdFVCwgb2lkLCB3cm9uZ19hdXRoPXdy
+
+      b25nX2F1dGgpCiAgICAgICAgaWYgY29kZToKICAgICAgICAgICAgcmFpc2UgVW5hdmFpbGFibGUo
+
+      ImFnZW50X3JlcXVlc3RfZmFpbGVkIikKICAgICAgICByZXR1cm4gdmFsdWVfb2Yob2lkLCBvdXRw
+
+      dXQsIGtpbmQpCgogICAgdXB0aW1lID0gZ2V0KHdpcmUuVVBUSU1FLCAidXB0aW1lIikKICAgIGFz
+
+      c2VydCBnZXQod2lyZS5TWVNOQU1FLCAidGV4dCIpID09ICJSMSIsICJXcm9uZyBhY3R1YWwgYWdl
+
+      bnQgaWRlbnRpdHkiCiAgICBpbmRleCA9IE5vbmUKICAgIGZvciBjYW5kaWRhdGUgaW4gcmFuZ2Uo
+
+      MSwgMTcpOgogICAgICAgIHRyeToKICAgICAgICAgICAgbmFtZSA9IGdldChUQUJMRSArICIyLiIg
+
+      KyBzdHIoY2FuZGlkYXRlKSwgInRleHQiKQogICAgICAgIGV4Y2VwdCBVbmF2YWlsYWJsZSBhcyBl
+
+      eGM6CiAgICAgICAgICAgIGlmIHN0cihleGMpICE9ICJ1bmV4cGVjdGVkX29pZF9vcl90eXBlIjoK
+
+      ICAgICAgICAgICAgICAgIHJhaXNlCiAgICAgICAgICAgIGNvbnRpbnVlCiAgICAgICAgaWYgbmFt
+
+      ZSA9PSBJTlRFUkZBQ0U6CiAgICAgICAgICAgIGluZGV4ID0gY2FuZGlkYXRlCiAgICAgICAgICAg
+
+      IGJyZWFrCiAgICBpZiBpbmRleCBpcyBOb25lOgogICAgICAgIHJhaXNlIFVuYXZhaWxhYmxlKCJk
+
+      ZWNsYXJlZF9pbnRlcmZhY2Vfbm90X2ZvdW5kIikKICAgIHNhbXBsZSA9IHsKICAgICAgICAiYWdl
+
+      bnQiOiAiUjEiLAogICAgICAgICJpbnRlcmZhY2UiOiBJTlRFUkZBQ0UsCiAgICAgICAgImluZGV4
+
+      IjogaW5kZXgsCiAgICAgICAgInVwdGltZV90aWNrcyI6IHVwdGltZSwKICAgICAgICAic3RhdGUi
+
+      OiBnZXQoVEFCTEUgKyAiOC4iICsgc3RyKGluZGV4KSwgInN0YXRlIiksCiAgICAgICAgInJ4X2J5
+
+      dGVzIjogZ2V0KFRBQkxFICsgIjEwLiIgKyBzdHIoaW5kZXgpLCAiY291bnRlciIpLAogICAgICAg
+
+      ICJ0eF9ieXRlcyI6IGdldChUQUJMRSArICIxNi4iICsgc3RyKGluZGV4KSwgImNvdW50ZXIiKSwK
+
+      ICAgIH0KICAgIGZpbmFsX3VwdGltZSA9IGdldCh3aXJlLlVQVElNRSwgInVwdGltZSIpCiAgICBp
+
+      ZiBmaW5hbF91cHRpbWUgPCB1cHRpbWU6CiAgICAgICAgcmFpc2UgVW5hdmFpbGFibGUoImFnZW50
+
+      X3Jlc3RhcnRlZF9kdXJpbmdfY29sbGVjdGlvbiIpCiAgICBzYW1wbGUudXBkYXRlKHVwdGltZV90
+
+      aWNrcz1maW5hbF91cHRpbWUsIG1vbm90b25pYz10aW1lLm1vbm90b25pYygpKQogICAgcmV0dXJu
+
+      IHNhbXBsZQoKCmRlZiBieXRlX3JhdGVzKHByZXZpb3VzLCBjdXJyZW50KToKICAgIGlmIHByZXZp
+
+      b3VzIGlzIE5vbmU6CiAgICAgICAgcmV0dXJuIE5vbmUKICAgIGlmIGFueShwcmV2aW91c1trZXld
+
+      ICE9IGN1cnJlbnRba2V5XSBmb3Iga2V5IGluICgiYWdlbnQiLCAiaW50ZXJmYWNlIiwgImluZGV4
+
+      IikpOgogICAgICAgIHJhaXNlIFZhbHVlRXJyb3IoImlkZW50aXR5X2Rpc2NvbnRpbnVpdHkiKQog
+
+      ICAgZWxhcHNlZCA9IGN1cnJlbnRbIm1vbm90b25pYyJdIC0gcHJldmlvdXNbIm1vbm90b25pYyJd
+
+      CiAgICBpZiBub3QgbWF0aC5pc2Zpbml0ZShlbGFwc2VkKSBvciBub3QgMCA8IGVsYXBzZWQgPD0g
+
+      NjA6CiAgICAgICAgcmFpc2UgVmFsdWVFcnJvcigic3RhbGVfb3JfaW52YWxpZF9pbnRlcnZhbCIp
+
+      CiAgICBpZiBjdXJyZW50WyJ1cHRpbWVfdGlja3MiXSA8IHByZXZpb3VzWyJ1cHRpbWVfdGlja3Mi
+
+      XToKICAgICAgICByYWlzZSBWYWx1ZUVycm9yKCJhZ2VudF91cHRpbWVfZGlzY29udGludWl0eSIp
+
+      CiAgICByZXN1bHQgPSB7fQogICAgZm9yIGtleSBpbiAoInJ4X2J5dGVzIiwgInR4X2J5dGVzIik6
+
+      CiAgICAgICAgYmVmb3JlLCBhZnRlciA9IHByZXZpb3VzW2tleV0sIGN1cnJlbnRba2V5XQogICAg
+
+      ICAgIGlmICgKICAgICAgICAgICAgdHlwZShiZWZvcmUpIGlzIG5vdCBpbnQKICAgICAgICAgICAg
+
+      b3IgdHlwZShhZnRlcikgaXMgbm90IGludAogICAgICAgICAgICBvciBub3QgMCA8PSBiZWZvcmUg
+
+      PD0gYWZ0ZXIgPD0gMioqMzIgLSAxCiAgICAgICAgKToKICAgICAgICAgICAgcmFpc2UgVmFsdWVF
+
+      cnJvcigiY291bnRlcl9kaXNjb250aW51aXR5IikKICAgICAgICByYXRlID0gKGFmdGVyIC0gYmVm
+
+      b3JlKSAvIGVsYXBzZWQKICAgICAgICBpZiBub3QgbWF0aC5pc2Zpbml0ZShyYXRlKToKICAgICAg
+
+      ICAgICAgcmFpc2UgVmFsdWVFcnJvcigiaW52YWxpZF9yYXRlIikKICAgICAgICByZXN1bHRba2V5
+
+      ICsgIl9wZXJfc2Vjb25kIl0gPSByYXRlCiAgICByZXR1cm4gcmVzdWx0CgoKZGVmIHNhdmUoc2Ft
+
+      cGxlKToKICAgIGNhY2hlID0gUk9PVCAvICJ0ZWxlbWV0cnktbGFzdC5qc29uIgogICAgYXNzZXJ0
+
+      IG5vdCBjYWNoZS5pc19zeW1saW5rKCkKICAgIGNhY2hlLndyaXRlX3RleHQoanNvbi5kdW1wcyhz
+
+      YW1wbGUsIHNvcnRfa2V5cz1UcnVlKSkKICAgIGNhY2hlLmNobW9kKDBvNjAwKQoKCmRlZiBwb2xs
+
+      KHdyb25nX2F1dGg9RmFsc2UsIHVwZGF0ZT1UcnVlKToKICAgIGNhY2hlID0gUk9PVCAvICJ0ZWxl
+
+      bWV0cnktbGFzdC5qc29uIgogICAgYXNzZXJ0IG5vdCBjYWNoZS5pc19zeW1saW5rKCkKICAgIHBy
+
+      ZXZpb3VzID0ganNvbi5sb2FkcyhjYWNoZS5yZWFkX3RleHQoKSkgaWYgY2FjaGUuZXhpc3RzKCkg
+
+      ZWxzZSBOb25lCiAgICB0cnk6CiAgICAgICAgc2FtcGxlID0gY29sbGVjdCh3cm9uZ19hdXRoKQog
+
+      ICAgZXhjZXB0IFVuYXZhaWxhYmxlIGFzIGV4YzoKICAgICAgICByZXR1cm4gewogICAgICAgICAg
+
+      ICAiYXZhaWxhYmxlIjogRmFsc2UsCiAgICAgICAgICAgICJmcmVzaCI6IEZhbHNlLAogICAgICAg
+
+      ICAgICAicmVhc29uIjogc3RyKGV4YyksCiAgICAgICAgICAgICJzYW1wbGUiOiBOb25lLAogICAg
+
+      ICAgICAgICAiYnl0ZV9yYXRlcyI6IE5vbmUsCiAgICAgICAgICAgICJsYXN0X2tub3duX3ByZXNl
+
+      bnQiOiBwcmV2aW91cyBpcyBub3QgTm9uZSwKICAgICAgICB9CiAgICB0cnk6CiAgICAgICAgcmF0
+
+      ZXMgPSBieXRlX3JhdGVzKHByZXZpb3VzLCBzYW1wbGUpCiAgICAgICAgcmVhc29uID0gImZpcnN0
+
+      X3NhbXBsZSIgaWYgcmF0ZXMgaXMgTm9uZSBlbHNlICJtZWFzdXJlZCIKICAgIGV4Y2VwdCBWYWx1
+
+      ZUVycm9yIGFzIGV4YzoKICAgICAgICByYXRlcywgcmVhc29uID0gTm9uZSwgc3RyKGV4YykKICAg
+
+      IGlmIHVwZGF0ZToKICAgICAgICBzYXZlKHNhbXBsZSkKICAgIHJldHVybiB7CiAgICAgICAgImF2
+
+      YWlsYWJsZSI6IFRydWUsCiAgICAgICAgImZyZXNoIjogVHJ1ZSwKICAgICAgICAic2FtcGxlIjog
+
+      c2FtcGxlLAogICAgICAgICJieXRlX3JhdGVzIjogcmF0ZXMsCiAgICAgICAgInJhdGVfc3RhdHVz
+
+      IjogcmVhc29uLAogICAgfQoKCmRlZiB3cm9uZ19hdXRoKCk6CiAgICB2YWx1ZSA9IChST09UIC8g
+
+      InRlbGVtZXRyeS1hdXRoLW1vZGUiKS5yZWFkX3RleHQoKS5zdHJpcCgpCiAgICBhc3NlcnQgdmFs
+
+      dWUgaW4gKCJnb29kIiwgIndyb25nIiksICJVbmtub3duIGZpeHR1cmUgYXV0aGVudGljYXRpb24g
+
+      bW9kZSIKICAgIHJldHVybiB2YWx1ZSA9PSAid3JvbmciCgoKZGVmIHJlcG9ydChwaGFzZSk6CiAg
+
+      ICB3cm9uZyA9IHdyb25nX2F1dGgoKQogICAgdmFsdWUgPSBwb2xsKHdyb25nLCB1cGRhdGU9RmFs
+
+      c2UpCiAgICBpZiBwaGFzZSA9PSAidW5hdmFpbGFibGUiOgogICAgICAgIGFzc2VydCAoCiAgICAg
+
+      ICAgICAgIHdyb25nCiAgICAgICAgICAgIGFuZCB2YWx1ZVsiYXZhaWxhYmxlIl0gaXMgRmFsc2UK
+
+      ICAgICAgICAgICAgYW5kIHZhbHVlWyJzYW1wbGUiXSBpcyBOb25lCiAgICAgICAgICAgIGFuZCB2
+
+      YWx1ZVsiYnl0ZV9yYXRlcyJdIGlzIE5vbmUKICAgICAgICApCiAgICBlbHNlOgogICAgICAgIGFz
+
+      c2VydCBub3Qgd3JvbmcgYW5kIHZhbHVlWyJhdmFpbGFibGUiXSBpcyBUcnVlIGFuZCB2YWx1ZVsi
+
+      ZnJlc2giXSBpcyBUcnVlCiAgICAgICAgYXNzZXJ0IHZhbHVlWyJzYW1wbGUiXVsic3RhdGUiXSA9
+
+      PSAoMiBpZiBwaGFzZSA9PSAiZG93biIgZWxzZSAxKQogICAgICAgIGlmIHBoYXNlID09ICJyYXRl
+
+      cyI6CiAgICAgICAgICAgIGFzc2VydCB2YWx1ZVsiYnl0ZV9yYXRlcyJdIGlzIG5vdCBOb25lCiAg
+
+      ICAgICAgICAgIGFzc2VydCBhbGwocmF0ZSA+IDAgZm9yIHJhdGUgaW4gdmFsdWVbImJ5dGVfcmF0
+
+      ZXMiXS52YWx1ZXMoKSkKICAgICAgICBzYXZlKHZhbHVlWyJzYW1wbGUiXSkKICAgIHJldHVybiB7
+
+      InN0YXR1cyI6ICJwYXNzZWQiLCAicGhhc2UiOiBwaGFzZSwgKip2YWx1ZX0KCgpkZWYgbWFpbigp
+
+      OgogICAgcGFyc2VyID0gYXJncGFyc2UuQXJndW1lbnRQYXJzZXIoZGVzY3JpcHRpb249X19kb2Nf
+
+      XykKICAgIHBhcnNlci5hZGRfYXJndW1lbnQoCiAgICAgICAgImFjdGlvbiIsCiAgICAgICAgY2hv
+
+      aWNlcz0oCiAgICAgICAgICAgICJjb25maWd1cmUiLAogICAgICAgICAgICAiaGVhbHRoeSIsCiAg
+
+      ICAgICAgICAgICJkb3duIiwKICAgICAgICAgICAgInJhdGVzIiwKICAgICAgICAgICAgInVuYXZh
+
+      aWxhYmxlIiwKICAgICAgICAgICAgImJhZC1hdXRoIiwKICAgICAgICAgICAgImdvb2QtYXV0aCIs
+
+      CiAgICAgICAgICAgICJ3YXRjaCIsCiAgICAgICAgKSwKICAgICkKICAgIGFyZ3MgPSBwYXJzZXIu
+
+      cGFyc2VfYXJncygpCiAgICBhc3NlcnQgKAogICAgICAgIG9zLmdldGV1aWQoKSA9PSAwCiAgICAg
+
+      ICAgYW5kIChST09UIC8gIkNNTC1URUxFTUVUUlktQk9BUkQiKS5yZWFkX3RleHQoKS5zdHJpcCgp
+
+      ID09ICJDTUwtVEVMRU1FVFJZLVYxIgogICAgKQogICAgaWYgYXJncy5hY3Rpb24gaW4gKCJjb25m
+
+      aWd1cmUiLCAiYmFkLWF1dGgiLCAiZ29vZC1hdXRoIik6CiAgICAgICAgcGF0aCA9IFJPT1QgLyAi
+
+      dGVsZW1ldHJ5LWF1dGgtbW9kZSIKICAgICAgICBhc3NlcnQgbm90IHBhdGguaXNfc3ltbGluaygp
+
+      CiAgICAgICAgcGF0aC53cml0ZV90ZXh0KCJ3cm9uZyIgaWYgYXJncy5hY3Rpb24gPT0gImJhZC1h
+
+      dXRoIiBlbHNlICJnb29kIikKICAgICAgICBwYXRoLmNobW9kKDBvNjAwKQogICAgICAgIHZhbHVl
+
+      ID0geyJzdGF0dXMiOiAicGFzc2VkIiwgIndyb25nX2F1dGgiOiBhcmdzLmFjdGlvbiA9PSAiYmFk
+
+      LWF1dGgifQogICAgZWxpZiBhcmdzLmFjdGlvbiA9PSAid2F0Y2giOgogICAgICAgIHdoaWxlIFRy
+
+      dWU6CiAgICAgICAgICAgIHZhbHVlID0gcG9sbCh3cm9uZ19hdXRoKCkpCiAgICAgICAgICAgIGlm
+
+      IG5vdCB2YWx1ZVsiYXZhaWxhYmxlIl06CiAgICAgICAgICAgICAgICBwcmludCgiVU5BVkFJTEFC
+
+      TEUgfCBubyBmcmVzaCBpbnRlcmZhY2Ugc3RhdGUgb3IgYnl0ZSByYXRlIiwgZmx1c2g9VHJ1ZSkK
+
+      ICAgICAgICAgICAgZWxzZToKICAgICAgICAgICAgICAgIHNhbXBsZSA9IHZhbHVlWyJzYW1wbGUi
+
+      XQogICAgICAgICAgICAgICAgcHJpbnQoCiAgICAgICAgICAgICAgICAgICAgZiJ7c2FtcGxlWydp
+
+      bnRlcmZhY2UnXX0gfCBzdGF0ZT17c2FtcGxlWydzdGF0ZSddfSB8IFJYPXtzYW1wbGVbJ3J4X2J5
+
+      dGVzJ119IGJ5dGVzIHwgVFg9e3NhbXBsZVsndHhfYnl0ZXMnXX0gYnl0ZXMgfCByYXRlcz17dmFs
+
+      dWVbJ2J5dGVfcmF0ZXMnXX0gfCB7dmFsdWVbJ3JhdGVfc3RhdHVzJ119IiwKICAgICAgICAgICAg
+
+      ICAgICAgICBmbHVzaD1UcnVlLAogICAgICAgICAgICAgICAgKQogICAgICAgICAgICB0aW1lLnNs
+
+      ZWVwKDIpCiAgICBlbHNlOgogICAgICAgIHZhbHVlID0gcmVwb3J0KGFyZ3MuYWN0aW9uKQogICAg
+
+      cHJpbnQoanNvbi5kdW1wcyh2YWx1ZSwgc29ydF9rZXlzPVRydWUpKQoKCmlmIF9fbmFtZV9fID09
+
+      ICJfX21haW5fXyI6CiAgICBtYWluKCkK
+
+      CML_EMBED_EXAMPLES_MANAGEMENT_TELEMETRY_BOARD_PY
+
+      python3 /lab/d.py configure
+
+      echo READY >/dev/console
+
+      exit 0
+
+      '
+  cpu_limit: 100
+  priority: 99
+  x: 260
+  y: 160
   interfaces:
-  - id: i0
+  - id: i1
     label: eth0
     type: physical
     slot: 0
-  configuration: []
-  priority: 99
-  tags: []
-- id: n2
-  label: API-TARGET
-  node_definition: iosv
-  x: 0
-  y: 160
-  configuration:
-  - name: ios_config.txt
-    content: "hostname API-TARGET\nno ip domain-lookup\nbanner motd ^C SECCORE-SCOR Security Dashboard\
-      \ Telemetry ^C\ninterface GigabitEthernet0/0\n description SECCORE-SCOR Security Dashboard Telemetry\n\
-      \ ip address 10.255.0.2 255.255.255.0\n no shutdown\nend"
-  interfaces:
-  - id: i0
-    label: Loopback0
-    type: loopback
-  - id: i1
-    label: GigabitEthernet0/0
-    type: physical
-    slot: 0
   - id: i2
-    label: GigabitEthernet0/1
+    label: eth1
     type: physical
     slot: 1
   - id: i3
-    label: GigabitEthernet0/2
+    label: eth2
     type: physical
     slot: 2
   - id: i4
-    label: GigabitEthernet0/3
+    label: eth3
     type: physical
     slot: 3
+  tags: []
+- id: n2
+  label: CLIENT
+  node_definition: net-tools
+  configuration:
+  - name: boot.sh
+    content: '#!/bin/bash
+
+      set -eu
+
+      ip address add 198.18.1.2/30 dev eth1
+
+      ip link set eth1 up
+
+      ip route add 192.0.2.1/32 via 198.18.1.1
+
+      mkdir -p /lab
+
+      echo READY >/dev/console
+
+      exit 0
+
+      '
+  cpu_limit: 100
   priority: 98
+  x: 520
+  y: 0
+  interfaces:
+  - id: i1
+    label: eth0
+    type: physical
+    slot: 0
+  - id: i2
+    label: eth1
+    type: physical
+    slot: 1
+  - id: i3
+    label: eth2
+    type: physical
+    slot: 2
+  - id: i4
+    label: eth3
+    type: physical
+    slot: 3
   tags: []
 links:
 - id: l0
   n1: n0
   i1: i1
   n2: n1
-  i2: i0
+  i2: i2
 - id: l1
   n1: n0
   i1: i2
   n2: n2
-  i2: i1
+  i2: i2
 annotations: []
 smart_annotations: []

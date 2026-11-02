@@ -324,6 +324,14 @@ NATIVE_PROFILES["native-ai-proposals"] = {
 }
 
 
+NATIVE_PROFILES["native-telemetry-board"] = {
+    "TOOLS": {
+        "/lab/snmp_probe.py": "examples/management/snmp_probe.py",
+        "/lab/d.py": "examples/management/telemetry_board.py",
+    },
+}
+
+
 def native_sources(data, metadata):
     """Validate registered source payloads without executing a shell or guest code."""
     profile = NATIVE_PROFILES.get(metadata.get("example_profile"))
