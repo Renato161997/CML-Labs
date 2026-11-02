@@ -343,6 +343,18 @@ NATIVE_PROFILES["native-first-hop-bindings"] = {
 }
 
 
+NATIVE_PROFILES["native-dns-policy"] = {
+    "DNS": {
+        "/lab/d.py": "examples/security/dns_policy.py",
+        "/lab/t.py": "examples/security/traffic_fixture.py",
+    },
+    "CLIENT": {
+        "/lab/d.py": "examples/security/dns_policy.py",
+        "/lab/t.py": "examples/security/traffic_fixture.py",
+    },
+}
+
+
 def native_sources(data, metadata):
     """Validate registered source payloads without executing a shell or guest code."""
     profile = NATIVE_PROFILES.get(metadata.get("example_profile"))

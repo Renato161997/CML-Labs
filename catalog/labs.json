@@ -3412,25 +3412,24 @@
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/018-umbrella-dns-security.yaml",
-      "title": "Umbrella DNS Security",
+      "title": "DNS Security Concepts: Policy, Bypass and Unavailability",
       "track": "350-701",
       "topic": "cloud-content",
-      "nodes": 3,
+      "nodes": 2,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-toolbox"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 2048,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 90,
+      "workbook": "docs/workbooks/350-701-018-umbrella-dns-security.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "868d5bb333a8fb86c1aac0753ec47bd3d47942efa04344ceefb178227648e8ab"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-02T20:07:48Z",
+      "sha256": "11834da9a9adf7ec3cb45de6af9a944ee3641af54390ae79cc13ec576b811fde"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/019-casb-sase-concepts.yaml",

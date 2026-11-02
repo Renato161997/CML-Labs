@@ -29669,5 +29669,231 @@
         ]
       }
     ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/018-umbrella-dns-security.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/d.py probe-enforce",
+        "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"enforce\")(?=.*\"independent_client\": \"dig\")",
+        "expectation": "The real dig client must observe all eight expected DNS response outcomes over UDP and TCP; no answer, refusal, policy denial and unavailability have distinct statuses.",
+        "command_timeout": 50,
+        "attempts": 3,
+        "interval_seconds": 2
+      },
+      {
+        "node": "CLIENT",
+        "command": "ping -n -c 3 -W 1 198.18.0.1",
+        "pattern": "3 packets transmitted, 3 received",
+        "expectation": "The guest and IP path remain healthy independently of DNS policy.",
+        "command_timeout": 15,
+        "attempts": 5,
+        "interval_seconds": 2
+      },
+      {
+        "node": "DNS",
+        "command": "python3 /lab/t.py probe 198.18.0.1",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/t.py probe 198.18.0.1",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.0\\.2\")(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      }
+    ],
+    "transitions": [
+      {
+        "name": "observe removal of only the domain block",
+        "node": "DNS",
+        "commands": [
+          "python3 /lab/d.py bypass"
+        ],
+        "command_pattern": "\"policy\": \"bypass\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/d.py probe-bypass",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"bypass\")(?=.*\"independent_client\": \"dig\")",
+            "expectation": "The real dig client must observe all eight expected DNS response outcomes over UDP and TCP; no answer, refusal, policy denial and unavailability have distinct statuses.",
+            "command_timeout": 50,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 1 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The guest and IP path remain healthy independently of DNS policy.",
+            "command_timeout": 15,
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "DNS",
+            "command": "python3 /lab/t.py probe 198.18.0.1",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/t.py probe 198.18.0.1",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.0\\.2\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "restore explicit DNS denial",
+        "node": "DNS",
+        "commands": [
+          "python3 /lab/d.py enforce"
+        ],
+        "command_pattern": "\"policy\": \"enforce\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/d.py probe-recovered",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"recovered\")(?=.*\"independent_client\": \"dig\")",
+            "expectation": "The real dig client must observe all eight expected DNS response outcomes over UDP and TCP; no answer, refusal, policy denial and unavailability have distinct statuses.",
+            "command_timeout": 50,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 1 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The guest and IP path remain healthy independently of DNS policy.",
+            "command_timeout": 15,
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "DNS",
+            "command": "python3 /lab/t.py probe 198.18.0.1",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/t.py probe 198.18.0.1",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.0\\.2\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "distinguish policy service unavailability",
+        "node": "DNS",
+        "commands": [
+          "python3 /lab/d.py unavailable"
+        ],
+        "command_pattern": "\"policy\": \"unavailable\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/d.py probe-unavailable",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"unavailable\")(?=.*\"independent_client\": \"dig\")",
+            "expectation": "The real dig client must observe all eight expected DNS response outcomes over UDP and TCP; no answer, refusal, policy denial and unavailability have distinct statuses.",
+            "command_timeout": 50,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 1 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The guest and IP path remain healthy independently of DNS policy.",
+            "command_timeout": 15,
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "DNS",
+            "command": "python3 /lab/t.py probe 198.18.0.1",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/t.py probe 198.18.0.1",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.0\\.2\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      },
+      {
+        "name": "recover legitimate resolution and domain denial",
+        "node": "DNS",
+        "commands": [
+          "python3 /lab/d.py enforce"
+        ],
+        "command_pattern": "\"policy\": \"enforce\"",
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/d.py probe-recovered",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"recovered\")(?=.*\"independent_client\": \"dig\")",
+            "expectation": "The real dig client must observe all eight expected DNS response outcomes over UDP and TCP; no answer, refusal, policy denial and unavailability have distinct statuses.",
+            "command_timeout": 50,
+            "attempts": 1,
+            "interval_seconds": 2
+          },
+          {
+            "node": "CLIENT",
+            "command": "ping -n -c 3 -W 1 198.18.0.1",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The guest and IP path remain healthy independently of DNS policy.",
+            "command_timeout": 15,
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "DNS",
+            "command": "python3 /lab/t.py probe 198.18.0.1",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/t.py probe 198.18.0.1",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.0\\.2\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          }
+        ]
+      }
+    ]
   }
 }
