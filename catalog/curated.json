@@ -1318,5 +1318,18 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-901-034-dockerized-network-tool.md",
     "example_profile": "native-container-tool"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/029-ai-assisted-automation-guardrails.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 100,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-029-ai-assisted-automation-guardrails.md",
+    "example_profile": "native-ai-proposals"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/003-site-to-site-vpn-types.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-003-site-to-site-vpn-types.md"
   }
 }

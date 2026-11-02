@@ -312,6 +312,18 @@ NATIVE_PROFILES["native-container-tool"] = {
 }
 
 
+NATIVE_PROFILES["native-ai-proposals"] = {
+    "TOOLS": {
+        **NATIVE_PROFILES["native-iosxe-controller"]["TOOLS"],
+        "/lab/s.py": "examples/automation/api_security.py",
+    },
+    "CLIENT": {
+        **NATIVE_PROFILES["native-iosxe-controller"]["CLIENT"],
+        "/lab/p.py": "examples/automation/proposal_gate.py",
+    },
+}
+
+
 def native_sources(data, metadata):
     """Validate registered source payloads without executing a shell or guest code."""
     profile = NATIVE_PROFILES.get(metadata.get("example_profile"))

@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **205**.
+Import/export passes: **233/233**. Functional passes: **207**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -175,6 +175,7 @@ Import/export passes: **233/233**. Functional passes: **205**.
 | [Intrusion Policy Concepts](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/015-intrusion-policy-concepts.yaml) | passed | 2.10.1+build.21 | cml-labs-inspection-cdecd8f68cdd, net-tools-2-10-1-3 | 33 | 3 | 2026-10-30T20:10:39Z |
 | [Guest Access Isolation](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/025-guest-access-isolation.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 18 | 16 | 2026-10-30T15:44:57Z |
 | [Cryptography PKI and VPN Trust Boundaries](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/002-cryptography-pki-ipsec.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 9 | 8 | 2026-10-30T15:27:44Z |
+| [VPN Types: Policy IPsec and Routed VTI](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/003-site-to-site-vpn-types.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 40 | 24 | 2026-11-02T18:42:20Z |
 | [Security Intelligence Sharing](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/004-security-intelligence-sharing.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 10 | 4 | 2026-10-30T15:15:54Z |
 | [SDN API Security: Wire Rejections and Scoped Approvals](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/005-sdn-api-security.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 22 | 33 | 2026-10-31T22:50:59Z |
 | [NetFlow Security Analytics and Triage](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/visibility-enforcement/026-netflow-stealthwatch.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 8 | 2 | 2026-10-30T16:18:15Z |
@@ -197,6 +198,7 @@ Import/export passes: **233/233**. Functional passes: **205**.
 | [Ansible Inventory Network](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/025-ansible-inventory-network.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-28T16:08:45Z |
 | [YANG Model Interface Change](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/027-yang-model-interface-change.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 2 | 28 | 2026-10-27T19:45:41Z |
 | [Event Automation: Gateway Restart and Retry-Safe Jobs](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/028-event-driven-remediation.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 18 | 32 | 2026-11-01T12:53:14Z |
+| [AI Proposals: Scoped Approval and Device Readback](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/029-ai-assisted-automation-guardrails.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 25 | 34 | 2026-11-02T18:35:14Z |
 | [GitOps Network Change](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/030-gitops-network-change.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 10 | 32 | 2026-10-28T16:24:11Z |
 | [Client Threat Model: Peer Identity, Schemas and Availability](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/security/037-secure-api-client-threat-model.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 4 | 34 | 2026-11-01T18:48:55Z |
 | [Distributed App Front Back Load Balancer](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/software-design/001-distributed-app-front-back-loadbalancer.yaml) | passed | 2.10.1+build.21 | ioll2-xe-17-18-02, net-tools-2-10-1-3 | 3 | 2 | 2026-10-27T18:25:47Z |
