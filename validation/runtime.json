@@ -50552,6 +50552,295 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-11-02T18:42:20Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/001-threats-vulnerabilities.yaml",
+      "sha256": "df28cf86c951b12fa8fa765aa522924b35ce12f11ff87badd9af9606febdb447",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-02T18:58:23Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "R1",
+          "command": "show interfaces Vlan10",
+          "expectation": "The management SVI is operational.",
+          "passed": true,
+          "output": "\nR1#show interfaces Vlan10\nVlan10 is up, line protocol is up , Autostate Enabled\n  Hardware is Ethernet SVI, address is aabb.cc82.0f00 (bia aabb.cc82.0f00)\n  Internet address is 198.18.0.1/30\n  MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec, \n     reliability 255/255, txload 1/255, rxload 1/255\n  Encapsulation ARPA, loopback not set\n  Keepalive not supported \n  ARP type: ARPA, ARP Timeout 04:00:00\n  Last input 00:00:25, output never, output hang never\n  Last clearing of \"show interface\" counters never\n  Input queue: 0/375/0/0 (size/max/drops/flushes); Total output drops: 0\n  Queueing strategy: fifo\n  Output queue: 0/40 (size/max)\n  5 minute input rate 0 bits/sec, 0 packets/sec\n  5 minute output rate 0 bits/sec, 0 packets/sec\n     14 packets input, 2401 bytes, 0 no buffer\n     Received 14 broadcasts (0 IP multicasts)\n     0 runts, 0 giants, 0 throttles \n     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored\n     2 packets output, 120 bytes, 0 underruns\n     Output 0 broadcasts (0 IP multicasts)\n     0 output errors, 0 interface resets\n     0 unknown protocol drops\n     0 output buffer failures, 0 output buffers swapped out\nR1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "UNTRUST",
+          "command": "ping -c 3 -W 2 198.18.0.1",
+          "expectation": "The independent source retains real IP connectivity to the management SVI.",
+          "passed": true,
+          "output": "\nroot@UNTRUST:~# ping -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=255 time=1.36 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=255 time=1.08 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=255 time=0.989 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2003ms\nrtt min/avg/max/mdev = 0.989/1.143/1.357/0.155 ms\nroot@UNTRUST:~# "
+        },
+        {
+          "phase": "establish identity and measure the initially exposed management path",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "establish identity and measure the initially exposed management path",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "crypto key generate rsa general-keys label CML-LAB-SSH modulus 2048",
+          "passed": true,
+          "output": "\nR1(config)#crypto key generate rsa general-keys label CML-LAB-SSH modulus 2048\n%This command is deprecated.  Use the command in exec mode insteadThe name for the keys will be: CML-LAB-SSH\n\n% The key modulus size is 2048 bits\n% Generating 2048 bit RSA keys, keys will be non-exportable...\n SECURITY WARNING - Module: SSH, Command: crypto key generate rsa ..., Reason: SSH host key uses insufficient key length, Description: SSH with insufficient key length, Remediation: Use SSH RSA host key with a minimum length of 3072 bits for enhanced security\n[OK] (elapsed time was 0 seconds)\n\nR1(config)#"
+        },
+        {
+          "phase": "establish identity and measure the initially exposed management path",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "ip ssh rsa keypair-name CML-LAB-SSH",
+          "passed": true,
+          "output": "\nR1(config)#ip ssh rsa keypair-name CML-LAB-SSH\n SECURITY WARNING - Module: SSH, Command: crypto key generate rsa ..., Reason: SSH host key uses insufficient key length, Description: SSH with insufficient key length, Remediation: Use SSH RSA host key with a minimum length of 3072 bits for enhanced security\nR1(config)#"
+        },
+        {
+          "phase": "establish identity and measure the initially exposed management path",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config)#end\nR1#"
+        },
+        {
+          "phase": "establish identity and measure the initially exposed management path",
+          "node": "UNTRUST",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "expectation": "The same untrusted source actually authenticates and obtains a privilege1 SSH session when the source allowlist is bypassed; password and privilege restrictions remain effective.",
+          "passed": true,
+          "output": "\nroot@UNTRUST:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@UNTRUST:~# "
+        },
+        {
+          "phase": "establish identity and measure the initially exposed management path",
+          "node": "DEVBOX",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "expectation": "The authorized management VLAN proves actual SSH login, viewer privilege1, denied configuration, banner, wrong-password rejection and closed legacy/web listeners.",
+          "passed": true,
+          "output": "\nroot@DEVBOX:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@DEVBOX:~# "
+        },
+        {
+          "phase": "establish identity and measure the initially exposed management path",
+          "node": "UNTRUST",
+          "command": "ping -c 3 -W 2 198.18.0.1",
+          "expectation": "The independent source retains real IP connectivity to the management SVI.",
+          "passed": true,
+          "output": "\nroot@UNTRUST:~# ping -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=255 time=0.588 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=255 time=1.10 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=255 time=1.27 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2057ms\nrtt min/avg/max/mdev = 0.588/0.986/1.273/0.290 ms\nroot@UNTRUST:~# "
+        },
+        {
+          "phase": "close the identified management-source exposure",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "close the identified management-source exposure",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "line vty 0 4",
+          "passed": true,
+          "output": "\nR1(config)#line vty 0 4\nR1(config-line)#"
+        },
+        {
+          "phase": "close the identified management-source exposure",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "access-class MGMT in",
+          "passed": true,
+          "output": "\nR1(config-line)#access-class MGMT in\nR1(config-line)#"
+        },
+        {
+          "phase": "close the identified management-source exposure",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-line)#end\nR1#"
+        },
+        {
+          "phase": "close the identified management-source exposure",
+          "node": "UNTRUST",
+          "command": "python3 /opt/cml-management/ssh_policy_probe.py denied",
+          "expectation": "The independently sourced client is rejected by transport policy, not a bad password or a host-key error.",
+          "passed": true,
+          "output": "\nroot@UNTRUST:~# python3 /opt/cml-management/ssh_policy_probe.py denied\n{\"checks\": {\"not_an_authentication_or_host_key_failure\": true, \"session_rejected\": true, \"transport_policy_rejection\": true}, \"mode\": \"denied\", \"passed\": true}\nroot@UNTRUST:~# "
+        },
+        {
+          "phase": "close the identified management-source exposure",
+          "node": "R1",
+          "command": "show access-lists MGMT",
+          "expectation": "The actual source-deny rule counts attempts from the untrusted VLAN.",
+          "passed": true,
+          "output": "\nR1#show access-lists MGMT\nStandard IP access list MGMT\n    10 permit 198.18.0.2\n    20 deny   any (1 match)\nR1#"
+        },
+        {
+          "phase": "close the identified management-source exposure",
+          "node": "DEVBOX",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "expectation": "The authorized management VLAN proves actual SSH login, viewer privilege1, denied configuration, banner, wrong-password rejection and closed legacy/web listeners.",
+          "passed": true,
+          "output": "\nroot@DEVBOX:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@DEVBOX:~# "
+        },
+        {
+          "phase": "close the identified management-source exposure",
+          "node": "UNTRUST",
+          "command": "ping -c 3 -W 2 198.18.0.1",
+          "expectation": "The independent source retains real IP connectivity to the management SVI.",
+          "passed": true,
+          "output": "\nroot@UNTRUST:~# ping -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=255 time=0.883 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=255 time=1.47 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=255 time=1.82 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2058ms\nrtt min/avg/max/mdev = 0.883/1.390/1.822/0.387 ms\nroot@UNTRUST:~# "
+        },
+        {
+          "phase": "reproduce the exposure by removing only its source binding",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "reproduce the exposure by removing only its source binding",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "line vty 0 4",
+          "passed": true,
+          "output": "\nR1(config)#line vty 0 4\nR1(config-line)#"
+        },
+        {
+          "phase": "reproduce the exposure by removing only its source binding",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "no access-class MGMT in",
+          "passed": true,
+          "output": "\nR1(config-line)#no access-class MGMT in\nR1(config-line)#"
+        },
+        {
+          "phase": "reproduce the exposure by removing only its source binding",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-line)#end\nR1#"
+        },
+        {
+          "phase": "reproduce the exposure by removing only its source binding",
+          "node": "UNTRUST",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "expectation": "The same untrusted source actually authenticates and obtains a privilege1 SSH session when the source allowlist is bypassed; password and privilege restrictions remain effective.",
+          "passed": true,
+          "output": "\nroot@UNTRUST:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@UNTRUST:~# "
+        },
+        {
+          "phase": "reproduce the exposure by removing only its source binding",
+          "node": "DEVBOX",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "expectation": "The authorized management VLAN proves actual SSH login, viewer privilege1, denied configuration, banner, wrong-password rejection and closed legacy/web listeners.",
+          "passed": true,
+          "output": "\nroot@DEVBOX:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@DEVBOX:~# "
+        },
+        {
+          "phase": "reproduce the exposure by removing only its source binding",
+          "node": "UNTRUST",
+          "command": "ping -c 3 -W 2 198.18.0.1",
+          "expectation": "The independent source retains real IP connectivity to the management SVI.",
+          "passed": true,
+          "output": "\nroot@UNTRUST:~# ping -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=255 time=0.753 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=255 time=1.77 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=255 time=1.21 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2040ms\nrtt min/avg/max/mdev = 0.753/1.243/1.767/0.414 ms\nroot@UNTRUST:~# "
+        },
+        {
+          "phase": "restore the source boundary and validate residual access",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nR1#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nR1(config)#"
+        },
+        {
+          "phase": "restore the source boundary and validate residual access",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "line vty 0 4",
+          "passed": true,
+          "output": "\nR1(config)#line vty 0 4\nR1(config-line)#"
+        },
+        {
+          "phase": "restore the source boundary and validate residual access",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "access-class MGMT in",
+          "passed": true,
+          "output": "\nR1(config-line)#access-class MGMT in\nR1(config-line)#"
+        },
+        {
+          "phase": "restore the source boundary and validate residual access",
+          "kind": "configuration",
+          "node": "R1",
+          "command": "end",
+          "passed": true,
+          "output": "\nR1(config-line)#end\nR1#"
+        },
+        {
+          "phase": "restore the source boundary and validate residual access",
+          "node": "UNTRUST",
+          "command": "python3 /opt/cml-management/ssh_policy_probe.py denied",
+          "expectation": "The independently sourced client is rejected by transport policy, not a bad password or a host-key error.",
+          "passed": true,
+          "output": "\nroot@UNTRUST:~# python3 /opt/cml-management/ssh_policy_probe.py denied\n{\"checks\": {\"not_an_authentication_or_host_key_failure\": true, \"session_rejected\": true, \"transport_policy_rejection\": true}, \"mode\": \"denied\", \"passed\": true}\nroot@UNTRUST:~# "
+        },
+        {
+          "phase": "restore the source boundary and validate residual access",
+          "node": "R1",
+          "command": "show access-lists MGMT",
+          "expectation": "The actual source-deny rule counts attempts from the untrusted VLAN.",
+          "passed": true,
+          "output": "\nR1#show access-lists MGMT\nStandard IP access list MGMT\n    10 permit 198.18.0.2 (4 matches)\n    20 deny   any (2 matches)\nR1#"
+        },
+        {
+          "phase": "restore the source boundary and validate residual access",
+          "node": "DEVBOX",
+          "command": "python3 /opt/cml-management/ssh_probe.py",
+          "expectation": "The authorized management VLAN proves actual SSH login, viewer privilege1, denied configuration, banner, wrong-password rejection and closed legacy/web listeners.",
+          "passed": true,
+          "output": "\nroot@DEVBOX:~# python3 /opt/cml-management/ssh_probe.py\n{\"checks\": {\"configuration_denied\": true, \"exec_clock_response\": true, \"http_closed\": true, \"https_closed\": true, \"login_banner\": true, \"telnet_closed\": true, \"valid_password_session\": true, \"viewer_privilege_one\": true, \"wrong_password_rejected\": true}, \"passed\": true}\nroot@DEVBOX:~# "
+        },
+        {
+          "phase": "restore the source boundary and validate residual access",
+          "node": "UNTRUST",
+          "command": "ping -c 3 -W 2 198.18.0.1",
+          "expectation": "The independent source retains real IP connectivity to the management SVI.",
+          "passed": true,
+          "output": "\nroot@UNTRUST:~# ping -c 3 -W 2 198.18.0.1\nPING 198.18.0.1 (198.18.0.1) 56(84) bytes of data.\n64 bytes from 198.18.0.1: icmp_seq=1 ttl=255 time=0.691 ms\n64 bytes from 198.18.0.1: icmp_seq=2 ttl=255 time=1.47 ms\n64 bytes from 198.18.0.1: icmp_seq=3 ttl=255 time=1.62 ms\n\n--- 198.18.0.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2054ms\nrtt min/avg/max/mdev = 0.691/1.262/1.624/0.408 ms\nroot@UNTRUST:~# "
+        }
+      ],
+      "plan_sha256": "60e0161dfc2c7af946bd099e75977e58d899641f63a334f828f0619685166945",
+      "startup_states": {
+        "R1": "BOOTED",
+        "DEVBOX": "STARTED",
+        "UNTRUST": "BOOTED"
+      },
+      "images": {
+        "R1": "ioll2-xe-17-18-02",
+        "DEVBOX": "ubuntu-24-04-20260307",
+        "UNTRUST": "cml-labs-toolbox-9f43df961cbe"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "DEVBOX"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-02T19:00:40Z"
     }
   ]
 }

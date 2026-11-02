@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **207**.
+Import/export passes: **233/233**. Functional passes: **208**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -174,6 +174,7 @@ Import/export passes: **233/233**. Functional passes: **207**.
 | [WPA2-PSK: Authentication, CCMP and Recovery](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/014-secure-wireless-architecture.yaml) | passed | 2.10.1+build.21 | wireless-ap-24-04-20260409, wireless-client-24-04-20260409 | 6 | 2 | 2026-10-31T16:50:44Z |
 | [Intrusion Policy Concepts](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/network-security/015-intrusion-policy-concepts.yaml) | passed | 2.10.1+build.21 | cml-labs-inspection-cdecd8f68cdd, net-tools-2-10-1-3 | 33 | 3 | 2026-10-30T20:10:39Z |
 | [Guest Access Isolation](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/secure-access/025-guest-access-isolation.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, ioll2-xe-17-18-02 | 18 | 16 | 2026-10-30T15:44:57Z |
+| [Threat Path: Exposed Management and Scoped Admission](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/001-threats-vulnerabilities.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, ioll2-xe-17-18-02, ubuntu-24-04-20260307 | 16 | 16 | 2026-11-02T19:00:40Z |
 | [Cryptography PKI and VPN Trust Boundaries](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/002-cryptography-pki-ipsec.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 9 | 8 | 2026-10-30T15:27:44Z |
 | [VPN Types: Policy IPsec and Routed VTI](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/003-site-to-site-vpn-types.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12 | 40 | 24 | 2026-11-02T18:42:20Z |
 | [Security Intelligence Sharing](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/004-security-intelligence-sharing.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 10 | 4 | 2026-10-30T15:15:54Z |

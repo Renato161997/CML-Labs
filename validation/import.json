@@ -753,11 +753,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/001-threats-vulnerabilities.yaml",
-      "sha256": "f75801686a66d845c342f6857a2085bf75f56ba7e5e25a49b701adb37c943526",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/002-cryptography-pki-ipsec.yaml",
       "sha256": "a1e210914099d72aa3f33e1e41400a25e9bba7c836012c38006b5f2b58f9fd00",
       "status": "import-export-pass"
@@ -1388,11 +1383,6 @@
       "completed_utc": "2026-11-02T18:14:42Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/003-site-to-site-vpn-types.yaml",
       "sha256": "0c6665d11f8e442bd807e514f683a49f5707c655e9a0a6a130da6eb2b7fc6c18",
       "cml_version": "2.10.1+build.21",
@@ -1401,6 +1391,21 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-11-02T18:22:31Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/001-threats-vulnerabilities.yaml",
+      "sha256": "df28cf86c951b12fa8fa765aa522924b35ce12f11ff87badd9af9606febdb447",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-02T18:53:56Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-02T18:53:56Z"
     }
   ]
 }
