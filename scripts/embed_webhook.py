@@ -355,6 +355,17 @@ NATIVE_PROFILES["native-dns-policy"] = {
 }
 
 
+NATIVE_PROFILES["native-git-policy-pipeline"] = {
+    "INSIDE": {
+        "/lab/c.py": "examples/automation/ci_pipeline.py",
+        "/lab/p.py": "examples/security/policy_code.py",
+        "/lab/policy_code.py": "examples/security/policy_code.py",
+        "/lab/t.py": "examples/security/traffic_fixture.py",
+    },
+    "OUTSIDE": {"/lab/t.py": "examples/security/traffic_fixture.py"},
+}
+
+
 def native_sources(data, metadata):
     """Validate registered source payloads without executing a shell or guest code."""
     profile = NATIVE_PROFILES.get(metadata.get("example_profile"))

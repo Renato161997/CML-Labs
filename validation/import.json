@@ -828,11 +828,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/020-ci-cd-for-network-automation.yaml",
-      "sha256": "2109e7258b8947fb11bbeb047542232763d263376231eaf0ca267255dd360e7d",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/024-kubernetes-network-automation.yaml",
       "sha256": "be39162539e2d4cd8131f461e995322d88ef9c95846068985591165620a747dd",
       "status": "import-export-pass"
@@ -1421,6 +1416,16 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-11-02T20:05:19Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/020-ci-cd-for-network-automation.yaml",
+      "sha256": "84d98d6eacab35aaf7247705c682c2128eacc4476140f374134b7eb282965a58",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-02T20:12:59Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-02T20:13:00Z"
     }
   ]
 }
