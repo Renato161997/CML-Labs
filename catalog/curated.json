@@ -1345,5 +1345,12 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-701-036-security-dashboard-telemetry.md",
     "example_profile": "native-telemetry-board"
+  },
+  "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 130,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-401-034-dhcp-snooping-dai-ipsg.md",
+    "example_profile": "native-first-hop-bindings"
   }
 }

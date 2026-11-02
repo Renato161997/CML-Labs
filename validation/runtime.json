@@ -51146,6 +51146,343 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-11-02T19:20:34Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "3a94840007a9aa52aea58be4a18c80b6c9956a77ccd1ebee72f999f448c28294",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-02T19:54:33Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "SERVER",
+          "command": "python3 /lab/h.py decode-wire",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/h.py decode-wire\n{\"decoded_messages\": [\"Discover\", \"Offer\", \"Request\", \"ACK\"], \"independent_decoder\": \"tcpdump\", \"phase\": \"decode-wire\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/h.py acquire",
+          "expectation": "Receive a matching real selecting DHCP ACK and confirm the received address in the actual kernel.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/h.py acquire\n{\"actual_dhcp_ack\": true, \"kernel_address_confirmed\": true, \"lease\": 600, \"status\": \"passed\", \"xid_matched\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/h.py data-good",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/h.py data-good\n{\"consecutive_complete_trains\": 2, \"phase\": \"data-good\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "GUARD",
+          "command": "python3 /lab/h.py bound",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@GUARD:~# python3 /lab/h.py bound\n{\"actual_worker_alive\": true, \"binding\": {\"expires\": 976908.537488618, \"ip\": \"198.18.10.10\", \"lease\": 600, \"mac\": \"02:00:00:00:00:10\", \"port\": 1, \"remaining\": 583.3599714630982}, \"counts\": {\"ack_learned\": 1, \"arp_binding_drop\": 0, \"dhcp_sequence_drop\": 0, \"discover_seen\": 1, \"forwarded\": 20, \"ip_binding_drop\": 0, \"lease_expired\": 0, \"malformed_drop\": 0, \"offer_seen\": 1, \"request_seen\": 1, \"unsupported_drop\": 79, \"untrusted_server_drop\": 0}, \"kernel_bypass_blocked\": true, \"last_lease\": 600, \"pending_stage\": null, \"phase\": \"bound\", \"status\": \"passed\", \"written_at\": 976325.177517155}\nroot@GUARD:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "SERVER",
+          "command": "python3 /lab/h.py neighbor-safe",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/h.py neighbor-safe\n{\"actual_neighbor_mac\": \"02:00:00:00:00:10\", \"phase\": \"neighbor-safe\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 1 198.18.99.1",
+          "expectation": "The separate control link remains healthy.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 1 198.18.99.1\nPING 198.18.99.1 (198.18.99.1) 56(84) bytes of data.\n64 bytes from 198.18.99.1: icmp_seq=1 ttl=64 time=0.287 ms\n64 bytes from 198.18.99.1: icmp_seq=2 ttl=64 time=0.559 ms\n64 bytes from 198.18.99.1: icmp_seq=3 ttl=64 time=0.198 ms\n\n--- 198.18.99.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2051ms\nrtt min/avg/max/mdev = 0.198/0.348/0.559/0.153 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/h.py control-no-bypass",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/h.py control-no-bypass\n{\"blocked\": true, \"normal_data_recovered\": true, \"phase\": \"control-no-bypass\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "reject server messages from the untrusted ingress",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/h.py rogue",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/h.py rogue\n{\"phase\": \"rogue\", \"status\": \"passed\", \"valid_rogue_ack_frames_sent\": 3}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "reject server messages from the untrusted ingress",
+          "node": "GUARD",
+          "command": "python3 /lab/h.py rogue-blocked",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@GUARD:~# python3 /lab/h.py rogue-blocked\n{\"actual_worker_alive\": true, \"binding\": {\"expires\": 976908.537488618, \"ip\": \"198.18.10.10\", \"lease\": 600, \"mac\": \"02:00:00:00:00:10\", \"port\": 1, \"remaining\": 569.7840067570796}, \"counts\": {\"ack_learned\": 1, \"arp_binding_drop\": 0, \"dhcp_sequence_drop\": 0, \"discover_seen\": 1, \"forwarded\": 32, \"ip_binding_drop\": 0, \"lease_expired\": 0, \"malformed_drop\": 0, \"offer_seen\": 1, \"request_seen\": 1, \"unsupported_drop\": 79, \"untrusted_server_drop\": 3}, \"kernel_bypass_blocked\": true, \"last_lease\": 600, \"pending_stage\": null, \"phase\": \"rogue-blocked\", \"status\": \"passed\", \"written_at\": 976338.753481861}\nroot@GUARD:~# "
+        },
+        {
+          "phase": "reject server messages from the untrusted ingress",
+          "node": "CLIENT",
+          "command": "python3 /lab/h.py data-good",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/h.py data-good\n{\"consecutive_complete_trains\": 2, \"phase\": \"data-good\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "reject server messages from the untrusted ingress",
+          "node": "SERVER",
+          "command": "python3 /lab/h.py neighbor-safe",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/h.py neighbor-safe\n{\"actual_neighbor_mac\": \"02:00:00:00:00:10\", \"phase\": \"neighbor-safe\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "reject server messages from the untrusted ingress",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "reject coherent forged ARP sender bindings",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/h.py arp-spoof",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/h.py arp-spoof\n{\"coherent_spoofed_arp_replies_sent\": 3, \"phase\": \"arp-spoof\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "reject coherent forged ARP sender bindings",
+          "node": "GUARD",
+          "command": "python3 /lab/h.py arp-blocked",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@GUARD:~# python3 /lab/h.py arp-blocked\n{\"actual_worker_alive\": true, \"binding\": {\"expires\": 976908.537488618, \"ip\": \"198.18.10.10\", \"lease\": 600, \"mac\": \"02:00:00:00:00:10\", \"port\": 1, \"remaining\": 561.8709438430378}, \"counts\": {\"ack_learned\": 1, \"arp_binding_drop\": 3, \"dhcp_sequence_drop\": 0, \"discover_seen\": 1, \"forwarded\": 44, \"ip_binding_drop\": 0, \"lease_expired\": 0, \"malformed_drop\": 0, \"offer_seen\": 1, \"request_seen\": 1, \"unsupported_drop\": 81, \"untrusted_server_drop\": 3}, \"kernel_bypass_blocked\": true, \"last_lease\": 600, \"pending_stage\": null, \"phase\": \"arp-blocked\", \"status\": \"passed\", \"written_at\": 976346.666544775}\nroot@GUARD:~# "
+        },
+        {
+          "phase": "reject coherent forged ARP sender bindings",
+          "node": "CLIENT",
+          "command": "python3 /lab/h.py data-good",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/h.py data-good\n{\"consecutive_complete_trains\": 2, \"phase\": \"data-good\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "reject coherent forged ARP sender bindings",
+          "node": "SERVER",
+          "command": "python3 /lab/h.py neighbor-safe",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/h.py neighbor-safe\n{\"actual_neighbor_mac\": \"02:00:00:00:00:10\", \"phase\": \"neighbor-safe\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "reject coherent forged ARP sender bindings",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "reject a real unauthorized kernel source address",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/h.py spoof-ip",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/h.py spoof-ip\n{\"actual_spoofed_source_received\": 0, \"phase\": \"spoof-ip\", \"secondary_address_removed\": true, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "reject a real unauthorized kernel source address",
+          "node": "GUARD",
+          "command": "python3 /lab/h.py ip-blocked",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@GUARD:~# python3 /lab/h.py ip-blocked\n{\"actual_worker_alive\": true, \"binding\": {\"expires\": 976908.537488618, \"ip\": \"198.18.10.10\", \"lease\": 600, \"mac\": \"02:00:00:00:00:10\", \"port\": 1, \"remaining\": 551.1863619380165}, \"counts\": {\"ack_learned\": 1, \"arp_binding_drop\": 3, \"dhcp_sequence_drop\": 0, \"discover_seen\": 1, \"forwarded\": 60, \"ip_binding_drop\": 3, \"lease_expired\": 0, \"malformed_drop\": 0, \"offer_seen\": 1, \"request_seen\": 1, \"unsupported_drop\": 84, \"untrusted_server_drop\": 3}, \"kernel_bypass_blocked\": true, \"last_lease\": 600, \"pending_stage\": null, \"phase\": \"ip-blocked\", \"status\": \"passed\", \"written_at\": 976357.35112668}\nroot@GUARD:~# "
+        },
+        {
+          "phase": "reject a real unauthorized kernel source address",
+          "node": "CLIENT",
+          "command": "python3 /lab/h.py data-good",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/h.py data-good\n{\"consecutive_complete_trains\": 2, \"phase\": \"data-good\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "reject a real unauthorized kernel source address",
+          "node": "SERVER",
+          "command": "python3 /lab/h.py neighbor-safe",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/h.py neighbor-safe\n{\"actual_neighbor_mac\": \"02:00:00:00:00:10\", \"phase\": \"neighbor-safe\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "reject a real unauthorized kernel source address",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "select a short real server lease",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/h.py short",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/h.py short\n{\"lease_policy\": 3, \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "select a short real server lease",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "observe wire lease expiry with a deliberately stale client",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/h.py acquire",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/h.py acquire\n{\"actual_dhcp_ack\": true, \"kernel_address_confirmed\": true, \"lease\": 3, \"status\": \"passed\", \"xid_matched\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "observe wire lease expiry with a deliberately stale client",
+          "node": "CLIENT",
+          "command": "python3 /lab/h.py expired-data",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/h.py expired-data\n{\"actual_received\": 0, \"phase\": \"expired-data\", \"stale_kernel_address_retained\": true, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "observe wire lease expiry with a deliberately stale client",
+          "node": "GUARD",
+          "command": "python3 /lab/h.py expired",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@GUARD:~# python3 /lab/h.py expired\n{\"actual_worker_alive\": true, \"binding\": null, \"counts\": {\"ack_learned\": 2, \"arp_binding_drop\": 3, \"dhcp_sequence_drop\": 0, \"discover_seen\": 2, \"forwarded\": 76, \"ip_binding_drop\": 6, \"lease_expired\": 1, \"malformed_drop\": 0, \"offer_seen\": 2, \"request_seen\": 2, \"unsupported_drop\": 85, \"untrusted_server_drop\": 3}, \"kernel_bypass_blocked\": true, \"last_lease\": 3, \"pending_stage\": null, \"phase\": \"expired\", \"status\": \"passed\", \"written_at\": 976374.988069562}\nroot@GUARD:~# "
+        },
+        {
+          "phase": "observe wire lease expiry with a deliberately stale client",
+          "node": "CLIENT",
+          "command": "ping -n -c 3 -W 1 198.18.99.1",
+          "expectation": "The separate control link remains healthy.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# ping -n -c 3 -W 1 198.18.99.1\nPING 198.18.99.1 (198.18.99.1) 56(84) bytes of data.\n64 bytes from 198.18.99.1: icmp_seq=1 ttl=64 time=0.198 ms\n64 bytes from 198.18.99.1: icmp_seq=2 ttl=64 time=0.332 ms\n64 bytes from 198.18.99.1: icmp_seq=3 ttl=64 time=0.292 ms\n\n--- 198.18.99.1 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2041ms\nrtt min/avg/max/mdev = 0.198/0.274/0.332/0.056 ms\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "observe wire lease expiry with a deliberately stale client",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restore the trusted long-lease policy",
+          "kind": "configuration",
+          "node": "SERVER",
+          "command": "python3 /lab/h.py long",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/h.py long\n{\"lease_policy\": 600, \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "restore the trusted long-lease policy",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "relearn from a new wire exchange and recover admission",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/h.py acquire",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/h.py acquire\n{\"actual_dhcp_ack\": true, \"kernel_address_confirmed\": true, \"lease\": 600, \"status\": \"passed\", \"xid_matched\": true}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "relearn from a new wire exchange and recover admission",
+          "node": "CLIENT",
+          "command": "python3 /lab/h.py data-good",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/h.py data-good\n{\"consecutive_complete_trains\": 2, \"phase\": \"data-good\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "relearn from a new wire exchange and recover admission",
+          "node": "GUARD",
+          "command": "python3 /lab/h.py recovered",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@GUARD:~# python3 /lab/h.py recovered\n{\"actual_worker_alive\": true, \"binding\": {\"expires\": 976980.389508609, \"ip\": \"198.18.10.10\", \"lease\": 600, \"mac\": \"02:00:00:00:00:10\", \"port\": 1, \"remaining\": 594.4578548409045}, \"counts\": {\"ack_learned\": 3, \"arp_binding_drop\": 3, \"dhcp_sequence_drop\": 0, \"discover_seen\": 3, \"forwarded\": 92, \"ip_binding_drop\": 6, \"lease_expired\": 1, \"malformed_drop\": 0, \"offer_seen\": 3, \"request_seen\": 3, \"unsupported_drop\": 85, \"untrusted_server_drop\": 3}, \"kernel_bypass_blocked\": true, \"last_lease\": 600, \"pending_stage\": null, \"phase\": \"recovered\", \"status\": \"passed\", \"written_at\": 976385.931653768}\nroot@GUARD:~# "
+        },
+        {
+          "phase": "relearn from a new wire exchange and recover admission",
+          "node": "SERVER",
+          "command": "python3 /lab/h.py neighbor-safe",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/h.py neighbor-safe\n{\"actual_neighbor_mac\": \"02:00:00:00:00:10\", \"phase\": \"neighbor-safe\", \"status\": \"passed\"}\nroot@SERVER:~# "
+        },
+        {
+          "phase": "relearn from a new wire exchange and recover admission",
+          "node": "CLIENT",
+          "command": "python3 /lab/h.py control-no-bypass",
+          "expectation": "Require fresh actual wire, kernel, process or independently observed packet evidence for this phase.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/h.py control-no-bypass\n{\"blocked\": true, \"normal_data_recovered\": true, \"phase\": \"control-no-bypass\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "relearn from a new wire exchange and recover admission",
+          "node": "SERVER",
+          "command": "python3 /lab/t.py probe 198.18.10.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@SERVER:~# python3 /lab/t.py probe 198.18.10.20\n{\"peer\": \"198.18.10.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@SERVER:~# "
+        }
+      ],
+      "plan_sha256": "3a17ffcb89ca35a6fed69332b053bde9c3cb64b9863ef80a8cec984652bd8ec7",
+      "startup_states": {
+        "GUARD": "BOOTED",
+        "CLIENT": "BOOTED",
+        "SERVER": "STARTED"
+      },
+      "images": {
+        "GUARD": null,
+        "CLIENT": null,
+        "SERVER": null
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "SERVER"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-02T19:56:28Z"
     }
   ]
 }
