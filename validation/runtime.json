@@ -49497,6 +49497,1061 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T19:50:49Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/029-ai-assisted-automation-guardrails.yaml",
+      "sha256": "b362c029528a099032cfb4e9002aa1609d1f589419fb40cea4faa8e308e4b011",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-02T18:31:11Z",
+      "checks": [
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto key mypubkey rsa",
+          "passed": true,
+          "output": "\nAPI#show crypto key mypubkey rsa\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "clock set 18:28:01 2 Nov 2026",
+          "passed": true,
+          "output": "\nAPI#clock set 18:28:01 2 Nov 2026\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "debug crypto pki transactions",
+          "passed": true,
+          "output": "\nAPI#debug crypto pki transactions\nCrypto PKI Trans debugging is on\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\n*Nov  2 18:28:01.000: %SYS-6-CLOCKUPDATE: System clock has been updated from 18:32:57 UTC Mon Nov 2 2026 to 18:28:01 UTC Mon Nov 2 2026, configured from console by console.\nNov  2 18:28:01.000: %PKI-6-AUTHORITATIVE_CLOCK: The system clock has been set.\nAPI#\nAPI#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto key generate rsa general-keys label LABSSH modulus 3072",
+          "passed": true,
+          "output": "\nAPI(config)#crypto key generate rsa general-keys label LABSSH modulus 3072\nThe name for the keys will be: LABSSH\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\n[OK] (elapsed time was 0 seconds)\n\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto key generate rsa general-keys label LABTLS modulus 3072",
+          "passed": true,
+          "output": "\nAPI(config)#crypto key generate rsa general-keys label LABTLS modulus 3072\nThe name for the keys will be: LABTLS\n\n% The key modulus size is 3072 bits\n% Generating 3072 bit RSA keys, keys will be non-exportable...\nNov  2 18:28:03.901: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH has been generated or imported by crypto-engine\nNov  2 18:28:03.911: %SSH-5-ENABLED: SSH 2.0 has been enabled\nNov  2 18:28:04.448: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH.server has been generated or imported by crypto-engine\n[OK] (elapsed time was 1 seconds)\n\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip ssh rsa keypair-name LABSSH",
+          "passed": true,
+          "output": "\nAPI(config)#ip ssh rsa keypair-name LABSSH\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "crypto pki trustpoint LABTLS",
+          "passed": true,
+          "output": "\nAPI(config)#crypto pki trustpoint LABTLS\nAPI(ca-trustpoint)#\nNov  2 18:28:05.889: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABTLS has been generated or imported by crypto-engine\nNov  2 18:28:06.656: %CRYPTO_ENGINE-5-KEY_DELETED: A key named LABSSH.server has been removed from key storage\nNov  2 18:28:06.656: %SSH-5-DISABLED: SSH 2.0 has been disabled\nNov  2 18:28:06.657: %SSH-5-ENABLED: SSH 2.0 has been enabled\nNov  2 18:28:06.749: %CRYPTO_ENGINE-5-KEY_ADDITION: A key named LABSSH.server has been generated or imported by crypto-engine\nNov  2 18:28:07.364: CRYPTO_PKI: Creating trustpoint LABTLS\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "enrollment selfsigned",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#enrollment selfsigned\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "subject-name CN=api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#subject-name CN=api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "subject-alt-name api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#subject-alt-name api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "serial-number none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#serial-number none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "fqdn api.cml-lab.example",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#fqdn api.cml-lab.example\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip-address none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#ip-address none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "revocation-check none",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#revocation-check none\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "rsakeypair LABTLS",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#rsakeypair LABTLS\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "hash sha256",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#hash sha256\nAPI(ca-trustpoint)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "exit",
+          "passed": true,
+          "output": "\nAPI(ca-trustpoint)#exit\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-trustpoint LABTLS",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-trustpoint LABTLS\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "ip http secure-server",
+          "passed": true,
+          "output": "\nAPI(config)#ip http secure-server\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "restconf",
+          "passed": true,
+          "output": "\nAPI(config)#restconf\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "netconf-yang",
+          "passed": true,
+          "output": "\nAPI(config)#netconf-yang\nAPI(config)#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "end",
+          "passed": true,
+          "output": "\nAPI(config)#end\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show platform software yang-management process",
+          "passed": true,
+          "output": "\nAPI#show platform software yang-management process\nconfd            : Not Running\nnesd             : Not Running\nsyncfd           : Not Running\nncsshd           : Not Running\ndmiauthd         : Not Running\nnginx            : Running    \nndbmand          : Not Running\npubd             : Running    \n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show platform software yang-management process",
+          "passed": true,
+          "output": "\nAPI#show platform software yang-management process\nconfd            : Running    \nnesd             : Running    \nsyncfd           : Running    \nncsshd           : Running    \ndmiauthd         : Running    \nnginx            : Running    \nndbmand          : Running    \npubd             : Running    \n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "undebug all",
+          "passed": true,
+          "output": "\nAPI#undebug all\nAll possible debugging has been turned off\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto pki certificates pem",
+          "passed": true,
+          "output": "4Ke56r6O1388\nH8V5s6GOOtaLQaHant1QZnPYUWcCJiGDXgJ6RzPNZdhhMbiRAZQY9sRjU8hetl98\npuT5/dJ0MXwTElIMhDUYW9VOzyF2W4S6uF2E6JdjVS6ifq5+2JTuqrd1ZIRZNGY4\n3nywbh9q8xTF0pEfJG80cz9vh8UgSixUnR7R1jXPVVWBFnnNZG95VCLOhYdHLpAK\ni8I8FrFqn59GQ6aheh9uX7zimyeClbo7Ggmum3OK7Hy94y/VG5ZeEgaHd2IEjucp\nXRk4rAFWhYjgcGfZN3jshwcxDgJ8IiirdvzCLDzT7m1E0nMMUDLhvgTjxESn1A0I\nPH0ZwzW+NZ551oO53nlqCXxsUBdiJPEJPfgAlX3wKJnWUlA8uJC4byYGDAvsYuk2\na/7+r/PwTfMQgZpWaj3htIVjCFPX1fLiTayS8Vlrc0rdrwio98ciHftsgu/WpMvG\n0/eLM4evfCooHUq+fB5AgWEj4xcB89om5ljhzCgwtS/QKtp/cUQ=\n-----END CERTIFICATE-----\n\n% General Purpose Certificate:\n-----BEGIN CERTIFICATE-----\nMIIEcjCCAtqgAwIBAgIBATANBgkqhkiG9w0BAQsFADBCMRwwGgYDVQQDExNhcGku\nY21sLWxhYi5leGFtcGxlMSIwIAYJKoZIhvcNAQkCFhNhcGkuY21sLWxhYi5leGFt\ncGxlMB4XDTI2MTEwMjE4MjgxNVoXDTM2MTEwMTE4MjgxNVowQjEcMBoGA1UEAxMT\nYXBpLmNtbC1sYWIuZXhhbXBsZTEiMCAGCSqGSIb3DQEJAhYTYXBpLmNtbC1sYWIu\nZXhhbXBsZTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBANWqFX3VJiQ/\nWYzfX0mVLqVz18O4lW/PMYPeS6q9tLm4XUy77he2LLZamf2mEF+1I+WEkNmsbzw8\n12vZvC3zYIHHXgkCCm/9FTij1koc70u2GrjBtJbRKtWIkOvDmHeHPyDAq968hA7X\n9s/t0zZiU6Rt1syt2ebdQSbRHqNu56ZHZuXe4+kbWVYBDYtTEniFLX9YzC3fqsMh\nrmxRt6XYrZ1/1tcDtg99BfVZe8KPk9L4UGiwyaeQx2v8DdIdRA3OGycTYJV389kn\njoIao1BbAW9dd/jQnw+d/nwxlPpyLfrb69bSgrspetw96bJzNvfnsu+PO/BmcYOx\nP7MUgRnzwrPnOy/10LTg0ad9zyhh7cij3DAUSuw+GN7Lw7tk4pjNZVVas5K7Zmwr\nnV49k/3YqdPFst2lrTQoegWg/ZACD/4aUeUoe36yfwiTHwmFkZ8W1XTHWw3KHYM/\nRs0mTCIOAAMwaKcKFuWqcBqxDxVv6cEVtiCXHjkeJoM6S+qIa2EuHQIDAQABo3Mw\ncTAPBgNVHRMBAf8EBTADAQH/MB4GA1UdEQQXMBWCE2FwaS5jbWwtbGFiLmV4YW1w\nbGUwHwYDVR0jBBgwFoAUWuZxNP0gXS2epyGqi6iF4f2DzVwwHQYDVR0OBBYEFFrm\ncTT9IF0tnqchqouoheH9g81cMA0GCSqGSIb3DQEBCwUAA4IBgQCa4Ke56r6O1388\nH8V5s6GOOtaLQaHant1QZnPYUWcCJiGDXgJ6RzPNZdhhMbiRAZQY9sRjU8hetl98\npuT5/dJ0MXwTElIMhDUYW9VOzyF2W4S6uF2E6JdjVS6ifq5+2JTuqrd1ZIRZNGY4\n3nywbh9q8xTF0pEfJG80cz9vh8UgSixUnR7R1jXPVVWBFnnNZG95VCLOhYdHLpAK\ni8I8FrFqn59GQ6aheh9uX7zimyeClbo7Ggmum3OK7Hy94y/VG5ZeEgaHd2IEjucp\nXRk4rAFWhYjgcGfZN3jshwcxDgJ8IiirdvzCLDzT7m1E0nMMUDLhvgTjxESn1A0I\nPH0ZwzW+NZ551oO53nlqCXxsUBdiJPEJPfgAlX3wKJnWUlA8uJC4byYGDAvsYuk2\na/7+r/PwTfMQgZpWaj3htIVjCFPX1fLiTayS8Vlrc0rdrwio98ciHftsgu/WpMvG\n0/eLM4evfCooHUq+fB5AgWEj4xcB89om5ljhzCgwtS/QKtp/cUQ=\n-----END CERTIFICATE-----\n\n------Trustpoint: SLA-TrustPoint------\n% The specified trustpoint is not enrolled (SLA-TrustPoint).\n% Only export the CA certificate in PEM format.\n% CA certificate:\n-----BEGIN CERTIFICATE-----\nMIIDITCCAgmgAwIBAgIBATANBgkqhkiG9w0BAQsFADAyMQ4wDAYDVQQKEwVDaXNj\nbzEgMB4GA1UEAxMXQ2lzY28gTGljZW5zaW5nIFJvb3QgQ0EwHhcNMTMwNTMwMTk0\nODQ3WhcNMzgwNTMwMTk0ODQ3WjAyMQ4wDAYDVQQKEwVDaXNjbzEgMB4GA1UEAxMX\nQ2lzY28gTGljZW5zaW5nIFJvb3QgQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw\nggEKAoIBAQCmvL2WEx4F9xRepyws1obmFyIuofHv9k3LtMeYISqhR8ZV2NeUcTgN\nhxFEHhqvBxqcrmOIijjlIBw5TXhGLvI5xln3FbmMCllbu1y9DP6+o3AKi/fY8lbu\nSqToDdtv0clgsf0Y/8aclm+miVeiYX3nEE/cX+opVqxzkKPrK1Q2rchHosXatVPr\naamlNVjp8+PAvSPPWL1xiGjmlJEg8yDnlI5x1647zITxBoTHS8jgD1ObpCtCxou3\nx0eQlrTLLWLqL1Bdx7BipGgR2VvoJQ/EXV1fuI8n0ZHFXw12YfmkzT2ZIyeouwO9\nTm1waXy634vfX0NolRNeRN/Hxs8E3X/RAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIB\nBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBRJ3IVLPTHlGz5qF2Bq8zM9O0xz\n6DANBgkqhkiG9w0BAQsFAAOCAQEAUH8k05MqZoYCXZ/oOK5cbU32sEljHHgkDakF\nYE7c3v9P7St3/EYOzWNv291EaB46VnOrkJPTsWyePYvZiYe/5Ay9nhrsoMIhibtc\nj6hWhs2YtkZVdbFGjfxmqEZ6PfRNVlcAat8PDc+DUBU8BP98Ieh4rBG6nNJVqSMs\nfKe35sGvdPYVLpm3sfz5u+lz3n9b3euGxx47SRdlMItfsNoGuSr+f0lOip4HuFc3\n86WL4RpIoinDfB5pOfCGeIDdzRbWus7K7rx8+YQoeHs1ICzcYORharYjzb0jDjr7\nQYYWqUCT4ElNEKt1J+hvc5MuNbWIYv2uAnUVb3GbsvDWl99/KA==\n-----END CERTIFICATE-----\n\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "configuration",
+          "node": "API",
+          "command": "show crypto key mypubkey rsa",
+          "passed": true,
+          "output": "\nAPI#show crypto key mypubkey rsa\n% Key pair was generated at: 18:28:03 UTC Nov 2 2026\nKey name: LABSSH\nKey type: RSA KEYS\n Storage Device: not specified\n Usage: General Purpose Key\n Key is not exportable. Redundancy enabled.\n Key Data:\n  308201A2 300D0609 2A864886 F70D0101 01050003 82018F00 3082018A 02820181 \n  00C6F811 46252975 DF22C49A F513FA88 4B89960A 03F4DA48 D000FD2E 48A7554E \n  0C4C74F0 03E642E3 CDD7AB97 72A3A6DB F16FFBFC 92E66911 D03D7C74 B8F2832A \n  4C76ED51 B606A6C2 843970D3 70BC8285 BF6FE48C 8A006E47 9E8773CC 1D28BEAF \n  8D22E40B 51A86DF7 F18CFFB8 06B6A46D BF67D27C F4D652F3 403F9D46 FD7FA92B \n  875E791B DB4FD51F 54B126E7 E2B55CC3 43669451 B1D34D5C 7F530F00 A30AC693 \n  7BD89D22 E4D98BD2 784364C6 48B7031E 4C23F6E3 1E0B11A2 E4CC5249 50511022 \n  8A1C946D 32704FB5 1CA9CE62 2D1D6024 75296180 A85E39D7 81B07D72 78AF8C96 \n  8144C3D7 23D4DCA0 98096D75 60D00BF7 9ED6D15C 52910B46 6E6A556B 391C5854 \n  091697B3 9959D4E3 376171F1 C8BA6192 F9FEF8ED BA2CAEA0 88A413B0 F4860161 \n  21698707 73B6F87F 032B29E7 60486258 0840A098 A1620F62 73586116 CBB6A60D \n  993E8EB6 FA6B2D9F C8558473 EB4BEE09 DB50C968 D996A33C 9D45918F 39638EE9 \n  7C18D63F A9FB0D44 3A4D05C6 0710A91F 2B798295 0194E434 A7ADCB23 2B65D6BD \n  13020301 0001\n% Key pair was generated at: 18:28:05 UTC Nov 2 2026\nKey name: LABTLS\nKey type: RSA KEYS\n Storage Device: not specified\n Usage: General Purpose Key\n Key is not exportable. Redundancy enabled.\n Key Data:\n  308201A2 300D0609 2A864886 F70D0101 01050003 82018F00 3082018A 02820181 \n  00D5AA15 7DD52624 3F598CDF 5F49952E A573D7C3 B8956FCF 3183DE4B AABDB4B9 \n  B85D4CBB EE17B62C B65A99FD A6105FB5 23E58490 D9AC6F3C 3CD76BD9 BC2DF360 \n  81C75E09 020A6FFD 1538A3D6 4A1CEF4B B61AB8C1 B496D12A D58890EB C3987787 \n  3F20C0AB DEBC840E D7F6CFED D3366253 A46DD6CC ADD9E6DD 4126D11E A36EE7A6 \n  4766E5DE E3E91B59 56010D8B 53127885 2D7F58CC 2DDFAAC3 21AE6C51 B7A5D8AD \n  9D7FD6D7 03B60F7D 05F5597B C28F93D2 F85068B0 C9A790C7 6BFC0DD2 1D440DCE \n  1B271360 9577F3D9 278E821A A3505B01 6F5D77F8 D09F0F9D FE7C3194 FA722DFA \n  DBEBD6D2 82BB297A DC3DE9B2 7336F7E7 B2EF8F3B F0667183 B13FB314 8119F3C2 \n  B3E73B2F F5D0B4E0 D1A77DCF 2861EDC8 A3DC3014 4AEC3E18 DECBC3BB 64E298CD \n  65555AB3 92BB666C 2B9D5E3D 93FDD8A9 D3C5B2DD A5AD3428 7A05A0FD 90020FFE \n  1A51E528 7B7EB27F 08931F09 85919F16 D574C75B 0DCA1D83 3F46CD26 4C220E00 \n  033068A7 0A16E5AA 701AB10F 156FE9C1 15B62097 1E391E26 833A4BEA 886B612E \n  1D020301 0001\n% Key pair was generated at: 18:28:06 UTC Nov 2 2026\nKey name: LABSSH.server\nKey type: RSA KEYS\nTemporary key\n Usage: Encryption Key\n Key is not exportable.\n Key Data:\n  30820132 300D0609 2A864886 F70D0101 01050003 82011F00 3082011A 02820111 \n  00D33744 988F6C6B B340AC9C 262BCA95 5BBDD76C 6AE4717A DF6CC507 ED0A7D68 \n  3D6187C3 FD3804E8 EC60BC64 625ACCC9 37C53F2A 0298BA70 1631786B 353FF18C \n  C774DBB3 9E4AD53D 99685586 B9C87415 EE22F9B1 D6F6783E ABB5CCAD D9F4D19A \n  5ACB96BE F67B7540 F6A5107B 77E4F948 F20F3331 089F1990 D5D8687F DE72CB8A \n  E80A0318 AEB76A96 D549760E F545EEEC 3C35CA6A D4084168 A1115257 2CCB620F \n  46AB893E 764CADB8 EBAF2DB3 86521F82 6F48A4CC 6EAC1DC0 1B290C1B 26947DD1 \n  ADFEB0C4 630D117F 93FD80E1 80839EC3 BA4E1C77 37161777 EB9CEC06 FBAD3BE8 \n  CC4998CE D20DFFDB 9050B9F9 6797766D 33125712 4A80FA1F 2FC71DF6 F12BDD10 \n  42E23CF0 06951AFD A0485832 F4789691 D3020301 0001\nAPI#"
+        },
+        {
+          "phase": "prepare",
+          "kind": "preparation",
+          "node": "API",
+          "command": "iosxe-api-v1",
+          "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29",
+          "passed": true
+        },
+        {
+          "phase": "baseline",
+          "node": "CLIENT",
+          "command": "python3 /lab/client.py baseline",
+          "expectation": "The real northbound HTTP client verifies baseline against the durable controller and its actual device adapter.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/client.py baseline\n{\"approved_job\": \"install-1\", \"invalid_requests_rejected\": true, \"phase\": \"baseline\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent IOS RIB contains the intended installed static route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\nRouting entry for 192.0.2.42/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nAPI#"
+        },
+        {
+          "phase": "baseline",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests reach the Linux loopback through the installed route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/3/7 ms\nAPI#"
+        },
+        {
+          "phase": "baseline",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "reject malformed generated proposals and exercise the real API backstop",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/p.py rejections",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/p.py rejections\n{\"history_unchanged\": true, \"local_rejections\": 18, \"phase\": \"rejections\", \"status\": \"passed\", \"wire_backstop_rejections\": 3}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "reject malformed generated proposals and exercise the real API backstop",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent IOS RIB contains the intended installed static route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\nRouting entry for 192.0.2.42/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nAPI#"
+        },
+        {
+          "phase": "reject malformed generated proposals and exercise the real API backstop",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests reach the Linux loopback through the installed route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "reject malformed generated proposals and exercise the real API backstop",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "withdraw only independent root fixture approval",
+          "kind": "configuration",
+          "node": "TOOLS",
+          "command": "python3 /lab/s.py policy-off",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/s.py policy-off\n{\"policy_enabled\": false, \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "withdraw only independent root fixture approval",
+          "node": "CLIENT",
+          "command": "python3 /lab/p.py approval-denied",
+          "expectation": "Require the declared local/real-wire proposal rejection, exact unchanged durable history or one successful job, and fresh actual device state. Claimed model confidence or approval is never authorization.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/p.py approval-denied\n{\"phase\": \"approval-denied\", \"rationale_and_confidence_cannot_approve\": true, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "withdraw only independent root fixture approval",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent IOS RIB contains the intended installed static route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\nRouting entry for 192.0.2.42/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nAPI#"
+        },
+        {
+          "phase": "withdraw only independent root fixture approval",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests reach the Linux loopback through the installed route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "withdraw only independent root fixture approval",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "restore exact operator fixture approval",
+          "kind": "configuration",
+          "node": "TOOLS",
+          "command": "python3 /lab/s.py policy-on",
+          "passed": true,
+          "output": "\nroot@TOOLS:~# python3 /lab/s.py policy-on\n{\"policy_enabled\": true, \"status\": \"passed\"}\nroot@TOOLS:~# "
+        },
+        {
+          "phase": "restore exact operator fixture approval",
+          "node": "CLIENT",
+          "command": "python3 /lab/p.py rejections",
+          "expectation": "Require the declared local/real-wire proposal rejection, exact unchanged durable history or one successful job, and fresh actual device state. Claimed model confidence or approval is never authorization.",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/p.py rejections\n{\"history_unchanged\": true, \"local_rejections\": 18, \"phase\": \"rejections\", \"status\": \"passed\", \"wire_backstop_rejections\": 3}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "restore exact operator fixture approval",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent IOS RIB contains the intended installed static route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\nRouting entry for 192.0.2.42/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nAPI#"
+        },
+        {
+          "phase": "restore exact operator fixture approval",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests reach the Linux loopback through the installed route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "restore exact operator fixture approval",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "apply a fresh scoped approved proposal",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/p.py withdraw",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/p.py withdraw\n{\"actual_device_readback\": true, \"new_jobs\": 1, \"phase\": \"withdraw\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "apply a fresh scoped approved proposal",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "Independently observe actual removal of only the scoped service host route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\n% Network not in table\nAPI#"
+        },
+        {
+          "phase": "apply a fresh scoped approved proposal",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests cannot reach the loopback while its usable route is absent.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n...\nSuccess rate is 0 percent (0/3)\nAPI#"
+        },
+        {
+          "phase": "apply a fresh scoped approved proposal",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "reject the now-stale original before-state",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/p.py stale",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/p.py stale\n{\"history_unchanged\": true, \"phase\": \"stale\", \"stale_context_rejected\": true, \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "reject the now-stale original before-state",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "Independently observe actual removal of only the scoped service host route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\n% Network not in table\nAPI#"
+        },
+        {
+          "phase": "reject the now-stale original before-state",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests cannot reach the loopback while its usable route is absent.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n...\nSuccess rate is 0 percent (0/3)\nAPI#"
+        },
+        {
+          "phase": "reject the now-stale original before-state",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "apply a fresh approved repair and verify forwarding",
+          "kind": "configuration",
+          "node": "CLIENT",
+          "command": "python3 /lab/p.py repair",
+          "passed": true,
+          "output": "\nroot@CLIENT:~# python3 /lab/p.py repair\n{\"actual_device_readback\": true, \"new_jobs\": 1, \"phase\": \"repair\", \"status\": \"passed\"}\nroot@CLIENT:~# "
+        },
+        {
+          "phase": "apply a fresh approved repair and verify forwarding",
+          "node": "API",
+          "command": "show ip route 192.0.2.42",
+          "expectation": "The independent IOS RIB contains the intended installed static route.",
+          "passed": true,
+          "output": "\nAPI#show ip route 192.0.2.42\nRouting entry for 192.0.2.42/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nAPI#"
+        },
+        {
+          "phase": "apply a fresh approved repair and verify forwarding",
+          "node": "API",
+          "command": "ping 192.0.2.42 repeat 3",
+          "expectation": "Three real requests reach the Linux loopback through the installed route.",
+          "passed": true,
+          "output": "\nAPI#ping 192.0.2.42 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.42, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        },
+        {
+          "phase": "apply a fresh approved repair and verify forwarding",
+          "node": "API",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "The connected device-management path remains healthy.",
+          "passed": true,
+          "output": "\nAPI#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 1/1/1 ms\nAPI#"
+        }
+      ],
+      "plan_sha256": "48d67e9131c7cab1ec633edf3dc9594bf91fea90d5857e86444669df607b3a95",
+      "startup_states": {
+        "API": "STARTED",
+        "TOOLS": "BOOTED",
+        "CLIENT": "BOOTED"
+      },
+      "images": {
+        "API": "csr1000v-17-03-08a",
+        "TOOLS": "cml-labs-toolbox-9f43df961cbe",
+        "CLIENT": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "API"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-02T18:35:14Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/003-site-to-site-vpn-types.yaml",
+      "sha256": "0c6665d11f8e442bd807e514f683a49f5707c655e9a0a6a130da6eb2b7fc6c18",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-02T18:35:16Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "P1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "Unprotected peer-address reachability remains healthy.",
+          "passed": true,
+          "output": "\nP1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/8 ms\nP1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "P1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "All protected loopback packets receive replies after actual negotiation.",
+          "passed": true,
+          "output": "\nP1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 10/14/21 ms\nP1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "P1",
+          "command": "show crypto isakmp sa",
+          "expectation": "The actual IKEv1 session completes Quick Mode.",
+          "passed": true,
+          "output": "\nP1#show crypto isakmp sa\nIPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n198.18.0.2      198.18.0.1      QM_IDLE           1001 ACTIVE\n\nIPv6 Crypto ISAKMP SA\n\nP1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "P1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual packet counters are nonzero and the negotiated transform is AES256/SHA256.",
+          "passed": true,
+          "output": "\nP1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 5, #pkts encrypt: 5, #pkts digest: 5\n    #pkts decaps: 5, #pkts decrypt: 5, #pkts verify: 5\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nP1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "P2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual packet counters are nonzero and the negotiated transform is AES256/SHA256.",
+          "passed": true,
+          "output": "\nP2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 5, #pkts encrypt: 5, #pkts digest: 5\n    #pkts decaps: 5, #pkts decrypt: 5, #pkts verify: 5\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nP2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "P1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The actual policy-based service route selects the physical peer next hop.",
+          "passed": true,
+          "output": "\nP1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nP1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "P1",
+          "command": "show crypto map",
+          "expectation": "The policy pair actually selects its crypto-map transform.",
+          "passed": true,
+          "output": "\nP1#show crypto map\nCrypto Map IPv4 \"CML-VPN\" 10 ipsec-isakmp\n\tPeer = 198.18.0.2\n\tExtended IP access list CML-PROTECTED\n\t    access-list CML-PROTECTED permit ip host 192.0.2.1 host 192.0.2.2\n\tCurrent peer: 198.18.0.2\n\tSecurity association lifetime: 4608000 kilobytes/3600 seconds\n\tResponder-Only (Y/N): N\n\tPFS (Y/N): Y\n\tDH group:  group14\n\tMixed-mode : Disabled\n\tTransform sets={ \n\t\tCML-ESP:  { esp-256-aes esp-sha256-hmac  } , \n\t}\n\tInterfaces using crypto map CML-VPN:\n\t\tGigabitEthernet0/0\n\n\tInterfaces using crypto map NiStTeSt1:\n\nP1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "V1",
+          "command": "ping 198.18.1.2 repeat 3",
+          "expectation": "The unprotected peer transport remains reachable.",
+          "passed": true,
+          "output": "\nV1#ping 198.18.1.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.1.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/4/4 ms\nV1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "V1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "The actual protected service loopback replies.",
+          "passed": true,
+          "output": "\nV1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 10/12/17 ms\nV1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "V1",
+          "command": "show crypto isakmp sa",
+          "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+          "passed": true,
+          "output": "\nV1#show crypto isakmp sa\nIPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n198.18.1.1      198.18.1.2      QM_IDLE           1002 ACTIVE\n198.18.1.2      198.18.1.1      QM_IDLE           1001 ACTIVE\n\nIPv6 Crypto ISAKMP SA\n\nV1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "V1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nV1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 3, #pkts encrypt: 3, #pkts digest: 3\n    #pkts decaps: 3, #pkts decrypt: 3, #pkts verify: 3\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nV1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "V2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nV2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 3, #pkts encrypt: 3, #pkts digest: 3\n    #pkts decaps: 3, #pkts decrypt: 3, #pkts verify: 3\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nV2#"
+        },
+        {
+          "phase": "baseline",
+          "node": "V1",
+          "command": "show ip route 192.0.2.12",
+          "expectation": "The actual route-based service prefix selects the protected VTI.",
+          "passed": true,
+          "output": "\nV1#show ip route 192.0.2.12\nRouting entry for 192.0.2.12/32\n  Known via \"static\", distance 1, metric 0 (connected)\n  Routing Descriptor Blocks:\n  * directly connected, via Tunnel0\n      Route metric is 0, traffic share count is 1\nV1#"
+        },
+        {
+          "phase": "baseline",
+          "node": "V1",
+          "command": "show interfaces Tunnel0",
+          "expectation": "The live routed tunnel uses native IPsec transport, rather than a GRE interface.",
+          "passed": true,
+          "output": "\nV1#show interfaces Tunnel0\nTunnel0 is up, line protocol is up \n  Hardware is Tunnel\n  Internet address is 172.16.1.1/30\n  MTU 17878 bytes, BW 100 Kbit/sec, DLY 50000 usec, \n     reliability 255/255, txload 1/255, rxload 1/255\n  Encapsulation TUNNEL, loopback not set\n  Keepalive not set\n  Tunnel linestate evaluation up\n  Tunnel source 198.18.1.1 (GigabitEthernet0/0), destination 198.18.1.2\n   Tunnel Subblocks:\n      src-track:\n         Tunnel0 source tracking subblock associated with GigabitEthernet0/0\n          Set of tunnels with source GigabitEthernet0/0, 1 member (includes iterators), on interface <OK>\n  Tunnel protocol/transport IPSEC/IP\n  Tunnel TTL 255\n  Tunnel transport MTU 1438 bytes\n  Tunnel transmit bandwidth 8000 (kbps)\n  Tunnel receive bandwidth 8000 (kbps)\n  Tunnel protection via IPSec (profile \"DESIGN-PROFILE\")\n  Last input never, output never, output hang never\n  Last clearing of \"show interface\" counters 00:04:58\n  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 24\n  Queueing strategy: fifo\n  Output queue: 0/0 (size/max)\n  5 minute input rate 0 bits/sec, 0 packets/sec\n  5 minute output rate 0 bits/sec, 0 packets/sec\n     3 packets input, 300 bytes, 0 no buffer\n     Received 0 broadcasts (0 IP multicasts)\n     0 runts, 0 giants, 0 throttles \n     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort\n     27 packets output, 1422 bytes, 0 underruns\n     0 output errors, 0 collisions, 0 interface resets\n     0 unknown protocol drops\n     0 output buffer failures, 0 output buffers swapped out\nV1#"
+        },
+        {
+          "phase": "drop only VTI ESP while the policy pair remains usable",
+          "kind": "configuration",
+          "node": "V2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nV2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nV2(config)#"
+        },
+        {
+          "phase": "drop only VTI ESP while the policy pair remains usable",
+          "kind": "configuration",
+          "node": "V2",
+          "command": "ip access-list extended TYPES-ESP",
+          "passed": true,
+          "output": "\nV2(config)#ip access-list extended TYPES-ESP\nV2(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only VTI ESP while the policy pair remains usable",
+          "kind": "configuration",
+          "node": "V2",
+          "command": "deny esp any any",
+          "passed": true,
+          "output": "\nV2(config-ext-nacl)#deny esp any any\nV2(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only VTI ESP while the policy pair remains usable",
+          "kind": "configuration",
+          "node": "V2",
+          "command": "permit ip any any",
+          "passed": true,
+          "output": "\nV2(config-ext-nacl)#permit ip any any\nV2(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only VTI ESP while the policy pair remains usable",
+          "kind": "configuration",
+          "node": "V2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nV2(config-ext-nacl)#exit\nV2(config)#"
+        },
+        {
+          "phase": "drop only VTI ESP while the policy pair remains usable",
+          "kind": "configuration",
+          "node": "V2",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nV2(config)#interface GigabitEthernet0/0\nV2(config-if)#"
+        },
+        {
+          "phase": "drop only VTI ESP while the policy pair remains usable",
+          "kind": "configuration",
+          "node": "V2",
+          "command": "ip access-group TYPES-ESP in",
+          "passed": true,
+          "output": "\nV2(config-if)#ip access-group TYPES-ESP in\nV2(config-if)#"
+        },
+        {
+          "phase": "drop only VTI ESP while the policy pair remains usable",
+          "kind": "configuration",
+          "node": "V2",
+          "command": "end",
+          "passed": true,
+          "output": "\nV2(config-if)#end\nV2#"
+        },
+        {
+          "phase": "drop only VTI ESP while the policy pair remains usable",
+          "node": "V1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "The controlled fault blocks the protected service.",
+          "passed": true,
+          "output": "\nV1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n...\nSuccess rate is 0 percent (0/3)\nV1#"
+        },
+        {
+          "phase": "drop only VTI ESP while the policy pair remains usable",
+          "node": "V1",
+          "command": "ping 198.18.1.2 repeat 3",
+          "expectation": "The unprotected peer transport remains reachable.",
+          "passed": true,
+          "output": "\nV1#ping 198.18.1.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.1.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 4/5/7 ms\nV1#"
+        },
+        {
+          "phase": "drop only VTI ESP while the policy pair remains usable",
+          "node": "V1",
+          "command": "show crypto isakmp sa",
+          "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+          "passed": true,
+          "output": "\nV1#show crypto isakmp sa\nIPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n198.18.1.1      198.18.1.2      QM_IDLE           1002 ACTIVE\n198.18.1.2      198.18.1.1      QM_IDLE           1001 ACTIVE\n\nIPv6 Crypto ISAKMP SA\n\nV1#"
+        },
+        {
+          "phase": "drop only VTI ESP while the policy pair remains usable",
+          "node": "V2",
+          "command": "show access-lists TYPES-ESP",
+          "expectation": "Actual VTI ESP packets hit this receiving filter.",
+          "passed": true,
+          "output": "\nV2#show access-lists TYPES-ESP\nExtended IP access list TYPES-ESP\n    10 deny esp any any (3 matches)\n    20 permit ip any any (3 matches)\nV2#"
+        },
+        {
+          "phase": "drop only VTI ESP while the policy pair remains usable",
+          "node": "P1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "All protected loopback packets receive replies after actual negotiation.",
+          "passed": true,
+          "output": "\nP1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 9/10/13 ms\nP1#"
+        },
+        {
+          "phase": "restore only VTI encrypted forwarding",
+          "kind": "configuration",
+          "node": "V2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nV2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nV2(config)#"
+        },
+        {
+          "phase": "restore only VTI encrypted forwarding",
+          "kind": "configuration",
+          "node": "V2",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nV2(config)#interface GigabitEthernet0/0\nV2(config-if)#"
+        },
+        {
+          "phase": "restore only VTI encrypted forwarding",
+          "kind": "configuration",
+          "node": "V2",
+          "command": "no ip access-group TYPES-ESP in",
+          "passed": true,
+          "output": "\nV2(config-if)#no ip access-group TYPES-ESP in\nV2(config-if)#"
+        },
+        {
+          "phase": "restore only VTI encrypted forwarding",
+          "kind": "configuration",
+          "node": "V2",
+          "command": "end",
+          "passed": true,
+          "output": "\nV2(config-if)#end\nV2#"
+        },
+        {
+          "phase": "restore only VTI encrypted forwarding",
+          "node": "V1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "The actual protected service loopback replies.",
+          "passed": true,
+          "output": "\nV1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 10/12/15 ms\nV1#"
+        },
+        {
+          "phase": "restore only VTI encrypted forwarding",
+          "node": "V1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nV1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 9, #pkts encrypt: 9, #pkts digest: 9\n    #pkts decaps: 6, #pkts decrypt: 6, #pkts verify: 6\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nV1#"
+        },
+        {
+          "phase": "restore only VTI encrypted forwarding",
+          "node": "V2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nV2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 6, #pkts encrypt: 6, #pkts digest: 6\n    #pkts decaps: 6, #pkts decrypt: 6, #pkts verify: 6\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nV2#"
+        },
+        {
+          "phase": "restore only VTI encrypted forwarding",
+          "node": "V1",
+          "command": "show ip route 192.0.2.12",
+          "expectation": "The actual route-based service prefix selects the protected VTI.",
+          "passed": true,
+          "output": "\nV1#show ip route 192.0.2.12\nRouting entry for 192.0.2.12/32\n  Known via \"static\", distance 1, metric 0 (connected)\n  Routing Descriptor Blocks:\n  * directly connected, via Tunnel0\n      Route metric is 0, traffic share count is 1\nV1#"
+        },
+        {
+          "phase": "restore only VTI encrypted forwarding",
+          "node": "V1",
+          "command": "show interfaces Tunnel0",
+          "expectation": "The live routed tunnel uses native IPsec transport, rather than a GRE interface.",
+          "passed": true,
+          "output": "\nV1#show interfaces Tunnel0\nTunnel0 is up, line protocol is up \n  Hardware is Tunnel\n  Internet address is 172.16.1.1/30\n  MTU 17878 bytes, BW 100 Kbit/sec, DLY 50000 usec, \n     reliability 255/255, txload 1/255, rxload 1/255\n  Encapsulation TUNNEL, loopback not set\n  Keepalive not set\n  Tunnel linestate evaluation up\n  Tunnel source 198.18.1.1 (GigabitEthernet0/0), destination 198.18.1.2\n   Tunnel Subblocks:\n      src-track:\n         Tunnel0 source tracking subblock associated with GigabitEthernet0/0\n          Set of tunnels with source GigabitEthernet0/0, 1 member (includes iterators), on interface <OK>\n  Tunnel protocol/transport IPSEC/IP\n  Tunnel TTL 255\n  Tunnel transport MTU 1438 bytes\n  Tunnel transmit bandwidth 8000 (kbps)\n  Tunnel receive bandwidth 8000 (kbps)\n  Tunnel protection via IPSec (profile \"DESIGN-PROFILE\")\n  Last input never, output never, output hang never\n  Last clearing of \"show interface\" counters 00:05:26\n  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 24\n  Queueing strategy: fifo\n  Output queue: 0/0 (size/max)\n  5 minute input rate 0 bits/sec, 0 packets/sec\n  5 minute output rate 0 bits/sec, 0 packets/sec\n     6 packets input, 600 bytes, 0 no buffer\n     Received 0 broadcasts (0 IP multicasts)\n     0 runts, 0 giants, 0 throttles \n     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort\n     33 packets output, 2022 bytes, 0 underruns\n     0 output errors, 0 collisions, 0 interface resets\n     0 unknown protocol drops\n     0 output buffer failures, 0 output buffers swapped out\nV1#"
+        },
+        {
+          "phase": "restore only VTI encrypted forwarding",
+          "node": "P1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "All protected loopback packets receive replies after actual negotiation.",
+          "passed": true,
+          "output": "\nP1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 10/12/14 ms\nP1#"
+        },
+        {
+          "phase": "drop only policy ESP while the VTI pair remains usable",
+          "kind": "configuration",
+          "node": "P2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nP2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nP2(config)#"
+        },
+        {
+          "phase": "drop only policy ESP while the VTI pair remains usable",
+          "kind": "configuration",
+          "node": "P2",
+          "command": "ip access-list extended TYPES-ESP",
+          "passed": true,
+          "output": "\nP2(config)#ip access-list extended TYPES-ESP\nP2(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only policy ESP while the VTI pair remains usable",
+          "kind": "configuration",
+          "node": "P2",
+          "command": "deny esp any any",
+          "passed": true,
+          "output": "\nP2(config-ext-nacl)#deny esp any any\nP2(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only policy ESP while the VTI pair remains usable",
+          "kind": "configuration",
+          "node": "P2",
+          "command": "permit ip any any",
+          "passed": true,
+          "output": "\nP2(config-ext-nacl)#permit ip any any\nP2(config-ext-nacl)#"
+        },
+        {
+          "phase": "drop only policy ESP while the VTI pair remains usable",
+          "kind": "configuration",
+          "node": "P2",
+          "command": "exit",
+          "passed": true,
+          "output": "\nP2(config-ext-nacl)#exit\nP2(config)#"
+        },
+        {
+          "phase": "drop only policy ESP while the VTI pair remains usable",
+          "kind": "configuration",
+          "node": "P2",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nP2(config)#interface GigabitEthernet0/0\nP2(config-if)#"
+        },
+        {
+          "phase": "drop only policy ESP while the VTI pair remains usable",
+          "kind": "configuration",
+          "node": "P2",
+          "command": "ip access-group TYPES-ESP in",
+          "passed": true,
+          "output": "\nP2(config-if)#ip access-group TYPES-ESP in\nP2(config-if)#"
+        },
+        {
+          "phase": "drop only policy ESP while the VTI pair remains usable",
+          "kind": "configuration",
+          "node": "P2",
+          "command": "end",
+          "passed": true,
+          "output": "\nP2(config-if)#end\nP2#"
+        },
+        {
+          "phase": "drop only policy ESP while the VTI pair remains usable",
+          "node": "P1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "Policy-selected payload is blocked rather than sent in plaintext.",
+          "passed": true,
+          "output": "\nP1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n...\nSuccess rate is 0 percent (0/3)\nP1#"
+        },
+        {
+          "phase": "drop only policy ESP while the VTI pair remains usable",
+          "node": "P1",
+          "command": "ping 198.18.0.2 repeat 3",
+          "expectation": "Unprotected peer-address reachability remains healthy.",
+          "passed": true,
+          "output": "\nP1#ping 198.18.0.2 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 198.18.0.2, timeout is 2 seconds:\n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 3/4/5 ms\nP1#"
+        },
+        {
+          "phase": "drop only policy ESP while the VTI pair remains usable",
+          "node": "P1",
+          "command": "show crypto isakmp sa",
+          "expectation": "The actual IKEv1 session completes Quick Mode.",
+          "passed": true,
+          "output": "\nP1#show crypto isakmp sa\nIPv4 Crypto ISAKMP SA\ndst             src             state          conn-id status\n198.18.0.2      198.18.0.1      QM_IDLE           1001 ACTIVE\n\nIPv6 Crypto ISAKMP SA\n\nP1#"
+        },
+        {
+          "phase": "drop only policy ESP while the VTI pair remains usable",
+          "node": "P2",
+          "command": "show access-lists TYPES-ESP",
+          "expectation": "Actual policy-protected ESP packets hit this receiving filter.",
+          "passed": true,
+          "output": "\nP2#show access-lists TYPES-ESP\nExtended IP access list TYPES-ESP\n    10 deny esp any any (3 matches)\n    20 permit ip any any (3 matches)\nP2#"
+        },
+        {
+          "phase": "drop only policy ESP while the VTI pair remains usable",
+          "node": "V1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "The actual protected service loopback replies.",
+          "passed": true,
+          "output": "\nV1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 10/12/17 ms\nV1#"
+        },
+        {
+          "phase": "restore both models and verify their distinct selected paths",
+          "kind": "configuration",
+          "node": "P2",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nP2#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nP2(config)#"
+        },
+        {
+          "phase": "restore both models and verify their distinct selected paths",
+          "kind": "configuration",
+          "node": "P2",
+          "command": "interface GigabitEthernet0/0",
+          "passed": true,
+          "output": "\nP2(config)#interface GigabitEthernet0/0\nP2(config-if)#"
+        },
+        {
+          "phase": "restore both models and verify their distinct selected paths",
+          "kind": "configuration",
+          "node": "P2",
+          "command": "no ip access-group TYPES-ESP in",
+          "passed": true,
+          "output": "\nP2(config-if)#no ip access-group TYPES-ESP in\nP2(config-if)#"
+        },
+        {
+          "phase": "restore both models and verify their distinct selected paths",
+          "kind": "configuration",
+          "node": "P2",
+          "command": "end",
+          "passed": true,
+          "output": "\nP2(config-if)#end\nP2#"
+        },
+        {
+          "phase": "restore both models and verify their distinct selected paths",
+          "node": "P1",
+          "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+          "expectation": "All protected loopback packets receive replies after actual negotiation.",
+          "passed": true,
+          "output": "\nP1#ping 192.0.2.2 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.2, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.1 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 9/12/16 ms\nP1#"
+        },
+        {
+          "phase": "restore both models and verify their distinct selected paths",
+          "node": "P1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual packet counters are nonzero and the negotiated transform is AES256/SHA256.",
+          "passed": true,
+          "output": "\nP1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 17, #pkts encrypt: 17, #pkts digest: 17\n    #pkts decaps: 14, #pkts decrypt: 14, #pkts verify: 14\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nP1#"
+        },
+        {
+          "phase": "restore both models and verify their distinct selected paths",
+          "node": "P2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual packet counters are nonzero and the negotiated transform is AES256/SHA256.",
+          "passed": true,
+          "output": "\nP2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 14, #pkts encrypt: 14, #pkts digest: 14\n    #pkts decaps: 14, #pkts decrypt: 14, #pkts verify: 14\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nP2#"
+        },
+        {
+          "phase": "restore both models and verify their distinct selected paths",
+          "node": "P1",
+          "command": "show ip route 192.0.2.2",
+          "expectation": "The actual policy-based service route selects the physical peer next hop.",
+          "passed": true,
+          "output": "\nP1#show ip route 192.0.2.2\nRouting entry for 192.0.2.2/32\n  Known via \"static\", distance 1, metric 0\n  Routing Descriptor Blocks:\n  * 198.18.0.2\n      Route metric is 0, traffic share count is 1\nP1#"
+        },
+        {
+          "phase": "restore both models and verify their distinct selected paths",
+          "node": "P1",
+          "command": "show crypto map",
+          "expectation": "The policy pair actually selects its crypto-map transform.",
+          "passed": true,
+          "output": "\nP1#show crypto map\nCrypto Map IPv4 \"CML-VPN\" 10 ipsec-isakmp\n\tPeer = 198.18.0.2\n\tExtended IP access list CML-PROTECTED\n\t    access-list CML-PROTECTED permit ip host 192.0.2.1 host 192.0.2.2\n\tCurrent peer: 198.18.0.2\n\tSecurity association lifetime: 4608000 kilobytes/3600 seconds\n\tResponder-Only (Y/N): N\n\tPFS (Y/N): Y\n\tDH group:  group14\n\tMixed-mode : Disabled\n\tTransform sets={ \n\t\tCML-ESP:  { esp-256-aes esp-sha256-hmac  } , \n\t}\n\tInterfaces using crypto map CML-VPN:\n\t\tGigabitEthernet0/0\n\n\tInterfaces using crypto map NiStTeSt1:\n\nP1#"
+        },
+        {
+          "phase": "restore both models and verify their distinct selected paths",
+          "node": "V1",
+          "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+          "expectation": "The actual protected service loopback replies.",
+          "passed": true,
+          "output": "\nV1#ping 192.0.2.12 source Loopback0 repeat 3\nType escape sequence to abort.\nSending 3, 100-byte ICMP Echos to 192.0.2.12, timeout is 2 seconds:\nPacket sent with a source address of 192.0.2.11 \n!!!\nSuccess rate is 100 percent (3/3), round-trip min/avg/max = 9/10/13 ms\nV1#"
+        },
+        {
+          "phase": "restore both models and verify their distinct selected paths",
+          "node": "V1",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nV1#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 15, #pkts encrypt: 15, #pkts digest: 15\n    #pkts decaps: 12, #pkts decrypt: 12, #pkts verify: 12\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nV1#"
+        },
+        {
+          "phase": "restore both models and verify their distinct selected paths",
+          "node": "V2",
+          "command": "show crypto ipsec sa | include #pkts|transform",
+          "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+          "passed": true,
+          "output": "\nV2#show crypto ipsec sa | include #pkts|transform\n    #pkts encaps: 12, #pkts encrypt: 12, #pkts digest: 12\n    #pkts decaps: 12, #pkts decrypt: 12, #pkts verify: 12\n    #pkts compressed: 0, #pkts decompressed: 0\n    #pkts not compressed: 0, #pkts compr. failed: 0\n    #pkts not decompressed: 0, #pkts decompress failed: 0\n        transform: esp-256-aes esp-sha256-hmac ,\n        transform: esp-256-aes esp-sha256-hmac ,\nV2#"
+        },
+        {
+          "phase": "restore both models and verify their distinct selected paths",
+          "node": "V1",
+          "command": "show ip route 192.0.2.12",
+          "expectation": "The actual route-based service prefix selects the protected VTI.",
+          "passed": true,
+          "output": "\nV1#show ip route 192.0.2.12\nRouting entry for 192.0.2.12/32\n  Known via \"static\", distance 1, metric 0 (connected)\n  Routing Descriptor Blocks:\n  * directly connected, via Tunnel0\n      Route metric is 0, traffic share count is 1\nV1#"
+        },
+        {
+          "phase": "restore both models and verify their distinct selected paths",
+          "node": "V1",
+          "command": "show interfaces Tunnel0",
+          "expectation": "The live routed tunnel uses native IPsec transport, rather than a GRE interface.",
+          "passed": true,
+          "output": "\nV1#show interfaces Tunnel0\nTunnel0 is up, line protocol is up \n  Hardware is Tunnel\n  Internet address is 172.16.1.1/30\n  MTU 17878 bytes, BW 100 Kbit/sec, DLY 50000 usec, \n     reliability 255/255, txload 1/255, rxload 1/255\n  Encapsulation TUNNEL, loopback not set\n  Keepalive not set\n  Tunnel linestate evaluation up\n  Tunnel source 198.18.1.1 (GigabitEthernet0/0), destination 198.18.1.2\n   Tunnel Subblocks:\n      src-track:\n         Tunnel0 source tracking subblock associated with GigabitEthernet0/0\n          Set of tunnels with source GigabitEthernet0/0, 1 member (includes iterators), on interface <OK>\n  Tunnel protocol/transport IPSEC/IP\n  Tunnel TTL 255\n  Tunnel transport MTU 1438 bytes\n  Tunnel transmit bandwidth 8000 (kbps)\n  Tunnel receive bandwidth 8000 (kbps)\n  Tunnel protection via IPSec (profile \"DESIGN-PROFILE\")\n  Last input never, output never, output hang never\n  Last clearing of \"show interface\" counters 00:06:01\n  Input queue: 0/75/0/0 (size/max/drops/flushes); Total output drops: 24\n  Queueing strategy: fifo\n  Output queue: 0/0 (size/max)\n  5 minute input rate 0 bits/sec, 0 packets/sec\n  5 minute output rate 0 bits/sec, 0 packets/sec\n     12 packets input, 1200 bytes, 0 no buffer\n     Received 0 broadcasts (0 IP multicasts)\n     0 runts, 0 giants, 0 throttles \n     0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort\n     39 packets output, 2622 bytes, 0 underruns\n     0 output errors, 0 collisions, 0 interface resets\n     0 unknown protocol drops\n     0 output buffer failures, 0 output buffers swapped out\nV1#"
+        }
+      ],
+      "plan_sha256": "3d9c08ca3771bf9206bdb0b49df0a5ba7c6044cde69eea1fef5fd1e38015ae71",
+      "startup_states": {
+        "P1": "STARTED",
+        "P2": "STARTED",
+        "V1": "STARTED",
+        "V2": "STARTED"
+      },
+      "images": {
+        "P1": "iosv-159-3-m12",
+        "P2": "iosv-159-3-m12",
+        "V1": "iosv-159-3-m12",
+        "V2": "iosv-159-3-m12"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "P1",
+        "P2",
+        "V1",
+        "V2"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-02T18:42:20Z"
     }
   ]
 }

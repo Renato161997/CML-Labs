@@ -763,11 +763,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/003-site-to-site-vpn-types.yaml",
-      "sha256": "8c9805bd0609ef8e52b1d3ff5729aea61f0572f06b0c7f3765f0f231680152bc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/004-security-intelligence-sharing.yaml",
       "sha256": "43423df8c67eeed9bffed3e13ca3be1c28522eb57d82f0337a34ca47e351060b",
       "status": "import-export-pass"
@@ -875,11 +870,6 @@
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/027-yang-model-interface-change.yaml",
       "sha256": "d75496e189ca12cd73b1a5a58bc39e5508183dc9dd20ee2995148ee6752ca373",
-      "status": "import-export-pass"
-    },
-    {
-      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/029-ai-assisted-automation-guardrails.yaml",
-      "sha256": "66ea994e5ebc633e1948066a7e274afd5c2519bf6b74dd86bca23b6eb212c54e",
       "status": "import-export-pass"
     },
     {
@@ -1368,11 +1358,6 @@
       "completed_utc": "2026-11-01T19:25:04Z"
     },
     {
-      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
-      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/019-containerized-network-tool.yaml",
       "sha256": "5daff539d3f83477bb059bd7b9586b026efba88a416afbc75c55c43d0775be86",
       "cml_version": "2.10.1+build.21",
@@ -1391,6 +1376,31 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-11-01T19:46:50Z"
+    },
+    {
+      "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/029-ai-assisted-automation-guardrails.yaml",
+      "sha256": "b362c029528a099032cfb4e9002aa1609d1f589419fb40cea4faa8e308e4b011",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-02T18:14:41Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-02T18:14:42Z"
+    },
+    {
+      "path": "labs/350-401-encor-implementing-and-operating-cisco-enterprise-network-core-technologies/security/034-dhcp-snooping-dai-ipsg.yaml",
+      "sha256": "1f1672f84aec1bd498ebc1e36a287d05eec6b41c5416aee448c49e6153ea12dc",
+      "status": "import-export-pass"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/003-site-to-site-vpn-types.yaml",
+      "sha256": "0c6665d11f8e442bd807e514f683a49f5707c655e9a0a6a130da6eb2b7fc6c18",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-02T18:22:31Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-02T18:22:31Z"
     }
   ]
 }

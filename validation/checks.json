@@ -28339,5 +28339,583 @@
         "command_pattern": "(?s)(?=.*\"phase\": \"no-key\")(?=.*\"status\": \"passed\")"
       }
     ]
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/infrastructure-automation/029-ai-assisted-automation-guardrails.yaml": {
+    "checks": [
+      {
+        "node": "CLIENT",
+        "command": "python3 /lab/client.py baseline",
+        "pattern": "\"status\": \"passed\"",
+        "expectation": "The real northbound HTTP client verifies baseline against the durable controller and its actual device adapter.",
+        "command_timeout": 90,
+        "attempts": 1
+      },
+      {
+        "node": "API",
+        "command": "show ip route 192.0.2.42",
+        "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+        "expectation": "The independent IOS RIB contains the intended installed static route."
+      },
+      {
+        "node": "API",
+        "command": "ping 192.0.2.42 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Three real requests reach the Linux loopback through the installed route."
+      },
+      {
+        "node": "API",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The connected device-management path remains healthy."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "reject malformed generated proposals and exercise the real API backstop",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/p.py rejections"
+        ],
+        "checks": [
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ],
+        "command_pattern": "(?s)(?=.*\"phase\": \"rejections\")(?=.*\"wire_backstop_rejections\": 3)(?=.*\"status\": \"passed\")",
+        "command_timeout": 60
+      },
+      {
+        "name": "withdraw only independent root fixture approval",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/s.py policy-off"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/p.py approval-denied",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"approval-denied\")",
+            "expectation": "Require the declared local/real-wire proposal rejection, exact unchanged durable history or one successful job, and fresh actual device state. Claimed model confidence or approval is never authorization.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ],
+        "command_pattern": "\"policy_enabled\": false",
+        "command_timeout": 60
+      },
+      {
+        "name": "restore exact operator fixture approval",
+        "node": "TOOLS",
+        "commands": [
+          "python3 /lab/s.py policy-on"
+        ],
+        "checks": [
+          {
+            "node": "CLIENT",
+            "command": "python3 /lab/p.py rejections",
+            "pattern": "(?s)(?=.*\"status\": \"passed\")(?=.*\"phase\": \"rejections\")",
+            "expectation": "Require the declared local/real-wire proposal rejection, exact unchanged durable history or one successful job, and fresh actual device state. Claimed model confidence or approval is never authorization.",
+            "command_timeout": 90,
+            "attempts": 1
+          },
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ],
+        "command_pattern": "\"policy_enabled\": true",
+        "command_timeout": 60
+      },
+      {
+        "name": "apply a fresh scoped approved proposal",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/p.py withdraw"
+        ],
+        "checks": [
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "Independently observe actual removal of only the scoped service host route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Three real requests cannot reach the loopback while its usable route is absent."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ],
+        "command_pattern": "(?s)(?=.*\"phase\": \"withdraw\")(?=.*\"actual_device_readback\": true)",
+        "command_timeout": 60
+      },
+      {
+        "name": "reject the now-stale original before-state",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/p.py stale"
+        ],
+        "checks": [
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?:Network|Subnet) not in table",
+            "expectation": "Independently observe actual removal of only the scoped service host route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Three real requests cannot reach the loopback while its usable route is absent."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ],
+        "command_pattern": "(?s)(?=.*\"phase\": \"stale\")(?=.*\"stale_context_rejected\": true)",
+        "command_timeout": 60
+      },
+      {
+        "name": "apply a fresh approved repair and verify forwarding",
+        "node": "CLIENT",
+        "commands": [
+          "python3 /lab/p.py repair"
+        ],
+        "checks": [
+          {
+            "node": "API",
+            "command": "show ip route 192.0.2.42",
+            "pattern": "(?s)Known via \"static\".*198\\.18\\.0\\.2",
+            "expectation": "The independent IOS RIB contains the intended installed static route."
+          },
+          {
+            "node": "API",
+            "command": "ping 192.0.2.42 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Three real requests reach the Linux loopback through the installed route."
+          },
+          {
+            "node": "API",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The connected device-management path remains healthy."
+          }
+        ],
+        "command_pattern": "(?s)(?=.*\"phase\": \"repair\")(?=.*\"actual_device_readback\": true)",
+        "command_timeout": 60
+      }
+    ],
+    "prepare": [
+      {
+        "operation": "iosxe-api-v1",
+        "router": "API",
+        "client": "TOOLS",
+        "implementation_sha256": "d9f05fcd6bac46b8b2c66286056843aa7862d72d3053573478c0df97ba885d29"
+      }
+    ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/security-concepts/003-site-to-site-vpn-types.yaml": {
+    "checks": [
+      {
+        "node": "P1",
+        "command": "ping 198.18.0.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "Unprotected peer-address reachability remains healthy."
+      },
+      {
+        "node": "P1",
+        "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "All protected loopback packets receive replies after actual negotiation.",
+        "attempts": 12,
+        "interval_seconds": 2
+      },
+      {
+        "node": "P1",
+        "command": "show crypto isakmp sa",
+        "pattern": "QM_IDLE",
+        "expectation": "The actual IKEv1 session completes Quick Mode.",
+        "attempts": 8,
+        "interval_seconds": 2
+      },
+      {
+        "node": "P1",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual packet counters are nonzero and the negotiated transform is AES256/SHA256.",
+        "command_timeout": 60
+      },
+      {
+        "node": "P2",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual packet counters are nonzero and the negotiated transform is AES256/SHA256.",
+        "command_timeout": 60
+      },
+      {
+        "node": "P1",
+        "command": "show ip route 192.0.2.2",
+        "pattern": "198\\.18\\.0\\.2",
+        "expectation": "The actual policy-based service route selects the physical peer next hop."
+      },
+      {
+        "node": "P1",
+        "command": "show crypto map",
+        "pattern": "Transform sets=\\{\\s*CML-ESP",
+        "expectation": "The policy pair actually selects its crypto-map transform."
+      },
+      {
+        "node": "V1",
+        "command": "ping 198.18.1.2 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The unprotected peer transport remains reachable."
+      },
+      {
+        "node": "V1",
+        "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+        "pattern": "Success rate is 100 percent",
+        "expectation": "The actual protected service loopback replies.",
+        "attempts": 30,
+        "interval_seconds": 3
+      },
+      {
+        "node": "V1",
+        "command": "show crypto isakmp sa",
+        "pattern": "QM_IDLE",
+        "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+        "attempts": 20,
+        "interval_seconds": 3
+      },
+      {
+        "node": "V1",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+        "attempts": 20,
+        "interval_seconds": 3,
+        "command_timeout": 60
+      },
+      {
+        "node": "V2",
+        "command": "show crypto ipsec sa | include #pkts|transform",
+        "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+        "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+        "attempts": 20,
+        "interval_seconds": 3,
+        "command_timeout": 60
+      },
+      {
+        "node": "V1",
+        "command": "show ip route 192.0.2.12",
+        "pattern": "Tunnel0",
+        "expectation": "The actual route-based service prefix selects the protected VTI."
+      },
+      {
+        "node": "V1",
+        "command": "show interfaces Tunnel0",
+        "pattern": "Tunnel protocol/transport IPSEC/IP",
+        "expectation": "The live routed tunnel uses native IPsec transport, rather than a GRE interface."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "drop only VTI ESP while the policy pair remains usable",
+        "node": "V2",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended TYPES-ESP",
+          "deny esp any any",
+          "permit ip any any",
+          "exit",
+          "interface GigabitEthernet0/0",
+          "ip access-group TYPES-ESP in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "V1",
+            "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "The controlled fault blocks the protected service."
+          },
+          {
+            "node": "V1",
+            "command": "ping 198.18.1.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The unprotected peer transport remains reachable."
+          },
+          {
+            "node": "V1",
+            "command": "show crypto isakmp sa",
+            "pattern": "QM_IDLE",
+            "expectation": "The actual IKEv1 session reaches Quick Mode idle.",
+            "attempts": 20,
+            "interval_seconds": 3
+          },
+          {
+            "node": "V2",
+            "command": "show access-lists TYPES-ESP",
+            "pattern": "deny esp any any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Actual VTI ESP packets hit this receiving filter."
+          },
+          {
+            "node": "P1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All protected loopback packets receive replies after actual negotiation.",
+            "attempts": 12,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "restore only VTI encrypted forwarding",
+        "node": "V2",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip access-group TYPES-ESP in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "V1",
+            "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual protected service loopback replies.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "V1",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "V2",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "V1",
+            "command": "show ip route 192.0.2.12",
+            "pattern": "Tunnel0",
+            "expectation": "The actual route-based service prefix selects the protected VTI."
+          },
+          {
+            "node": "V1",
+            "command": "show interfaces Tunnel0",
+            "pattern": "Tunnel protocol/transport IPSEC/IP",
+            "expectation": "The live routed tunnel uses native IPsec transport, rather than a GRE interface."
+          },
+          {
+            "node": "P1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All protected loopback packets receive replies after actual negotiation.",
+            "attempts": 12,
+            "interval_seconds": 2
+          }
+        ]
+      },
+      {
+        "name": "drop only policy ESP while the VTI pair remains usable",
+        "node": "P2",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended TYPES-ESP",
+          "deny esp any any",
+          "permit ip any any",
+          "exit",
+          "interface GigabitEthernet0/0",
+          "ip access-group TYPES-ESP in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "P1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 0 percent",
+            "expectation": "Policy-selected payload is blocked rather than sent in plaintext."
+          },
+          {
+            "node": "P1",
+            "command": "ping 198.18.0.2 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "Unprotected peer-address reachability remains healthy."
+          },
+          {
+            "node": "P1",
+            "command": "show crypto isakmp sa",
+            "pattern": "QM_IDLE",
+            "expectation": "The actual IKEv1 session completes Quick Mode.",
+            "attempts": 8,
+            "interval_seconds": 2
+          },
+          {
+            "node": "P2",
+            "command": "show access-lists TYPES-ESP",
+            "pattern": "deny esp any any[^\\n]*\\([1-9][0-9]* match",
+            "expectation": "Actual policy-protected ESP packets hit this receiving filter."
+          },
+          {
+            "node": "V1",
+            "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual protected service loopback replies.",
+            "attempts": 30,
+            "interval_seconds": 3
+          }
+        ]
+      },
+      {
+        "name": "restore both models and verify their distinct selected paths",
+        "node": "P2",
+        "commands": [
+          "configure terminal",
+          "interface GigabitEthernet0/0",
+          "no ip access-group TYPES-ESP in",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "P1",
+            "command": "ping 192.0.2.2 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "All protected loopback packets receive replies after actual negotiation.",
+            "attempts": 12,
+            "interval_seconds": 2
+          },
+          {
+            "node": "P1",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual packet counters are nonzero and the negotiated transform is AES256/SHA256.",
+            "command_timeout": 60
+          },
+          {
+            "node": "P2",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual packet counters are nonzero and the negotiated transform is AES256/SHA256.",
+            "command_timeout": 60
+          },
+          {
+            "node": "P1",
+            "command": "show ip route 192.0.2.2",
+            "pattern": "198\\.18\\.0\\.2",
+            "expectation": "The actual policy-based service route selects the physical peer next hop."
+          },
+          {
+            "node": "P1",
+            "command": "show crypto map",
+            "pattern": "Transform sets=\\{\\s*CML-ESP",
+            "expectation": "The policy pair actually selects its crypto-map transform."
+          },
+          {
+            "node": "V1",
+            "command": "ping 192.0.2.12 source Loopback0 repeat 3",
+            "pattern": "Success rate is 100 percent",
+            "expectation": "The actual protected service loopback replies.",
+            "attempts": 30,
+            "interval_seconds": 3
+          },
+          {
+            "node": "V1",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "V2",
+            "command": "show crypto ipsec sa | include #pkts|transform",
+            "pattern": "(?s)(?=.*#pkts encaps:\\s*[1-9][0-9]*)(?=.*#pkts decaps:\\s*[1-9][0-9]*)(?=.*transform:\\s*esp-256-aes esp-sha256-hmac)",
+            "expectation": "Both actual protected packet directions are nonzero with AES256/SHA256.",
+            "attempts": 20,
+            "interval_seconds": 3,
+            "command_timeout": 60
+          },
+          {
+            "node": "V1",
+            "command": "show ip route 192.0.2.12",
+            "pattern": "Tunnel0",
+            "expectation": "The actual route-based service prefix selects the protected VTI."
+          },
+          {
+            "node": "V1",
+            "command": "show interfaces Tunnel0",
+            "pattern": "Tunnel protocol/transport IPSEC/IP",
+            "expectation": "The live routed tunnel uses native IPsec transport, rather than a GRE interface."
+          }
+        ]
+      }
+    ]
   }
 }
