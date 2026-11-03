@@ -1366,5 +1366,12 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-901-020-ci-cd-for-network-automation.md",
     "example_profile": "native-git-policy-pipeline"
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/035-secure-access-automation.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 110,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-701-035-secure-access-automation.md",
+    "example_profile": "native-firewall-traffic"
   }
 }

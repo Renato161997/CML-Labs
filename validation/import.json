@@ -633,11 +633,6 @@
       "status": "import-export-pass"
     },
     {
-      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/035-secure-access-automation.yaml",
-      "sha256": "e9c9854d5c73e2a720d1681b74bad53c780f3e687025a93584e6fe9ebffe2be8",
-      "status": "import-export-pass"
-    },
-    {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/045-scor-capstone-secure-edge.yaml",
       "sha256": "d5053ab6aea05ebcb4da50e10a8c01c1ff0b69dc12e6baad8fa7af4377ad77ba",
       "status": "import-export-pass"
@@ -1426,6 +1421,16 @@
       "status": "import-export-pass",
       "test_lab_removed": true,
       "completed_utc": "2026-11-02T20:13:00Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/035-secure-access-automation.yaml",
+      "sha256": "7b5587d2847f3eb1499f1e820f901c8b0c62cd4a0586e0ce8dc627d13ec9d521",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-03T07:53:22Z",
+      "checks": [],
+      "status": "import-export-pass",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-03T07:53:22Z"
     }
   ]
 }

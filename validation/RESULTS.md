@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **212**.
+Import/export passes: **233/233**. Functional passes: **213**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -160,6 +160,7 @@ Import/export passes: **233/233**. Functional passes: **212**.
 | [Policy as Code: Guarded Artifacts, Real Deployment and Rollback](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/032-firewall-policy-as-code.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3 | 48 | 7 | 2026-11-01T13:37:13Z |
 | [SOAR Events: Signature, Approval and Verified Route Remediation](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/033-soar-webhook-remediation.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 20 | 33 | 2026-11-01T12:49:56Z |
 | [Indicator Feed: Revalidation, Revocation and Cache Integrity](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/034-threat-intel-enrichment.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 13 | 6 | 2026-11-01T13:04:54Z |
+| [Secure Access Automation: Grant, Timed Revocation and Repair](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/035-secure-access-automation.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 46 | 38 | 2026-11-03T08:11:22Z |
 | [Telemetry: Fresh State and Honest Byte Rates](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/036-security-dashboard-telemetry.yaml) | passed | 2.10.1+build.21 | iol-xe-17-18-02, net-tools-2-10-1-3 | 22 | 12 | 2026-11-02T19:20:34Z |
 | [SCOR Capstone Secure Edge](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/capstone/045-scor-capstone-secure-edge.yaml) | passed | 2.10.1+build.21 | iosv-159-3-m12, net-tools-2-10-1-3 | 23 | 18 | 2026-10-30T16:02:32Z |
 | [DNS Security Concepts: Policy, Bypass and Unavailability](../labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/cloud-content/018-umbrella-dns-security.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe | 20 | 4 | 2026-11-02T20:07:48Z |
