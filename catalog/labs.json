@@ -3279,25 +3279,25 @@
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/035-secure-access-automation.yaml",
-      "title": "Secure Access Automation",
+      "title": "Secure Access Automation: Grant, Timed Revocation and Repair",
       "track": "350-701",
       "topic": "automation",
       "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv"
+        "iosv",
+        "net-tools"
       ],
       "nominal_ram_mib": 1536,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 110,
+      "workbook": "docs/workbooks/350-701-035-secure-access-automation.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "e9c9854d5c73e2a720d1681b74bad53c780f3e687025a93584e6fe9ebffe2be8"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-03T08:11:22Z",
+      "sha256": "7b5587d2847f3eb1499f1e820f901c8b0c62cd4a0586e0ce8dc627d13ec9d521"
     },
     {
       "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/036-security-dashboard-telemetry.yaml",

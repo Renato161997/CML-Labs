@@ -30690,5 +30690,484 @@
         ]
       }
     ]
+  },
+  "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/035-secure-access-automation.yaml": {
+    "checks": [
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": false)",
+        "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+        "pattern": "(?s)(?=.*\"reachable\": false)",
+        "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+        "attempts": 1,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "OUTSIDE",
+        "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+        "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+        "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+        "attempts": 20,
+        "interval_seconds": 2,
+        "command_timeout": 20
+      },
+      {
+        "node": "INSIDE",
+        "command": "ping -n -c 3 -W 1 198.18.20.20",
+        "pattern": "3 packets transmitted, 3 received",
+        "expectation": "The routed control path remains healthy independently of time-limited application access.",
+        "command_timeout": 15,
+        "attempts": 5,
+        "interval_seconds": 2
+      },
+      {
+        "node": "FW",
+        "command": "show ip interface GigabitEthernet0/0 | include Inbound",
+        "pattern": "Inbound\\s+access list is ACCESS-IN",
+        "expectation": "The actual ingress ACL stays bound through grant, expiry and the missing-automation negative control."
+      }
+    ],
+    "transitions": [
+      {
+        "name": "grant the classroom source and arm the first expiry",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "ip access-list extended ACCESS-IN",
+          "no 10",
+          "10 permit tcp host 198.18.10.10 any eq 8080",
+          "exit",
+          "event manager applet EXPIRE-ACCESS",
+          "event timer countdown time 45",
+          "action 1.0 cli command \"enable\"",
+          "action 2.0 cli command \"configure terminal\"",
+          "action 3.0 cli command \"ip access-list extended ACCESS-IN\"",
+          "action 4.0 cli command \"no 10\"",
+          "action 5.0 cli command \"10 deny tcp host 198.18.10.10 any eq 8080\"",
+          "action 6.0 cli command \"end\"",
+          "action 7.0 syslog msg \"CML-ACCESS-FIRST-EXPIRED\"",
+          "exit",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 1 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The routed control path remains healthy independently of time-limited application access.",
+            "command_timeout": 15,
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "FW",
+            "command": "show ip interface GigabitEthernet0/0 | include Inbound",
+            "pattern": "Inbound\\s+access list is ACCESS-IN",
+            "expectation": "The actual ingress ACL stays bound through grant, expiry and the missing-automation negative control."
+          }
+        ]
+      },
+      {
+        "name": "observe the first autonomous expiry",
+        "node": "INSIDE",
+        "commands": [
+          "python3 -c 'import time;time.sleep(50);print(1)'"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "(?m)^1\\s*$",
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 1 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The routed control path remains healthy independently of time-limited application access.",
+            "command_timeout": 15,
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "FW",
+            "command": "show ip interface GigabitEthernet0/0 | include Inbound",
+            "pattern": "Inbound\\s+access list is ACCESS-IN",
+            "expectation": "The actual ingress ACL stays bound through grant, expiry and the missing-automation negative control."
+          },
+          {
+            "node": "FW",
+            "command": "show logging | include CML-ACCESS-FIRST-EXPIRED",
+            "pattern": "%HA_EM-[0-7]-LOG:\\s+EXPIRE-ACCESS:\\s+CML-ACCESS-FIRST-EXPIRED",
+            "expectation": "The unique phase marker is emitted only after the real EEM actions have restored application denial."
+          },
+          {
+            "node": "FW",
+            "command": "show event manager history events",
+            "pattern": "EXPIRE-ACCESS",
+            "expectation": "The actual IOSv event history records the countdown applet invocation."
+          }
+        ]
+      },
+      {
+        "name": "remove expiry automation and deliberately regrant access",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "no event manager applet EXPIRE-ACCESS",
+          "ip access-list extended ACCESS-IN",
+          "no 10",
+          "10 permit tcp host 198.18.10.10 any eq 8080",
+          "exit",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 1 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The routed control path remains healthy independently of time-limited application access.",
+            "command_timeout": 15,
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "FW",
+            "command": "show ip interface GigabitEthernet0/0 | include Inbound",
+            "pattern": "Inbound\\s+access list is ACCESS-IN",
+            "expectation": "The actual ingress ACL stays bound through grant, expiry and the missing-automation negative control."
+          }
+        ]
+      },
+      {
+        "name": "prove a grant without automation does not expire",
+        "node": "INSIDE",
+        "commands": [
+          "python3 -c 'import time;time.sleep(50);print(1)'"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "(?m)^1\\s*$",
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 1 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The routed control path remains healthy independently of time-limited application access.",
+            "command_timeout": 15,
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "FW",
+            "command": "show ip interface GigabitEthernet0/0 | include Inbound",
+            "pattern": "Inbound\\s+access list is ACCESS-IN",
+            "expectation": "The actual ingress ACL stays bound through grant, expiry and the missing-automation negative control."
+          }
+        ]
+      },
+      {
+        "name": "restore the one-shot expiry for the still-active grant",
+        "node": "FW",
+        "commands": [
+          "configure terminal",
+          "event manager applet EXPIRE-ACCESS",
+          "event timer countdown time 45",
+          "action 1.0 cli command \"enable\"",
+          "action 2.0 cli command \"configure terminal\"",
+          "action 3.0 cli command \"ip access-list extended ACCESS-IN\"",
+          "action 4.0 cli command \"no 10\"",
+          "action 5.0 cli command \"10 deny tcp host 198.18.10.10 any eq 8080\"",
+          "action 6.0 cli command \"end\"",
+          "action 7.0 syslog msg \"CML-ACCESS-SECOND-EXPIRED\"",
+          "exit",
+          "end"
+        ],
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"peer\": \"198\\.18\\.10\\.10\")(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 1 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The routed control path remains healthy independently of time-limited application access.",
+            "command_timeout": 15,
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "FW",
+            "command": "show ip interface GigabitEthernet0/0 | include Inbound",
+            "pattern": "Inbound\\s+access list is ACCESS-IN",
+            "expectation": "The actual ingress ACL stays bound through grant, expiry and the missing-automation negative control."
+          }
+        ]
+      },
+      {
+        "name": "observe fresh autonomous revocation after repair",
+        "node": "INSIDE",
+        "commands": [
+          "python3 -c 'import time;time.sleep(50);print(1)'"
+        ],
+        "command_timeout": 60,
+        "command_pattern": "(?m)^1\\s*$",
+        "checks": [
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": false)",
+            "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+            "attempts": 1,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "OUTSIDE",
+            "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+            "pattern": "(?s)(?=.*\"reachable\": true)(?=.*\"status\": 200)(?=.*\"server\": \"OUTSIDE\")",
+            "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+            "attempts": 20,
+            "interval_seconds": 2,
+            "command_timeout": 20
+          },
+          {
+            "node": "INSIDE",
+            "command": "ping -n -c 3 -W 1 198.18.20.20",
+            "pattern": "3 packets transmitted, 3 received",
+            "expectation": "The routed control path remains healthy independently of time-limited application access.",
+            "command_timeout": 15,
+            "attempts": 5,
+            "interval_seconds": 2
+          },
+          {
+            "node": "FW",
+            "command": "show ip interface GigabitEthernet0/0 | include Inbound",
+            "pattern": "Inbound\\s+access list is ACCESS-IN",
+            "expectation": "The actual ingress ACL stays bound through grant, expiry and the missing-automation negative control."
+          },
+          {
+            "node": "FW",
+            "command": "show logging | include CML-ACCESS-SECOND-EXPIRED",
+            "pattern": "%HA_EM-[0-7]-LOG:\\s+EXPIRE-ACCESS:\\s+CML-ACCESS-SECOND-EXPIRED",
+            "expectation": "The unique phase marker is emitted only after the real EEM actions have restored application denial."
+          },
+          {
+            "node": "FW",
+            "command": "show event manager history events",
+            "pattern": "EXPIRE-ACCESS",
+            "expectation": "The actual IOSv event history records the countdown applet invocation."
+          }
+        ]
+      }
+    ]
   }
 }

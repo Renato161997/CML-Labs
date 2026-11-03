@@ -52465,6 +52465,711 @@
       "status": "passed",
       "test_lab_removed": true,
       "completed_utc": "2026-11-02T20:18:07Z"
+    },
+    {
+      "path": "labs/350-701-scor-implementing-and-operating-cisco-security-core-technologies/automation/035-secure-access-automation.yaml",
+      "sha256": "7b5587d2847f3eb1499f1e820f901c8b0c62cd4a0586e0ce8dc627d13ec9d521",
+      "cml_version": "2.10.1+build.21",
+      "started_utc": "2026-11-03T08:02:32Z",
+      "checks": [
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 1 198.18.20.20",
+          "expectation": "The routed control path remains healthy independently of time-limited application access.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 1 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=7.01 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.11 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.02 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2002ms\nrtt min/avg/max/mdev = 1.023/3.048/7.010/2.801 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "baseline",
+          "node": "FW",
+          "command": "show ip interface GigabitEthernet0/0 | include Inbound",
+          "expectation": "The actual ingress ACL stays bound through grant, expiry and the missing-automation negative control.",
+          "passed": true,
+          "output": "\nFW#show ip interface GigabitEthernet0/0 | include Inbound\n  Inbound  access list is ACCESS-IN\nFW#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "ip access-list extended ACCESS-IN",
+          "passed": true,
+          "output": "\nFW(config)#ip access-list extended ACCESS-IN\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no 10",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#no 10\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "10 permit tcp host 198.18.10.10 any eq 8080",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#10 permit tcp host 198.18.10.10 any eq 8080\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "exit",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#exit\nFW(config)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "event manager applet EXPIRE-ACCESS",
+          "passed": true,
+          "output": "\nFW(config)#event manager applet EXPIRE-ACCESS\nFW(config-applet)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "event timer countdown time 45",
+          "passed": true,
+          "output": "\nFW(config-applet)#event timer countdown time 45\nFW(config-applet)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "action 1.0 cli command \"enable\"",
+          "passed": true,
+          "output": "\nFW(config-applet)#action 1.0 cli command \"enable\"\nFW(config-applet)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "action 2.0 cli command \"configure terminal\"",
+          "passed": true,
+          "output": "\nFW(config-applet)#action 2.0 cli command \"configure terminal\"\nFW(config-applet)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "action 3.0 cli command \"ip access-list extended ACCESS-IN\"",
+          "passed": true,
+          "output": "\nFW(config-applet)#action 3.0 cli command \"ip access-list extended ACCESS-IN\"\nFW(config-applet)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "action 4.0 cli command \"no 10\"",
+          "passed": true,
+          "output": "\nFW(config-applet)#action 4.0 cli command \"no 10\"\nFW(config-applet)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "action 5.0 cli command \"10 deny tcp host 198.18.10.10 any eq 8080\"",
+          "passed": true,
+          "output": "\nFW(config-applet)#action 5.0 cli command \"10 deny tcp host 198.18.10.10 any eq 8080\"\nFW(config-applet)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "action 6.0 cli command \"end\"",
+          "passed": true,
+          "output": "\nFW(config-applet)#action 6.0 cli command \"end\"\nFW(config-applet)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "action 7.0 syslog msg \"CML-ACCESS-FIRST-EXPIRED\"",
+          "passed": true,
+          "output": "\nFW(config-applet)#action 7.0 syslog msg \"CML-ACCESS-FIRST-EXPIRED\"\nFW(config-applet)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "exit",
+          "passed": true,
+          "output": "\nFW(config-applet)#exit\nFW(config)#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config)#end\nFW#"
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 1 198.18.20.20",
+          "expectation": "The routed control path remains healthy independently of time-limited application access.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 1 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=0.788 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=0.839 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.25 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2080ms\nrtt min/avg/max/mdev = 0.788/0.960/1.254/0.208 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "grant the classroom source and arm the first expiry",
+          "node": "FW",
+          "command": "show ip interface GigabitEthernet0/0 | include Inbound",
+          "expectation": "The actual ingress ACL stays bound through grant, expiry and the missing-automation negative control.",
+          "passed": true,
+          "output": "\nFW#show ip interface GigabitEthernet0/0 | include Inbound\n  Inbound  access list is ACCESS-IN\nFW#"
+        },
+        {
+          "phase": "observe the first autonomous expiry",
+          "kind": "configuration",
+          "node": "INSIDE",
+          "command": "python3 -c 'import time;time.sleep(50);print(1)'",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 -c 'import time;time.sleep(50);print(1)'\n1\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "observe the first autonomous expiry",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "observe the first autonomous expiry",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "observe the first autonomous expiry",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "observe the first autonomous expiry",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "observe the first autonomous expiry",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 1 198.18.20.20",
+          "expectation": "The routed control path remains healthy independently of time-limited application access.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 1 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=0.876 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=2.05 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=2.04 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2033ms\nrtt min/avg/max/mdev = 0.876/1.656/2.054/0.552 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "observe the first autonomous expiry",
+          "node": "FW",
+          "command": "show ip interface GigabitEthernet0/0 | include Inbound",
+          "expectation": "The actual ingress ACL stays bound through grant, expiry and the missing-automation negative control.",
+          "passed": true,
+          "output": "\nFW#show ip interface GigabitEthernet0/0 | include Inbound\n  Inbound  access list is ACCESS-IN\nFW#"
+        },
+        {
+          "phase": "observe the first autonomous expiry",
+          "node": "FW",
+          "command": "show logging | include CML-ACCESS-FIRST-EXPIRED",
+          "expectation": "The unique phase marker is emitted only after the real EEM actions have restored application denial.",
+          "passed": true,
+          "output": "\nFW#show logging | include CML-ACCESS-FIRST-EXPIRED\n*Nov  3 08:08:27.455: %HA_EM-6-LOG: EXPIRE-ACCESS: CML-ACCESS-FIRST-EXPIRED\nFW#"
+        },
+        {
+          "phase": "observe the first autonomous expiry",
+          "node": "FW",
+          "command": "show event manager history events",
+          "expectation": "The actual IOSv event history records the countdown applet invocation.",
+          "passed": true,
+          "output": "\nFW#show event manager history events\nNo.  Job Id Proc Status   Time of Event            Event Type        Name\n1    1      Actv success  Tue Nov 3 08:08:27 2026  timer countdown   applet: EXPIRE-ACCESS \nFW#"
+        },
+        {
+          "phase": "remove expiry automation and deliberately regrant access",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "remove expiry automation and deliberately regrant access",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no event manager applet EXPIRE-ACCESS",
+          "passed": true,
+          "output": "\nFW(config)#no event manager applet EXPIRE-ACCESS\nFW(config)#"
+        },
+        {
+          "phase": "remove expiry automation and deliberately regrant access",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "ip access-list extended ACCESS-IN",
+          "passed": true,
+          "output": "\nFW(config)#ip access-list extended ACCESS-IN\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "remove expiry automation and deliberately regrant access",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "no 10",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#no 10\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "remove expiry automation and deliberately regrant access",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "10 permit tcp host 198.18.10.10 any eq 8080",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#10 permit tcp host 198.18.10.10 any eq 8080\nFW(config-ext-nacl)#"
+        },
+        {
+          "phase": "remove expiry automation and deliberately regrant access",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "exit",
+          "passed": true,
+          "output": "\nFW(config-ext-nacl)#exit\nFW(config)#"
+        },
+        {
+          "phase": "remove expiry automation and deliberately regrant access",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config)#end\nFW#"
+        },
+        {
+          "phase": "remove expiry automation and deliberately regrant access",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove expiry automation and deliberately regrant access",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove expiry automation and deliberately regrant access",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "remove expiry automation and deliberately regrant access",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "remove expiry automation and deliberately regrant access",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 1 198.18.20.20",
+          "expectation": "The routed control path remains healthy independently of time-limited application access.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 1 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=1.13 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.92 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.82 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2002ms\nrtt min/avg/max/mdev = 1.132/1.624/1.922/0.350 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "remove expiry automation and deliberately regrant access",
+          "node": "FW",
+          "command": "show ip interface GigabitEthernet0/0 | include Inbound",
+          "expectation": "The actual ingress ACL stays bound through grant, expiry and the missing-automation negative control.",
+          "passed": true,
+          "output": "\nFW#show ip interface GigabitEthernet0/0 | include Inbound\n  Inbound  access list is ACCESS-IN\nFW#"
+        },
+        {
+          "phase": "prove a grant without automation does not expire",
+          "kind": "configuration",
+          "node": "INSIDE",
+          "command": "python3 -c 'import time;time.sleep(50);print(1)'",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 -c 'import time;time.sleep(50);print(1)'\n1\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "prove a grant without automation does not expire",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "prove a grant without automation does not expire",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "prove a grant without automation does not expire",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "prove a grant without automation does not expire",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "prove a grant without automation does not expire",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 1 198.18.20.20",
+          "expectation": "The routed control path remains healthy independently of time-limited application access.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 1 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=0.859 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.27 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=2.01 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2009ms\nrtt min/avg/max/mdev = 0.859/1.377/2.009/0.476 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "prove a grant without automation does not expire",
+          "node": "FW",
+          "command": "show ip interface GigabitEthernet0/0 | include Inbound",
+          "expectation": "The actual ingress ACL stays bound through grant, expiry and the missing-automation negative control.",
+          "passed": true,
+          "output": "\nFW#show ip interface GigabitEthernet0/0 | include Inbound\n  Inbound  access list is ACCESS-IN\nFW#"
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "configure terminal",
+          "passed": true,
+          "output": "\nFW#configure terminal\nEnter configuration commands, one per line.  End with CNTL/Z.\nFW(config)#"
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "event manager applet EXPIRE-ACCESS",
+          "passed": true,
+          "output": "\nFW(config)#event manager applet EXPIRE-ACCESS\nFW(config-applet)#"
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "event timer countdown time 45",
+          "passed": true,
+          "output": "\nFW(config-applet)#event timer countdown time 45\nFW(config-applet)#"
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "action 1.0 cli command \"enable\"",
+          "passed": true,
+          "output": "\nFW(config-applet)#action 1.0 cli command \"enable\"\nFW(config-applet)#"
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "action 2.0 cli command \"configure terminal\"",
+          "passed": true,
+          "output": "\nFW(config-applet)#action 2.0 cli command \"configure terminal\"\nFW(config-applet)#"
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "action 3.0 cli command \"ip access-list extended ACCESS-IN\"",
+          "passed": true,
+          "output": "\nFW(config-applet)#action 3.0 cli command \"ip access-list extended ACCESS-IN\"\nFW(config-applet)#"
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "action 4.0 cli command \"no 10\"",
+          "passed": true,
+          "output": "\nFW(config-applet)#action 4.0 cli command \"no 10\"\nFW(config-applet)#"
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "action 5.0 cli command \"10 deny tcp host 198.18.10.10 any eq 8080\"",
+          "passed": true,
+          "output": "\nFW(config-applet)#action 5.0 cli command \"10 deny tcp host 198.18.10.10 any eq 8080\"\nFW(config-applet)#"
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "action 6.0 cli command \"end\"",
+          "passed": true,
+          "output": "\nFW(config-applet)#action 6.0 cli command \"end\"\nFW(config-applet)#"
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "action 7.0 syslog msg \"CML-ACCESS-SECOND-EXPIRED\"",
+          "passed": true,
+          "output": "\nFW(config-applet)#action 7.0 syslog msg \"CML-ACCESS-SECOND-EXPIRED\"\nFW(config-applet)#"
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "exit",
+          "passed": true,
+          "output": "\nFW(config-applet)#exit\nFW(config)#"
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "kind": "configuration",
+          "node": "FW",
+          "command": "end",
+          "passed": true,
+          "output": "\nFW(config)#end\nFW#"
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.10.10\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 1 198.18.20.20",
+          "expectation": "The routed control path remains healthy independently of time-limited application access.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 1 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=1.95 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=0.956 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=1.60 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2002ms\nrtt min/avg/max/mdev = 0.956/1.499/1.945/0.409 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "restore the one-shot expiry for the still-active grant",
+          "node": "FW",
+          "command": "show ip interface GigabitEthernet0/0 | include Inbound",
+          "expectation": "The actual ingress ACL stays bound through grant, expiry and the missing-automation negative control.",
+          "passed": true,
+          "output": "\nFW#show ip interface GigabitEthernet0/0 | include Inbound\n  Inbound  access list is ACCESS-IN\nFW#"
+        },
+        {
+          "phase": "observe fresh autonomous revocation after repair",
+          "kind": "configuration",
+          "node": "INSIDE",
+          "command": "python3 -c 'import time;time.sleep(50);print(1)'",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 -c 'import time;time.sleep(50);print(1)'\n1\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "observe fresh autonomous revocation after repair",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "observe fresh autonomous revocation after repair",
+          "node": "INSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection is blocked while its separately checked server stays healthy.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"reachable\": false, \"reason\": \"network_rejected\"}\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "observe fresh autonomous revocation after repair",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "observe fresh autonomous revocation after repair",
+          "node": "OUTSIDE",
+          "command": "python3 /lab/t.py probe 198.18.20.20 --port 9090",
+          "expectation": "The actual plain-HTTP connection succeeds with the expected observed peer.",
+          "passed": true,
+          "output": "\nroot@OUTSIDE:~# python3 /lab/t.py probe 198.18.20.20 --port 9090\n{\"peer\": \"198.18.20.20\", \"reachable\": true, \"server\": \"OUTSIDE\", \"status\": 200}\nroot@OUTSIDE:~# "
+        },
+        {
+          "phase": "observe fresh autonomous revocation after repair",
+          "node": "INSIDE",
+          "command": "ping -n -c 3 -W 1 198.18.20.20",
+          "expectation": "The routed control path remains healthy independently of time-limited application access.",
+          "passed": true,
+          "output": "\nroot@INSIDE:~# ping -n -c 3 -W 1 198.18.20.20\nPING 198.18.20.20 (198.18.20.20) 56(84) bytes of data.\n64 bytes from 198.18.20.20: icmp_seq=1 ttl=63 time=0.841 ms\n64 bytes from 198.18.20.20: icmp_seq=2 ttl=63 time=1.15 ms\n64 bytes from 198.18.20.20: icmp_seq=3 ttl=63 time=0.937 ms\n\n--- 198.18.20.20 ping statistics ---\n3 packets transmitted, 3 received, 0% packet loss, time 2012ms\nrtt min/avg/max/mdev = 0.841/0.977/1.154/0.130 ms\nroot@INSIDE:~# "
+        },
+        {
+          "phase": "observe fresh autonomous revocation after repair",
+          "node": "FW",
+          "command": "show ip interface GigabitEthernet0/0 | include Inbound",
+          "expectation": "The actual ingress ACL stays bound through grant, expiry and the missing-automation negative control.",
+          "passed": true,
+          "output": "\nFW#show ip interface GigabitEthernet0/0 | include Inbound\n  Inbound  access list is ACCESS-IN\nFW#"
+        },
+        {
+          "phase": "observe fresh autonomous revocation after repair",
+          "node": "FW",
+          "command": "show logging | include CML-ACCESS-SECOND-EXPIRED",
+          "expectation": "The unique phase marker is emitted only after the real EEM actions have restored application denial.",
+          "passed": true,
+          "output": "\nFW#show logging | include CML-ACCESS-SECOND-EXPIRED\n*Nov  3 08:10:50.232: %HA_EM-6-LOG: EXPIRE-ACCESS: CML-ACCESS-SECOND-EXPIRED\nFW#"
+        },
+        {
+          "phase": "observe fresh autonomous revocation after repair",
+          "node": "FW",
+          "command": "show event manager history events",
+          "expectation": "The actual IOSv event history records the countdown applet invocation.",
+          "passed": true,
+          "output": "\nFW#show event manager history events\nNo.  Job Id Proc Status   Time of Event            Event Type        Name\n1    1      Actv success  Tue Nov 3 08:08:27 2026  timer countdown   applet: EXPIRE-ACCESS \n2    2      Actv success  Tue Nov 3 08:10:49 2026  timer countdown   applet: EXPIRE-ACCESS \nFW#"
+        }
+      ],
+      "plan_sha256": "988cdd26bd6ef0818b7de1ed8caac3d49b01bdb5ae83a3855c68973fbbf840e2",
+      "startup_states": {
+        "FW": "STARTED",
+        "INSIDE": "BOOTED",
+        "OUTSIDE": "BOOTED"
+      },
+      "images": {
+        "FW": "iosv-159-3-m12",
+        "INSIDE": "net-tools-2-10-1-3",
+        "OUTSIDE": "net-tools-2-10-1-3"
+      },
+      "image_selection": "explicit private overrides",
+      "console_transport": "websocket",
+      "client_versions": {
+        "cryptography": "50.0.0",
+        "paramiko": "5.0.0",
+        "virl2-client": "2.10.1",
+        "websockets": "15.0.1"
+      },
+      "console_boot_fallback": [
+        "FW"
+      ],
+      "status": "passed",
+      "test_lab_removed": true,
+      "completed_utc": "2026-11-03T08:11:22Z"
     }
   ]
 }
