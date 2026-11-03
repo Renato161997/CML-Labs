@@ -1,6 +1,6 @@
 # Validation levels
 
-These checks have different meanings. A green CI badge is not a live CML pass.
+All 233 exercises passed CML import and export. The evidence includes 213 functional passes. The remaining 20 have import/export evidence only. CI checks the repository and the evidence records.
 
 See the [observed results matrix](RESULTS.md), [raw import/export evidence](import.json)
 and [raw functional evidence](runtime.json).

@@ -2,10 +2,9 @@
 
 [![Lab quality](https://github.com/Renato161997/CML-Labs/actions/workflows/quality.yml/badge.svg)](https://github.com/Renato161997/CML-Labs/actions/workflows/quality.yml)
 
-**233 Cisco Modeling Labs exercises, with a curated starting path and explicit validation levels.**
+Practice routing, switching, security and network automation with 233 Cisco Modeling Labs exercises. Pick a lab from the catalog, import its YAML and follow the workbook if one is available.
 
-Practice enterprise routing, switching, security concepts and network automation.
-Topology files and original teaching examples only: no vendor images, entitlement files or exam dumps.
+All **233 labs** passed import and export in CML. **213** also passed functional checks. The remaining **20** have import/export evidence only. See the [results for each lab](validation/RESULTS.md).
 
 **[Browse all labs](docs/CATALOG.md)** Â· **[Validation evidence](validation/README.md)** Â· **[Certification/image scope](docs/CERTIFICATIONS.md)** Â· **[Report a problem](https://github.com/Renato161997/CML-Labs/issues/new/choose)**
 
