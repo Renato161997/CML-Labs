@@ -4470,25 +4470,26 @@
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/020-ci-cd-for-network-automation.yaml",
-      "title": "CI CD For Network Automation",
+      "title": "Local CI/CD: Committed Policy, Test Gates and Real Deployment",
       "track": "350-901",
       "topic": "deployment-security",
       "nodes": 3,
       "node_types": [
-        "desktop",
-        "iosv"
+        "cml-labs-toolbox",
+        "iol-xe",
+        "net-tools"
       ],
-      "nominal_ram_mib": 1536,
+      "nominal_ram_mib": 2560,
       "image_selection": "installed default; verify image availability before boot",
-      "difficulty": "Unrated",
-      "duration_minutes": null,
-      "workbook": null,
-      "kind": "scaffold",
-      "runtime_status": "not-run",
+      "difficulty": "Intermediate",
+      "duration_minutes": 140,
+      "workbook": "docs/workbooks/350-901-020-ci-cd-for-network-automation.md",
+      "kind": "practice",
+      "runtime_status": "passed",
       "import_status": "import-export-pass",
-      "cml_version": null,
-      "validated_utc": null,
-      "sha256": "2109e7258b8947fb11bbeb047542232763d263376231eaf0ca267255dd360e7d"
+      "cml_version": "2.10.1+build.21",
+      "validated_utc": "2026-11-02T20:18:07Z",
+      "sha256": "84d98d6eacab35aaf7247705c682c2128eacc4476140f374134b7eb282965a58"
     },
     {
       "path": "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/021-secrets-management.yaml",

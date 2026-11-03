@@ -2,7 +2,7 @@
 
 Generated from the file-hash-checked evidence. CI checks these records; it does not boot CML.
 
-Import/export passes: **233/233**. Functional passes: **211**.
+Import/export passes: **233/233**. Functional passes: **212**.
 
 [Raw import/export evidence](import.json) Â· [Raw functional evidence](runtime.json) Â· [Meaning and reproduction](README.md)
 
@@ -194,6 +194,7 @@ Import/export passes: **233/233**. Functional passes: **211**.
 | [Capstone: Device-Backed Controller Reconciliation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/039-devcor-capstone-controller-integration.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 12 | 32 | 2026-10-31T17:38:27Z |
 | [Capstone: Durable Jobs, Compensation and Concurrent Replay](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/capstone/040-devcor-capstone-network-automation-app.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 19 | 34 | 2026-10-31T17:41:46Z |
 | [Container Security: A Real Unprivileged Network Workload](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/019-containerized-network-tool.yaml) | passed | 2.10.1+build.21 | controller default (unresolved) | 26 | 5 | 2026-11-01T19:49:55Z |
+| [Local CI/CD: Committed Policy, Test Gates and Real Deployment](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/020-ci-cd-for-network-automation.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, iol-xe-17-18-02, net-tools-2-10-1-3 | 79 | 12 | 2026-11-02T20:18:07Z |
 | [Secrets: OS Ownership, Scoped Injection and Live Rotation](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/021-secrets-management.yaml) | passed | 2.10.1+build.21 | net-tools-2-10-1-3 | 4 | 2 | 2026-11-01T11:55:49Z |
 | [Secure API Client: Verified Peers and Backend Recovery](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/022-secure-api-client.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a | 4 | 34 | 2026-11-01T18:46:06Z |
 | [Application Threat Model: API Denial and Backend Failure](../labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/023-application-threat-model.yaml) | passed | 2.10.1+build.21 | cml-labs-toolbox-9f43df961cbe, csr1000v-17-03-08a, net-tools-2-10-1-3 | 16 | 35 | 2026-10-31T22:46:21Z |

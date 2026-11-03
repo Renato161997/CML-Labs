@@ -1359,5 +1359,12 @@
     "kind": "practice",
     "workbook": "docs/workbooks/350-701-018-umbrella-dns-security.md",
     "example_profile": "native-dns-policy"
+  },
+  "labs/350-901-devcor-developing-applications-using-cisco-core-platforms-and-apis/deployment-security/020-ci-cd-for-network-automation.yaml": {
+    "difficulty": "Intermediate",
+    "duration_minutes": 140,
+    "kind": "practice",
+    "workbook": "docs/workbooks/350-901-020-ci-cd-for-network-automation.md",
+    "example_profile": "native-git-policy-pipeline"
   }
 }
